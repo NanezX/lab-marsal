@@ -27,7 +27,7 @@
 	const { form, errors, constraints, message, enhance } = superForm(data.loginForm);
 </script>
 
-<Container class={['flex', 'direct-children:p-8', 'rounded-xl', 'w-2/3']}>
+<Container class={['flex', 'direct-children:p-8', 'rounded-xl', 'w-2/3', 'max-w-5xl']}>
 	<!-- Izquierda bienvenida -->
 	<div
 		class="rounded-l-lm w-3/5 space-y-10 rounded-l-xl bg-gradient-to-br from-secondary-blue to-primary-blue text-white"
