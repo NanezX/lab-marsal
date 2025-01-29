@@ -4,7 +4,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: "postgresql://user:password@localhost:5432/dbname" # Dummy URL
+      DATABASE_URL: 'postgresql://user:password@localhost:5432/dbname' # Dummy URL
     steps:
       - name: Checkout
         uses: actions/checkout@v4
