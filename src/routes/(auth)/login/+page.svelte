@@ -4,15 +4,22 @@
 	import Input from '$lib/components/Input.svelte';
 	import tree from '$lib/assets/tree.svg';
 	import icon from '$lib/assets/icon.png';
-	import { At, Lock } from '@steeze-ui/tabler-icons';
+	import { At, Lock, LockOpen2 } from '@steeze-ui/tabler-icons';
 
 	let email = $state('');
 	let password = $state('');
 	let passwordInputType: 'password' | 'text' = $state('password');
 	let showPassword = $state(false);
+	let iconPassword = $state(Lock);
 
 	function togglePasswordInput() {
-		passwordInputType = passwordInputType == 'password' ? 'text' : 'password';
+		if (passwordInputType == 'password') {
+			passwordInputType = 'text';
+			iconPassword = LockOpen2;
+		} else {
+			passwordInputType = 'password';
+			iconPassword = Lock;
+		}
 	}
 </script>
 
@@ -47,7 +54,7 @@
 				<Input
 					bind:value={password}
 					type={passwordInputType}
-					icon={Lock}
+					icon={iconPassword}
 					placeholder="Contraseña"
 				/>
 				<Checkbox
