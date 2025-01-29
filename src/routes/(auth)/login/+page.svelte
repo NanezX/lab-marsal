@@ -6,6 +6,7 @@
 
 <div class="flex h-full w-full items-center justify-center">
 	<Container class={['flex', 'direct-children:p-8', 'rounded-xl', 'w-2/3']}>
+		<!-- Izquierda bienvenida -->
 		<div
 			class="from-secondary-blue to-primary-blue rounded-l-lm w-3/5 space-y-10 rounded-l-xl bg-gradient-to-br text-white"
 		>
@@ -25,6 +26,8 @@
 				<img src={tree} alt="Hermoso arbol al iniciar sesion" width="250" class="mx-auto" />
 			</div>
 		</div>
+
+		<!-- Derecha login process -->
 		<div class="w-2/5 rounded-r-xl border bg-white">
 			<p>Let's gou</p>
 		</div>
