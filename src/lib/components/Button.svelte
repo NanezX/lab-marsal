@@ -1,8 +1,9 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
 	import type { ClassValue, MouseEventHandler } from 'svelte/elements';
 
 	type PropType = {
-		children: any;
+		children: Snippet;
 		type?: 'submit' | 'reset' | 'button';
 		title?: string;
 		class?: ClassValue;
