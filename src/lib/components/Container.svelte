@@ -1,9 +1,15 @@
 <script lang="ts">
-	const props = $props();
+	import type { Snippet } from 'svelte';
+	import type { ClassValue, MouseEventHandler } from 'svelte/elements';
 
-	const children = props.children;
+	type PropType = {
+		children: Snippet;
+		class?: ClassValue;
+	};
+
+	const { children, class: className }: PropType = $props();
 </script>
 
-<div class={['mx-auto shadow-2xl', props.class]}>
+<div class={['mx-auto shadow-2xl', className]}>
 	{@render children()}
 </div>
