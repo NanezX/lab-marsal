@@ -23,6 +23,7 @@
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.18.0",
 		"@playwright/test": "^1.49.1",
+		"@steeze-ui/tabler-icons": "^3.3.1",
 		"@sveltejs/adapter-auto": "^4.0.0",
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
@@ -47,6 +48,7 @@
 		"@node-rs/argon2": "^2.0.2",
 		"@oslojs/crypto": "^1.0.1",
 		"@oslojs/encoding": "^1.1.0",
+		"@steeze-ui/svelte-icon": "^1.6.2",
 		"drizzle-orm": "^0.38.4",
 		"postgres": "^3.4.5"
 	}
