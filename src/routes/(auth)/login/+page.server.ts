@@ -1,5 +1,5 @@
 import { UserLoginSchema } from '$lib/utils/zod';
-import { message, superValidate, fail as failForms } from 'sveltekit-superforms';
+import { message, superValidate, fail as failForms, type SuperValidated } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 // import { fail as failSvelte } from '@sveltejs/kit';
@@ -33,7 +33,16 @@ export const actions = {
 	}
 };
 
-function mockLogin(form: any, email: string, password: string) {
+
+// TODO: This mock function and type is temporal
+type TempFormType = SuperValidated<{
+	email: string;
+	password: string;
+}, unknown, {
+	email: string;
+	password: string;
+}>
+function mockLogin(form: TempFormType, email: string, password: string) {
 	const validUser = {
 		email: 'admin@gmail.com',
 		password: 'Admin123'
