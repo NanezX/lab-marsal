@@ -9,7 +9,7 @@
 	let { class: className }: PropType = $props();
 
 	const classes = [
-		'h-8 w-8 border-4 animate-spin rounded-[50%] border-solid border-primary-blue/30 border-t-primary-blue',
+		'h-6 w-6 border-4 animate-spin rounded-[50%] border-solid border-primary-blue/30 border-t-primary-blue',
 		className
 	];
 </script>
