@@ -1,1 +1,5 @@
 Tippy.js -> For tooltips
+winston -> LOggin library
+OpenTelemetry -> Collection of APIs, SDKs and Tools to generate, collect and read data as metrics, logs and traces. Basically help to analyze the software.
+driver.js -> Tours and highlights
+shepherd.js -> Tours and highlights
