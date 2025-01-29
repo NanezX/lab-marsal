@@ -1,4 +1,4 @@
-import { UserLoginSchema } from '$lib/utils/zod';
+import { UserLoginSchema } from '$lib/server/utils/zod';
 import {
 	message,
 	superValidate,
