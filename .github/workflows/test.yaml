@@ -1,0 +1,25 @@
+name: Tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.20.6
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Svelte check
+        run: npm run check
+
+      - name: Run unitary tests
+        run: npm run test:unit -- --run
+
+      - name: Run e2e tests
+        run: npm run test:e2e
