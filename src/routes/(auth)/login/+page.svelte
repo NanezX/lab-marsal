@@ -1,7 +1,9 @@
 <script lang="ts">
 	import Container from '$lib/components/Container.svelte';
+	import Input from '$lib/components/Input.svelte';
 	import tree from '$lib/assets/tree.svg';
 	import icon from '$lib/assets/icon.png';
+	import { At } from '@steeze-ui/tabler-icons';
 </script>
 
 <div class="flex h-full w-full items-center justify-center">
@@ -29,7 +31,7 @@
 
 		<!-- Derecha login process -->
 		<div class="w-2/5 rounded-r-xl border bg-white">
-			<p>Let's gou</p>
+			<Input icon={At} />
 		</div>
 	</Container>
 </div>
