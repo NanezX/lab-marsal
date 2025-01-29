@@ -6,6 +6,7 @@
 	import icon from '$lib/assets/icon.png';
 	import { At, Lock, LockOpen2 } from '@steeze-ui/tabler-icons';
 	import Button from '$lib/components/Button.svelte';
+	import { UserLoginSchema } from '$lib/utils/zod';
 
 	let email = $state('');
 	let password = $state('');
@@ -22,6 +23,8 @@
 			iconPassword = Lock;
 		}
 	}
+
+	UserLoginSchema;
 </script>
 
 <div class="flex h-full w-full items-center justify-center">
@@ -52,9 +55,16 @@
 			<h3 class="text-primary-blue text-center text-2xl">Iniciar sesión</h3>
 			<form class="flex flex-col gap-y-8">
 				<div class="space-y-4">
-					<Input bind:value={email} type="email" icon={At} placeholder="Correo electrónico" />
+					<Input
+						bind:value={email}
+						type="email"
+						required
+						icon={At}
+						placeholder="Correo electrónico"
+					/>
 					<Input
 						bind:value={password}
+						required
 						type={passwordInputType}
 						icon={iconPassword}
 						placeholder="Contraseña"
