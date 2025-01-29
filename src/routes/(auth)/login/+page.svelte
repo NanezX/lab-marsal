@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Container from '$lib/components/Container.svelte';
+	import Checkbox from '$lib/components/Checkbox.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import tree from '$lib/assets/tree.svg';
 	import icon from '$lib/assets/icon.png';
@@ -8,6 +9,11 @@
 	let email = $state('');
 	let password = $state('');
 	let passwordInputType: 'password' | 'text' = $state('password');
+	let showPassword = $state(false);
+
+	function togglePasswordInput() {
+		passwordInputType = passwordInputType == 'password' ? 'text' : 'password';
+	}
 </script>
 
 <div class="flex h-full w-full items-center justify-center">
@@ -44,7 +50,18 @@
 					icon={Lock}
 					placeholder="Contraseña"
 				/>
+				<Checkbox
+					bind:value={
+						() => showPassword,
+						(v) => {
+							togglePasswordInput();
+							return showPassword;
+						}
+					}
+					text="Mostrar contraseña"
+				/>
 				<button
+					class="w-full"
 					aria-label="yes"
 					type="button"
 					onclick={() => {
