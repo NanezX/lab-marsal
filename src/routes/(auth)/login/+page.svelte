@@ -31,7 +31,7 @@
 
 		<!-- Derecha login process -->
 		<div class="w-2/5 rounded-r-xl border bg-white">
-			<Input icon={At} />
+			<Input type="email" icon={At} placeholder="Correco electronico" />
 		</div>
 	</Container>
 </div>

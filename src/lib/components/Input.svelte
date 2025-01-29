@@ -1,24 +1,32 @@
 <script lang="ts">
 	import { Icon, type IconSource } from '@steeze-ui/svelte-icon';
 
-	type PropType = { type?: 'text' | 'password'; disabled?: boolean; icon?: IconSource };
+	// Prop type
+	// TODO: Add the bind:value
+	type PropType = {
+		placeholder?: string;
+		title?: string;
+		type?: 'text' | 'password' | 'email';
+		disabled?: boolean;
+		icon?: IconSource;
+	};
 
-	const { type = 'text', disabled = false, icon }: PropType = $props();
-	// 'w-4/5 w-full rounded-md border border-gray-300 bg-white px-3 py-2
-	// text-right text-black outline-none [appearance:textfield]
-	// [&::-webkit-inner-spin-button]:appearance-none'
+	// Prop deconstruct
+	const { placeholder, title, type = 'text', disabled = false, icon }: PropType = $props();
 
-	// disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-600
+	// Reusable classes
+	const inputClass = [
+		'bg-secondary-blue/30 focus:ring-dark-blue w-full rounded-3xl border py-2 pl-10 pr-4 focus:outline-none focus:ring-1',
+		{ 'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600': disabled }
+	];
+	const iconClass = ['text-primary-blue/50 absolute ml-4 h-5 w-5', { 'text-gray-400': disabled }];
 </script>
 
 {#if icon}
 	<div class="relative flex items-center">
-		<input
-			type="text"
-			placeholder="Correco electronico"
-			class="bg-secondary-blue/30 w-full rounded-3xl border py-2 pl-10 pr-4 focus:outline-none focus:ring focus:ring-blue-500"
-		/>
-		<Icon src={icon} class="text-primary-blue/50 absolute ml-4 h-5 w-5" />
+		<input {type} {placeholder} {disabled} {title} class={inputClass} />
+
+		<Icon src={icon} class={iconClass} />
 	</div>
 {:else}
 	<!-- else content here -->
