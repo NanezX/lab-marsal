@@ -2,7 +2,6 @@
 	import { Icon, type IconSource } from '@steeze-ui/svelte-icon';
 
 	// Prop type
-	// TODO: Add the bind:value
 	type PropType = {
 		value: string;
 		placeholder?: string;
