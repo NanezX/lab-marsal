@@ -1,9 +1,9 @@
-
 <script lang="ts">
-    const { children } = $props()
+	const props = $props();
 
+	const children = props.children;
 </script>
 
-<div class="mx-auto w-fit border h-fit">
-    {@render children()}
+<div class={['mx-auto h-fit w-fit shadow-2xl', props.class]}>
+	{@render children()}
 </div>
