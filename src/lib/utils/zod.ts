@@ -1,10 +1,10 @@
 import { z } from "zod"
 
 export const UserLoginSchema = z.object({
-    email: z.string().min(1, "Email is required").email("Invalid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters long"),
+    email: z.string().min(1, "Correo electrónico obligatorio").email("Correo electrónico inválido"),
+    password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
 });
 
 export const UserRegisterSchema = UserLoginSchema.extend({
-    fullName: z.string().min(1, "Name is required"),
+    fullName: z.string().min(1, "Nombre es obligatario"),
 });
