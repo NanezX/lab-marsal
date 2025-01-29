@@ -6,7 +6,7 @@
 		type?: 'submit' | 'reset' | 'button';
 		title?: string;
 		class?: ClassValue;
-		disabled: boolean;
+		disabled?: boolean;
 		onclick?: MouseEventHandler<HTMLButtonElement>;
 	};
 
@@ -16,7 +16,7 @@
 		class: className,
 		type = 'button',
 		onclick,
-		disabled
+		disabled = false
 	}: PropType = $props();
 
 	let classes = [
