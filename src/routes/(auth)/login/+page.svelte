@@ -7,6 +7,7 @@
 
 	let email = $state('');
 	let password = $state('');
+	let passwordInputType: 'password' | 'text' = $state('password');
 </script>
 
 <div class="flex h-full w-full items-center justify-center">
@@ -37,7 +38,12 @@
 			<h3 class="text-primary-blue text-center text-2xl">Iniciar sesión</h3>
 			<form class="space-y-4">
 				<Input bind:value={email} type="email" icon={At} placeholder="Correo electrónico" />
-				<Input bind:value={password} type="text" icon={Lock} placeholder="Contraseña" />
+				<Input
+					bind:value={password}
+					type={passwordInputType}
+					icon={Lock}
+					placeholder="Contraseña"
+				/>
 				<button
 					aria-label="yes"
 					type="button"
