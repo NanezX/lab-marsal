@@ -5,7 +5,15 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 
 	theme: {
-		extend: {}
+		extend: {
+			colors: {
+				"primary-blue": "#049ce4",
+				"secondary-blue": "#81d4e7",
+				"dark-blue": "#045494",
+				"primary-gray": "#59728e",
+				"secondary-gray": "#bcccd9"
+			}
+		}
 	},
 
 	plugins: [
