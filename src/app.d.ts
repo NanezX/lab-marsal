@@ -8,11 +8,11 @@ declare global {
 		}
 		namespace Superforms {
 			type Message = {
-				type: 'error' | 'success';
+				type: 'error' | 'success' | 'warning';
 				text: string;
 			};
 		}
 	}
 }
 
-export {};
+export { };
