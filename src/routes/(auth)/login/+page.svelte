@@ -81,8 +81,8 @@
 					bind:value={
 						() => showPassword,
 						(v) => {
+							showPassword = !v;
 							togglePasswordInput();
-							return showPassword;
 						}
 					}
 					text="Mostrar contraseña"

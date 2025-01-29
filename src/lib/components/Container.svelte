@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { ClassValue, MouseEventHandler } from 'svelte/elements';
+	import type { ClassValue } from 'svelte/elements';
 
 	type PropType = {
 		children: Snippet;

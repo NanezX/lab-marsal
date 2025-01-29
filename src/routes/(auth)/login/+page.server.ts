@@ -2,8 +2,7 @@ import { UserLoginSchema } from '$lib/utils/zod';
 import { message, superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { fail as failSvelte } from '@sveltejs/kit';
+// import { fail as failSvelte } from '@sveltejs/kit';
 
 // TODO: Add the message type based on the docs: https://superforms.rocks/concepts/messages
 // Basically, createa message object /type. We can add it to the globals
@@ -34,7 +33,6 @@ export const actions = {
 	}
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mockLogin(form: any, email: string, password: string) {
 	const validUser = {
 		email: 'admin@gmail.com',
