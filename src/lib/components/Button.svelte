@@ -6,15 +6,24 @@
 		type?: 'submit' | 'reset' | 'button';
 		title?: string;
 		class?: ClassValue;
+		disabled: boolean;
 		onclick?: MouseEventHandler<HTMLButtonElement>;
 	};
 
-	let { children, title: text, class: className, type = 'button', onclick }: PropType = $props();
+	let {
+		children,
+		title: text,
+		class: className,
+		type = 'button',
+		onclick,
+		disabled
+	}: PropType = $props();
 
 	let classes = [
 		'bg-primary-blue text-white hover:bg-primary-blue/75 px-4 py-1 rounded-3xl',
-		className
+		className,
+		{ 'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600': disabled }
 	];
 </script>
 
-<button {type} class={classes} {onclick} title={text}>{@render children()}</button>
+<button {disabled} {type} class={classes} {onclick} title={text}>{@render children()}</button>
