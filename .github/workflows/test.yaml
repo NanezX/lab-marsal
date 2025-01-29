@@ -1,7 +1,7 @@
 name: Tests
 on: [push, pull_request]
 jobs:
-  test:
+  unit-tests:
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: 'postgresql://user:password@localhost:5432/dbname' # Dummy URL
@@ -23,5 +23,34 @@ jobs:
       - name: Run unitary tests
         run: npm run test:unit -- --run
 
+  e2e-tests:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: 'postgresql://user:password@localhost:5432/dbname' # Dummy URL
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.20.6
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Svelte check
+        run: npm run check
+
       - name: Run e2e tests
         run: npm run test:e2e
+
+      - uses: actions/upload-artifact@v4
+        # if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
