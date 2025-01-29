@@ -3,7 +3,7 @@
 	import Input from '$lib/components/Input.svelte';
 	import tree from '$lib/assets/tree.svg';
 	import icon from '$lib/assets/icon.png';
-	import { At } from '@steeze-ui/tabler-icons';
+	import { At, Lock } from '@steeze-ui/tabler-icons';
 </script>
 
 <div class="flex h-full w-full items-center justify-center">
@@ -30,8 +30,9 @@
 		</div>
 
 		<!-- Derecha login process -->
-		<div class="w-2/5 rounded-r-xl border bg-white">
+		<div class="w-2/5 space-y-4 rounded-r-xl border bg-white">
 			<Input type="email" icon={At} placeholder="Correco electronico" />
+			<Input type="text" icon={Lock} placeholder="Contraseña" />
 		</div>
 	</Container>
 </div>
