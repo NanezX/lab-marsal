@@ -19,14 +19,14 @@
 		'bg-secondary-blue/30 focus:ring-dark-blue w-full rounded-3xl border py-2 pl-10 pr-4 focus:outline-none focus:ring-1',
 		{ 'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600': disabled }
 	];
-	const iconClass = ['text-primary-blue/50 absolute ml-4 h-5 w-5', { 'text-gray-400': disabled }];
+	const iconClass = ['text-primary-blue absolute ml-4 h-5 w-5', { 'text-gray-400': disabled }];
 </script>
 
 {#if icon}
 	<div class="relative flex items-center">
 		<input {type} {placeholder} {disabled} {title} class={inputClass} />
 
-		<Icon src={icon} class={iconClass} />
+		<Icon src={icon} class={iconClass} {title} />
 	</div>
 {:else}
 	<!-- else content here -->
