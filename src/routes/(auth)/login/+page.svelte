@@ -5,6 +5,7 @@
 	import tree from '$lib/assets/tree.svg';
 	import icon from '$lib/assets/icon.png';
 	import { At, Lock, LockOpen2 } from '@steeze-ui/tabler-icons';
+	import Button from '$lib/components/Button.svelte';
 
 	let email = $state('');
 	let password = $state('');
@@ -49,31 +50,33 @@
 		<!-- Derecha login process -->
 		<div class="flex w-2/5 flex-col justify-center space-y-8 rounded-r-xl border bg-white">
 			<h3 class="text-primary-blue text-center text-2xl">Iniciar sesión</h3>
-			<form class="space-y-4">
-				<Input bind:value={email} type="email" icon={At} placeholder="Correo electrónico" />
-				<Input
-					bind:value={password}
-					type={passwordInputType}
-					icon={iconPassword}
-					placeholder="Contraseña"
-				/>
-				<Checkbox
-					bind:value={
-						() => showPassword,
-						(v) => {
-							togglePasswordInput();
-							return showPassword;
+			<form class="flex flex-col gap-y-8">
+				<div class="space-y-4">
+					<Input bind:value={email} type="email" icon={At} placeholder="Correo electrónico" />
+					<Input
+						bind:value={password}
+						type={passwordInputType}
+						icon={iconPassword}
+						placeholder="Contraseña"
+					/>
+					<Checkbox
+						bind:value={
+							() => showPassword,
+							(v) => {
+								togglePasswordInput();
+								return showPassword;
+							}
 						}
-					}
-					text="Mostrar contraseña"
-				/>
-				<button
-					class="w-full"
-					aria-label="yes"
-					type="button"
+						text="Mostrar contraseña"
+					/>
+				</div>
+				<Button
+					class="w-fit self-center"
 					onclick={() => {
 						alert('clicked');
-					}}>Click</button
+					}}
+				>
+					Iniciar sesión</Button
 				>
 			</form>
 		</div>
