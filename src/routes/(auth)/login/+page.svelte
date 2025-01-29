@@ -30,9 +30,13 @@
 		</div>
 
 		<!-- Derecha login process -->
-		<div class="w-2/5 space-y-4 rounded-r-xl border bg-white">
-			<Input type="email" icon={At} placeholder="Correco electronico" />
-			<Input type="text" icon={Lock} placeholder="Contraseña" />
+		<div class="flex w-2/5 flex-col justify-center space-y-8 rounded-r-xl border bg-white">
+			<h3 class="text-primary-blue text-center text-2xl">Iniciar sesión</h3>
+			<form class="space-y-4">
+				<Input type="email" icon={At} placeholder="Correo electrónico" />
+				<Input type="text" icon={Lock} placeholder="Contraseña" />
+				<button aria-label="yes" type="button" onclick={() => alert('clicked')}>Click</button>
+			</form>
 		</div>
 	</Container>
 </div>
