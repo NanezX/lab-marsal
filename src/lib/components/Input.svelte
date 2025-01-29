@@ -4,6 +4,7 @@
 	// Prop type
 	// TODO: Add the bind:value
 	type PropType = {
+		value: string;
 		placeholder?: string;
 		title?: string;
 		type?: 'text' | 'password' | 'email';
@@ -12,7 +13,14 @@
 	};
 
 	// Prop deconstruct
-	const { placeholder, title, type = 'text', disabled = false, icon }: PropType = $props();
+	let {
+		value = $bindable(''),
+		placeholder,
+		title,
+		type = 'text',
+		disabled = false,
+		icon
+	}: PropType = $props();
 
 	// Reusable classes
 	const inputClass = [
@@ -24,7 +32,7 @@
 
 {#if icon}
 	<div class="relative flex items-center">
-		<input {type} {placeholder} {disabled} {title} class={inputClass} />
+		<input bind:value {type} {placeholder} {disabled} {title} class={inputClass} />
 
 		<Icon src={icon} class={iconClass} {title} />
 	</div>

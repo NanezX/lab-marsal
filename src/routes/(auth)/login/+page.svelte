@@ -4,6 +4,9 @@
 	import tree from '$lib/assets/tree.svg';
 	import icon from '$lib/assets/icon.png';
 	import { At, Lock } from '@steeze-ui/tabler-icons';
+
+	let email = $state('');
+	let password = $state('');
 </script>
 
 <div class="flex h-full w-full items-center justify-center">
@@ -33,9 +36,15 @@
 		<div class="flex w-2/5 flex-col justify-center space-y-8 rounded-r-xl border bg-white">
 			<h3 class="text-primary-blue text-center text-2xl">Iniciar sesión</h3>
 			<form class="space-y-4">
-				<Input type="email" icon={At} placeholder="Correo electrónico" />
-				<Input type="text" icon={Lock} placeholder="Contraseña" />
-				<button aria-label="yes" type="button" onclick={() => alert('clicked')}>Click</button>
+				<Input bind:value={email} type="email" icon={At} placeholder="Correo electrónico" />
+				<Input bind:value={password} type="text" icon={Lock} placeholder="Contraseña" />
+				<button
+					aria-label="yes"
+					type="button"
+					onclick={() => {
+						alert('clicked');
+					}}>Click</button
+				>
 			</form>
 		</div>
 	</Container>
