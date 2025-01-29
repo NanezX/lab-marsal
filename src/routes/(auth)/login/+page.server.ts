@@ -10,46 +10,40 @@ import { fail as failSvelte } from '@sveltejs/kit';
 // TODO: Integrate toastify for the messages
 
 export const load = async () => {
-    const loginForm = await superValidate(zod(UserLoginSchema));
+	const loginForm = await superValidate(zod(UserLoginSchema));
 
-    return { loginForm };
+	return { loginForm };
 };
 
-
 export const actions = {
-    login: async ({ request }) => {
-        const form = await superValidate(request, zod(UserLoginSchema));
-        console.log(form);
+	login: async ({ request }) => {
+		const form = await superValidate(request, zod(UserLoginSchema));
+		console.log(form);
 
-        console.log(form.data)
+		console.log(form.data);
 
-        if (!form.valid) {
-            // Again, return { form } and things will just work.
-            return failForms(400, { form });
-        }
+		if (!form.valid) {
+			// Again, return { form } and things will just work.
+			return failForms(400, { form });
+		}
 
+		// TODO: Do something REAL with the validated form.data
+		// TODO: Redirect after succesful login. Use the current code from Lucia
 
-        // TODO: Do something REAL with the validated form.data
-        // TODO: Redirect after succesful login. Use the current code from Lucia
-
-        return mockLogin(form, form.data.email, form.data.password)
-
-    }
+		return mockLogin(form, form.data.email, form.data.password);
+	}
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mockLogin(form: any, email: string, password: string) {
-    const validUser = {
-        email: "admin@gmail.com",
-        password: "Admin123"
-    }
+	const validUser = {
+		email: 'admin@gmail.com',
+		password: 'Admin123'
+	};
 
+	if (validUser.email != email.toLowerCase() || validUser.password != password) {
+		return message(form, 'Credenciales incorrectos', { status: 401 });
+	}
 
-    if (validUser.email != email.toLowerCase() || validUser.password != password) {
-        return message(form, 'Credenciales incorrectos', { status: 401 });
-    }
-
-
-    return message(form, 'Inicio de sesión exitoso');
-
+	return message(form, 'Inicio de sesión exitoso');
 }

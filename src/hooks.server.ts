@@ -2,8 +2,7 @@ import { redirect, type Handle } from '@sveltejs/kit';
 import * as auth from '$lib/server/auth.js';
 
 // TODO: Verify that /login and /register routes are only accessible for non-logged users
-// TODO: Redirect to /home (or /) route if logged users go to /login and /register routes 
-
+// TODO: Redirect to /home (or /) route if logged users go to /login and /register routes
 
 const handleAuth: Handle = async ({ event, resolve }) => {
 	// Get the session token from the cookies
@@ -34,7 +33,6 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 	if (!event.locals.user && event.url.pathname !== '/login') {
 		throw redirect(302, '/login');
 	}
-
 
 	return resolve(event);
 };
