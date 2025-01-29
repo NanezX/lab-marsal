@@ -92,6 +92,6 @@
 		</form>
 
 		<!-- Message from the form -->
-		{#if $message}<p>{$message}</p>{/if}
+		{#if $message}<p>{$message.text}</p>{/if}
 	</div>
 </Container>

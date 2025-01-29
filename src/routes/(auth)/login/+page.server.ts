@@ -9,8 +9,6 @@ import { zod } from 'sveltekit-superforms/adapters';
 
 // import { fail as failSvelte } from '@sveltejs/kit';
 
-// TODO: Add the message type based on the docs: https://superforms.rocks/concepts/messages
-// Basically, createa message object /type. We can add it to the globals
 // TODO: Integrate toastify for the messages
 
 export const load = async () => {
@@ -44,7 +42,7 @@ type TempFormType = SuperValidated<
 		email: string;
 		password: string;
 	},
-	unknown,
+	App.Superforms.Message,
 	{
 		email: string;
 		password: string;
@@ -57,8 +55,8 @@ function mockLogin(form: TempFormType, email: string, password: string) {
 	};
 
 	if (validUser.email != email.toLowerCase() || validUser.password != password) {
-		return message(form, 'Credenciales incorrectos', { status: 401 });
+		return message(form, { text: 'Credenciales incorrectos', type: 'error' }, { status: 401 });
 	}
 
-	return message(form, 'Inicio de sesión exitoso');
+	return message(form, { text: 'Inicio de sesión exitoso', type: 'success' });
 }
