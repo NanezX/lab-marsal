@@ -21,6 +21,8 @@ export default {
 			addVariant('not-first-last', '&:not(:last-child):not(:first-child)')
 			addVariant('first-last', ['&:first-child', '&:last-child'])
 			addVariant('direct-children', '&>*')
+			addVariant("not-first", '&:not(:first-child)')
+			addVariant("not-last", '&:not(:last-child)')
 		}),
 	]
 } satisfies Config;
