@@ -4,10 +4,12 @@
 	import Input from '$lib/components/Input.svelte';
 	import tree from '$lib/assets/tree.svg';
 	import icon from '$lib/assets/icon.png';
+	import Button from '$lib/components/Button.svelte';
 	import { At, Lock, LockOpen2 } from '@steeze-ui/tabler-icons';
+	import { superForm } from 'sveltekit-superforms';
 
-	let email = $state('');
-	let password = $state('');
+	let { data } = $props();
+
 	let passwordInputType: 'password' | 'text' = $state('password');
 	let showPassword = $state(false);
 	let iconPassword = $state(Lock);
@@ -21,13 +23,15 @@
 			iconPassword = Lock;
 		}
 	}
+
+	const { form, errors, constraints, message, enhance } = superForm(data.loginForm);
 </script>
 
 <div class="flex h-full w-full items-center justify-center">
 	<Container class={['flex', 'direct-children:p-8', 'rounded-xl', 'w-2/3']}>
 		<!-- Izquierda bienvenida -->
 		<div
-			class="from-secondary-blue to-primary-blue rounded-l-lm w-3/5 space-y-10 rounded-l-xl bg-gradient-to-br text-white"
+			class="rounded-l-lm w-3/5 space-y-10 rounded-l-xl bg-gradient-to-br from-secondary-blue to-primary-blue text-white"
 		>
 			<div class="flex items-center justify-around">
 				<img alt="El logo de MarsalLab" src={icon} width="100" height="100" />
@@ -48,34 +52,48 @@
 
 		<!-- Derecha login process -->
 		<div class="flex w-2/5 flex-col justify-center space-y-8 rounded-r-xl border bg-white">
-			<h3 class="text-primary-blue text-center text-2xl">Iniciar sesión</h3>
-			<form class="space-y-4">
-				<Input bind:value={email} type="email" icon={At} placeholder="Correo electrónico" />
-				<Input
-					bind:value={password}
-					type={passwordInputType}
-					icon={iconPassword}
-					placeholder="Contraseña"
-				/>
-				<Checkbox
-					bind:value={
-						() => showPassword,
-						(v) => {
-							togglePasswordInput();
-							return showPassword;
+			<h3 class="text-center text-2xl text-primary-blue">Iniciar sesión</h3>
+
+			<form class="flex flex-col gap-y-8" method="POST" action="?/login" use:enhance>
+				<div class="space-y-4">
+					<Input
+						bind:value={$form.email}
+						type="email"
+						name="email"
+						required
+						icon={At}
+						placeholder="Correo electrónico"
+						{...$constraints.email}
+					/>
+					{#if $errors.email}<span class="text-sm text-red-500">{$errors.email}</span>{/if}
+
+					<Input
+						bind:value={$form.password}
+						required
+						type={passwordInputType}
+						name="password"
+						icon={iconPassword}
+						placeholder="Contraseña"
+						{...$constraints.password}
+					/>
+					{#if $errors.password}<span class="text-sm text-red-500">{$errors.password}</span>{/if}
+
+					<Checkbox
+						bind:value={
+							() => showPassword,
+							(v) => {
+								togglePasswordInput();
+								return showPassword;
+							}
 						}
-					}
-					text="Mostrar contraseña"
-				/>
-				<button
-					class="w-full"
-					aria-label="yes"
-					type="button"
-					onclick={() => {
-						alert('clicked');
-					}}>Click</button
-				>
+						text="Mostrar contraseña"
+					/>
+				</div>
+				<Button type="submit" class="w-fit self-center">Iniciar sesión</Button>
 			</form>
+
+			<!-- Message from the form -->
+			{#if $message}<p>{$message}</p>{/if}
 		</div>
 	</Container>
 </div>
