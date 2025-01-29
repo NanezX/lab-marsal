@@ -8,6 +8,7 @@
 		title?: string;
 		type?: 'text' | 'password' | 'email';
 		disabled?: boolean;
+		required?: boolean;
 		icon?: IconSource;
 	};
 
@@ -18,6 +19,7 @@
 		title,
 		type = 'text',
 		disabled = false,
+		required = false,
 		icon
 	}: PropType = $props();
 
@@ -31,7 +33,7 @@
 
 {#if icon}
 	<div class="relative flex items-center">
-		<input bind:value {type} {placeholder} {disabled} {title} class={inputClass} />
+		<input bind:value {type} {placeholder} {disabled} {title} class={inputClass} {required} />
 
 		<Icon src={icon} class={iconClass} {title} />
 	</div>
