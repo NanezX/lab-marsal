@@ -8,7 +8,7 @@
 	import { At, Lock, LockOpen2 } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
 	import Spinner from '$lib/components/Spinner.svelte';
-	import { toastLoading } from '$lib/toasts.js';
+	import { toastError } from '$lib/toasts.js';
 
 	let { data } = $props();
 
@@ -27,7 +27,16 @@
 	}
 
 	const { form, errors, constraints, message, enhance, delayed } = superForm(data.loginForm, {
-		delayMs: 0
+		delayMs: 0,
+
+		// Usage of toastError to display login errors
+		onUpdated({ form }) {
+			if (form.message) {
+				if (form.message.type == 'error') {
+					toastError(form.message.text);
+				}
+			}
+		}
 	});
 </script>
 
@@ -101,8 +110,5 @@
 				<Button type="submit" class="flex w-32 justify-center self-center">Iniciar sesión</Button>
 			{/if}
 		</form>
-
-		<!-- Message from the form -->
-		{#if $message}<p>{$message.text}</p>{/if}
 	</div>
 </Container>
