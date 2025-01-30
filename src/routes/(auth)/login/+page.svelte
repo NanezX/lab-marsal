@@ -26,7 +26,7 @@
 		}
 	}
 
-	const { form, errors, constraints, message, enhance, delayed } = superForm(data.loginForm, {
+	const { form, errors, constraints, enhance, delayed } = superForm(data.loginForm, {
 		delayMs: 0,
 
 		// Usage of toastError to display login errors
