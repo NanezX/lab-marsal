@@ -17,6 +17,7 @@ export const load = async () => {
 	return { loginForm };
 };
 
+
 export const actions = {
 	login: async ({ request }) => {
 		const form = await superValidate(request, zod(UserLoginSchema));
@@ -24,10 +25,18 @@ export const actions = {
 
 		console.log(form.data);
 
+		// TODO: Remove
+		function sleep(ms: number) {
+			return new Promise((resolve) => setTimeout(resolve, ms));
+		}
+		await sleep(2000)
+
 		if (!form.valid) {
 			// Again, return { form } and things will just work.
 			return failForms(400, { form });
 		}
+
+
 
 		// TODO: Do something REAL with the validated form.data
 		// TODO: Redirect after succesful login. Use the current code from Lucia
