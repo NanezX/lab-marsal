@@ -16,8 +16,8 @@
 	let showPassword = $state(false);
 	let iconPassword = $state(Lock);
 
-	function togglePasswordInput() {
-		if (passwordInputType == 'password') {
+	function togglePasswordInput(showPassword_: boolean) {
+		if (showPassword_) {
 			passwordInputType = 'text';
 			iconPassword = LockOpen2;
 		} else {
@@ -93,9 +93,9 @@
 				<Checkbox
 					bind:value={
 						() => showPassword,
-						(v) => {
-							showPassword = !v;
-							togglePasswordInput();
+						(value) => {
+							showPassword = value;
+							togglePasswordInput(value);
 						}
 					}
 					text="Mostrar contraseña"
