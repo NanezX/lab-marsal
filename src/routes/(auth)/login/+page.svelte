@@ -111,6 +111,9 @@
 			{/if}
 		</form>
 
+		<!-- NOTA: No se creara una pantalla para el registro, ya que dicho registro de nuevos usuaros solo lo haran
+		 los usuarios con los Autorizacion para ello, como el Admin role
+		  -->
 		<p>Olvidé mi contraseña</p>
 	</div>
 </Container>
