@@ -110,5 +110,7 @@
 				<Button type="submit" class="flex w-32 justify-center self-center">Iniciar sesión</Button>
 			{/if}
 		</form>
+
+		<p>Olvidé mi contraseña</p>
 	</div>
 </Container>
