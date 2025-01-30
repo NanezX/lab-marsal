@@ -8,10 +8,10 @@
 
 	let { class: className }: PropType = $props();
 
-	const classes = ['inline animate-spin w-4 h-4 text-primary-blue', className];
+	const classes = ['animate-spin w-4 h-4 text-primary-blue', className];
 </script>
 
-<div role="status">
+<div role="status" class="w-fit">
 	<svg
 		aria-hidden="true"
 		class={classes}
