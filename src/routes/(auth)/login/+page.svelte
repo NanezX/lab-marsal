@@ -7,6 +7,8 @@
 	import Button from '$lib/components/Button.svelte';
 	import { At, Lock, LockOpen2 } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
+	import Spinner from '$lib/components/Spinner.svelte';
+	import { toastLoading } from '$lib/toasts.js';
 
 	let { data } = $props();
 
@@ -24,7 +26,9 @@
 		}
 	}
 
-	const { form, errors, constraints, message, enhance } = superForm(data.loginForm);
+	const { form, errors, constraints, message, enhance, delayed } = superForm(data.loginForm, {
+		delayMs: 0
+	});
 </script>
 
 <Container class={['flex', 'direct-children:p-8', 'rounded-xl', 'w-2/3', 'max-w-5xl']}>
@@ -88,7 +92,14 @@
 					text="Mostrar contraseña"
 				/>
 			</div>
-			<Button type="submit" class="w-fit self-center">Iniciar sesión</Button>
+
+			{#if $delayed}
+				<Button type="submit" class="flex w-32 justify-center self-center" disabled>
+					<Spinner class="h-6 w-6" />
+				</Button>
+			{:else}
+				<Button type="submit" class="flex w-32 justify-center self-center">Iniciar sesión</Button>
+			{/if}
 		</form>
 
 		<!-- Message from the form -->
