@@ -22,3 +22,9 @@ export const toastLoading = (text: string = 'Cargando...') => {
     });
 }
 
+
+export const toastError = (text: string) => toast.push(text, {
+    theme: {
+
+    }
+})
