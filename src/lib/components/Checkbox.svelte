@@ -38,5 +38,5 @@
 			</svg>
 		</span>
 	</label>
-	<label class="cursor-pointer text-sm" for="check-2">{text}</label>
+	<label class="cursor-pointer select-none text-sm" for="check-2">{text}</label>
 </div>
