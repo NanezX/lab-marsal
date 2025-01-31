@@ -1,5 +1,19 @@
 import { encodeBase32LowerCase } from '@oslojs/encoding';
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+
+enum UserRoles {
+	admin = 'administrador',
+	bioanalista = 'bioanalista',
+	auxiliar = 'auxiliar',
+	secretaria = 'secretaria'
+}
+
+export const userRoleEnum = pgEnum('user_role', [
+	UserRoles.admin,
+	UserRoles.bioanalista,
+	UserRoles.auxiliar,
+	UserRoles.secretaria
+]);
 
 export const user = pgTable('user', {
 	id: text('id')
@@ -14,7 +28,8 @@ export const user = pgTable('user', {
 	username: text('username').notNull().unique(),
 	email: text('email').notNull().unique(),
 	passwordHash: text('password_hash').notNull(),
-	fullname: text('fullname').notNull()
+	fullname: text('fullname').notNull(),
+	role: userRoleEnum().notNull()
 });
 
 export const session = pgTable('session', {
