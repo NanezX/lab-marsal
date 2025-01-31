@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { X, XboxX } from '@steeze-ui/tabler-icons';
-	import { Icon, type IconSource } from '@steeze-ui/svelte-icon';
+	import { X } from '@steeze-ui/tabler-icons';
+	import { Icon } from '@steeze-ui/svelte-icon';
 	import ToastSkeleton from './ToastSkeleton.svelte';
 
 	// Prop type
