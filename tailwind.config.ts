@@ -14,6 +14,22 @@ export default {
 				'primary-gray': '#59728e',
 				'secondary-gray': '#bcccd9',
 				'primary-green': '#1a9590'
+			},
+			keyframes: {
+				zoomin: {
+					"0%": {
+						transform: "scale(1)"
+					},
+					"25%": {
+						transform: "scale(1.25)"
+					},
+					"100%": {
+						transform: "scale(1)"
+					}
+				}
+			},
+			animation: {
+				zoomin: "zoomin 1s ease-in-out infinite"
 			}
 		}
 	},
