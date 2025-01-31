@@ -19,14 +19,16 @@
 		onclick,
 		disabled = false
 	}: PropType = $props();
-
-	let classes = [
-		'bg-primary-blue text-white hover:bg-primary-blue/75 px-4 py-1 rounded-3xl',
-		// Styles when disabled
-		'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600',
-		// Pass style classes
-		className
-	];
 </script>
 
-<button {disabled} {type} class={classes} {onclick} title={text}>{@render children()}</button>
+<button
+	{disabled}
+	{type}
+	class={[
+		'rounded-3xl bg-primary-blue px-4 py-1 text-white hover:bg-primary-blue/75',
+		'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600',
+		className
+	]}
+	{onclick}
+	title={text}>{@render children()}</button
+>
