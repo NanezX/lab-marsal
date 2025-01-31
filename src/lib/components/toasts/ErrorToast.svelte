@@ -13,7 +13,7 @@
 
 <ToastSkeleton>
 	<span>
-		<Icon src={X} class="h-8 w-8 p-0 text-red-500" />
+		<Icon src={X} class="animate-zoomin h-8 w-8 p-0 text-red-500" />
 	</span>
 	<span class="break-all">{text}</span>
 </ToastSkeleton>
