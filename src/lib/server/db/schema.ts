@@ -1,7 +1,7 @@
 import { encodeBase32LowerCase } from '@oslojs/encoding';
 import { pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
-enum UserRoles {
+export enum UserRoles {
 	admin = 'administrador',
 	bioanalista = 'bioanalista',
 	auxiliar = 'auxiliar',
