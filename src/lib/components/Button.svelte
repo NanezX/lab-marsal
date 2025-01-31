@@ -22,13 +22,15 @@
 </script>
 
 <button
-	{disabled}
-	{type}
 	class={[
 		'rounded-3xl bg-primary-blue px-4 py-1 text-white hover:bg-primary-blue/75',
 		'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600',
 		className
 	]}
+	{disabled}
+	{type}
 	{onclick}
-	title={text}>{@render children()}</button
+	title={text}
 >
+	{@render children()}
+</button>
