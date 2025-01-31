@@ -4,7 +4,6 @@ import LoadingToast from './components/toasts/LoadingToast.svelte';
 import ErrorToast from './components/toasts/ErrorToast.svelte';
 import SuccessToast from './components/toasts/SuccessToast.svelte';
 
-
 export const toastLoading = (text: string = 'Cargando...') => {
 	return toast.push({
 		component: {
@@ -37,12 +36,12 @@ export const toastError = (text: string) => {
 			'--toastBackground': '#bcccd9',
 			'--toastColor': '#000',
 			'--toastBorderRadius': '0.75rem',
-			"--toastBarBackground": "#ef4444",
+			'--toastBarBackground': '#ef4444'
 		}
 	});
-}
+};
+
 export const toastSucces = (text: string) => {
-	toast.pop(0)
 	toast.push(text, {
 		component: {
 			src: SuccessToast as unknown as typeof SvelteComponent,
@@ -54,7 +53,7 @@ export const toastSucces = (text: string) => {
 			'--toastBackground': '#bcccd9',
 			'--toastColor': '#000',
 			'--toastBorderRadius': '0.75rem',
-			"--toastBarBackground": "#22c55e",
+			'--toastBarBackground': '#22c55e'
 		}
 	});
-}
+};

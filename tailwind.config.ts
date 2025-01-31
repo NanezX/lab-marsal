@@ -16,7 +16,7 @@ export default {
 				'primary-green': '#1a9590'
 			},
 			keyframes: {
-				"zoomin": {
+				zoomin: {
 					'0%': {
 						transform: 'scale(1)'
 					},
