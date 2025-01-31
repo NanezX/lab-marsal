@@ -102,13 +102,13 @@
 				/>
 			</div>
 
-			{#if $delayed}
-				<Button type="submit" class="flex w-32 justify-center self-center" disabled>
+			<Button type="submit" disabled={$delayed} class="flex w-32 justify-center self-center">
+				{#if $delayed}
 					<Spinner class="h-6 w-6" />
-				</Button>
-			{:else}
-				<Button type="submit" class="flex w-32 justify-center self-center">Iniciar sesión</Button>
-			{/if}
+				{:else}
+					Iniciar sesión
+				{/if}
+			</Button>
 		</form>
 
 		<!-- NOTA: No se creara una pantalla para el registro, ya que dicho registro de nuevos usuaros solo lo haran
