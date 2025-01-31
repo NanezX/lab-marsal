@@ -9,6 +9,6 @@ export const UserLoginSchema = z.object({
 });
 
 export const UserRegisterSchema = UserLoginSchema.extend({
-	fullName: z.string().min(1, 'Nombre es obligatario'),
-	userName: z.string().min(1, 'Username es obligatario')
+	fullname: z.string().min(1, 'Nombre es obligatario'),
+	username: z.string().min(1, 'Username es obligatario')
 });
