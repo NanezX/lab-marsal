@@ -17,6 +17,7 @@ export const toastLoading = (text: string = 'Cargando...') => {
 		dismissable: false,
 		initial: 0,
 		theme: {
+			"--toastWidth": "auto",
 			'--toastBackground': '#bcccd9',
 			'--toastColor': '#000',
 			'--toastBorderRadius': '0.75rem'
@@ -33,6 +34,7 @@ export const toastError = (text: string) => {
 			}
 		},
 		theme: {
+			"--toastWidth": "auto",
 			'--toastBackground': '#bcccd9',
 			'--toastColor': '#000',
 			'--toastBorderRadius': '0.75rem',
@@ -50,6 +52,7 @@ export const toastSucces = (text: string) => {
 			}
 		},
 		theme: {
+			"--toastWidth": "auto",
 			'--toastBackground': '#bcccd9',
 			'--toastColor': '#000',
 			'--toastBorderRadius': '0.75rem',
