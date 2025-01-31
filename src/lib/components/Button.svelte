@@ -22,8 +22,10 @@
 
 	let classes = [
 		'bg-primary-blue text-white hover:bg-primary-blue/75 px-4 py-1 rounded-3xl',
-		className,
-		{ 'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600': disabled }
+		// Styles when disabled
+		'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600',
+		// Pass style classes
+		className
 	];
 </script>
 
