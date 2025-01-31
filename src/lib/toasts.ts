@@ -1,6 +1,8 @@
 import { toast } from '@zerodevx/svelte-toast';
 import type { SvelteComponent } from 'svelte';
 import LoadingToast from './components/toasts/LoadingToast.svelte';
+import ErrorToast from './components/toasts/ErrorToast.svelte';
+
 
 export const toastLoading = (text: string = 'Cargando...') => {
 	return toast.push({
@@ -22,7 +24,21 @@ export const toastLoading = (text: string = 'Cargando...') => {
 	});
 };
 
-export const toastError = (text: string) =>
+export const toastError = (text: string) => {
+	toast.pop(0)
 	toast.push(text, {
-		theme: {}
+		component: {
+			src: ErrorToast as unknown as typeof SvelteComponent,
+			props: {
+				text
+			}
+		},
+		dismissable: false,
+		initial: 0,
+		theme: {
+			'--toastBackground': '#bcccd9',
+			'--toastColor': '#000',
+			'--toastBorderRadius': '0.75rem'
+		}
 	});
+}
