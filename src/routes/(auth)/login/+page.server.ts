@@ -1,21 +1,13 @@
 import { UserLoginSchema } from '$lib/server/utils/zod';
 import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-///
 import { verify } from '@node-rs/argon2';
-// import { hash, verify } from '@node-rs/argon2';
-// import { encodeBase32LowerCase } from '@oslojs/encoding';
 import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import type { Actions } from './$types';
-///
-
-// import { fail as failSvelte } from '@sveltejs/kit';
-
-// TODO: Integrate toastify for the messages
 
 export const load = async () => {
 	const loginForm = await superValidate(zod(UserLoginSchema));
