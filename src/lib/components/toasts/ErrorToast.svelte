@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Spinner from '../Spinner.svelte';
+	import { X, XboxX } from '@steeze-ui/tabler-icons';
+	import { Icon, type IconSource } from '@steeze-ui/svelte-icon';
 	import ToastSkeleton from './ToastSkeleton.svelte';
 
 	// Prop type
@@ -11,6 +12,8 @@
 </script>
 
 <ToastSkeleton>
-	<Spinner element="span" class="m-1 max-h-6 min-h-6 min-w-6 max-w-6" />
+	<span>
+		<Icon src={X} class="h-8 w-8 p-0 text-red-500" />
+	</span>
 	<span class="break-all">{text}</span>
 </ToastSkeleton>
