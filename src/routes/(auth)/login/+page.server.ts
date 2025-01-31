@@ -61,7 +61,7 @@ function mockLogin(form: TempFormType, email: string, password: string) {
 	};
 
 	if (validUser.email != email.toLowerCase() || validUser.password != password) {
-		return message(form, { text: 'Credenciales incorrectos', type: 'error' }, { status: 401 });
+		return message(form, { text: 'Credenciales incorrectas', type: 'error' }, { status: 401 });
 	}
 
 	return message(form, { text: 'Inicio de sesión exitoso', type: 'success' });

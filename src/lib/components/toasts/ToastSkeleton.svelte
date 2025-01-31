@@ -9,6 +9,6 @@
 	let { children }: PropType = $props();
 </script>
 
-<div class="flex items-center gap-x-4 p-2 text-lg text-black">
+<div class="flex max-w-96 items-center gap-x-4 p-2 text-lg text-black">
 	{@render children()}
 </div>
