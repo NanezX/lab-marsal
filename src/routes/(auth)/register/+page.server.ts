@@ -25,6 +25,7 @@ export const actions: Actions = {
 			return failForms(400, { form });
 		}
 
+		// TODO: Implement role save
 		const { email, password, fullname, username } = form.data;
 
 		const passwordHash = await hash(password, {
@@ -36,9 +37,13 @@ export const actions: Actions = {
 		});
 
 		try {
-			await db
-				.insert(table.user)
-				.values({ email: email.toLowerCase(), fullname, username, passwordHash });
+			await db.insert(table.user).values({
+				email: email.toLowerCase(),
+				fullname,
+				username,
+				passwordHash,
+				role: table.UserRoles.secretaria
+			});
 
 			const results = await db
 				.select({ id: table.user.id })
