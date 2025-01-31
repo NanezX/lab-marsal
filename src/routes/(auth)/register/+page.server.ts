@@ -55,6 +55,9 @@ export const actions: Actions = {
 				throw new Error('No se registro el usuario');
 			}
 
+			// TODO: This register will be used to create new users, so it should not create the session here
+			// TODO: Maybe the password could be send to the email. But need to add later the email functionality (verification and sents)
+            // Example at: https://github.com/lucia-auth/example-sveltekit-email-password-2fa/blob/main/src/lib/server/email-verification.ts
 			const sessionToken = auth.generateSessionToken();
 			const session = await auth.createSession(sessionToken, existingUser.id);
 			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
