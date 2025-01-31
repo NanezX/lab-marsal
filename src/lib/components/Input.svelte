@@ -8,7 +8,7 @@
 		placeholder?: string;
 		title?: string;
 		type?: 'text' | 'password' | 'email';
-		disabled?: boolean;
+		disabled?: boolean | null;
 		required?: boolean;
 		icon?: IconSource;
 	};
@@ -28,9 +28,10 @@
 	// Reusable classes
 	const inputClass = [
 		'bg-secondary-blue/30 focus:ring-dark-blue w-full rounded-3xl border py-2 pl-10 pr-4 focus:outline-none focus:ring-1',
-		{ 'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600': disabled }
+		'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600'
 	];
-	const iconClass = ['text-primary-blue absolute ml-4 h-5 w-5', { 'text-gray-400': disabled }];
+
+	const iconClass = ['text-primary-blue absolute ml-4 h-5 w-5'];
 </script>
 
 {#if icon}
@@ -46,7 +47,7 @@
 			{required}
 		/>
 
-		<Icon src={icon} class={iconClass} {title} />
+		<Icon src={icon} class={[iconClass, { '!text-gray-400': disabled }]} {title} />
 	</div>
 {:else}
 	<!-- else content here -->

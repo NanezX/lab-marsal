@@ -1,4 +1,4 @@
-import { UserLoginSchema } from '$lib/utils/zod';
+import { UserLoginSchema } from '$lib/server/utils/zod';
 import {
 	message,
 	superValidate,
@@ -23,6 +23,12 @@ export const actions = {
 		console.log(form);
 
 		console.log(form.data);
+
+		// TODO: Remove
+		function sleep(ms: number) {
+			return new Promise((resolve) => setTimeout(resolve, ms));
+		}
+		await sleep(2000);
 
 		if (!form.valid) {
 			// Again, return { form } and things will just work.
@@ -55,7 +61,7 @@ function mockLogin(form: TempFormType, email: string, password: string) {
 	};
 
 	if (validUser.email != email.toLowerCase() || validUser.password != password) {
-		return message(form, { text: 'Credenciales incorrectos', type: 'error' }, { status: 401 });
+		return message(form, { text: 'Credenciales incorrectas', type: 'error' }, { status: 401 });
 	}
 
 	return message(form, { text: 'Inicio de sesión exitoso', type: 'success' });

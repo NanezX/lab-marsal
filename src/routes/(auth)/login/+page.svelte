@@ -7,6 +7,8 @@
 	import Button from '$lib/components/Button.svelte';
 	import { At, Lock, LockOpen2 } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
+	import Spinner from '$lib/components/Spinner.svelte';
+	import { toastError } from '$lib/toasts.js';
 
 	let { data } = $props();
 
@@ -14,8 +16,8 @@
 	let showPassword = $state(false);
 	let iconPassword = $state(Lock);
 
-	function togglePasswordInput() {
-		if (passwordInputType == 'password') {
+	function togglePasswordInput(showPassword_: boolean) {
+		if (showPassword_) {
 			passwordInputType = 'text';
 			iconPassword = LockOpen2;
 		} else {
@@ -24,7 +26,18 @@
 		}
 	}
 
-	const { form, errors, constraints, message, enhance } = superForm(data.loginForm);
+	const { form, errors, constraints, enhance, delayed } = superForm(data.loginForm, {
+		delayMs: 0,
+
+		// Usage of toastError to display login errors
+		onUpdated({ form }) {
+			if (form.message) {
+				if (form.message.type == 'error') {
+					toastError(form.message.text);
+				}
+			}
+		}
+	});
 </script>
 
 <Container class={['flex', 'direct-children:p-8', 'rounded-xl', 'w-2/3', 'max-w-5xl']}>
@@ -80,18 +93,27 @@
 				<Checkbox
 					bind:value={
 						() => showPassword,
-						(v) => {
-							showPassword = !v;
-							togglePasswordInput();
+						(value) => {
+							showPassword = value;
+							togglePasswordInput(value);
 						}
 					}
 					text="Mostrar contraseña"
 				/>
 			</div>
-			<Button type="submit" class="w-fit self-center">Iniciar sesión</Button>
+
+			<Button type="submit" disabled={$delayed} class="flex w-32 justify-center self-center">
+				{#if $delayed}
+					<Spinner class="h-6 w-6" />
+				{:else}
+					Iniciar sesión
+				{/if}
+			</Button>
 		</form>
 
-		<!-- Message from the form -->
-		{#if $message}<p>{$message.text}</p>{/if}
+		<!-- NOTA: No se creara una pantalla para el registro, ya que dicho registro de nuevos usuaros solo lo haran
+		 los usuarios con los Autorizacion para ello, como el Admin role
+		  -->
+		<p>Olvidé mi contraseña</p>
 	</div>
 </Container>
