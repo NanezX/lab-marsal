@@ -8,7 +8,7 @@
 		placeholder?: string;
 		title?: string;
 		type?: 'text' | 'password' | 'email';
-		disabled?: boolean;
+		disabled?: boolean | null;
 		required?: boolean;
 		icon?: IconSource;
 	};
