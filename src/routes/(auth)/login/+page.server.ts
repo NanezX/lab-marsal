@@ -1,15 +1,13 @@
 import { UserLoginSchema } from '$lib/server/utils/zod';
-import {
-	message,
-	superValidate,
-	fail as failForms,
-	type SuperValidated
-} from 'sveltekit-superforms';
+import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-
-// import { fail as failSvelte } from '@sveltejs/kit';
-
-// TODO: Integrate toastify for the messages
+import { verify } from '@node-rs/argon2';
+import { redirect } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
+import * as auth from '$lib/server/auth';
+import { db } from '$lib/server/db';
+import * as table from '$lib/server/db/schema';
+import type { Actions } from './$types';
 
 export const load = async () => {
 	const loginForm = await superValidate(zod(UserLoginSchema));
@@ -17,52 +15,54 @@ export const load = async () => {
 	return { loginForm };
 };
 
-export const actions = {
-	login: async ({ request }) => {
+export const actions: Actions = {
+	login: async (event) => {
+		const request = event.request;
 		const form = await superValidate(request, zod(UserLoginSchema));
-		console.log(form);
-
-		console.log(form.data);
-
-		// TODO: Remove
-		function sleep(ms: number) {
-			return new Promise((resolve) => setTimeout(resolve, ms));
-		}
-		await sleep(2000);
 
 		if (!form.valid) {
 			// Again, return { form } and things will just work.
 			return failForms(400, { form });
 		}
 
-		// TODO: Do something REAL with the validated form.data
-		// TODO: Redirect after succesful login. Use the current code from Lucia
+		const { email, password } = form.data;
 
-		return mockLogin(form, form.data.email, form.data.password);
+		const results = await db
+			.select()
+			.from(table.user)
+			.where(eq(table.user.email, email.toLowerCase()));
+
+		const existingUser = results.at(0);
+
+		if (!existingUser) {
+			return message(
+				form,
+				{ text: 'Incorrect username or password', type: 'error' },
+				{ status: 400 }
+			);
+		}
+
+		// TODO: Use other hashing method??
+		const validPassword = await verify(existingUser.passwordHash, password, {
+			memoryCost: 19456,
+			timeCost: 2,
+			outputLen: 32,
+			parallelism: 1
+		});
+
+		if (!validPassword) {
+			return message(
+				form,
+				{ text: 'Incorrect username or password', type: 'error' },
+				{ status: 400 }
+			);
+		}
+
+		const sessionToken = auth.generateSessionToken();
+		const session = await auth.createSession(sessionToken, existingUser.id);
+		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+
+		// TODO: Change to redirect to home
+		return redirect(302, '/demo/lucia');
 	}
 };
-
-// TODO: This mock function and type is temporal
-type TempFormType = SuperValidated<
-	{
-		email: string;
-		password: string;
-	},
-	App.Superforms.Message,
-	{
-		email: string;
-		password: string;
-	}
->;
-function mockLogin(form: TempFormType, email: string, password: string) {
-	const validUser = {
-		email: 'admin@gmail.com',
-		password: 'Admin123'
-	};
-
-	if (validUser.email != email.toLowerCase() || validUser.password != password) {
-		return message(form, { text: 'Credenciales incorrectas', type: 'error' }, { status: 401 });
-	}
-
-	return message(form, { text: 'Inicio de sesión exitoso', type: 'success' });
-}
