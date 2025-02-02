@@ -1,13 +1,13 @@
 import { UserRegisterSchema } from '$lib/server/utils/zod';
-import { superValidate, fail as failForms } from 'sveltekit-superforms';
+import { superValidate, fail as failForms, message, type ErrorStatus } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { hash } from '@node-rs/argon2';
-import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-// import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import type { Actions } from './$types';
+import postgres from 'postgres';
+// import * as auth from '$lib/server/auth';
 
 // import * as auth from '$lib/server/auth';
 // import { fail, redirect } from '@sveltejs/kit';
@@ -75,6 +75,7 @@ export const actions: Actions = {
 
 			const existingUser = results.at(0);
 			if (!existingUser) {
+				// TODO: Handle error
 				throw new Error('No se registro el usuario');
 			}
 
@@ -84,14 +85,23 @@ export const actions: Actions = {
 			// const sessionToken = auth.generateSessionToken();
 			// const session = await auth.createSession(sessionToken, existingUser.id);
 			// auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
-
-			return redirect(302, '/login');
 		} catch (e) {
-			if (e instanceof Error) {
+			let errMsg = 'Ha ocurrido un error';
+			let codeStatus: ErrorStatus = 400;
+
+			// Solo el email tiene el UNIQUE Constraint (error code 23505)
+			if (e instanceof postgres.PostgresError && e.code == '23505') {
+				errMsg = 'El email ya esta en uso';
+				codeStatus = 400;
+			} else if (e instanceof Error) {
 				console.error(e);
 				console.error(e.message);
+				errMsg = e.message;
 			}
-			return fail(500, { message: 'An error has occurred' });
+
+			return message(form, { text: errMsg, type: 'error' }, { status: codeStatus });
 		}
+
+		return message(form, { text: 'Usuario creado', type: 'success' });
 	}
 };

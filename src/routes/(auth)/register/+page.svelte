@@ -7,7 +7,7 @@
 	import { At, Lock, LockOpen2, User } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
 	import Spinner from '$lib/components/Spinner.svelte';
-	import { toastError } from '$lib/toasts.js';
+	import { toastError, toastSucces } from '$lib/toasts.js';
 	import Select from '$lib/components/Select.svelte';
 	import { UserRoles } from '$lib/shared/enums.js';
 	import Checkbox from '$lib/components/Checkbox.svelte';
@@ -30,12 +30,15 @@
 
 	const { form, errors, constraints, enhance, delayed } = superForm(data.registerForm, {
 		delayMs: 0,
+		applyAction: true,
 
 		// Usage of toastError to display login errors
 		onUpdated({ form }) {
 			if (form.message) {
 				if (form.message.type == 'error') {
 					toastError(form.message.text);
+				} else if (form.message.type == 'success') {
+					toastSucces(form.message.text);
 				}
 			}
 		}
