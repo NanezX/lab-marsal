@@ -28,6 +28,10 @@ export default ts.config(
 		languageOptions: {
 			parserOptions: {
 				parser: ts.parser
+			},
+			globals: {
+				// Setting `T` as global because the linter does not recognize the `T` as generic type inside svelte components
+				T: 'readonly'
 			}
 		}
 	}
