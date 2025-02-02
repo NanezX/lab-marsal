@@ -1,8 +1,13 @@
 <script lang="ts">
+	import { slide, fly } from 'svelte/transition';
 	import icon from '$lib/assets/icon.png';
+
+	let {} = $props();
+
+	let isOpen = $state(false);
 </script>
 
-<!-- class="absolute left-0 top-0 flex w-full justify-between bg-secondary-blue px-20 py-6 shadow-xl" -->
+<!-- Navigation bar -->
 <div class="absolute left-0 top-0 w-full bg-secondary-blue/80 py-4 shadow-xl">
 	<div class="flex justify-between px-40">
 		<a href="/home" title="Ir a inicio">
@@ -11,6 +16,27 @@
 				<p class="font-bold">Lab Marsal</p>
 			</div>
 		</a>
-		<p>Usuario</p>
+		<!-- Dropdown container -->
+		<div class="relative inline-flex items-center">
+			<button
+				in:fly={{ x: -300 }}
+				out:fly={{ x: -300 }}
+				onclick={() => (isOpen = !isOpen)}
+				class="rounded-lg bg-primary-blue px-4 py-2 text-white"
+			>
+				Victor Alfonzo Hernandez Jimenez
+			</button>
+
+			{#if isOpen}
+				<div
+					class="absolute right-0 top-full rounded border border-primary-blue bg-secondary-blue shadow-lg"
+					in:slide
+					out:slide
+				>
+					<p class="cursor-pointer px-4 py-2 hover:bg-primary-blue">Perfil</p>
+					<p class="cursor-pointer px-4 py-2 hover:bg-primary-blue">Cerrar sesión</p>
+				</div>
+			{/if}
+		</div>
 	</div>
 </div>
