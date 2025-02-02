@@ -12,8 +12,7 @@
 		disabled?: boolean | null;
 		required?: boolean;
 		class?: ClassValue;
-		// This `key` is to access to a that value if `T` is an object to display it
-		key?: string;
+		formatter?: (item: T) => string;
 	};
 
 	// Prop deconstruct
@@ -26,8 +25,14 @@
 		disabled = false,
 		required = false,
 		class: classes,
-		key
+		formatter
 	}: PropType = $props();
+
+	// If this cause future issues, the issue comes from the zod validation at role. This is required and .nativeEnum
+	// provide, as default value, the first element at the enum. This cause that the select never start with a "empty" state
+	// which does not starting showing the placeholder.
+	// @ts-expect-error This is to allow the select to start at the placehorder
+	value = '';
 
 	// Reusable classes
 	const selectClass = [
@@ -35,18 +40,19 @@
 		'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600',
 		classes
 	];
+
+	console.log('value: ', value);
 </script>
 
-<!-- TODO: Instead of using a `key`, accept as props a formatter function that will let the consumer to pass how the values should be displayed -->
 <select bind:value {name} {required} class={selectClass} {title} {disabled}>
 	<!-- Default option -->
 	<option value="" disabled selected>{placeholder}</option>
 
 	{#each items as item}
 		<option value={item}>
-			{#if key && isObject(item)}
-				<!-- This is just redering the first children -->
-				{item[key]}
+			<!-- The consumer decide how to display the data -->
+			{#if formatter}
+				{formatter(item)}
 			{:else}
 				{item}
 			{/if}
