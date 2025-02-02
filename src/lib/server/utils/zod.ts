@@ -12,5 +12,9 @@ export const UserLoginSchema = z.object({
 export const UserRegisterSchema = UserLoginSchema.extend({
 	name: z.string().min(1, 'Nombre es obligatario'),
 	lastName: z.string().min(1, 'Apellido es obligatario'),
-	role: z.nativeEnum(UserRoles, { errorMap: () => ({ message: 'Rol no valido' }) })
+	role: z.nativeEnum(UserRoles, { errorMap: () => ({ message: 'Rol no valido' }) }),
+	repeatPassword: z.string().min(1, 'Debe repetir la contraseña')
+}).refine((obj) => obj.password === obj.repeatPassword, {
+	message: 'Las contraseñas no coinciden',
+	path: ['repeatPassword']
 });

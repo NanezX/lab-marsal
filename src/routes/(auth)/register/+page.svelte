@@ -4,29 +4,29 @@
 	import addUser from '$lib/assets/add-user.svg';
 	import icon from '$lib/assets/icon.png';
 	import Button from '$lib/components/Button.svelte';
-	import { At, Lock, User } from '@steeze-ui/tabler-icons';
-	// import { At, Lock, LockOpen2, User } from '@steeze-ui/tabler-icons';
+	import { At, Lock, LockOpen2, User } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import { toastError } from '$lib/toasts.js';
 	import Select from '$lib/components/Select.svelte';
 	import { UserRoles } from '$lib/shared/enums.js';
+	import Checkbox from '$lib/components/Checkbox.svelte';
 
 	let { data } = $props();
 
 	let passwordInputType: 'password' | 'text' = $state('password');
-	// let showPassword = $state(false);
+	let showPassword = $state(false);
 	let iconPassword = $state(Lock);
 
-	// function togglePasswordInput(showPassword_: boolean) {
-	// 	if (showPassword_) {
-	// 		passwordInputType = 'text';
-	// 		iconPassword = LockOpen2;
-	// 	} else {
-	// 		passwordInputType = 'password';
-	// 		iconPassword = Lock;
-	// 	}
-	// }
+	function togglePasswordInput(showPassword_: boolean) {
+		if (showPassword_) {
+			passwordInputType = 'text';
+			iconPassword = LockOpen2;
+		} else {
+			passwordInputType = 'password';
+			iconPassword = Lock;
+		}
+	}
 
 	const { form, errors, constraints, enhance, delayed } = superForm(data.registerForm, {
 		delayMs: 0,
@@ -137,16 +137,31 @@
 				/>
 				{#if $errors.password}<span class="text-sm text-red-500">{$errors.password}</span>{/if}
 				<Input
-					bind:value={$form.password}
+					bind:value={$form.repeatPassword}
 					required
 					type={passwordInputType}
-					name="password"
+					name="repeatPassword"
 					icon={iconPassword}
 					placeholder="Repetir contraseña"
 					wrapperClass="col-span-3"
-					{...$constraints.password}
+					{...$constraints.repeatPassword}
 				/>
-				{#if $errors.password}<span class="text-sm text-red-500">{$errors.password}</span>{/if}
+				{#if $errors.repeatPassword}<span class="text-sm text-red-500"
+						>{$errors.repeatPassword}</span
+					>{/if}
+
+				<div class="col-span-3 col-start-4">
+					<Checkbox
+						bind:value={
+							() => showPassword,
+							(value) => {
+								showPassword = value;
+								togglePasswordInput(value);
+							}
+						}
+						text="Mostrar contraseña"
+					/>
+				</div>
 			</div>
 
 			<Button type="submit" disabled={$delayed} class="flex w-32 justify-center self-center">
