@@ -1,4 +1,4 @@
-import { UserRoles } from '$lib/shared/enums';
+import { UserRoles } from '../../shared/enums';
 import { encodeBase32LowerCase } from '@oslojs/encoding';
 import { pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
