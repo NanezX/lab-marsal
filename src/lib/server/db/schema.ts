@@ -2,7 +2,6 @@ import { UserRoles } from '$lib/shared/enums';
 import { encodeBase32LowerCase } from '@oslojs/encoding';
 import { pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
-
 export const userRoleEnum = pgEnum('user_role', [
 	UserRoles.admin,
 	UserRoles.bioanalista,

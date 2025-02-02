@@ -1,6 +1,6 @@
 export enum UserRoles {
-    secretaria = 'secretaria',
-    auxiliar = 'auxiliar',
-    bioanalista = 'bioanalista',
-    admin = 'administrador',
+	secretaria = 'secretaria',
+	auxiliar = 'auxiliar',
+	bioanalista = 'bioanalista',
+	admin = 'administrador'
 }
