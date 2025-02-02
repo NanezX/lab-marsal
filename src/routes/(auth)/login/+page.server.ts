@@ -62,7 +62,6 @@ export const actions: Actions = {
 		const session = await auth.createSession(sessionToken, existingUser.id);
 		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
 
-		// TODO: Change to redirect to home
 		return redirect(302, '/');
 	},
 
