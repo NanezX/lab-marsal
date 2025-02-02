@@ -10,8 +10,7 @@ export const UserLoginSchema = z.object({
 });
 
 export const UserRegisterSchema = UserLoginSchema.extend({
-	fullname: z.string().min(1, 'Nombre es obligatario'),
-	username: z.string().min(1, 'Username es obligatario'),
-	// TODO: Verify that the role validation works. That also return the error message
+	name: z.string().min(1, 'Nombre es obligatario'),
+	lastName: z.string().min(1, 'Apellido es obligatario'),
 	role: z.nativeEnum(UserRoles, { errorMap: () => ({ message: 'Rol no valido' }) })
 });
