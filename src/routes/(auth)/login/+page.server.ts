@@ -1,8 +1,8 @@
 import { UserLoginSchema } from '$lib/server/utils/zod';
-import { superValidate, fail as failForms } from 'sveltekit-superforms';
+import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { verify } from '@node-rs/argon2';
-import { fail, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
@@ -32,9 +32,11 @@ export const actions: Actions = {
 			.from(table.user)
 			.where(eq(table.user.email, email.toLowerCase()));
 
+
 		const existingUser = results.at(0);
+
 		if (!existingUser) {
-			return fail(400, { message: 'Incorrect username or password' });
+			return message(form, { text: 'Incorrect username or password', type: "error" }, { status: 400 });
 		}
 
 		// TODO: Use other hashing method??
@@ -46,13 +48,14 @@ export const actions: Actions = {
 		});
 
 		if (!validPassword) {
-			return fail(400, { message: 'Incorrect username or password' });
+			return message(form, { text: 'Incorrect username or password', type: "error" }, { status: 400 });
 		}
 
 		const sessionToken = auth.generateSessionToken();
 		const session = await auth.createSession(sessionToken, existingUser.id);
 		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
 
+		// TODO: Change to redirect to home
 		return redirect(302, '/demo/lucia');
 	}
 };
