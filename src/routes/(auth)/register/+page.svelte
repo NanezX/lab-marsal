@@ -120,6 +120,7 @@
 					required
 					placeholder="Selecciona un rol"
 					class="col-span-2"
+					formatter={(rol_) => rol_.charAt(0).toUpperCase() + rol_.slice(1).toLowerCase()}
 					{...$constraints.role}
 				/>
 				{#if $errors.role}<span class="text-sm text-red-500">{$errors.role}</span>{/if}
