@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Container from '$lib/components/Container.svelte';
-	import Checkbox from '$lib/components/Checkbox.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import addUser from '$lib/assets/add-user.svg';
 	import icon from '$lib/assets/icon.png';
@@ -15,18 +14,18 @@
 	let { data } = $props();
 
 	let passwordInputType: 'password' | 'text' = $state('password');
-	let showPassword = $state(false);
+	// let showPassword = $state(false);
 	let iconPassword = $state(Lock);
 
-	function togglePasswordInput(showPassword_: boolean) {
-		if (showPassword_) {
-			passwordInputType = 'text';
-			iconPassword = LockOpen2;
-		} else {
-			passwordInputType = 'password';
-			iconPassword = Lock;
-		}
-	}
+	// function togglePasswordInput(showPassword_: boolean) {
+	// 	if (showPassword_) {
+	// 		passwordInputType = 'text';
+	// 		iconPassword = LockOpen2;
+	// 	} else {
+	// 		passwordInputType = 'password';
+	// 		iconPassword = Lock;
+	// 	}
+	// }
 
 	const { form, errors, constraints, enhance, delayed } = superForm(data.registerForm, {
 		delayMs: 0,

@@ -1,5 +1,4 @@
 <script lang="ts" generics="T">
-	import { isObject } from '$lib/shared/utils';
 	import type { ClassValue } from 'svelte/elements';
 
 	// Prop type
