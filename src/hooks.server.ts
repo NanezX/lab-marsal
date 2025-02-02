@@ -5,6 +5,11 @@ import * as auth from '$lib/server/auth.js';
 // TODO: Redirect to /home (or /) route if logged users go to /login and /register routes
 
 const handleAuth: Handle = async ({ event, resolve }) => {
+	// Moving root path from `/` to `/home`
+	if (event.url.pathname === '/') {
+		throw redirect(307, '/home');
+	}
+
 	// Get the session token from the cookies
 	const sessionToken = event.cookies.get(auth.sessionCookieName);
 
