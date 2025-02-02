@@ -4,7 +4,8 @@
 	import addUser from '$lib/assets/add-user.svg';
 	import icon from '$lib/assets/icon.png';
 	import Button from '$lib/components/Button.svelte';
-	import { At, Lock, LockOpen2, User } from '@steeze-ui/tabler-icons';
+	import { At, Lock, User } from '@steeze-ui/tabler-icons';
+	// import { At, Lock, LockOpen2, User } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import { toastError } from '$lib/toasts.js';
