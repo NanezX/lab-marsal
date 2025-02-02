@@ -9,6 +9,8 @@
 	import { superForm } from 'sveltekit-superforms';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import { toastError } from '$lib/toasts.js';
+	import Select from '$lib/components/Select.svelte';
+	import { UserRoles } from '$lib/shared/enums.js';
 
 	let { data } = $props();
 
@@ -63,6 +65,7 @@
 		</div>
 	</div>
 
+	<!-- TODO: Use separated variables for each input/select -->
 	<!-- TODO: Validaciones para el form:  
 			- Nombres: solo letras
 			- Apellido: solo letras
@@ -110,14 +113,13 @@
 				/>
 				{#if $errors.email}<span class="text-sm text-red-500">{$errors.email}</span>{/if}
 
-				<!-- TODO: This should be a select -->
-				<Input
+				<Select
 					bind:value={$form.lastName}
+					items={Object.values(UserRoles)}
 					name="select"
 					required
-					icon={User}
-					placeholder="Rol"
-					wrapperClass="col-span-2"
+					placeholder="Selecciona el rol"
+					class="col-span-2"
 					{...$constraints.lastName}
 				/>
 				{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}
