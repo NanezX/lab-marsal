@@ -5,7 +5,7 @@
 	import addUser from '$lib/assets/add-user.svg';
 	import icon from '$lib/assets/icon.png';
 	import Button from '$lib/components/Button.svelte';
-	import { At, Lock, LockOpen2 } from '@steeze-ui/tabler-icons';
+	import { At, Lock, LockOpen2, User } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import { toastError } from '$lib/toasts.js';
@@ -40,6 +40,7 @@
 	});
 </script>
 
+<!-- TODO: Move this page from the (auth) group. This page is only for logged users and of course, to users that have the access to this page -->
 <Container class={['flex', 'direct-children:p-8', 'rounded-xl', 'w-2/3', 'max-w-5xl']}>
 	<!-- Izquierda Saludo -->
 	<div
@@ -62,12 +63,41 @@
 		</div>
 	</div>
 
-	<!-- Derecha login process -->
+	<!-- TODO: Validaciones para el form:  
+			- Nombres: solo letras
+			- Apellido: solo letras
+			- Correo: listo
+			- Rol: Solo rol valido
+			- Password: minimo 8 caracteres, etc etc
+			- Repeat Password: debe ser igual que Password
+	 -->
+	<!-- Derecha register new process -->
 	<div class="flex w-3/5 flex-col justify-center space-y-8 rounded-r-xl border bg-white">
-		<h3 class="text-center text-2xl text-primary-blue">Iniciar sesión</h3>
+		<h3 class="text-center text-2xl text-primary-blue">Registrar nuevo usuario</h3>
 
 		<form class="flex flex-col gap-y-8" method="POST" action="?/register" use:enhance>
-			<div class="space-y-4">
+			<div class="grid grid-cols-6 gap-x-2 gap-y-6">
+				<Input
+					bind:value={$form.name}
+					name="name"
+					required
+					icon={User}
+					placeholder="Nombre"
+					wrapperClass="col-span-3"
+					{...$constraints.name}
+				/>
+				{#if $errors.name}<span class="text-sm text-red-500">{$errors.name}</span>{/if}
+
+				<Input
+					bind:value={$form.lastName}
+					name="lastName"
+					required
+					icon={User}
+					placeholder="Apellido"
+					wrapperClass="col-span-3"
+					{...$constraints.lastName}
+				/>
+				{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}
 				<Input
 					bind:value={$form.email}
 					type="email"
@@ -75,9 +105,22 @@
 					required
 					icon={At}
 					placeholder="Correo electrónico"
+					wrapperClass="col-span-4"
 					{...$constraints.email}
 				/>
 				{#if $errors.email}<span class="text-sm text-red-500">{$errors.email}</span>{/if}
+
+				<!-- TODO: This should be a select -->
+				<Input
+					bind:value={$form.lastName}
+					name="select"
+					required
+					icon={User}
+					placeholder="Rol"
+					wrapperClass="col-span-2"
+					{...$constraints.lastName}
+				/>
+				{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}
 
 				<Input
 					bind:value={$form.password}
@@ -86,34 +129,30 @@
 					name="password"
 					icon={iconPassword}
 					placeholder="Contraseña"
+					wrapperClass="col-span-3"
 					{...$constraints.password}
 				/>
 				{#if $errors.password}<span class="text-sm text-red-500">{$errors.password}</span>{/if}
-
-				<Checkbox
-					bind:value={
-						() => showPassword,
-						(value) => {
-							showPassword = value;
-							togglePasswordInput(value);
-						}
-					}
-					text="Mostrar contraseña"
+				<Input
+					bind:value={$form.password}
+					required
+					type={passwordInputType}
+					name="password"
+					icon={iconPassword}
+					placeholder="Repetir contraseña"
+					wrapperClass="col-span-3"
+					{...$constraints.password}
 				/>
+				{#if $errors.password}<span class="text-sm text-red-500">{$errors.password}</span>{/if}
 			</div>
 
 			<Button type="submit" disabled={$delayed} class="flex w-32 justify-center self-center">
 				{#if $delayed}
 					<Spinner class="h-6 w-6" />
 				{:else}
-					Iniciar sesión
+					Registrar
 				{/if}
 			</Button>
 		</form>
-
-		<!-- NOTA: No se creara una pantalla para el registro, ya que dicho registro de nuevos usuaros solo lo haran
-		 los usuarios con los Autorizacion para ello, como el Admin role
-		  -->
-		<p>Olvidé mi contraseña</p>
 	</div>
 </Container>
