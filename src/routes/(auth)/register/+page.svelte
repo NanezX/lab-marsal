@@ -157,5 +157,13 @@
 				{/if}
 			</Button>
 		</form>
+		<hr class="border-1 border-secondary-blue" />
+
+		<a
+			class="self-center text-primary-blue underline underline-offset-2 hover:text-blue-800"
+			href="/login"
+		>
+			Iniciar sesión
+		</a>
 	</div>
 </Container>
