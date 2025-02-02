@@ -32,11 +32,14 @@ export const actions: Actions = {
 			.from(table.user)
 			.where(eq(table.user.email, email.toLowerCase()));
 
-
 		const existingUser = results.at(0);
 
 		if (!existingUser) {
-			return message(form, { text: 'Incorrect username or password', type: "error" }, { status: 400 });
+			return message(
+				form,
+				{ text: 'Incorrect username or password', type: 'error' },
+				{ status: 400 }
+			);
 		}
 
 		// TODO: Use other hashing method??
@@ -48,7 +51,11 @@ export const actions: Actions = {
 		});
 
 		if (!validPassword) {
-			return message(form, { text: 'Incorrect username or password', type: "error" }, { status: 400 });
+			return message(
+				form,
+				{ text: 'Incorrect username or password', type: 'error' },
+				{ status: 400 }
+			);
 		}
 
 		const sessionToken = auth.generateSessionToken();

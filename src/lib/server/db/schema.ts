@@ -25,10 +25,10 @@ export const user = pgTable('user', {
 			const id = encodeBase32LowerCase(bytes);
 			return id;
 		}),
-	username: text('username').notNull().unique(),
 	email: text('email').notNull().unique(),
 	passwordHash: text('password_hash').notNull(),
-	fullname: text('fullname').notNull(),
+	name: text('name').notNull(),
+	lastName: text('lastname').notNull(),
 	role: userRoleEnum().notNull()
 });
 
