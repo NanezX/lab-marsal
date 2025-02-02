@@ -29,10 +29,10 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 		event.locals.session = session;
 	}
 
-	// Redirect unauthenticated users to /login
-	if (!event.locals.user && event.url.pathname !== '/login') {
-		throw redirect(302, '/login');
-	}
+	// // Redirect unauthenticated users to /login
+	// if (!event.locals.user && event.url.pathname !== '/login') {
+	// 	throw redirect(302, '/login');
+	// }
 
 	return resolve(event);
 };
