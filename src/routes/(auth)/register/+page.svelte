@@ -114,15 +114,15 @@
 				{#if $errors.email}<span class="text-sm text-red-500">{$errors.email}</span>{/if}
 
 				<Select
-					bind:value={$form.lastName}
+					bind:value={$form.role}
 					items={Object.values(UserRoles)}
-					name="select"
+					name="role"
 					required
-					placeholder="Selecciona el rol"
+					placeholder="Selecciona un rol"
 					class="col-span-2"
-					{...$constraints.lastName}
+					{...$constraints.role}
 				/>
-				{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}
+				{#if $errors.role}<span class="text-sm text-red-500">{$errors.role}</span>{/if}
 
 				<Input
 					bind:value={$form.password}
