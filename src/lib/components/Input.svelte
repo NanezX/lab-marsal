@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Icon, type IconSource } from '@steeze-ui/svelte-icon';
+	import type { ClassValue } from 'svelte/elements';
 
 	// Prop type
 	type PropType = {
@@ -11,6 +12,7 @@
 		disabled?: boolean | null;
 		required?: boolean;
 		icon?: IconSource;
+		wrapperClass?: ClassValue;
 	};
 
 	// Prop deconstruct
@@ -22,7 +24,8 @@
 		type = 'text',
 		disabled = false,
 		required = false,
-		icon
+		icon,
+		wrapperClass: wrapperClass
 	}: PropType = $props();
 
 	// Reusable classes
@@ -35,7 +38,7 @@
 </script>
 
 {#if icon}
-	<div class="relative flex items-center">
+	<div class={['relative flex items-center', wrapperClass]}>
 		<input
 			bind:value
 			{name}
