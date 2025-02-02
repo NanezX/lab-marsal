@@ -1,5 +1,5 @@
+import { UserRoles } from '$lib/shared/enums';
 import { z } from 'zod';
-import { UserRoles } from '../db/schema';
 
 export const UserLoginSchema = z.object({
 	email: z.string().min(1, 'Correo electrónico obligatorio').email('Correo electrónico inválido'),
