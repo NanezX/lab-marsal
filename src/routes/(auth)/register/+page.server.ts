@@ -4,7 +4,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { hash } from '@node-rs/argon2';
 import { fail, redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-import * as auth from '$lib/server/auth';
+// import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import type { Actions } from './$types';
@@ -58,9 +58,11 @@ export const actions: Actions = {
 			// TODO: This register will be used to create new users, so it should not create the session here
 			// TODO: Maybe the password could be send to the email. But need to add later the email functionality (verification and sents)
 			// Example at: https://github.com/lucia-auth/example-sveltekit-email-password-2fa/blob/main/src/lib/server/email-verification.ts
-			const sessionToken = auth.generateSessionToken();
-			const session = await auth.createSession(sessionToken, existingUser.id);
-			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+			// const sessionToken = auth.generateSessionToken();
+			// const session = await auth.createSession(sessionToken, existingUser.id);
+			// auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+
+			return redirect(302, '/login');
 		} catch (e) {
 			if (e instanceof Error) {
 				console.error(e);
@@ -68,7 +70,5 @@ export const actions: Actions = {
 			}
 			return fail(500, { message: 'An error has occurred' });
 		}
-
-		return redirect(302, '/');
 	}
 };
