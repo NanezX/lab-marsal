@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { zoom } from '$lib/components/actions/zoom';
 	import Button from '$lib/components/Button.svelte';
+	import Checkbox from '$lib/components/Checkbox.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import BaseModal from '$lib/components/modal/BaseModal.svelte';
+	import Select from '$lib/components/Select.svelte';
 	import { formatCapital } from '$lib/shared/utils';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import {
@@ -12,7 +14,8 @@
 		Search,
 		Trash,
 		Edit,
-		FileSearch
+		FileSearch,
+		UserSearch
 	} from '@steeze-ui/tabler-icons';
 
 	// TODO: Recheck the types laters coming from the DB
@@ -105,12 +108,84 @@
 
 	// TODO: Move modal to single component AddExamModal
 	let showModal = $state(true);
+
+	// TODO: USe SuperForms
+	let inputExamId = $state('');
+	let autoId = $state(true);
+
+	let priority = $state('');
+	const priorities = ['normal', 'urgente'];
+
+	let examType = $state('');
+	const examTypes = ['hematologia', 'tipiaje sanguineo', 'otros'];
+
+	let createNewPacient = $state(false);
+	let pacientId = $state('23875912');
+	let pacientFullname = $state('Andres Bello');
 </script>
 
 <div class="flex w-full flex-col gap-y-8">
 	<BaseModal bind:showModal title="Añadir examen">
-		<div class="">
-			<p>My children</p>
+		<div class="flex flex-col space-y-4 px-8 py-2">
+			<div>
+				<p class="mb-4 text-lg font-semibold">Examen</p>
+
+				<div class="mb-4 flex w-full justify-start">
+					<Input
+						wrapperClass="w-1/2"
+						placeholder="Identificador del examen"
+						bind:value={inputExamId}
+						name="inputExamId"
+					/>
+					<Checkbox text="Autogenerar ID" wrapperClass="ml-2" bind:value={autoId} />
+				</div>
+				<div class="flex gap-x-6">
+					<Select
+						bind:value={examType}
+						items={examTypes}
+						name="examType"
+						required
+						placeholder="Seleccionar el tipo de examen"
+						formatter={formatCapital}
+					/>
+
+					<Select
+						bind:value={priority}
+						items={priorities}
+						name="priority"
+						required
+						placeholder="Seleccionar prioridad"
+						formatter={formatCapital}
+					/>
+				</div>
+			</div>
+
+			<hr class="border-1 border-primary-gray/50" />
+			<div>
+				<div class="mb-4 inline-flex">
+					<p class="text-lg font-semibold">Paciente</p>
+					<Checkbox text="Crear nuevo paciente" wrapperClass="ml-2" bind:value={createNewPacient} />
+				</div>
+				<div class="mb-4 flex items-center gap-x-2">
+					<Input
+						wrapperClass="w-1/2"
+						placeholder="Nombre del paciente"
+						bind:value={pacientId}
+						name="pacientId"
+						disabled
+					/>
+					<Icon src={UserSearch} size="24" />
+				</div>
+				<div>
+					<Input
+						wrapperClass="w-1/2"
+						placeholder="Cedula del paciente"
+						bind:value={pacientFullname}
+						name="pacientFullname"
+						disabled
+					/>
+				</div>
+			</div>
 		</div>
 	</BaseModal>
 	<p class="text-center text-3xl">Examenes</p>
