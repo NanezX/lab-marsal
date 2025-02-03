@@ -38,7 +38,7 @@
 </script>
 
 {#if icon}
-	<div class={['relative flex items-center', wrapperClass]}>
+	<div class={['flex items-center', wrapperClass]}>
 		<input
 			bind:value
 			{name}
@@ -53,6 +53,16 @@
 		<Icon src={icon} class={[iconClass, { '!text-gray-400': disabled }]} {title} />
 	</div>
 {:else}
-	<!-- else content here -->
-	<p>Input without icon</p>
+	<div class={['flex items-center', wrapperClass]}>
+		<input
+			bind:value
+			{name}
+			{type}
+			{placeholder}
+			{disabled}
+			{title}
+			class={[inputClass, 'pl-4']}
+			{required}
+		/>
+	</div>
 {/if}

@@ -1,16 +1,25 @@
 <script lang="ts">
+	import type { ClassValue } from 'svelte/elements';
+
 	// Prop type
 	type PropType = {
 		value: boolean;
 		text: string;
 		title?: string;
 		disabled?: boolean;
+		wrapperClass?: ClassValue;
 	};
 
-	let { value = $bindable(false), text, title, disabled = false }: PropType = $props();
+	let {
+		value = $bindable(false),
+		text,
+		title,
+		disabled = false,
+		wrapperClass
+	}: PropType = $props();
 </script>
 
-<div class="ml-auto flex w-fit items-center gap-x-2" {title}>
+<div class={['ml-auto flex w-fit items-center gap-x-2', wrapperClass]} {title}>
 	<label class="relative flex cursor-pointer items-center" for="check-2">
 		<input
 			bind:checked={value}
