@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Container from '$lib/components/Container.svelte';
-	import NavBar from '$lib/components/navs/NavBar.svelte';
+	import NavBar from '$lib/components/layout/NavBar.svelte';
 	import {
 		Microscope,
 		UserCircle,
