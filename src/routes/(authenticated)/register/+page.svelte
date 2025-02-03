@@ -123,8 +123,7 @@
 				class="col-span-2"
 				formatter={formatCapital}
 				{...$constraints.role}
-				/>
-				<!-- formatter={(rol_) => rol_.charAt(0).toUpperCase() + rol_.slice(1).toLowerCase()} -->
+			/>
 			{#if $errors.role}<span class="text-sm text-red-500">{$errors.role}</span>{/if}
 
 			<Input
