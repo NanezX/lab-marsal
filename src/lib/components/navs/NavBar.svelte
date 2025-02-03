@@ -2,9 +2,21 @@
 	import { slide, fly } from 'svelte/transition';
 	import icon from '$lib/assets/icon.png';
 
-	let {} = $props();
-
 	let isOpen = $state(false);
+	let container: Element | null = $state(null);
+
+	function handleClickOutside(event: MouseEvent) {
+		if (container && !container.contains(event.target as Node)) {
+			isOpen = false;
+		}
+	}
+
+	$effect(() => {
+		if (isOpen) {
+			document.addEventListener('click', handleClickOutside);
+			return () => document.removeEventListener('click', handleClickOutside);
+		}
+	});
 </script>
 
 <!-- Navigation bar -->
@@ -17,7 +29,7 @@
 			</div>
 		</a>
 		<!-- Dropdown container -->
-		<div class="relative inline-flex items-center">
+		<div class="relative inline-flex items-center" bind:this={container}>
 			<button
 				in:fly={{ x: -300 }}
 				out:fly={{ x: -300 }}
