@@ -4,7 +4,15 @@
 	import Input from '$lib/components/Input.svelte';
 	import { formatCapital } from '$lib/shared/utils';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { CircleCheck, CircleChevronsUp, CircleMinus, Search } from '@steeze-ui/tabler-icons';
+	import {
+		CircleCheck,
+		CircleChevronsUp,
+		CircleMinus,
+		Search,
+		Trash,
+		Edit,
+		FileSearch
+	} from '@steeze-ui/tabler-icons';
 
 	// TODO: Recheck the types laters coming from the DB
 	type Exam = {
@@ -113,32 +121,15 @@
 		{#each lastExams as exam}
 			<div
 				class="select-none rounded border bg-white px-4 py-2 text-lg hover:border hover:border-primary-blue hover:shadow-2xl"
-				use:zoom={{ scale: 1.15, zindexIn: '99999', zindexOut: 'auto' }}
+				use:zoom={{ scale: 1.06, zindexIn: '99999', zindexOut: 'auto' }}
 			>
-				<div class="mb-2 flex">
+				<div class="mb-[-0.25rem] flex">
 					<p>
 						<span class="font-semibold">Estado: </span>
 						<span>{exam.pending ? 'En proceso' : 'Completado'}</span>
 					</p>
 					<p class="ml-auto w-fit rounded-full bg-secondary-gray/50 p-1"># {exam.id}</p>
 				</div>
-				<p>
-					<span class="font-semibold"> Paciente: </span>
-					<span>
-						{exam.clientName}
-						{exam.clientLastName}
-					</span>
-				</p>
-				<p>
-					<span class="font-semibold"> Cedula: </span>
-					<span>
-						{exam.numberId ?? 'N/A'}
-					</span>
-				</p>
-				<p>
-					<span class="font-semibold">Tipo de examen: </span>
-					<span>{formatCapital(exam.type)}</span>
-				</p>
 
 				<p class="inline-flex items-center gap-x-2">
 					<span class="font-semibold">Prioridad: </span>
@@ -157,7 +148,55 @@
 					{/if}
 				</p>
 
-				<p class="text-end text-sm">Creada: {exam.createdAt}</p>
+				<p>
+					<span class="font-semibold"> Paciente: </span>
+					<span>
+						{exam.clientName}
+						{exam.clientLastName}
+					</span>
+				</p>
+				<p>
+					<span class="font-semibold"> Cedula: </span>
+					<span>
+						{exam.numberId ?? 'N/A'}
+					</span>
+				</p>
+				<p>
+					<span class="font-semibold">Tipo de examen: </span>
+					<span>{formatCapital(exam.type)}</span>
+				</p>
+
+				<div class="mt-4 flex justify-between">
+					<p class="text-end text-sm">Creada: {exam.createdAt}</p>
+					<div class="flex gap-x-2">
+						<button
+							use:zoom={{ scale: 1.25, time: 0.25 }}
+							title="Ver"
+							class="text-blue-400 hover:text-blue-600"
+							onclick={() => alert('ver')}
+						>
+							<Icon src={FileSearch} size="28" />
+						</button>
+						{#if exam.pending}
+							<button
+								use:zoom={{ scale: 1.25, time: 0.25 }}
+								title="Editar"
+								class="hover text-green-400"
+								onclick={() => alert('editar')}
+							>
+								<Icon src={Edit} size="28" />
+							</button>
+							<button
+								use:zoom={{ scale: 1.25, time: 0.25 }}
+								title="Eliminar"
+								class="text-red-500"
+								onclick={() => alert('eliminar')}
+							>
+								<Icon src={Trash} size="28" />
+							</button>
+						{/if}
+					</div>
+				</div>
 			</div>
 		{/each}
 	</div>
