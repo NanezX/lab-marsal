@@ -67,14 +67,14 @@
 					<hr class="border-1 border-primary-gray" />
 
 					<div
-						class="hover:txt-white my-1 inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded px-4 py-2"
+						class="my-1 inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded px-4 py-2 hover:bg-secondary-blue"
 					>
 						<p>Mi perfil</p>
 						<Icon src={UserCircle} size="24" />
 					</div>
 
 					<div
-						class="hover:txt-white inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded px-4 py-2"
+						class="inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded px-4 py-2 hover:bg-secondary-blue"
 					>
 						<p>Cerrar sesión</p>
 						<Icon src={Logout} size="24" />
