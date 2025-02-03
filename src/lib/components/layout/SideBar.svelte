@@ -53,7 +53,7 @@
 	];
 </script>
 
-<div class={['flex flex-col rounded-xl border bg-gray-100 p-1 text-xl shadow-2xl']}>
+<div class="flex h-fit flex-col rounded-xl border bg-gray-100 p-1 text-xl shadow-2xl">
 	<!-- Links / Modulos-->
 	{#each routes as route}
 		<a
