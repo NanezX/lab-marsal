@@ -38,7 +38,7 @@
 </script>
 
 {#if icon}
-	<div class={['relative flex items-center', wrapperClass]}>
+	<div class={['flex items-center', wrapperClass]}>
 		<input
 			bind:value
 			{name}
