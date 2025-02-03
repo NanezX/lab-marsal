@@ -30,7 +30,7 @@
 </script>
 
 <!-- Navigation bar -->
-<div class="left-0 top-0 w-full bg-secondary-blue/80 py-4 shadow-xl">
+<div class="w-full border-b border-b-primary-blue/60 bg-secondary-blue/80 py-4 shadow-xl">
 	<div class="flex justify-between px-40">
 		<a href="/home" title="Ir a inicio">
 			<div class="flex items-center gap-x-2">
