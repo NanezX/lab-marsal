@@ -35,7 +35,7 @@
 		<a href="/home" title="Ir a inicio">
 			<div class="flex items-center gap-x-2">
 				<img alt="El logo de MarsalLab" src={icon} width="70" height="70" />
-				<p class="font-bold">Lab Marsal</p>
+				<p class="text-xl font-bold">LabMarsal</p>
 			</div>
 		</a>
 		<!-- Dropdown container -->
