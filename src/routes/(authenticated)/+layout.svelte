@@ -9,7 +9,7 @@
 
 <div class="h-full w-full">
 	<NavBar fullName={`${data.user.name} ${data.user.lastName}`} email={data.user.email} />
-	<div class="mx-auto mt-8 flex justify-evenly px-40">
+	<div class="mx-auto mt-10 flex justify-evenly px-40">
 		<SideBar />
 		<Container class="mx-0 flex w-2/3 max-w-5xl rounded-xl bg-white direct-children:p-8">
 			{@render children()}
