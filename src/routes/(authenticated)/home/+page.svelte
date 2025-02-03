@@ -1,12 +1,27 @@
 <script lang="ts">
 	import { zoom } from '$lib/components/actions/zoom.js';
+	import { formatCapital } from '$lib/shared/utils.js';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { ChevronDown, UserCircle, UserShare } from '@steeze-ui/tabler-icons';
-	import { fly } from 'svelte/transition';
+	import {
+		UserShare,
+		FileSearch,
+		CircleChevronsUp,
+		CircleMinus,
+		CircleCheck
+	} from '@steeze-ui/tabler-icons';
 
 	let { data } = $props();
 
 	// TODO: Recheck the types laters coming from the DB
+	type Exam = {
+		id: string;
+		type: 'hematologia' | 'tipiaje sanguineo' | 'otros';
+		clientName: string;
+		clientLastName: string;
+		createdAt: string;
+		priority: 'urgente' | 'normal';
+		pending: boolean;
+	};
 	type Client = {
 		id: string;
 		name: string;
@@ -15,8 +30,48 @@
 		pendingExams: number;
 	};
 
-	// Last client views (max 4 clients). This should come already by latest view
-	let lastClients: Client[] = [
+	// TODO: Last exams views (max 4 exams). This should come already by latest view
+	const lastExams: Exam[] = [
+		{
+			id: '1',
+			type: 'hematologia',
+			clientName: 'Yacsuri',
+			clientLastName: 'Rios',
+			createdAt: 'Hace 2 horas',
+			priority: 'urgente',
+			pending: false
+		},
+		{
+			id: '2',
+			type: 'hematologia',
+			clientName: 'Victor',
+			clientLastName: 'Hernandez',
+			createdAt: 'Hace 3 dias',
+			priority: 'normal',
+			pending: true
+		},
+		{
+			id: '3',
+			type: 'otros',
+			clientName: 'Juan',
+			clientLastName: 'Perez',
+			createdAt: 'Hace 5 dias',
+			priority: 'normal',
+			pending: false
+		},
+		{
+			id: '4',
+			type: 'hematologia',
+			clientName: 'Juan',
+			clientLastName: 'Perez',
+			createdAt: 'Hace 5 dias',
+			priority: 'urgente',
+			pending: true
+		}
+	];
+
+	// TODO: Last client views (max 4 clients). This should come already by latest view
+	const lastClients: Client[] = [
 		{
 			id: '1',
 			name: 'Victor',
@@ -33,7 +88,6 @@
 		},
 		{
 			id: '3',
-
 			name: 'Juan',
 			lastName: 'Perez',
 			updatedAt: 'Hace 4 dias',
@@ -47,8 +101,6 @@
 			pendingExams: 0
 		}
 	];
-
-	fly;
 </script>
 
 <div class="flex w-full flex-col">
@@ -57,8 +109,55 @@
 	</p>
 
 	<div class="space-y-4 divide-y-2">
-		<div class="bg-red-500">
-			<p class="text-center text-lg">Ultimos examenes vistos</p>
+		<div class="space-y-2 pt-2">
+			<p class="text-center text-lg font-bold">Ultimos examenes vistos</p>
+			<div class="grid grid-cols-2 gap-2">
+				{#each lastExams as exam}
+					<a
+						use:zoom
+						href="/exams/{exam.id}"
+						class="group flex flex-col gap-y-2 rounded border bg-white px-4 py-2 text-sm shadow-lg"
+					>
+						<div class="flex justify-between">
+							<p>
+								<span class="font-semibold">Tipo: </span>
+								<span>{formatCapital(exam.type)}</span>
+							</p>
+							<p class="inline-flex gap-x-2">
+								{#if exam.pending}
+									<span class="font-semibold">Prioridad: </span>
+									<span>
+										<Icon
+											src={exam.priority == 'urgente' ? CircleChevronsUp : CircleMinus}
+											size="22"
+											class={{
+												'text-red-400': exam.priority == 'urgente'
+											}}
+										/>
+									</span>
+								{:else}
+									<Icon src={CircleCheck} size="22" class="text-green-400" />
+								{/if}
+							</p>
+						</div>
+						<div class="flex justify-between">
+							<p>
+								<span class="font-semibold"> Cliente: </span>
+								<span>
+									{exam.clientName.at(0)}.
+									{exam.clientLastName}
+								</span>
+							</p>
+							<p><span class="font-semibold">Pendientes:</span> {formatCapital(exam.type)}</p>
+						</div>
+
+						<div class="flex justify-between">
+							<p><span class="font-semibold">Creacion:</span> {exam.createdAt}</p>
+							<Icon src={FileSearch} size="20" class="group-hover:text-primary-blue" />
+						</div>
+					</a>
+				{/each}
+			</div>
 		</div>
 
 		<div class="space-y-2 pt-2">
