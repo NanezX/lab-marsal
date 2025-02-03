@@ -2,6 +2,7 @@
 	import { zoom } from '$lib/components/actions/zoom';
 	import Button from '$lib/components/Button.svelte';
 	import Input from '$lib/components/Input.svelte';
+	import BaseModal from '$lib/components/modal/BaseModal.svelte';
 	import { formatCapital } from '$lib/shared/utils';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import {
@@ -101,9 +102,17 @@
 
 	// TODO: Maybe can exist an search component
 	let inputSearch = $state('');
+
+	// TODO: Move modal to single component AddExamModal
+	let showModal = $state(true);
 </script>
 
 <div class="flex w-full flex-col gap-y-8">
+	<BaseModal bind:showModal title="Añadir examen">
+		<div class="">
+			<p>My children</p>
+		</div>
+	</BaseModal>
 	<p class="text-center text-3xl">Examenes</p>
 
 	<div class="flex w-full justify-evenly">
@@ -114,7 +123,7 @@
 			icon={Search}
 			wrapperClass="w-4/5"
 		/>
-		<Button class="text-xl">Nuevo +</Button>
+		<Button class="text-xl" onclick={() => (showModal = true)}>Nuevo +</Button>
 	</div>
 
 	<div class="mt-4 grid grid-cols-2 gap-3">

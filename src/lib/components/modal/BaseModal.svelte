@@ -1,75 +1,62 @@
 <script>
-	import { fade } from 'svelte/transition';
+	//
+	// import { closeModal, processModal } from "$lib/stores/index";
+	import Button from '$lib/components/Button.svelte';
+	import { Icon } from '@steeze-ui/svelte-icon';
+	import { LetterCaseUpper, X } from '@steeze-ui/tabler-icons';
+	import { blur } from 'svelte/transition';
 
-	let { showModal = $bindable(), children } = $props();
+	//
+	let { title = 'My title', showModal = $bindable(), children } = $props();
 
-	let dialog = $state(); // HTMLDialogElement
-
-	$effect(() => {
-		if (showModal) dialog.showModal();
-	});
+	function closeModal() {
+		console.log('xd');
+		showModal = false;
+	}
 </script>
 
-<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
 {#if showModal}
-	<dialog
-		transition:fade
-		class="max-w-[32rem] rounded backdrop:bg-black/30"
-		bind:this={dialog}
-		onclose={() => (showModal = false)}
-		onclick={(e) => {
-			if (e.target === dialog) dialog.close();
-		}}
+	<div
+		transition:blur
+		class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none"
 	>
-		<div class="p-4" transition:fade>
-			{@render children?.()}
-			<hr />
+		<div class="relative mx-auto my-6 w-2/4 max-w-3xl">
+			<!--content-->
+			<div
+				class="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none"
+			>
+				<!--header-->
+				<div
+					class="border-blueGray-200 flex items-start justify-between rounded-t border-b border-solid p-5"
+				>
+					<h3 class="text-3xl font-semibold text-gray-600">
+						{title}
+					</h3>
+					<button
+						class="float-right ml-auto border-0 bg-transparent p-1 text-3xl font-semibold leading-none text-gray-500 outline-none hover:text-red-500 focus:outline-none"
+						onclick={closeModal}
+					>
+						<Icon src={X} size="24" />
+					</button>
+				</div>
 
-			<!-- svelte-ignore a11y_autofocus -->
-			<button autofocus onclick={() => dialog.close()}>Cerrar</button>
+				<!--body-->
+				<div class="relative flex-auto p-6">
+					{@render children()}
+				</div>
+
+				<!--footer-->
+				<div class=" flex items-center justify-end gap-x-6 rounded-b border-t border-solid p-6">
+					<Button class="bg-red-500 hover:bg-red-500/75" onclick={closeModal}>Cerrar</Button>
+					<Button
+						onclick={() => {
+							alert('Guardar!');
+							closeModal();
+						}}>Guardar</Button
+					>
+				</div>
+			</div>
 		</div>
-	</dialog>
+	</div>
+	<div class="fixed inset-0 z-40 bg-black opacity-25"></div>
 {/if}
-
-<style>
-	/* 
-    dialog {
-		max-width: 32em;
-		border-radius: 0.2em;
-		border: none;
-		padding: 0;
-	}
-	dialog::backdrop {
-		background: rgba(0, 0, 0, 0.3);
-	}
-	dialog > div {
-		padding: 1em;
-	}
-    */
-	dialog[open] {
-		animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-	}
-	/* 
-	@keyframes zoom {
-		from {
-			transform: scale(0.95);
-		}
-		to {
-			transform: scale(1);
-		}
-	}
-	dialog[open]::backdrop {
-		animation: fade 0.2s ease-out;
-	}
-	@keyframes fade {
-		from {
-			opacity: 0;
-		}
-		to {
-			opacity: 1;
-		}
-	}
-	button {
-		display: block;
-	} */
-</style>
