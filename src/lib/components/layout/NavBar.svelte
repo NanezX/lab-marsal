@@ -71,12 +71,14 @@
 						<Icon src={UserCircle} size="24" />
 					</div>
 
-					<div
-						class="inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded px-4 py-2 hover:bg-secondary-blue"
-					>
-						<p>Cerrar sesión</p>
-						<Icon src={Logout} size="24" />
-					</div>
+					<form method="POST" action="/logout">
+						<button
+							class="inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded px-4 py-2 hover:bg-secondary-blue"
+						>
+							<p>Cerrar sesión</p>
+							<Icon src={Logout} size="24" />
+						</button>
+					</form>
 				</div>
 			{/if}
 		</div>
