@@ -5,19 +5,19 @@ export type ZoomArgs = {
 	zindexOut?: string;
 };
 export function zoom(node: HTMLElement, args: ZoomArgs = {}) {
-	const { scale = 1.025, time = 0.5, zindexIn, zindexOut = "auto" } = args;
+	const { scale = 1.025, time = 0.5, zindexIn, zindexOut = 'auto' } = args;
 
 	node.style.transition = `${time}s`;
 
 	function zoomIn() {
 		node.style.transform = `scale(${scale})`;
 		if (zindexIn) {
-			node.style.zIndex = zindexIn
+			node.style.zIndex = zindexIn;
 		}
 	}
 	function zoomOut() {
 		if (zindexOut) {
-			node.style.zIndex = zindexOut
+			node.style.zIndex = zindexOut;
 		}
 
 		node.style.transform = 'scale(1)';
