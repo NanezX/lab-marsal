@@ -10,6 +10,7 @@
 	import Select from '$lib/components/Select.svelte';
 	import { UserRoles } from '$lib/shared/enums.js';
 	import Checkbox from '$lib/components/Checkbox.svelte';
+	import { formatCapital } from '$lib/shared/utils.js';
 
 	let { data } = $props();
 
@@ -120,9 +121,10 @@
 				required
 				placeholder="Selecciona un rol"
 				class="col-span-2"
-				formatter={(rol_) => rol_.charAt(0).toUpperCase() + rol_.slice(1).toLowerCase()}
+				formatter={formatCapital}
 				{...$constraints.role}
-			/>
+				/>
+				<!-- formatter={(rol_) => rol_.charAt(0).toUpperCase() + rol_.slice(1).toLowerCase()} -->
 			{#if $errors.role}<span class="text-sm text-red-500">{$errors.role}</span>{/if}
 
 			<Input
