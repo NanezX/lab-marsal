@@ -107,7 +107,7 @@
 	let inputSearch = $state('');
 
 	// TODO: Move modal to single component AddExamModal
-	let showModal = $state(true);
+	let showModal = $state(false);
 
 	// TODO: USe SuperForms
 	let inputExamId = $state('');

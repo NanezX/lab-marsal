@@ -1,16 +1,12 @@
 <script>
-	//
-	// import { closeModal, processModal } from "$lib/stores/index";
 	import Button from '$lib/components/Button.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { X } from '@steeze-ui/tabler-icons';
 	import { blur } from 'svelte/transition';
 
-	//
 	let { title = 'My title', showModal = $bindable(), children } = $props();
 
 	function closeModal() {
-		console.log('xd');
 		showModal = false;
 	}
 </script>
