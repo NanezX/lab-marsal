@@ -57,12 +57,18 @@
 
 			{#if isOpen}
 				<div
-					class="absolute right-0 top-full rounded border border-primary-blue bg-secondary-blue shadow-lg"
+					class={[
+						'absolute right-0 top-full  rounded border border-primary-blue bg-secondary-blue shadow-lg',
+						// Direct children
+						'direct-children:cursor-pointer direct-children:px-4 direct-children:py-2',
+						// Hover direct children
+						'hover:direct-children:bg-primary-blue hover:direct-children:text-white'
+					]}
 					in:slide
 					out:slide
 				>
-					<p class="cursor-pointer px-4 py-2 hover:bg-primary-blue">Perfil</p>
-					<p class="cursor-pointer px-4 py-2 hover:bg-primary-blue">Cerrar sesión</p>
+					<p>Perfil</p>
+					<p>Cerrar sesión</p>
 				</div>
 			{/if}
 		</div>
