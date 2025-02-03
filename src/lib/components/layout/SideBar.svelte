@@ -13,7 +13,8 @@
 <div
 	class={[
 		'flex flex-col rounded-xl border bg-gray-100 px-8 py-4 text-xl shadow-2xl',
-		'direct-children:flex direct-children:items-center direct-children:gap-x-5 direct-children:p-2'
+		'direct-children:flex direct-children:items-center direct-children:gap-x-5 direct-children:p-2',
+		'direct-children:rounded hover:direct-children:bg-secondary-blue'
 	]}
 >
 	<!-- Links / Modulos-->
