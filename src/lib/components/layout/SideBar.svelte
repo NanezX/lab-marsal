@@ -9,6 +9,7 @@
 	} from '@steeze-ui/tabler-icons';
 	import { Icon, type IconSource } from '@steeze-ui/svelte-icon';
 	import type { UserRoles } from '$lib/shared/enums';
+	import { page } from '$app/state';
 
 	type Route = {
 		href: string;
@@ -53,12 +54,15 @@
 	];
 </script>
 
-<div class={['flex flex-col rounded-xl border bg-gray-100 p-1 text-xl shadow-2xl']}>
+<div class="flex h-fit flex-col rounded-xl border bg-gray-100 p-1 text-xl shadow-2xl">
 	<!-- Links / Modulos-->
 	{#each routes as route}
 		<a
 			href={route.href}
-			class="flex items-center gap-x-5 rounded px-8 py-4 hover:bg-secondary-blue"
+			class={[
+				'flex items-center gap-x-5 rounded px-8 py-4 hover:bg-secondary-blue',
+				{ 'bg-gray-200': page.url.pathname == route.href }
+			]}
 		>
 			<Icon src={route.icon} size={route.size || '24'} />
 			<span>{route.text}</span>
