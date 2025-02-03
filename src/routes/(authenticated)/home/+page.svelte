@@ -108,15 +108,15 @@
 		Hola {data.user.name}, bienvenido/a a LabMarsal App
 	</p>
 
-	<div class="space-y-4 divide-y-2">
+	<div class="space-y-4">
 		<div class="space-y-2 pt-2">
-			<p class="text-center text-lg font-bold">Ultimos examenes vistos</p>
+			<p class="text-center text-xl font-bold">Ultimos examenes vistos</p>
 			<div class="grid grid-cols-2 gap-2">
 				{#each lastExams as exam}
 					<a
 						use:zoom
 						href="/exams/{exam.id}"
-						class="group flex flex-col gap-y-2 rounded border bg-white px-4 py-2 text-sm shadow-lg"
+						class="group flex flex-col gap-y-2 rounded border-2 bg-gray-100/50 px-4 py-2 text-sm"
 					>
 						<div class="flex justify-between">
 							<p>
@@ -148,7 +148,7 @@
 									{exam.clientLastName}
 								</span>
 							</p>
-							<p><span class="font-semibold">Pendientes:</span> {formatCapital(exam.type)}</p>
+							<p><span class="font-semibold">Tipo:</span> {formatCapital(exam.type)}</p>
 						</div>
 
 						<div class="flex justify-between">
@@ -161,14 +161,14 @@
 		</div>
 
 		<div class="space-y-2 pt-2">
-			<p class="text-center text-lg font-bold">Ultimos clientes vistos</p>
+			<p class="text-center text-xl font-bold">Ultimos clientes vistos</p>
 
 			<div class="grid grid-cols-2 gap-2">
 				{#each lastClients as client}
 					<a
 						use:zoom
 						href="/clients/{client.id}"
-						class="group flex flex-col gap-y-2 rounded border bg-white px-4 py-2 text-sm shadow-lg"
+						class="group flex flex-col gap-y-2 rounded border-2 bg-gray-100/50 px-4 py-2 text-sm"
 					>
 						<div class="flex justify-between">
 							<p>
