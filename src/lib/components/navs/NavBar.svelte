@@ -4,8 +4,6 @@
 	import { ChevronDown, UserCircle, Logout } from '@steeze-ui/tabler-icons';
 	import { Icon } from '@steeze-ui/svelte-icon';
 
-	ChevronDown;
-
 	// Prop type
 	type PropType = {
 		fullName: string;
