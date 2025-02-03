@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Container from '$lib/components/Container.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import addUser from '$lib/assets/add-user.svg';
 	import icon from '$lib/assets/icon.png';
