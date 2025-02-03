@@ -2,6 +2,8 @@
 	import { zoom } from '$lib/components/actions/zoom.js';
 	import { formatCapital } from '$lib/shared/utils.js';
 	import { Icon } from '@steeze-ui/svelte-icon';
+	import icon from '$lib/assets/logo.webp';
+
 	import {
 		UserShare,
 		FileSearch,
@@ -104,9 +106,18 @@
 </script>
 
 <div class="flex w-full flex-col">
-	<p class="self-center bg-green-300 text-center">
-		Hola {data.user.name}, bienvenido/a a LabMarsal App
-	</p>
+	<div class="flex items-center justify-evenly gap-x-20">
+		<p class="text-3xl">Bienvenido {data.user.name}</p>
+		<img
+			alt="El logo de MarsalLab"
+			src={icon}
+			width="220"
+			height="220"
+			class=" rounded-2xl border-2 p-2"
+		/>
+	</div>
+
+	<!-- </p> -->
 
 	<div class="space-y-4">
 		<div class="space-y-2 pt-2">
