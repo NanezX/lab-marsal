@@ -31,7 +31,7 @@
 
 <!-- Navigation bar -->
 <div class="w-full border-b border-b-primary-blue/60 bg-secondary-blue/80 py-4 shadow-xl">
-	<div class="flex justify-between px-40">
+	<div class="mx-auto flex w-[80%] justify-between px-40">
 		<a href="/home" title="Ir a inicio">
 			<div class="flex items-center gap-x-2">
 				<img alt="El logo de MarsalLab" src={icon} width="70" height="70" />
