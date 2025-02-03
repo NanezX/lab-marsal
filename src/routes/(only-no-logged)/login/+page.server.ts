@@ -2,7 +2,7 @@ import { UserLoginSchema } from '$lib/server/utils/zod';
 import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { verify } from '@node-rs/argon2';
-import { fail, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import * as auth from '$lib/server/auth';
 import { db } from '$lib/server/db';
@@ -62,16 +62,6 @@ export const actions: Actions = {
 		const session = await auth.createSession(sessionToken, existingUser.id);
 		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
 
-		return redirect(302, '/');
-	},
-
-	logout: async (event) => {
-		if (!event.locals.session) {
-			return fail(401);
-		}
-
-		await auth.invalidateSession(event.locals.session.id);
-		auth.deleteSessionTokenCookie(event);
-		return redirect(302, '/login');
+		return redirect(302, '/home');
 	}
 };

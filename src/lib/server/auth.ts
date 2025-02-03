@@ -31,7 +31,13 @@ export async function validateSessionToken(token: string) {
 	const [result] = await db
 		.select({
 			// Adjust user table here to tweak returned data
-			user: { id: table.user.id, email: table.user.email },
+			user: {
+				id: table.user.id,
+				email: table.user.email,
+				name: table.user.name,
+				lastName: table.user.lastName,
+				role: table.user.role
+			},
 			session: table.session
 		})
 		.from(table.session)
@@ -79,6 +85,9 @@ export function setSessionTokenCookie(event: RequestEvent, token: string, expire
 
 export function deleteSessionTokenCookie(event: RequestEvent) {
 	event.cookies.delete(sessionCookieName, {
-		path: '/'
+		path: '/',
+		// sameSite: 'lax',
+		secure: false,
+		httpOnly: true
 	});
 }
