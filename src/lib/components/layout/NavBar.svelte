@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { slide, fly } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 	import icon from '$lib/assets/icon.png';
 	import { ChevronDown, UserCircle, Logout } from '@steeze-ui/tabler-icons';
 	import { Icon } from '@steeze-ui/svelte-icon';
+	import { clickedOutside } from '../actions/clickedOutside';
 
 	// Prop type
 	type PropType = {
@@ -13,20 +14,6 @@
 	let { fullName, email = 'No email' }: PropType = $props();
 
 	let isOpen = $state(false);
-	let container: Element | null = $state(null);
-
-	function handleClickOutside(event: MouseEvent) {
-		if (container && !container.contains(event.target as Node)) {
-			isOpen = false;
-		}
-	}
-
-	$effect(() => {
-		if (isOpen) {
-			document.addEventListener('click', handleClickOutside);
-			return () => document.removeEventListener('click', handleClickOutside);
-		}
-	});
 </script>
 
 <!-- Navigation bar -->
@@ -38,12 +25,15 @@
 				<p class="text-xl font-bold">LabMarsal</p>
 			</div>
 		</a>
+
 		<!-- Dropdown container -->
-		<div class="relative inline-flex items-center" bind:this={container}>
+		<div
+			class="relative inline-flex items-center"
+			use:clickedOutside
+			onclickedout={() => (isOpen = false)}
+		>
 			<!-- TODO: Use the reusable button -->
 			<button
-				in:fly={{ x: -300 }}
-				out:fly={{ x: -300 }}
 				onclick={() => (isOpen = !isOpen)}
 				class="flex items-center gap-x-2 rounded-lg bg-primary-blue px-4 py-2 text-white hover:bg-primary-blue/80"
 			>
@@ -58,8 +48,7 @@
 			{#if isOpen}
 				<div
 					class="absolute right-0 top-full select-none rounded border border-secondary-blue bg-gray-200 p-1 text-center shadow-lg"
-					in:slide
-					out:slide
+					transition:slide
 				>
 					<p class="m-2 text-primary-gray">{email}</p>
 					<hr class="border-1 border-primary-gray" />
