@@ -1,6 +1,17 @@
 <script lang="ts">
 	import { slide, fly } from 'svelte/transition';
 	import icon from '$lib/assets/icon.png';
+	import { ChevronDown } from '@steeze-ui/tabler-icons';
+	import { Icon } from '@steeze-ui/svelte-icon';
+
+	ChevronDown;
+
+	// Prop type
+	type PropType = {
+		text: string;
+	};
+
+	let { text }: PropType = $props();
 
 	let isOpen = $state(false);
 	let container: Element | null = $state(null);
@@ -34,9 +45,14 @@
 				in:fly={{ x: -300 }}
 				out:fly={{ x: -300 }}
 				onclick={() => (isOpen = !isOpen)}
-				class="rounded-lg bg-primary-blue px-4 py-2 text-white"
+				class="flex items-center gap-x-2 rounded-lg bg-primary-blue px-4 py-2 text-white"
 			>
-				Victor Alfonzo Hernandez Jimenez
+				<span>
+					{text}
+				</span>
+				<span class={['mt-[2px] transition-transform duration-200', { 'rotate-180': isOpen }]}>
+					<Icon src={ChevronDown} size="18" />
+				</span>
 			</button>
 
 			{#if isOpen}

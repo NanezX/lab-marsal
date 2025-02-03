@@ -3,7 +3,7 @@
 	import NavBar from '$lib/components/navs/NavBar.svelte';
 </script>
 
-<NavBar />
+<NavBar text="Victor Hernandez" />
 <Container
 	class={[
 		'flex',
