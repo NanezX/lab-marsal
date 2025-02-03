@@ -85,6 +85,9 @@ export function setSessionTokenCookie(event: RequestEvent, token: string, expire
 
 export function deleteSessionTokenCookie(event: RequestEvent) {
 	event.cookies.delete(sessionCookieName, {
-		path: '/'
+		path: '/',
+		// sameSite: 'lax',
+		secure: false,
+		httpOnly: true
 	});
 }
