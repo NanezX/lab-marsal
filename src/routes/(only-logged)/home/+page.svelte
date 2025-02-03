@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Container from '$lib/components/Container.svelte';
-	import NavBar from '$lib/components/navs/NavBar.svelte';../../home/$types.js
+	import NavBar from '$lib/components/navs/NavBar.svelte';
 
 	let { data } = $props();
 </script>
