@@ -1,19 +1,20 @@
 <script lang="ts">
 	import { slide, fly } from 'svelte/transition';
 	import icon from '$lib/assets/icon.png';
-	import { ChevronDown } from '@steeze-ui/tabler-icons';
+	import { ChevronDown, UserCircle, Logout } from '@steeze-ui/tabler-icons';
 	import { Icon } from '@steeze-ui/svelte-icon';
 
 	ChevronDown;
 
 	// Prop type
 	type PropType = {
-		text: string;
+		fullName: string;
+		email: string;
 	};
 
-	let { text }: PropType = $props();
+	let { fullName, email = 'No email' }: PropType = $props();
 
-	let isOpen = $state(false);
+	let isOpen = $state(true);
 	let container: Element | null = $state(null);
 
 	function handleClickOutside(event: MouseEvent) {
@@ -41,6 +42,7 @@
 		</a>
 		<!-- Dropdown container -->
 		<div class="relative inline-flex items-center" bind:this={container}>
+			<!-- TODO: Use the reusable button -->
 			<button
 				in:fly={{ x: -300 }}
 				out:fly={{ x: -300 }}
@@ -48,7 +50,7 @@
 				class="flex items-center gap-x-2 rounded-lg bg-primary-blue px-4 py-2 text-white"
 			>
 				<span>
-					{text}
+					{fullName}
 				</span>
 				<span class={['mt-[2px] transition-transform duration-200', { 'rotate-180': isOpen }]}>
 					<Icon src={ChevronDown} size="18" />
@@ -57,18 +59,26 @@
 
 			{#if isOpen}
 				<div
-					class={[
-						'absolute right-0 top-full  rounded border border-primary-blue bg-secondary-blue shadow-lg',
-						// Direct children
-						'direct-children:cursor-pointer direct-children:px-4 direct-children:py-2',
-						// Hover direct children
-						'hover:direct-children:bg-primary-blue hover:direct-children:text-white'
-					]}
+					class="absolute right-0 top-full select-none rounded border border-primary-blue bg-secondary-blue p-1 text-center shadow-lg"
 					in:slide
 					out:slide
 				>
-					<p>Perfil</p>
-					<p>Cerrar sesión</p>
+					<p class="m-2 text-primary-gray">{email}</p>
+					<hr class="border-1 border-primary-gray" />
+
+					<div
+						class="my-1 inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded px-4 py-2 hover:bg-primary-blue hover:text-white"
+					>
+						<p>Mi perfil</p>
+						<Icon src={UserCircle} size="24" />
+					</div>
+
+					<div
+						class="inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded px-4 py-2 hover:bg-primary-blue hover:text-white"
+					>
+						<p>Cerrar sesión</p>
+						<Icon src={Logout} size="24" />
+					</div>
 				</div>
 			{/if}
 		</div>

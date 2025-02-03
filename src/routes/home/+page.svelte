@@ -1,9 +1,11 @@
 <script lang="ts">
 	import Container from '$lib/components/Container.svelte';
 	import NavBar from '$lib/components/navs/NavBar.svelte';
+
+	let { data } = $props();
 </script>
 
-<NavBar text="Victor Hernandez" />
+<NavBar fullName={data.user.id} email={data.user?.email} />
 <Container
 	class={[
 		'flex',
