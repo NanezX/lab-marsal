@@ -41,7 +41,7 @@
 				</div>
 
 				<!--body-->
-				<div class="relative flex-auto p-6">
+				<div class="relative flex-auto">
 					{@render children()}
 				</div>
 
