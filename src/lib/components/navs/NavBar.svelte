@@ -14,7 +14,7 @@
 
 	let { fullName, email = 'No email' }: PropType = $props();
 
-	let isOpen = $state(true);
+	let isOpen = $state(false);
 	let container: Element | null = $state(null);
 
 	function handleClickOutside(event: MouseEvent) {
@@ -36,7 +36,7 @@
 	<div class="flex justify-between px-40">
 		<a href="/home" title="Ir a inicio">
 			<div class="flex items-center gap-x-2">
-				<img alt="El logo de MarsalLab" src={icon} width="50" height="50" />
+				<img alt="El logo de MarsalLab" src={icon} width="70" height="70" />
 				<p class="font-bold">Lab Marsal</p>
 			</div>
 		</a>
@@ -47,7 +47,7 @@
 				in:fly={{ x: -300 }}
 				out:fly={{ x: -300 }}
 				onclick={() => (isOpen = !isOpen)}
-				class="flex items-center gap-x-2 rounded-lg bg-primary-blue px-4 py-2 text-white"
+				class="flex items-center gap-x-2 rounded-lg bg-primary-blue px-4 py-2 text-white hover:bg-primary-blue/80"
 			>
 				<span>
 					{fullName}
