@@ -5,7 +5,7 @@
 	let { data } = $props();
 </script>
 
-<NavBar fullName={data.user.id} email={data.user?.email} />
+<NavBar fullName={`${data.user.name} ${data.user.lastName}`} email={data.user?.email} />
 <Container
 	class={[
 		'flex',
