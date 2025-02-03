@@ -59,7 +59,7 @@
 
 			{#if isOpen}
 				<div
-					class="absolute right-0 top-full select-none rounded border border-primary-blue bg-secondary-blue p-1 text-center shadow-lg"
+					class="absolute right-0 top-full select-none rounded border border-secondary-blue bg-gray-200 p-1 text-center shadow-lg"
 					in:slide
 					out:slide
 				>
@@ -67,14 +67,14 @@
 					<hr class="border-1 border-primary-gray" />
 
 					<div
-						class="my-1 inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded px-4 py-2 hover:bg-primary-blue hover:text-white"
+						class="hover:txt-white my-1 inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded px-4 py-2"
 					>
 						<p>Mi perfil</p>
 						<Icon src={UserCircle} size="24" />
 					</div>
 
 					<div
-						class="inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded px-4 py-2 hover:bg-primary-blue hover:text-white"
+						class="hover:txt-white inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded px-4 py-2"
 					>
 						<p>Cerrar sesión</p>
 						<Icon src={Logout} size="24" />
