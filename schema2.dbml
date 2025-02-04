@@ -1,0 +1,25 @@
+enum user_role {
+  administrador
+  bioanalista
+  auxiliar
+  secretaria
+}
+
+table session {
+  id text [pk, not null]
+  user_id text [not null]
+  expires_at "timestamp with time zone" [not null]
+}
+
+table user {
+  id text [pk, not null]
+  email text [not null, unique]
+  password_hash text [not null]
+  name text [not null]
+  lastname text [not null]
+  role user_role [not null]
+}
+
+// ref: session.user_id > user.id
+
+ref: session.user_id > user.id
