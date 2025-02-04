@@ -113,11 +113,9 @@
 			src={icon}
 			width="220"
 			height="220"
-			class=" rounded-2xl border-2 p-2"
+			class="rounded-2xl border-2 border-gray-200 p-2"
 		/>
 	</div>
-
-	<!-- </p> -->
 
 	<div class="space-y-4">
 		<div class="space-y-2 pt-2">
@@ -127,7 +125,7 @@
 					<a
 						use:zoom
 						href="/exams/{exam.id}"
-						class="group flex flex-col gap-y-2 rounded border-2 bg-gray-100/50 px-4 py-2 text-sm"
+						class="group flex flex-col gap-y-2 rounded-sm border-2 border-gray-200 bg-gray-100/50 px-4 py-2 text-sm"
 					>
 						<div class="flex justify-between">
 							<p>
@@ -179,7 +177,7 @@
 					<a
 						use:zoom
 						href="/clients/{client.id}"
-						class="group flex flex-col gap-y-2 rounded border-2 bg-gray-100/50 px-4 py-2 text-sm"
+						class="group flex flex-col gap-y-2 rounded-sm border-2 border-gray-200 bg-gray-100/50 px-4 py-2 text-sm"
 					>
 						<div class="flex justify-between">
 							<p>
