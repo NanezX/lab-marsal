@@ -54,13 +54,13 @@
 	];
 </script>
 
-<div class="flex h-fit flex-col rounded-xl border bg-gray-100 p-1 text-xl shadow-2xl">
+<div class="flex h-fit flex-col rounded-xl border border-gray-200 bg-gray-100 p-1 text-xl shadow-2xl">
 	<!-- Links / Modulos-->
 	{#each routes as route}
 		<a
 			href={route.href}
 			class={[
-				'flex items-center gap-x-5 rounded px-8 py-4 hover:bg-secondary-blue',
+				'flex items-center gap-x-5 rounded-sm px-8 py-4 hover:bg-secondary-blue',
 				{ 'bg-gray-200': page.url.pathname == route.href }
 			]}
 		>

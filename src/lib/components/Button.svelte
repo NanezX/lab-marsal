@@ -23,7 +23,7 @@
 
 <button
 	class={[
-		'rounded-3xl bg-primary-blue px-4 py-1 text-white hover:bg-primary-blue/75',
+		'bg-primary-blue hover:bg-primary-blue/75 cursor-pointer rounded-3xl px-4 py-1 text-white',
 		'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600',
 		className
 	]}
