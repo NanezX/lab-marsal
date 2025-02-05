@@ -120,6 +120,7 @@
 	const examTypes = ['hematologia', 'tipiaje sanguineo', 'otros'];
 
 	let createNewPacient = $state(false);
+	let createNewPacient2 = $state(false);
 	let pacientId = $state('23875912');
 	let pacientFullname = $state('Andres Bello');
 </script>
@@ -137,7 +138,12 @@
 						bind:value={inputExamId}
 						name="inputExamId"
 					/>
-					<Checkbox text="Autogenerar ID" wrapperClass="ml-2" bind:value={autoId} />
+					<Checkbox
+						name="autoGenId"
+						text="Autogenerar ID"
+						wrapperClass="ml-2"
+						bind:value={autoId}
+					/>
 				</div>
 				<div class="flex gap-x-6">
 					<Select
@@ -162,9 +168,14 @@
 
 			<hr class="border-primary-gray/50 border" />
 			<div>
-				<div class="mb-4 inline-flex">
+				<div class="mb-4 inline-flex gap-x-4">
 					<p class="text-lg font-semibold">Paciente</p>
-					<Checkbox text="Crear nuevo paciente" wrapperClass="ml-2" bind:value={createNewPacient} />
+					<Checkbox
+						name="createNewPacient"
+						text="Crear nuevo paciente"
+						wrapperClass="ml-2"
+						bind:value={createNewPacient2}
+					/>
 				</div>
 				<div class="mb-4 flex items-center gap-x-2">
 					<Input

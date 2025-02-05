@@ -5,6 +5,7 @@
 	type PropType = {
 		value: boolean;
 		text: string;
+		name: string;
 		title?: string;
 		disabled?: boolean;
 		wrapperClass?: ClassValue;
@@ -13,6 +14,7 @@
 	let {
 		value = $bindable(false),
 		text,
+		name,
 		title,
 		disabled = false,
 		wrapperClass
@@ -23,6 +25,7 @@
 	<label class="relative flex cursor-pointer items-center" for="check-2">
 		<input
 			bind:checked={value}
+			{name}
 			{disabled}
 			type="checkbox"
 			class="peer checked:border-primary-blue checked:bg-primary-blue h-4 w-4 cursor-pointer appearance-none rounded-sm border border-slate-300 shadow-sm transition-all hover:shadow-md"

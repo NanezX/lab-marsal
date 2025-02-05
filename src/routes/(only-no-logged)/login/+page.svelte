@@ -92,6 +92,7 @@
 			{#if $errors.password}<span class="text-sm text-red-500">{$errors.password}</span>{/if}
 
 			<Checkbox
+				name="showPassword"
 				bind:value={
 					() => showPassword,
 					(value) => {
