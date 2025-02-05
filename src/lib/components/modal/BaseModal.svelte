@@ -3,6 +3,7 @@
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { X } from '@steeze-ui/tabler-icons';
 	import { blur } from 'svelte/transition';
+	import { clickedOutside } from '../actions/clickedOutside';
 
 	let { title = 'My title', showModal = $bindable(), children } = $props();
 
@@ -16,7 +17,7 @@
 		transition:blur
 		class="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-hidden focus:outline-hidden"
 	>
-		<div class="relative mx-auto my-6 w-2/4 max-w-3xl">
+		<div use:clickedOutside onclickedout={closeModal} class="relative mx-auto my-6 w-2/4 max-w-3xl">
 			<!--content-->
 			<div
 				class="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-hidden focus:outline-hidden"
