@@ -61,7 +61,7 @@
 			{placeholder}
 			{disabled}
 			{title}
-			class={[inputClass, 'pl-4']}
+			class={[inputClass, '!pl-4']}
 			{required}
 		/>
 	</div>

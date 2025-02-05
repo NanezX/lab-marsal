@@ -160,7 +160,7 @@
 				</div>
 			</div>
 
-			<hr class="border-1 border-primary-gray/50" />
+			<hr class="border-primary-gray/50 border" />
 			<div>
 				<div class="mb-4 inline-flex">
 					<p class="text-lg font-semibold">Paciente</p>
@@ -204,7 +204,7 @@
 	<div class="mt-4 grid grid-cols-2 gap-3">
 		{#each lastExams as exam}
 			<div
-				class="select-none rounded border bg-white px-4 py-2 text-lg hover:border hover:border-primary-blue hover:shadow-2xl"
+				class="hover:border-primary-blue rounded-sm border bg-white px-4 py-2 text-lg select-none hover:border hover:shadow-2xl"
 				use:zoom={{ scale: 1.06, zindexIn: '99999', zindexOut: 'auto' }}
 			>
 				<div class="mb-[-0.25rem] flex">
@@ -212,7 +212,7 @@
 						<span class="font-semibold">Estado: </span>
 						<span>{exam.pending ? 'En proceso' : 'Completado'}</span>
 					</p>
-					<p class="ml-auto w-fit rounded-full bg-secondary-gray/50 p-1"># {exam.id}</p>
+					<p class="bg-secondary-gray/50 ml-auto w-fit rounded-full p-1"># {exam.id}</p>
 				</div>
 
 				<p class="inline-flex items-center gap-x-2">
