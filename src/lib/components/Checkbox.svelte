@@ -25,11 +25,11 @@
 			bind:checked={value}
 			{disabled}
 			type="checkbox"
-			class="peer h-4 w-4 cursor-pointer appearance-none rounded border border-slate-300 shadow transition-all checked:border-primary-blue checked:bg-primary-blue hover:shadow-md"
+			class="peer checked:border-primary-blue checked:bg-primary-blue h-4 w-4 cursor-pointer appearance-none rounded-sm border border-slate-300 shadow-sm transition-all hover:shadow-md"
 			id="check-2"
 		/>
 		<span
-			class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-white opacity-0 peer-checked:opacity-100"
+			class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform text-white opacity-0 peer-checked:opacity-100"
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -47,5 +47,5 @@
 			</svg>
 		</span>
 	</label>
-	<label class="cursor-pointer select-none text-sm" for="check-2">{text}</label>
+	<label class="cursor-pointer text-sm select-none" for="check-2">{text}</label>
 </div>

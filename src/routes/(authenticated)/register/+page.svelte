@@ -47,7 +47,7 @@
 
 <!-- Izquierda Saludo -->
 <div
-	class="rounded-l-lm w-2/5 space-y-10 rounded-l-xl bg-gradient-to-br from-secondary-blue to-primary-blue text-white"
+	class="rounded-l-lm from-secondary-blue to-primary-blue w-2/5 space-y-10 rounded-l-xl bg-linear-to-br text-white"
 >
 	<div class="flex items-center justify-around">
 		<img alt="El logo de MarsalLab" src={icon} width="100" height="100" />
@@ -76,8 +76,10 @@
 			- Repeat Password: debe ser igual que Password
 	 -->
 <!-- Derecha register new process -->
-<div class="flex w-3/5 flex-col justify-center space-y-8 rounded-r-xl border bg-white">
-	<h3 class="text-center text-2xl text-primary-blue">Registrar nuevo usuario</h3>
+<div
+	class="flex w-3/5 flex-col justify-center space-y-8 rounded-r-xl border border-gray-200 bg-white"
+>
+	<h3 class="text-primary-blue text-center text-2xl">Registrar nuevo usuario</h3>
 
 	<form class="flex flex-col gap-y-8" method="POST" action="?/register" use:enhance>
 		<div class="grid grid-cols-6 gap-x-2 gap-y-6">

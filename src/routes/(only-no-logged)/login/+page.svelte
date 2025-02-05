@@ -42,7 +42,7 @@
 <!-- <Container class={['flex', 'direct-children:p-8', 'rounded-xl', 'w-2/3', 'max-w-5xl']}> -->
 <!-- Izquierda bienvenida -->
 <div
-	class="rounded-l-lm w-3/5 space-y-10 rounded-l-xl bg-gradient-to-br from-secondary-blue to-primary-blue text-white"
+	class="rounded-l-lm from-secondary-blue to-primary-blue w-3/5 space-y-10 rounded-l-xl bg-linear-to-br text-white"
 >
 	<div class="flex items-center justify-around">
 		<img alt="El logo de MarsalLab" src={icon} width="100" height="100" />
@@ -62,8 +62,10 @@
 </div>
 
 <!-- Derecha login process -->
-<div class="flex w-2/5 flex-col justify-center space-y-8 rounded-r-xl border bg-white">
-	<h3 class="text-center text-2xl text-primary-blue">Iniciar sesión</h3>
+<div
+	class="flex w-2/5 flex-col justify-center space-y-8 rounded-r-xl border border-gray-200 bg-white"
+>
+	<h3 class="text-primary-blue text-center text-2xl">Iniciar sesión</h3>
 
 	<form class="flex flex-col gap-y-8" method="POST" action="?/login" use:enhance>
 		<div class="space-y-4">

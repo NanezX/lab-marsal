@@ -14,22 +14,22 @@
 {#if showModal}
 	<div
 		transition:blur
-		class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none"
+		class="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-hidden focus:outline-hidden"
 	>
 		<div class="relative mx-auto my-6 w-2/4 max-w-3xl">
 			<!--content-->
 			<div
-				class="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none"
+				class="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-hidden focus:outline-hidden"
 			>
 				<!--header-->
 				<div
-					class="border-blueGray-200 flex items-start justify-between rounded-t border-b border-solid p-5"
+					class="border-blueGray-200 flex items-start justify-between rounded-t border-b border-solid border-b-gray-200 p-5"
 				>
 					<h3 class="text-3xl font-semibold text-gray-600">
 						{title}
 					</h3>
 					<button
-						class="float-right ml-auto border-0 bg-transparent p-1 text-3xl font-semibold leading-none text-gray-500 outline-none hover:text-red-500 focus:outline-none"
+						class="float-right ml-auto border-0 bg-transparent p-1 text-3xl leading-none font-semibold text-gray-500 outline-hidden hover:text-red-500 focus:outline-hidden"
 						onclick={closeModal}
 					>
 						<Icon src={X} size="24" />
@@ -42,7 +42,9 @@
 				</div>
 
 				<!--footer-->
-				<div class=" flex items-center justify-end gap-x-6 rounded-b border-t border-solid p-6">
+				<div
+					class=" flex items-center justify-end gap-x-6 rounded-b border-t border-solid border-t-gray-200 p-6"
+				>
 					<Button class="bg-red-500 hover:bg-red-500/75" onclick={closeModal}>Cerrar</Button>
 					<Button
 						onclick={() => {
