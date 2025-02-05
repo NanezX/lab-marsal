@@ -25,7 +25,7 @@
 			bind:checked={value}
 			{disabled}
 			type="checkbox"
-			class="peer h-4 w-4 cursor-pointer appearance-none rounded border border-slate-300 shadow transition-all checked:border-primary-blue checked:bg-primary-blue hover:shadow-md"
+			class="peer h-4 w-4 cursor-pointer appearance-none rounded-sm border border-slate-300 shadow-sm transition-all checked:border-primary-blue checked:bg-primary-blue hover:shadow-md"
 			id="check-2"
 		/>
 		<span
