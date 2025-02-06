@@ -120,7 +120,6 @@
 	const examTypes = ['hematologia', 'tipiaje sanguineo', 'otros'];
 
 	let createNewPacient = $state(false);
-	let createNewPacient2 = $state(false);
 	let pacientId = $state('23875912');
 	let pacientFullname = $state('Andres Bello');
 </script>
@@ -174,7 +173,7 @@
 						name="createNewPacient"
 						text="Crear nuevo paciente"
 						wrapperClass="ml-2"
-						bind:value={createNewPacient2}
+						bind:value={createNewPacient}
 					/>
 				</div>
 				<div class="mb-4 flex items-center gap-x-2">
