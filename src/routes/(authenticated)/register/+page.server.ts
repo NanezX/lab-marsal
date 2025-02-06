@@ -60,12 +60,21 @@ export const actions: Actions = {
 		});
 
 		try {
+			// Moch a random ID
+			function getRandomInt(min: number, max: number) {
+				min = Math.ceil(min);
+				max = Math.floor(max);
+				return Math.floor(Math.random() * (max - min + 1)) + min;
+			}
+			// TODO: Send the real data to the database with the new table format and remove the mocked values
 			await db.insert(table.user).values({
 				email: email.toLowerCase(),
 				passwordHash,
-				name,
+				firstName: name,
 				lastName,
-				role
+				role,
+				documentId: getRandomInt(0, 999999999),
+				birthdate: new Date(Date.now()).toString()
 			});
 
 			const results = await db

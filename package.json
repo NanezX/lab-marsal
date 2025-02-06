@@ -17,12 +17,15 @@
 		"test:e2e": "playwright test",
 		"db:push": "drizzle-kit push",
 		"db:migrate": "drizzle-kit migrate",
-		"db:studio": "drizzle-kit studio"
+		"db:studio": "drizzle-kit studio",
+		"dbml:schema": "tsx ./dbml/dbml.ts",
+		"dbml:diagram": "dbml-renderer -i ./dbml/schema.dbml -o ./dbml/diagram.svg"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.18.0",
 		"@playwright/test": "^1.50.0",
+		"@softwaretechnik/dbml-renderer": "^1.0.30",
 		"@steeze-ui/tabler-icons": "^3.3.1",
 		"@sveltejs/adapter-auto": "^4.0.0",
 		"@sveltejs/kit": "^2.17.1",
@@ -30,6 +33,8 @@
 		"@tailwindcss/postcss": "^4.0.0",
 		"@types/node": "^22.12.0",
 		"@zerodevx/svelte-toast": "^0.9.6",
+		"autoprefixer": "^10.4.20",
+		"drizzle-dbml-generator": "^0.10.0",
 		"drizzle-kit": "^0.30.2",
 		"eslint": "^9.18.0",
 		"eslint-config-prettier": "^10.0.1",
@@ -41,6 +46,7 @@
 		"svelte": "^5.19.4",
 		"svelte-check": "^4.0.0",
 		"sveltekit-superforms": "^2.23.1",
+		"tsx": "^4.19.2",
 		"tailwindcss": "^4.0.0",
 		"typescript": "^5.0.0",
 		"typescript-eslint": "^8.20.0",

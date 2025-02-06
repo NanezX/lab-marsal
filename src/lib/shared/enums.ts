@@ -1,6 +1,23 @@
 export enum UserRoles {
-	secretaria = 'secretaria',
-	auxiliar = 'auxiliar',
-	bioanalista = 'bioanalista',
-	admin = 'administrador'
+	Secretaria = 'secretaria',
+	Auxiliar = 'auxiliar',
+	Bioanalista = 'bioanalista',
+	Admin = 'administrador'
+}
+
+export enum ExamPriority {
+	Low = 'low',
+	Normal = 'normal',
+	High = 'high'
+}
+
+export enum ExamStatus {
+	Cancelled = 'cancelled',
+	Active = 'active',
+	Completed = 'completed'
+}
+
+export enum PatientGender {
+	Male = 'male',
+	Female = 'female'
 }
