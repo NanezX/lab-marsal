@@ -1,6 +1,8 @@
 import { UserRoles } from '../../shared/enums';
-import { encodeBase32LowerCase } from '@oslojs/encoding';
-import { pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+// import { encodeBase32LowerCase } from '@oslojs/encoding';
+import { pgEnum, pgTable, uuid, text, timestamp, boolean, date } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { v4 as uuidv4 } from 'uuid'; 
 
 export const userRoleEnum = pgEnum('user_role', [
 	UserRoles.admin,
@@ -10,21 +12,30 @@ export const userRoleEnum = pgEnum('user_role', [
 ]);
 
 export const user = pgTable('user', {
-	id: text('id')
+	id: uuid('id')
 		.primaryKey()
-		.$defaultFn(() => {
-			// TODO: Usage of UUID v4 directly?
-			// ID with 120 bits of entropy, or about the same as UUID v4.
-			const bytes = crypto.getRandomValues(new Uint8Array(15));
-			const id = encodeBase32LowerCase(bytes);
-			return id;
-		}),
+		.$defaultFn(() => uuidv4()),
 	email: text('email').notNull().unique(),
 	passwordHash: text('password_hash').notNull(),
-	name: text('name').notNull(),
+	firstName: text('first').notNull(),
 	lastName: text('lastname').notNull(),
-	role: userRoleEnum().notNull()
+	role: userRoleEnum().notNull(),
+	deleted: boolean().notNull().default(false),
+	documentId: text('document_id').notNull(),
+	birthdate: date(),
+	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
+		.defaultNow()
+		.$onUpdate(() => new Date())
+		.notNull(),
+	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
+		.defaultNow()
+		.$onUpdate(() => new Date())
+		.notNull()
 });
+
+export const userRelations = relations(user, ({ many }) => ({
+	session: many(session),
+}));
 
 export const session = pgTable('session', {
 	id: text('id').primaryKey(),
@@ -33,6 +44,13 @@ export const session = pgTable('session', {
 		.references(() => user.id),
 	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull()
 });
+
+export const sessionRelations = relations(session, ({ one }) => ({
+	user: one(user, {
+		fields: [session.userId],
+		references: [user.id],
+	}),
+}));
 
 export type Session = typeof session.$inferSelect;
 
