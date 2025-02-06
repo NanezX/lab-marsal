@@ -107,7 +107,7 @@
 
 <div class="flex w-full flex-col">
 	<div class="flex items-center justify-evenly gap-x-20">
-		<p class="text-3xl">Bienvenido {data.user.name}</p>
+		<p class="text-3xl">Bienvenido {data.user.firstName}</p>
 		<img
 			alt="El logo de MarsalLab"
 			src={icon}
