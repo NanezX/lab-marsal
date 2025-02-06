@@ -86,7 +86,7 @@ export const user = pgTable('user', {
 
 // User relations declarations
 export const userRelations = relations(user, ({ many }) => ({
-	session: many(session)
+	sessions: many(session)
 }));
 
 // Patient table
@@ -95,6 +95,11 @@ export const patient = pgTable('patient', {
 		.primaryKey()
 		.$defaultFn(() => uuidv4())
 });
+
+// Patient relations declarations
+export const patientRelations = relations(user, ({ many }) => ({
+	exams: many(exam)
+}));
 
 // Exam type table
 export const examType = pgTable('exam_type', {
@@ -119,6 +124,11 @@ export const examType = pgTable('exam_type', {
 		.notNull()
 });
 
+// Exam type relations declarations
+export const examTypeRelations = relations(examType, ({ many }) => ({
+	exams: many(exam)
+}));
+
 // Exam table
 export const exam = pgTable('exam', {
 	id: uuid()
@@ -127,7 +137,7 @@ export const exam = pgTable('exam', {
 	patientId: uuid('patient_id')
 		.notNull()
 		.references(() => patient.id),
-	examType: uuid('exam_type')
+	examTypeId: uuid('exam_type_id')
 		.notNull()
 		.references(() => examType.id),
 	priority: examPriorityEnum().notNull().default(ExamPriority.Normal),
@@ -145,3 +155,15 @@ export const exam = pgTable('exam', {
 		.$onUpdate(() => new Date())
 		.notNull()
 });
+
+// Exam relations declarations
+export const examRelations = relations(exam, ({ one }) => ({
+	patient: one(patient, {
+		fields: [exam.patientId],
+		references: [patient.id]
+	}),
+	examType: one(examType, {
+		fields: [exam.examTypeId],
+		references: [examType.id]
+	})
+}));
