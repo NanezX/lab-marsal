@@ -2,7 +2,7 @@ import { UserRoles } from '../../shared/enums';
 // import { encodeBase32LowerCase } from '@oslojs/encoding';
 import { pgEnum, pgTable, uuid, text, timestamp, boolean, date } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import { v4 as uuidv4 } from 'uuid'; 
+import { v4 as uuidv4 } from 'uuid';
 
 export const userRoleEnum = pgEnum('user_role', [
 	UserRoles.admin,
@@ -11,6 +11,7 @@ export const userRoleEnum = pgEnum('user_role', [
 	UserRoles.secretaria
 ]);
 
+// User table
 export const user = pgTable('user', {
 	id: uuid('id')
 		.primaryKey()
@@ -33,10 +34,12 @@ export const user = pgTable('user', {
 		.notNull()
 });
 
+// User relations declarations
 export const userRelations = relations(user, ({ many }) => ({
-	session: many(session),
+	session: many(session)
 }));
 
+// Session table
 export const session = pgTable('session', {
 	id: text('id').primaryKey(),
 	userId: text('user_id')
@@ -45,11 +48,12 @@ export const session = pgTable('session', {
 	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull()
 });
 
+// Session relations declarations
 export const sessionRelations = relations(session, ({ one }) => ({
 	user: one(user, {
 		fields: [session.userId],
-		references: [user.id],
-	}),
+		references: [user.id]
+	})
 }));
 
 export type Session = typeof session.$inferSelect;
