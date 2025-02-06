@@ -120,6 +120,7 @@
 	const examTypes = ['hematologia', 'tipiaje sanguineo', 'otros'];
 
 	let createNewPacient = $state(false);
+	let createNewPacient2 = $state(false);
 	let pacientId = $state('23875912');
 	let pacientFullname = $state('Andres Bello');
 </script>
@@ -137,7 +138,12 @@
 						bind:value={inputExamId}
 						name="inputExamId"
 					/>
-					<Checkbox text="Autogenerar ID" wrapperClass="ml-2" bind:value={autoId} />
+					<Checkbox
+						name="autoGenId"
+						text="Autogenerar ID"
+						wrapperClass="ml-2"
+						bind:value={autoId}
+					/>
 				</div>
 				<div class="flex gap-x-6">
 					<Select
@@ -160,11 +166,16 @@
 				</div>
 			</div>
 
-			<hr class="border-1 border-primary-gray/50" />
+			<hr class="border-primary-gray/50 border" />
 			<div>
-				<div class="mb-4 inline-flex">
+				<div class="mb-4 inline-flex gap-x-4">
 					<p class="text-lg font-semibold">Paciente</p>
-					<Checkbox text="Crear nuevo paciente" wrapperClass="ml-2" bind:value={createNewPacient} />
+					<Checkbox
+						name="createNewPacient"
+						text="Crear nuevo paciente"
+						wrapperClass="ml-2"
+						bind:value={createNewPacient2}
+					/>
 				</div>
 				<div class="mb-4 flex items-center gap-x-2">
 					<Input
@@ -204,7 +215,7 @@
 	<div class="mt-4 grid grid-cols-2 gap-3">
 		{#each lastExams as exam}
 			<div
-				class="select-none rounded border bg-white px-4 py-2 text-lg hover:border hover:border-primary-blue hover:shadow-2xl"
+				class="hover:border-primary-blue rounded-sm border bg-white px-4 py-2 text-lg select-none hover:border hover:shadow-2xl"
 				use:zoom={{ scale: 1.06, zindexIn: '99999', zindexOut: 'auto' }}
 			>
 				<div class="mb-[-0.25rem] flex">
@@ -212,7 +223,7 @@
 						<span class="font-semibold">Estado: </span>
 						<span>{exam.pending ? 'En proceso' : 'Completado'}</span>
 					</p>
-					<p class="ml-auto w-fit rounded-full bg-secondary-gray/50 p-1"># {exam.id}</p>
+					<p class="bg-secondary-gray/50 ml-auto w-fit rounded-full p-1"># {exam.id}</p>
 				</div>
 
 				<p class="inline-flex items-center gap-x-2">

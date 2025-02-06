@@ -11,6 +11,6 @@
 </script>
 
 <ToastSkeleton>
-	<Spinner element="span" class="m-1 max-h-6 min-h-6 min-w-6 max-w-6" />
+	<Spinner element="span" class="m-1 max-h-6 min-h-6 max-w-6 min-w-6" />
 	<span class="break-all">{text}</span>
 </ToastSkeleton>

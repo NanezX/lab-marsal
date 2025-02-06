@@ -4,6 +4,7 @@
 	import { ChevronDown, UserCircle, Logout } from '@steeze-ui/tabler-icons';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { clickedOutside } from '../actions/clickedOutside';
+	import Button from '../Button.svelte';
 
 	// Prop type
 	type PropType = {
@@ -17,7 +18,7 @@
 </script>
 
 <!-- Navigation bar -->
-<div class="w-full border-b border-b-primary-blue/60 bg-secondary-blue/80 py-4 shadow-xl">
+<div class="border-b-primary-blue/60 bg-secondary-blue/80 w-full border-b py-4 shadow-xl">
 	<div class="mx-auto flex w-[80%] justify-between px-40">
 		<a href="/home" title="Ir a inicio">
 			<div class="flex items-center gap-x-2">
@@ -32,10 +33,9 @@
 			use:clickedOutside
 			onclickedout={() => (isOpen = false)}
 		>
-			<!-- TODO: Use the reusable button -->
-			<button
+			<Button
 				onclick={() => (isOpen = !isOpen)}
-				class="flex items-center gap-x-2 rounded-lg bg-primary-blue px-4 py-2 text-white hover:bg-primary-blue/80"
+				class="flex items-center gap-x-2 rounded-lg px-4 py-2"
 			>
 				<span>
 					{fullName}
@@ -43,19 +43,19 @@
 				<span class={['mt-[2px] transition-transform duration-200', { 'rotate-180': isOpen }]}>
 					<Icon src={ChevronDown} size="18" />
 				</span>
-			</button>
+			</Button>
 
 			{#if isOpen}
 				<div
-					class="absolute right-0 top-full select-none rounded border border-secondary-blue bg-gray-200 p-1 text-center shadow-lg"
+					class="border-secondary-blue absolute top-full right-0 rounded-sm border bg-gray-200 p-1 text-center shadow-lg select-none"
 					transition:slide
 				>
-					<p class="m-2 text-primary-gray">{email}</p>
-					<hr class="border-1 border-primary-gray" />
+					<p class="text-primary-gray m-2">{email}</p>
+					<hr class="border-primary-gray/50 border-1" />
 
 					<a
 						href="account"
-						class="my-1 inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded px-4 py-2 hover:bg-secondary-blue"
+						class="hover:bg-secondary-blue my-1 inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded-sm px-4 py-2"
 					>
 						<p>Mi perfil</p>
 						<Icon src={UserCircle} size="24" />
@@ -63,7 +63,7 @@
 
 					<form method="POST" action="/logout">
 						<button
-							class="inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded px-4 py-2 hover:bg-secondary-blue"
+							class="hover:bg-secondary-blue inline-flex w-full cursor-pointer items-center justify-end gap-x-2 rounded-sm px-4 py-2"
 						>
 							<p>Cerrar sesión</p>
 							<Icon src={Logout} size="24" />
