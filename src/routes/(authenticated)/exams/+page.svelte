@@ -119,6 +119,7 @@
 	let examType = $state('');
 	const examTypes = ['hematologia', 'tipiaje sanguineo', 'otros'];
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	let createNewPacient = $state(false);
 	let createNewPacient2 = $state(false);
 	let pacientId = $state('23875912');
