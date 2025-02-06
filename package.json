@@ -54,6 +54,7 @@
 		"@oslojs/encoding": "^1.1.0",
 		"@steeze-ui/svelte-icon": "^1.6.2",
 		"drizzle-orm": "^0.39.1",
-		"postgres": "^3.4.5"
+		"postgres": "^3.4.5",
+		"uuid": "^11.0.5"
 	}
 }

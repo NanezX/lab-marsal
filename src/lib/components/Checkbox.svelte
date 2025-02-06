@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { ClassValue } from 'svelte/elements';
+	import { v4 as uuidv4 } from 'uuid';
 
 	// Prop type
 	type PropType = {
@@ -19,17 +20,19 @@
 		disabled = false,
 		wrapperClass
 	}: PropType = $props();
+
+	let instanceId = uuidv4();
 </script>
 
 <div class={['ml-auto flex w-fit items-center gap-x-2', wrapperClass]} {title}>
-	<label class="relative flex cursor-pointer items-center" for="check-2">
+	<label class="relative flex cursor-pointer items-center" for={instanceId}>
 		<input
 			bind:checked={value}
 			{name}
 			{disabled}
 			type="checkbox"
 			class="peer checked:border-primary-blue checked:bg-primary-blue h-4 w-4 cursor-pointer appearance-none rounded-sm border border-slate-300 shadow-sm transition-all hover:shadow-md"
-			id="check-2"
+			id={instanceId}
 		/>
 		<span
 			class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform text-white opacity-0 peer-checked:opacity-100"
@@ -50,5 +53,5 @@
 			</svg>
 		</span>
 	</label>
-	<label class="cursor-pointer text-sm select-none" for="check-2">{text}</label>
+	<label class="cursor-pointer text-sm select-none" for={instanceId}>{text}</label>
 </div>
