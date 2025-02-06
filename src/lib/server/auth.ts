@@ -71,6 +71,7 @@ export async function validateSessionToken(token: string) {
 export type SessionValidationResult = Awaited<ReturnType<typeof validateSessionToken>>;
 
 export async function invalidateSession(sessionId: string) {
+	// TODO: Should use soft delete with the delete column
 	await db.delete(table.session).where(eq(table.session.id, sessionId));
 }
 
