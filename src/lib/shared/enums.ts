@@ -6,13 +6,13 @@ export enum UserRoles {
 }
 
 export enum ExamPriority {
-	Low = "low",
-	Normal = "normal",
-	High = "high"
+	Low = 'low',
+	Normal = 'normal',
+	High = 'high'
 }
 
 export enum ExamStatus {
-	Cancelled = "cancelled",
-	Active = "active",
-	Completed = "completed"
+	Cancelled = 'cancelled',
+	Active = 'active',
+	Completed = 'completed'
 }

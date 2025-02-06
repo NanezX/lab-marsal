@@ -1,4 +1,4 @@
-import type { session, user } from "./schema";
+import type { session, user } from './schema';
 
 export type Session = typeof session.$inferSelect;
 

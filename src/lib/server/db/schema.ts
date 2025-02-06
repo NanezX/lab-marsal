@@ -1,6 +1,16 @@
 import { UserRoles, ExamPriority, ExamStatus } from '../../shared/enums';
 // import { encodeBase32LowerCase } from '@oslojs/encoding';
-import { pgEnum, pgTable, uuid, text, timestamp, boolean, date, jsonb, decimal } from 'drizzle-orm/pg-core';
+import {
+	pgEnum,
+	pgTable,
+	uuid,
+	text,
+	timestamp,
+	boolean,
+	date,
+	jsonb,
+	decimal
+} from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -20,13 +30,29 @@ export const examPriorityEnum = pgEnum('exam_priority', [
 	ExamPriority.High
 ]);
 
-
 export const examStatusEnum = pgEnum('exam_status', [
 	ExamStatus.Cancelled,
 	ExamStatus.Active,
-	ExamStatus.Completed,
+	ExamStatus.Completed
 ]);
 
+// Session table
+export const session = pgTable('session', {
+	// TODO: Use only UUID as IDs
+	id: text().primaryKey(),
+	userId: uuid('user_id')
+		.notNull()
+		.references(() => user.id),
+	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull()
+});
+
+// Session relations declarations
+export const sessionRelations = relations(session, ({ one }) => ({
+	user: one(user, {
+		fields: [session.userId],
+		references: [user.id]
+	})
+}));
 
 // User table
 export const user = pgTable('user', {
@@ -57,43 +83,24 @@ export const userRelations = relations(user, ({ many }) => ({
 	session: many(session)
 }));
 
-// Session table
-export const session = pgTable('session', {
-	// TODO: Use only UUID as IDs
-	id: text().primaryKey(),
-	userId: uuid('user_id')
-		.notNull()
-		.references(() => user.id),
-	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull()
-});
-
-// Session relations declarations
-export const sessionRelations = relations(session, ({ one }) => ({
-	user: one(user, {
-		fields: [session.userId],
-		references: [user.id]
-	})
-}));
-
-
 // Patient table
-export const patient = pgTable("patient", {
+export const patient = pgTable('patient', {
 	id: uuid()
 		.primaryKey()
-		.$defaultFn(() => uuidv4()),
-})
+		.$defaultFn(() => uuidv4())
+});
 
 // Exam type table
-export const examType = pgTable("exam_type", {
+export const examType = pgTable('exam_type', {
 	id: uuid()
 		.primaryKey()
 		.$defaultFn(() => uuidv4()),
 	name: text().notNull().unique(),
 	description: text(),
-	basePrice: decimal("base_price", { precision: 19, scale: 3 }).notNull(),
+	basePrice: decimal('base_price', { precision: 19, scale: 3 }).notNull(),
 	parameters: jsonb().notNull(),
 	formulas: jsonb().notNull(),
-	normalValues: jsonb("normal_values").notNull(),
+	normalValues: jsonb('normal_values').notNull(),
 
 	deleted: boolean().notNull().default(false),
 	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
@@ -104,18 +111,24 @@ export const examType = pgTable("exam_type", {
 		.defaultNow()
 		.$onUpdate(() => new Date())
 		.notNull()
-})
+});
 
 // Exam table
-export const exam = pgTable("exam", {
-	id: uuid().primaryKey().$defaultFn(() => uuidv4()),
-	patientId: uuid("patient_id").notNull().references(() => patient.id),
-	examType: uuid("exam_type").notNull().references(() => examType.id),
+export const exam = pgTable('exam', {
+	id: uuid()
+		.primaryKey()
+		.$defaultFn(() => uuidv4()),
+	patientId: uuid('patient_id')
+		.notNull()
+		.references(() => patient.id),
+	examType: uuid('exam_type')
+		.notNull()
+		.references(() => examType.id),
 	priority: examPriorityEnum().notNull().default(ExamPriority.Normal),
 	status: examStatusEnum().notNull().default(ExamStatus.Active),
 	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }),
 	results: jsonb(),
-	price: decimal("base_price", { precision: 19, scale: 3 }).notNull(),
+	price: decimal('base_price', { precision: 19, scale: 3 }).notNull(),
 	deleted: boolean().notNull().default(false),
 	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
 		.defaultNow()
@@ -125,4 +138,4 @@ export const exam = pgTable("exam", {
 		.defaultNow()
 		.$onUpdate(() => new Date())
 		.notNull()
-})
+});
