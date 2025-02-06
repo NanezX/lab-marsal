@@ -7,7 +7,6 @@ import {
 	text,
 	timestamp,
 	boolean,
-	date,
 	jsonb,
 	integer,
 	decimal,
@@ -77,8 +76,7 @@ export const user = pgTable('user', {
 	lastName: text().notNull(),
 	role: userRoleEnum().notNull(),
 	documentId: integer('document_id').notNull().unique(),
-	birthdate: date().notNull(),
-
+	birthdate: timestamp({ withTimezone: true, mode: 'date' }).notNull(),
 	deleted: boolean().notNull().default(false),
 	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
 		.defaultNow()
@@ -103,7 +101,7 @@ export const patient = pgTable('patient', {
 	firstName: text().notNull(),
 	lastName: text().notNull(),
 	documentId: integer('document_id').notNull().unique(),
-	birthdate: date().notNull(),
+	birthdate: timestamp({ withTimezone: true, mode: 'date' }).notNull(),
 	email: text(),
 	phoneNumber: text(),
 	gender: patientGenderEnum().notNull(),
