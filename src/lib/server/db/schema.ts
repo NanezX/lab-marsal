@@ -9,7 +9,8 @@ import {
 	boolean,
 	date,
 	jsonb,
-	decimal
+	decimal,
+	varchar
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
@@ -53,6 +54,11 @@ export const sessionRelations = relations(session, ({ one }) => ({
 		references: [user.id]
 	})
 }));
+
+export const config = pgTable('configuration', {
+	id: varchar({ length: 50 }),
+	value: text()
+});
 
 // User table
 export const user = pgTable('user', {
