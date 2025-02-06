@@ -6,7 +6,7 @@
 	type PropType = {
 		value: boolean;
 		text: string;
-		name: string;
+		name?: string;
 		title?: string;
 		disabled?: boolean;
 		wrapperClass?: ClassValue;
