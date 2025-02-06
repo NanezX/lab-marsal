@@ -74,7 +74,7 @@ export const actions: Actions = {
 				lastName,
 				role,
 				documentId: getRandomInt(0, 999999999),
-				birthdate: new Date(Date.now()).toString()
+				birthdate: new Date(Date.now())
 			});
 
 			const results = await db
