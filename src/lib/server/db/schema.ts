@@ -1,4 +1,4 @@
-import { UserRoles, ExamPriority, ExamStatus } from '../../shared/enums';
+import { UserRoles, ExamPriority, ExamStatus, PatientGender } from '../../shared/enums';
 // import { encodeBase32LowerCase } from '@oslojs/encoding';
 import {
 	pgEnum,
@@ -9,6 +9,7 @@ import {
 	boolean,
 	date,
 	jsonb,
+	integer,
 	decimal,
 	varchar
 } from 'drizzle-orm/pg-core';
@@ -35,6 +36,11 @@ export const examStatusEnum = pgEnum('exam_status', [
 	ExamStatus.Cancelled,
 	ExamStatus.Active,
 	ExamStatus.Completed
+]);
+
+export const patientGenderEnum = pgEnum('patient_gender', [
+	PatientGender.Male,
+	PatientGender.Female
 ]);
 
 // Session table
@@ -70,8 +76,8 @@ export const user = pgTable('user', {
 	firstName: text().notNull(),
 	lastName: text().notNull(),
 	role: userRoleEnum().notNull(),
-	documentId: text('document_id').notNull(),
-	birthdate: date(),
+	documentId: integer('document_id').notNull().unique(),
+	birthdate: date().notNull(),
 
 	deleted: boolean().notNull().default(false),
 	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
@@ -93,7 +99,23 @@ export const userRelations = relations(user, ({ many }) => ({
 export const patient = pgTable('patient', {
 	id: uuid()
 		.primaryKey()
-		.$defaultFn(() => uuidv4())
+		.$defaultFn(() => uuidv4()),
+	firstName: text().notNull(),
+	lastName: text().notNull(),
+	documentId: integer('document_id').notNull().unique(),
+	birthdate: date().notNull(),
+	email: text(),
+	phoneNumber: text(),
+	gender: patientGenderEnum().notNull(),
+	deleted: boolean().notNull().default(false),
+	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
+		.defaultNow()
+		.$onUpdate(() => new Date())
+		.notNull(),
+	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
+		.defaultNow()
+		.$onUpdate(() => new Date())
+		.notNull()
 });
 
 // Patient relations declarations

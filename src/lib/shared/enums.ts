@@ -16,3 +16,8 @@ export enum ExamStatus {
 	Active = 'active',
 	Completed = 'completed'
 }
+
+export enum PatientGender {
+	Male = 'male',
+	Female = 'female'
+}
