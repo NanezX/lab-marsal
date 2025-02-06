@@ -26,3 +26,6 @@ vite.config.ts.timestamp-*
 # DBML Files
 *.dbml
 dbml/*.svg
+
+# Testing
+/coverage
