@@ -7,6 +7,7 @@
 	import Select from '$lib/components/Select.svelte';
 	import { formatCapital } from '$lib/shared/utils';
 	import { Icon } from '@steeze-ui/svelte-icon';
+	import { fade } from 'svelte/transition';
 	import {
 		CircleCheck,
 		CircleChevronsUp,
@@ -125,7 +126,7 @@
 	let pacientFullname = $state('Andres Bello');
 </script>
 
-<div class="flex w-full flex-col gap-y-8">
+<div in:fade class="flex w-full flex-col gap-y-8">
 	<BaseModal bind:showModal title="Añadir examen">
 		<div class="flex flex-col space-y-4 px-8 py-2">
 			<div>

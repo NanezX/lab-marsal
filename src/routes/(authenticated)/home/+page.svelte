@@ -2,8 +2,8 @@
 	import { zoom } from '$lib/components/actions/zoom.js';
 	import { formatCapital } from '$lib/shared/utils.js';
 	import { Icon } from '@steeze-ui/svelte-icon';
+	import { fade } from 'svelte/transition';
 	import icon from '$lib/assets/logo.webp';
-
 	import {
 		UserShare,
 		FileSearch,
@@ -105,7 +105,7 @@
 	];
 </script>
 
-<div class="flex w-full flex-col">
+<div in:fade class="flex w-full flex-col">
 	<div class="flex items-center justify-evenly gap-x-20">
 		<p class="text-3xl">Bienvenido {data.user.firstName}</p>
 		<img
