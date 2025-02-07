@@ -60,7 +60,7 @@ export const actions: Actions = {
 
 			const existingUser = results.at(0);
 			if (!existingUser) {
-				// TODO: Handle error
+				// TODO: Handle error with a custom error class
 				throw new Error('No se registro el usuario');
 			}
 
