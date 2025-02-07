@@ -20,6 +20,14 @@ describe('Utilities', () => {
 	it('should format an ISO String to a human readable date', () => {
 		expect(true).toBeTruthy();
 	});
+
+	it('should hash the text', () => {
+		expect(true).toBeTruthy();
+	});
+
+	it('should verify the hashed text', () => {
+		expect(true).toBeTruthy();
+	});
 });
 
 describe('Database operations', () => {

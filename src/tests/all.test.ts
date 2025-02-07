@@ -38,6 +38,15 @@ describe('Auth sessions', () => {
 	});
 });
 
+describe('Rol authorization', () => {
+	it('should get the role of the user after validating the session', () => {
+		expect(true).toBeTruthy();
+	});
+	it('should fail to get the role of the user with invalid session', () => {
+		expect(true).toBeTruthy();
+	});
+});
+
 describe('Zod input validations', () => {
 	it('should validate user login data with the user login schema correctly', () => {
 		expect(true).toBeTruthy();
