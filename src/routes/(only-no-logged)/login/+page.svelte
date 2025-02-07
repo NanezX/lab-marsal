@@ -30,6 +30,7 @@
 
 		// Usage of toastError to display login errors
 		onUpdated({ form }) {
+			// TODO: Use the shared function to hadle to display the toast based on the form.message
 			if (form.message) {
 				if (form.message.type == 'error') {
 					toastError(form.message.text);
