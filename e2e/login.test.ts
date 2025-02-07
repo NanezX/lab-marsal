@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test.describe(('Login page'), () => {
-
+test.describe('Login page', () => {
 	test('should have email and password inputs', async ({ page }) => {
 		await page.goto('/login');
 		await expect(page.locator('h1')).toBeVisible();
@@ -22,7 +21,9 @@ test.describe(('Login page'), () => {
 		await expect(page.locator('h1')).toBeVisible();
 	});
 
-	test('should show error message under the inputs if password or email are not valid values', async ({ page }) => {
+	test('should show error message under the inputs if password or email are not valid values', async ({
+		page
+	}) => {
 		await page.goto('/login');
 		await expect(page.locator('h1')).toBeVisible();
 	});
@@ -36,5 +37,4 @@ test.describe(('Login page'), () => {
 		await page.goto('/login');
 		await expect(page.locator('h1')).toBeVisible();
 	});
-})
-
+});

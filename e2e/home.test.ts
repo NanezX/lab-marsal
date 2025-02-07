@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test.describe(('Home page'), () => {
-
+test.describe('Home page', () => {
 	test('should display the welcome message with the image', async ({ page }) => {
 		await page.goto('/login');
 		await expect(page.locator('h1')).toBeVisible();
@@ -41,5 +40,4 @@ test.describe(('Home page'), () => {
 		await page.goto('/login');
 		await expect(page.locator('h1')).toBeVisible();
 	});
-})
-
+});

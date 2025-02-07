@@ -166,7 +166,7 @@ export const exam = pgTable('exam', {
 	results: jsonb(),
 	price: decimal('base_price', { precision: 19, scale: 3 }).notNull(),
 	paid: boolean().notNull(),
-	paymentMethod: text("payment_method"),
+	paymentMethod: text('payment_method'),
 	paymentRef: text('payment_ref'),
 	deleted: boolean().notNull().default(false),
 	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
