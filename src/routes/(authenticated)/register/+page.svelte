@@ -111,6 +111,7 @@
 
 			<!-- Document ID -->
 			<!-- TODO: Use an state directly from the super vaidate form -->
+			<!-- TODO: Set max and mins for Document ID -->
 			<Input
 				bind:value={$form.lastName}
 				type="number"
@@ -119,8 +120,8 @@
 				icon={Id}
 				placeholder="Cédula"
 				wrapperClass="col-span-3"
-				min=1
-				max=20
+				min="1"
+				max="20"
 				{...$constraints.lastName}
 			/>
 			{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}
