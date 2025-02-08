@@ -85,6 +85,7 @@
 
 	<form class="flex flex-col gap-y-8" method="POST" action="?/register" use:enhance>
 		<div class="grid grid-cols-6 gap-x-2 gap-y-6">
+			<!-- First name -->
 			<Input
 				bind:value={$form.name}
 				name="name"
@@ -96,6 +97,7 @@
 			/>
 			{#if $errors.name}<span class="text-sm text-red-500">{$errors.name}</span>{/if}
 
+			<!-- Last name -->
 			<Input
 				bind:value={$form.lastName}
 				name="lastName"
@@ -106,6 +108,8 @@
 				{...$constraints.lastName}
 			/>
 			{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}
+
+			<!-- Email -->
 			<Input
 				bind:value={$form.email}
 				type="email"
@@ -118,6 +122,7 @@
 			/>
 			{#if $errors.email}<span class="text-sm text-red-500">{$errors.email}</span>{/if}
 
+			<!-- User roles - Select -->
 			<Select
 				bind:value={$form.role}
 				items={Object.values(UserRoles)}
@@ -130,6 +135,7 @@
 			/>
 			{#if $errors.role}<span class="text-sm text-red-500">{$errors.role}</span>{/if}
 
+			<!-- Password -->
 			<Input
 				bind:value={$form.password}
 				required
@@ -141,6 +147,8 @@
 				{...$constraints.password}
 			/>
 			{#if $errors.password}<span class="text-sm text-red-500">{$errors.password}</span>{/if}
+
+			<!-- Repeat Password -->
 			<Input
 				bind:value={$form.repeatPassword}
 				required
@@ -154,18 +162,19 @@
 			{#if $errors.repeatPassword}<span class="text-sm text-red-500">{$errors.repeatPassword}</span
 				>{/if}
 
-			<div class="col-span-3 col-start-4">
-				<Checkbox
-					bind:value={
-						() => showPassword,
-						(value) => {
-							showPassword = value;
-							togglePasswordInput(value);
-						}
+			<!-- Show password checkbox -->
+			<Checkbox
+				bind:value={
+					() => showPassword,
+					(value) => {
+						showPassword = value;
+						togglePasswordInput(value);
 					}
-					text="Mostrar contraseña"
-				/>
-			</div>
+				}
+				wrapperClass="col-span-3 col-start-4"
+				text="Mostrar contraseña"
+			/>
+			<!-- </div> -->
 		</div>
 
 		<Button type="submit" disabled={$delayed} class="flex w-32 justify-center self-center">
