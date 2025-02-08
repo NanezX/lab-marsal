@@ -202,10 +202,9 @@
 						togglePasswordInput(value);
 					}
 				}
-				wrapperClass="col-span-3 col-start-4"
+				wrapperClass="col-span-3 col-start-4 mt-[-1rem]"
 				text="Mostrar contraseña"
 			/>
-			<!-- </div> -->
 		</div>
 
 		<Button type="submit" disabled={$delayed} class="flex w-32 justify-center self-center">
