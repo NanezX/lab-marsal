@@ -15,8 +15,24 @@ import {
 import { relations } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 
-// TODO: Maybe creating an BaseTable ifno with commons keys like id, createdAt, updatedAt, deleted
 // TODO: Check on https://orm.drizzle.team/docs/column-types/pg#jsonb for type inference for jsonb columns on database
+
+// TODO: Maybe creating an BaseTable ifno with commons keys like id, createdAt, updatedAt, deleted
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const baseTable = {
+	id: uuid()
+		.primaryKey()
+		.$defaultFn(() => uuidv4()),
+	deleted: boolean().notNull().default(false),
+	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
+		.defaultNow()
+		.$onUpdate(() => new Date())
+		.notNull(),
+	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
+		.defaultNow()
+		.$onUpdate(() => new Date())
+		.notNull()
+}
 
 export const userRoleEnum = pgEnum('user_role', [
 	UserRoles.Admin,
@@ -93,6 +109,8 @@ export const userRelations = relations(user, ({ many }) => ({
 	sessions: many(session)
 }));
 
+
+
 // Patient table
 export const patient = pgTable('patient', {
 	id: uuid()
@@ -131,8 +149,6 @@ export const examType = pgTable('exam_type', {
 	basePrice: decimal('base_price', { precision: 19, scale: 3 }).notNull(),
 	parameters: jsonb().notNull(),
 	formulas: jsonb().notNull(),
-	// normalValues: jsonb('normal_values').notNull(),
-
 	deleted: boolean().notNull().default(false),
 	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
 		.defaultNow()
