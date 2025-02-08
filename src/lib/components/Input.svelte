@@ -41,36 +41,21 @@
 	const iconClass = ['text-primary-blue absolute ml-4 h-5 w-5'];
 </script>
 
-{#if icon}
-	<div class={['flex items-center', wrapperClass]}>
-		<input
-			bind:value
-			{name}
-			{type}
-			{placeholder}
-			{disabled}
-			{title}
-			class={inputClass}
-			{required}
-			{min}
-			{max}
-		/>
+<div class={['flex items-center', wrapperClass]}>
+	<input
+		bind:value
+		{name}
+		{type}
+		{placeholder}
+		{disabled}
+		{title}
+		class={[inputClass, { '!pl-4': icon == undefined }]}
+		{required}
+		{min}
+		{max}
+	/>
 
+	{#if icon}
 		<Icon src={icon} class={[iconClass, { 'text-gray-400!': disabled }]} {title} />
-	</div>
-{:else}
-	<div class={['flex items-center', wrapperClass]}>
-		<input
-			bind:value
-			{name}
-			{type}
-			{placeholder}
-			{disabled}
-			{title}
-			class={[inputClass, '!pl-4']}
-			{required}
-			{min}
-			{max}
-		/>
-	</div>
-{/if}
+	{/if}
+</div>
