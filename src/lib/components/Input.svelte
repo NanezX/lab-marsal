@@ -13,6 +13,8 @@
 		required?: boolean;
 		icon?: IconSource;
 		wrapperClass?: ClassValue;
+		min?: string | number | null;
+		max?: string | number | null;
 	};
 
 	// Prop deconstruct
@@ -25,7 +27,9 @@
 		disabled = false,
 		required = false,
 		icon,
-		wrapperClass: wrapperClass
+		wrapperClass: wrapperClass,
+		min,
+		max
 	}: PropType = $props();
 
 	// Reusable classes
@@ -48,6 +52,8 @@
 			{title}
 			class={inputClass}
 			{required}
+			{min}
+			{max}
 		/>
 
 		<Icon src={icon} class={[iconClass, { 'text-gray-400!': disabled }]} {title} />
@@ -63,6 +69,8 @@
 			{title}
 			class={[inputClass, '!pl-4']}
 			{required}
+			{min}
+			{max}
 		/>
 	</div>
 {/if}

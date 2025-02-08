@@ -3,7 +3,7 @@
 	import addUser from '$lib/assets/add-user.svg';
 	import icon from '$lib/assets/icon.png';
 	import Button from '$lib/components/Button.svelte';
-	import { At, Lock, LockOpen2, User } from '@steeze-ui/tabler-icons';
+	import { At, Id, Lock, LockOpen2, User } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import { toastError, toastSucces } from '$lib/toasts.js';
@@ -105,6 +105,22 @@
 				icon={User}
 				placeholder="Apellido"
 				wrapperClass="col-span-3"
+				{...$constraints.lastName}
+			/>
+			{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}
+
+			<!-- Document ID -->
+			<!-- TODO: Use an state directly from the super vaidate form -->
+			<Input
+				bind:value={$form.lastName}
+				type="number"
+				name="documentId"
+				required
+				icon={Id}
+				placeholder="Cédula"
+				wrapperClass="col-span-3"
+				min=1
+				max=20
 				{...$constraints.lastName}
 			/>
 			{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}
