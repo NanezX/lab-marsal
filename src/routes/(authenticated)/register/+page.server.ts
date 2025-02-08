@@ -7,6 +7,7 @@ import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import type { Actions } from './$types';
 import postgres from 'postgres';
+import { maxDocumentId, minDocumentId } from '$lib/shared/utils';
 
 export const load = async () => {
 	const registerForm = await superValidate(zod(UserRegisterSchema));
@@ -49,7 +50,7 @@ export const actions: Actions = {
 				firstName: name,
 				lastName,
 				role,
-				documentId: getRandomInt(0, 999999999),
+				documentId: getRandomInt(minDocumentId, maxDocumentId),
 				birthdate: new Date(Date.now())
 			});
 

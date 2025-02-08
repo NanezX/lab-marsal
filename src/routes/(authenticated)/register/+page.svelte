@@ -10,7 +10,7 @@
 	import Select from '$lib/components/Select.svelte';
 	import { UserRoles } from '$lib/shared/enums.js';
 	import Checkbox from '$lib/components/Checkbox.svelte';
-	import { formatCapital } from '$lib/shared/utils.js';
+	import { formatCapital, maxDocumentId, minDocumentId } from '$lib/shared/utils.js';
 
 	let { data } = $props();
 
@@ -120,8 +120,8 @@
 				icon={Id}
 				placeholder="Cédula"
 				wrapperClass="col-span-3"
-				min="1"
-				max="20"
+				min={minDocumentId}
+				max={maxDocumentId}
 				{...$constraints.lastName}
 			/>
 			{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}

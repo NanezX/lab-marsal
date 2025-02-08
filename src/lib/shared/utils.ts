@@ -10,3 +10,6 @@ export function isObject(value: unknown): value is Record<string, unknown> {
 export function formatCapital(text: string): string {
 	return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
+
+export const minDocumentId = 0;
+export const maxDocumentId = 999999999;
