@@ -131,7 +131,7 @@ export const examType = pgTable('exam_type', {
 	basePrice: decimal('base_price', { precision: 19, scale: 3 }).notNull(),
 	parameters: jsonb().notNull(),
 	formulas: jsonb().notNull(),
-	normalValues: jsonb('normal_values').notNull(),
+	// normalValues: jsonb('normal_values').notNull(),
 
 	deleted: boolean().notNull().default(false),
 	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
@@ -165,6 +165,9 @@ export const exam = pgTable('exam', {
 	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }),
 	results: jsonb(),
 	price: decimal('base_price', { precision: 19, scale: 3 }).notNull(),
+	paid: boolean().notNull(),
+	paymentMethod: text('payment_method'),
+	paymentRef: text('payment_ref'),
 	deleted: boolean().notNull().default(false),
 	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
 		.defaultNow()

@@ -34,6 +34,8 @@
 
 		// Usage of toastError to display login errors
 		onUpdated({ form }) {
+			// TODO: Function that receive the form.message and show the toast based on the type. Also, it can accept
+			// ignoring types. Like, do not show sucess modal if the response was success which can happen in things like login
 			if (form.message) {
 				if (form.message.type == 'error') {
 					toastError(form.message.text);

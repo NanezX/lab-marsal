@@ -7,30 +7,6 @@ import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import type { Actions } from './$types';
 import postgres from 'postgres';
-// import * as auth from '$lib/server/auth';
-
-// import * as auth from '$lib/server/auth';
-// import { fail, redirect } from '@sveltejs/kit';
-// import type { Actions, PageServerLoad } from './$types';
-
-// export const load: PageServerLoad = async (event) => {
-// 	if (!event.locals.user) {
-// 		return redirect(302, '/demo/lucia/login');
-// 	}
-// 	return { user: event.locals.user };
-// };
-
-// export const actions: Actions = {
-// 	logout: async (event) => {
-// 		if (!event.locals.session) {
-// 			return fail(401);
-// 		}
-// 		await auth.invalidateSession(event.locals.session.id);
-// 		auth.deleteSessionTokenCookie(event);
-
-// 		return redirect(302, '/demo/lucia/login');
-// 	}
-// };
 
 export const load = async () => {
 	const registerForm = await superValidate(zod(UserRegisterSchema));
@@ -84,7 +60,7 @@ export const actions: Actions = {
 
 			const existingUser = results.at(0);
 			if (!existingUser) {
-				// TODO: Handle error
+				// TODO: Handle error with a custom error class
 				throw new Error('No se registro el usuario');
 			}
 
