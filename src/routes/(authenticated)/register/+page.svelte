@@ -87,15 +87,15 @@
 		<div class="grid grid-cols-6 gap-x-2 gap-y-6">
 			<!-- First name -->
 			<Input
-				bind:value={$form.name}
-				name="name"
+				bind:value={$form.firstName}
+				name="firstName"
 				required
 				icon={User}
 				placeholder="Nombre"
 				wrapperClass="col-span-3"
-				{...$constraints.name}
+				{...$constraints.firstName}
 			/>
-			{#if $errors.name}<span class="text-sm text-red-500">{$errors.name}</span>{/if}
+			{#if $errors.firstName}<span class="text-sm text-red-500">{$errors.firstName}</span>{/if}
 
 			<!-- Last name -->
 			<Input
@@ -110,10 +110,8 @@
 			{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}
 
 			<!-- Document ID -->
-			<!-- TODO: Use an state directly from the super vaidate form -->
-			<!-- TODO: Set max and mins for Document ID -->
 			<Input
-				bind:value={$form.lastName}
+				bind:value={$form.documentId}
 				type="number"
 				name="documentId"
 				required
@@ -127,9 +125,8 @@
 			{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}
 
 			<!-- Cumpleaños -->
-			<!-- TODO: Use an state directly from the super vaidate form -->
 			<Input
-				bind:value={$form.lastName}
+				bind:value={$form.birthdate}
 				type="date"
 				name="birthdate"
 				required
