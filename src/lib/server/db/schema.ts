@@ -17,23 +17,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 // TODO: Check on https://orm.drizzle.team/docs/column-types/pg#jsonb for type inference for jsonb columns on database
 
-// TODO: Maybe creating an BaseTable ifno with commons keys like id, createdAt, updatedAt, deleted
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const baseTable = {
-	id: uuid()
-		.primaryKey()
-		.$defaultFn(() => uuidv4()),
-	deleted: boolean().notNull().default(false),
-	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
-		.defaultNow()
-		.$onUpdate(() => new Date())
-		.notNull(),
-	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
-		.defaultNow()
-		.$onUpdate(() => new Date())
-		.notNull()
-}
 
+// PostgreSQL Enum for User roles
 export const userRoleEnum = pgEnum('user_role', [
 	UserRoles.Admin,
 	UserRoles.Bioanalista,
@@ -41,27 +26,50 @@ export const userRoleEnum = pgEnum('user_role', [
 	UserRoles.Secretaria
 ]);
 
+// PostgreSQL Enum for Exam priority
 export const examPriorityEnum = pgEnum('exam_priority', [
 	ExamPriority.Low,
 	ExamPriority.Normal,
 	ExamPriority.High
 ]);
 
+// PostgreSQL Enum for Exam status
 export const examStatusEnum = pgEnum('exam_status', [
 	ExamStatus.Cancelled,
 	ExamStatus.Active,
 	ExamStatus.Completed
 ]);
 
+// PostgreSQL Enum for Patient gender
 export const patientGenderEnum = pgEnum('patient_gender', [
 	PatientGender.Male,
 	PatientGender.Female
 ]);
 
+// TODO: Maybe creating an BaseTable ifno with commons keys like id, createdAt, updatedAt, deleted
+const baseTable = {
+	// ID of the row
+	id: uuid()
+		.primaryKey()
+		.$defaultFn(() => uuidv4()),
+	// Flag for soft delete
+	deleted: boolean().notNull().default(false),
+	// Time when the row was created
+	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
+		.defaultNow()
+		.notNull(),
+	// Time of the last update of the table
+	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
+		.defaultNow()
+		.$onUpdate(() => new Date())
+		.notNull()
+}
+
+
+
 // Session table
 export const session = pgTable('session', {
-	// TODO: Use only UUID as IDs
-	id: text().primaryKey(),
+	...baseTable,
 	userId: uuid('user_id')
 		.notNull()
 		.references(() => user.id),
