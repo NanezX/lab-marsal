@@ -84,6 +84,7 @@ export const sessionRelations = relations(session, ({ one }) => ({
 	})
 }));
 
+// Configuration table
 export const config = pgTable('configuration', {
 	id: varchar({ length: 50 }),
 	value: text()
