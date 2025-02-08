@@ -44,13 +44,13 @@ export default {
 			addUtilities({
 				'.arrow-hide': {
 					'-moz-appearance': 'textfield !important',
-					'appearance': 'textfield !important',
+					appearance: 'textfield !important',
 					'-webkit-appearance': 'none',
-					'margin': '0'
+					margin: '0'
 				},
 				'.arrow-hide::-webkit-inner-spin-button, .arrow-hide::-webkit-outer-spin-button': {
 					'-webkit-appearance': 'none',
-					'margin': '0'
+					margin: '0'
 				}
 			});
 		})
