@@ -4,7 +4,7 @@
 
 	// Prop type
 	type PropType = {
-		value: string;
+		value: string | number;
 		name: string;
 		placeholder?: string;
 		title?: string;
