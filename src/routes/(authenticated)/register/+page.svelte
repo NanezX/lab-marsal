@@ -3,7 +3,7 @@
 	import addUser from '$lib/assets/add-user.svg';
 	import icon from '$lib/assets/icon.png';
 	import Button from '$lib/components/Button.svelte';
-	import { At, Id, Lock, LockOpen2, User } from '@steeze-ui/tabler-icons';
+	import { At, Cake, Id, Lock, LockOpen2, User } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import { toastError, toastSucces } from '$lib/toasts.js';
@@ -122,6 +122,20 @@
 				wrapperClass="col-span-3"
 				min="1"
 				max="20"
+				{...$constraints.lastName}
+			/>
+			{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}
+
+			<!-- Cumpleaños -->
+			<!-- TODO: Use an state directly from the super vaidate form -->
+			<Input
+				bind:value={$form.lastName}
+				type="date"
+				name="birthdate"
+				required
+				icon={Cake}
+				placeholder="Cumpleaños"
+				wrapperClass="col-span-3"
 				{...$constraints.lastName}
 			/>
 			{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}
