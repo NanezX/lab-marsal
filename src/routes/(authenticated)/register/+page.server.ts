@@ -8,6 +8,8 @@ import * as table from '$lib/server/db/schema';
 import type { Actions } from './$types';
 import postgres from 'postgres';
 import { maxDocumentId, minDocumentId } from '$lib/shared/utils';
+import { findUserByEmail } from '$lib/server/utils/dbQueries';
+import { hashingOptions } from '$lib/server/utils';
 
 export const load = async () => {
 	const registerForm = await superValidate(zod(UserRegisterSchema));
@@ -17,6 +19,9 @@ export const load = async () => {
 
 export const actions: Actions = {
 	register: async (event) => {
+		// TODO: Check that users role. Only admin can call this endpoint
+		// TODO: Implement role save
+
 		const request = event.request;
 		const form = await superValidate(request, zod(UserRegisterSchema));
 
@@ -25,55 +30,48 @@ export const actions: Actions = {
 			return failForms(400, { form });
 		}
 
-		// TODO: Implement role save
-		const { email, password, name, lastName, role } = form.data;
+		// Obtain all the data from the register form. The repeated password is already checked by Zod
+		const { email, password, firstName, lastName, role, documentId, birthdate } = form.data;
 
-		const passwordHash = await hash(password, {
-			// recommended minimum parameters
-			memoryCost: 19456,
-			timeCost: 2,
-			outputLen: 32,
-			parallelism: 1
-		});
+		const isUserFound = await findUserByEmail(email, 'deleted', 'passwordHash');
+
+		if (isUserFound) {
+			// Against some rules to avoid exposing vulnerabilities, we return the 409 error for already taken emails
+			// because this is intented to be an internal application on the organization
+			return message(form, { text: 'El email ya esta en uso', type: 'error' }, { status: 409 });
+		}
+
+		// Hash the introduced password
+		const passwordHash = await hash(password, hashingOptions);
 
 		try {
-			// Moch a random ID
-			function getRandomInt(min: number, max: number) {
-				min = Math.ceil(min);
-				max = Math.floor(max);
-				return Math.floor(Math.random() * (max - min + 1)) + min;
-			}
-			// TODO: Send the real data to the database with the new table format and remove the mocked values
-			await db.insert(table.user).values({
-				email: email.toLowerCase(),
-				passwordHash,
-				firstName: name,
-				lastName,
-				role,
-				documentId: getRandomInt(minDocumentId, maxDocumentId),
-				birthdate: new Date(Date.now())
-			});
-
-			const results = await db
-				.select({ id: table.user.id })
-				.from(table.user)
-				.where(eq(table.user.email, email.toLowerCase()));
-
-			const existingUser = results.at(0);
-			if (!existingUser) {
-				// TODO: Handle error with a custom error class
-				throw new Error('No se registro el usuario');
-			}
-
-			// TODO: This register will be used to create new users, so it should not create the session here
+			// await db.insert(table.user).values({
+			// 	email: email.toLowerCase(),
+			// 	passwordHash,
+			// 	firstName,
+			// 	lastName,
+			// 	role,
+			// 	documentId: documentId,
+			// 	birthdate: new Date(birthdate)
+			// });
+			// const results = await db
+			// 	.select({ id: table.user.id })
+			// 	.from(table.user)
+			// 	.where(eq(table.user.email, email.toLowerCase()));
+			// const existingUser = results.at(0);
+			// if (!existingUser) {
+			// 	// TODO: Handle error with a custom error class
+			// 	throw new Error('No se registro el usuario');
+			// }
+			// This register will be used to create new users, so it should not create the session here.
+			// TODO: Implement email strategy to verify accounts/users
 			// TODO: Maybe the password could be send to the email. But need to add later the email functionality (verification and sents)
 			// Example at: https://github.com/lucia-auth/example-sveltekit-email-password-2fa/blob/main/src/lib/server/email-verification.ts
-			// const sessionToken = auth.generateSessionToken();
-			// const session = await auth.createSession(sessionToken, existingUser.id);
-			// auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
 		} catch (e) {
 			let errMsg = 'Ha ocurrido un error';
 			let codeStatus: ErrorStatus = 400;
+
+			console.log('e: ', e);
 
 			// Solo el email tiene el UNIQUE Constraint (error code 23505)
 			if (e instanceof postgres.PostgresError && e.code == '23505') {
