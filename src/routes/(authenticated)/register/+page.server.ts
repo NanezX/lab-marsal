@@ -8,6 +8,8 @@ import type { Actions } from './$types';
 import postgres from 'postgres';
 import { findUserByEmail, findUserByDocumentId } from '$lib/server/utils/dbQueries';
 import { hashingOptions } from '$lib/server/auth';
+import { error as svelteError } from '@sveltejs/kit';
+import { UserRoles } from '$lib/shared/enums';
 
 // TODO: Implement email strategy to verify accounts/users
 // TODO: Maybe the password could be send to the email. But need to add later the email functionality (verification and sents)
@@ -21,9 +23,18 @@ export const load = async () => {
 
 export const actions: Actions = {
 	register: async (event) => {
-		// TODO: Check that users role. Only admin can call this endpoint
-		// TODO: Implement role save
+		// Check for the caller session
+		const { session, user } = event.locals;
+		if (!session || !user) {
+			svelteError(409, { message: 'No se encontro una sesion activa' });
+		}
 
+		// Check for the role of the caller
+		if (user.role !== UserRoles.Admin) {
+			svelteError(409, { message: 'No tiene permisos para registrar usuarios' });
+		}
+
+		// Check the data sent
 		const request = event.request;
 		const form = await superValidate(request, zod(UserRegisterSchema));
 
