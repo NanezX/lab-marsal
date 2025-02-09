@@ -6,11 +6,11 @@
 	import { At, Cake, Id, Lock, LockOpen2, User } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
 	import Spinner from '$lib/components/Spinner.svelte';
-	import { toastError, toastSucces } from '$lib/toasts.js';
 	import Select from '$lib/components/Select.svelte';
 	import { UserRoles } from '$lib/shared/enums.js';
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import { formatCapital, maxDocumentId, minDocumentId } from '$lib/shared/utils.js';
+	import { showToast } from '$lib/toasts.js';
 
 	let { data } = $props();
 
@@ -37,11 +37,7 @@
 			// TODO: Function that receive the form.message and show the toast based on the type. Also, it can accept
 			// ignoring types. Like, do not show sucess modal if the response was success which can happen in things like login
 			if (form.message) {
-				if (form.message.type == 'error') {
-					toastError(form.message.text);
-				} else if (form.message.type == 'success') {
-					toastSucces(form.message.text);
-				}
+				showToast(form.message.text, form.message.type);
 			}
 		}
 	});
@@ -68,15 +64,6 @@
 	</div>
 </div>
 
-<!-- TODO: Use separated variables for each input/select -->
-<!-- TODO: Validaciones para el form:  
-			- Nombres: solo letras
-			- Apellido: solo letras
-			- Correo: listo
-			- Rol: Solo rol valido
-			- Password: minimo 8 caracteres, etc etc
-			- Repeat Password: debe ser igual que Password
-	 -->
 <!-- Derecha register new process -->
 <div
 	class="flex w-3/5 flex-col justify-center space-y-8 rounded-r-xl border border-gray-200 bg-white"
