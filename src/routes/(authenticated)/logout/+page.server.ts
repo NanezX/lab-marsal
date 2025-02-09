@@ -4,11 +4,19 @@ import type { Actions } from './$types';
 
 export const actions: Actions = {
 	default: async (event) => {
+		// No active session
 		if (!event.locals.session) {
 			return error(401);
 		}
 
-		await auth.invalidateSession(event.locals.session.id);
+		// No auth cookie found
+		const sessionToken = event.cookies.get(auth.sessionCookieName);
+		if (!sessionToken) {
+			return error(401);
+		}
+
+		// Invalidate the session and delete the auth cookie
+		await auth.invalidateSession(sessionToken);
 		auth.deleteSessionTokenCookie(event);
 		return redirect(302, '/login');
 	}

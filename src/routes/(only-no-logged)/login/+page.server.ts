@@ -48,7 +48,7 @@ export const actions: Actions = {
 			);
 		}
 
-		// Set the session
+		// Create the session
 		const sessionToken = auth.generateSessionToken();
 		const session = await auth.createSession(sessionToken, existingUser.id);
 		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);

@@ -63,7 +63,9 @@ const baseTable = {
 
 // Session table
 export const session = pgTable('session', {
-	...baseTable,
+	id: baseTable.id,
+	createdAt: baseTable.createdAt,
+	updatedAt: baseTable.updatedAt,
 	sessionToken: text('session_token').notNull(),
 	sessionId: text('session_id').notNull().unique(),
 	userId: uuid('user_id')

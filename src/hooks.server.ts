@@ -39,6 +39,10 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 		throw redirect(302, '/login');
 	}
 
+	if (event.locals.user && event.url.pathname == '/login') {
+		throw redirect(307, '/home');
+	}
+
 	return resolve(event);
 };
 
