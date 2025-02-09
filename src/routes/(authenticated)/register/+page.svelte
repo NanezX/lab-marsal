@@ -187,6 +187,7 @@
 				name="repeatPassword"
 				icon={iconPassword}
 				placeholder="Repetir contraseña"
+				autoComplete={false}
 				wrapperClass="col-span-3"
 				{...$constraints.repeatPassword}
 			/>
