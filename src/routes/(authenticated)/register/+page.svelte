@@ -117,12 +117,13 @@
 				required
 				icon={Id}
 				placeholder="Cédula"
-				wrapperClass="col-span-3"
+				autoComplete={false}
 				min={minDocumentId}
 				max={maxDocumentId}
-				{...$constraints.lastName}
+				wrapperClass="col-span-3"
+				{...$constraints.documentId}
 			/>
-			{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}
+			{#if $errors.documentId}<span class="text-sm text-red-500">{$errors.documentId}</span>{/if}
 
 			<!-- Cumpleaños -->
 			<Input
@@ -135,7 +136,7 @@
 				wrapperClass="col-span-3"
 				{...$constraints.lastName}
 			/>
-			{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}
+			{#if $errors.birthdate}<span class="text-sm text-red-500">{$errors.birthdate}</span>{/if}
 
 			<!-- Email -->
 			<Input
@@ -145,6 +146,7 @@
 				required
 				icon={At}
 				placeholder="Correo electrónico"
+				autoComplete={false}
 				wrapperClass="col-span-4"
 				{...$constraints.email}
 			/>
@@ -171,6 +173,7 @@
 				name="password"
 				icon={iconPassword}
 				placeholder="Contraseña"
+				autoComplete={false}
 				wrapperClass="col-span-3"
 				{...$constraints.password}
 			/>

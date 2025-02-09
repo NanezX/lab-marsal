@@ -15,6 +15,7 @@
 		wrapperClass?: ClassValue;
 		min?: string | number | null;
 		max?: string | number | null;
+		autoComplete?: boolean;
 	};
 
 	// Prop deconstruct
@@ -29,7 +30,8 @@
 		icon,
 		wrapperClass: wrapperClass,
 		min,
-		max
+		max,
+		autoComplete = true
 	}: PropType = $props();
 
 	// Reusable classes
@@ -53,6 +55,7 @@
 		{required}
 		{min}
 		{max}
+		autocomplete={!autoComplete ? 'new-password' : undefined}
 	/>
 
 	{#if icon}
