@@ -4,23 +4,32 @@ import LoadingToast from './components/toasts/LoadingToast.svelte';
 import ErrorToast from './components/toasts/ErrorToast.svelte';
 import SuccessToast from './components/toasts/SuccessToast.svelte';
 
-export function showToast(text: string, type: App.Superforms.Message['type'] | 'loading'): number {
+export function showToast(
+	text: string,
+	type: App.Superforms.Message['type'] | 'loading',
+	ignore: (App.Superforms.Message['type'] | 'loading')[] = []
+) {
+	// Ignore this message type if specified
+	if (!ignore.includes(type)) {
+		return null;
+	}
+
+	// Show the toast based on the type
 	switch (type) {
-		case "error": {
-			return toastError(text)
+		case 'error': {
+			return toastError(text);
 		}
 		case 'warning': {
-			return toast.push("WARNING!")
+			return toast.push('WARNING!');
 		}
 		case 'loading': {
-			return toastLoading(text)
+			return toastLoading(text);
 		}
 		// Success
 		default: {
-			return toastSuccess(text)
+			return toastSuccess(text);
 		}
 	}
-
 }
 
 export const toastLoading = (text: string = 'Cargando...') => {

@@ -7,7 +7,7 @@
 	import { At, Lock, LockOpen2 } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
 	import Spinner from '$lib/components/Spinner.svelte';
-	import { toastError } from '$lib/toasts.js';
+	import { showToast } from '$lib/toasts.js';
 
 	let { data } = $props();
 
@@ -28,13 +28,10 @@
 	const { form, errors, constraints, enhance, delayed } = superForm(data.loginForm, {
 		delayMs: 0,
 
-		// Usage of toastError to display login errors
 		onUpdated({ form }) {
-			// TODO: Use the shared function to hadle to display the toast based on the form.message
+			// Display login errors if occur
 			if (form.message) {
-				if (form.message.type == 'error') {
-					toastError(form.message.text);
-				}
+				showToast(form.message.text, form.message.type, ['success', 'warning']);
 			}
 		}
 	});
