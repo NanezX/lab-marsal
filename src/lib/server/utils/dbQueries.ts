@@ -1,21 +1,29 @@
 import { db } from '$lib/server/db';
 import { user } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
+import type { InferSelectModel } from 'drizzle-orm';
 import type { PgTable } from 'drizzle-orm/pg-core';
 
 
-// USERS
-
-export async function findUserByEmail(email: string, options = {}) {
-	console.log("options: ", options)
-
+/**
+ * Find a user by email, with optional column exclusions.
+ */
+export async function findUserByEmail<
+	E extends (keyof InferSelectModel<typeof user>)[]
+>(
+	email: string,
+	...excludes: E
+): Promise<Omit<InferSelectModel<typeof user>, E[number]> | undefined> {
+	// Perform select operation with exclusion
 	const results = await db
-		.select(selectWithout(user, ["deleted", "passwordHash"]))
+		.select(selectWithout(user, excludes))
 		.from(user)
 		.where(eq(user.email, email.toLowerCase()));
 
-	return results.at(0)
+	// Return the result with type
+	return results.at(0) as Omit<InferSelectModel<typeof user>, E[number]> | undefined;
 }
+
 
 /**
  * Function to exclude specific columns from a table while keeping full type safety.
@@ -29,11 +37,5 @@ function selectWithout<
 >(table: T, excludedColumns: K[]) {
 	return Object.fromEntries(
 		Object.entries(table).filter(([key]) => !excludedColumns.includes(key as K))
-	) as Omit<T["_"]["columns"], K>; // 🔥 Correctly removes excluded columns from the type
+	) as { [P in Exclude<keyof T["_"]["columns"], K>]: T["_"]["columns"][P] };
 }
-
-
-
-
-
-
