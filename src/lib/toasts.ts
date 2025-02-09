@@ -10,7 +10,7 @@ export function showToast(
 	ignore: (App.Superforms.Message['type'] | 'loading')[] = []
 ) {
 	// Ignore this message type if specified
-	if (!ignore.includes(type)) {
+	if (ignore.includes(type)) {
 		return null;
 	}
 
