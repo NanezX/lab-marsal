@@ -1,8 +1,13 @@
-import { encodeBase32LowerCase } from '@oslojs/encoding';
+// TODO: Remove this dependency '@oslojs/encoding'
+// import { encodeBase32LowerCase } from '@oslojs/encoding';
 
-export function generateUserId() {
-	// ID with 120 bits of entropy, or about the same as UUID v4.
-	const bytes = crypto.getRandomValues(new Uint8Array(15));
-	const id = encodeBase32LowerCase(bytes);
-	return id;
-}
+/**
+ * Hashing options for argon2
+ */
+export const hashingOptions = {
+	variant: 'argon2id',
+	memoryCost: 19456,
+	timeCost: 2,
+	outputLen: 32,
+	parallelism: 1
+};
