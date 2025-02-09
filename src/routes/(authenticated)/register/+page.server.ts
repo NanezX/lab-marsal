@@ -7,7 +7,7 @@ import * as table from '$lib/server/db/schema';
 import type { Actions } from './$types';
 import postgres from 'postgres';
 import { findUserByEmail, findUserByDocumentId } from '$lib/server/utils/dbQueries';
-import { hashingOptions } from '$lib/server/utils';
+import { hashingOptions } from '$lib/server/auth';
 
 // TODO: Implement email strategy to verify accounts/users
 // TODO: Maybe the password could be send to the email. But need to add later the email functionality (verification and sents)

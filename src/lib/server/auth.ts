@@ -93,3 +93,11 @@ export function deleteSessionTokenCookie(event: RequestEvent) {
 		httpOnly: true
 	});
 }
+
+export const hashingOptions = {
+	variant: 'argon2id',
+	memoryCost: 19456,
+	timeCost: 2,
+	outputLen: 32,
+	parallelism: 1
+};

@@ -6,7 +6,7 @@ import { redirect } from '@sveltejs/kit';
 import * as auth from '$lib/server/auth';
 import type { Actions } from './$types';
 import { findUserByEmail } from '$lib/server/utils/dbQueries';
-import { hashingOptions } from '$lib/server/utils';
+import { hashingOptions } from '$lib/server/auth';
 
 export const load = async () => {
 	const loginForm = await superValidate(zod(UserLoginSchema));
