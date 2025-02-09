@@ -4,15 +4,18 @@
 
 	// Prop type
 	type PropType = {
-		value: string;
+		value: string | number;
 		name: string;
 		placeholder?: string;
 		title?: string;
-		type?: 'text' | 'password' | 'email';
+		type?: 'text' | 'password' | 'email' | 'number' | 'date';
 		disabled?: boolean | null;
 		required?: boolean;
 		icon?: IconSource;
 		wrapperClass?: ClassValue;
+		min?: string | number | null;
+		max?: string | number | null;
+		autoComplete?: boolean;
 	};
 
 	// Prop deconstruct
@@ -25,44 +28,37 @@
 		disabled = false,
 		required = false,
 		icon,
-		wrapperClass: wrapperClass
+		wrapperClass: wrapperClass,
+		min,
+		max,
+		autoComplete = true
 	}: PropType = $props();
 
 	// Reusable classes
 	const inputClass = [
-		'bg-secondary-blue/30 focus:ring-dark-blue w-full rounded-3xl border border-gray-200 py-2 pl-10 pr-4 focus:outline-hidden focus:ring-1',
+		'arrow-hide bg-secondary-blue/30 focus:ring-dark-blue w-full rounded-3xl border border-gray-200 py-2 pl-10 pr-4 focus:outline-hidden focus:ring-1',
 		'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600'
 	];
 
 	const iconClass = ['text-primary-blue absolute ml-4 h-5 w-5'];
 </script>
 
-{#if icon}
-	<div class={['flex items-center', wrapperClass]}>
-		<input
-			bind:value
-			{name}
-			{type}
-			{placeholder}
-			{disabled}
-			{title}
-			class={inputClass}
-			{required}
-		/>
+<div class={['flex items-center', wrapperClass]}>
+	<input
+		bind:value
+		{name}
+		{type}
+		{placeholder}
+		{disabled}
+		{title}
+		class={[inputClass, { '!pl-4': icon == undefined }]}
+		{required}
+		{min}
+		{max}
+		autocomplete={!autoComplete ? 'new-password' : undefined}
+	/>
 
+	{#if icon}
 		<Icon src={icon} class={[iconClass, { 'text-gray-400!': disabled }]} {title} />
-	</div>
-{:else}
-	<div class={['flex items-center', wrapperClass]}>
-		<input
-			bind:value
-			{name}
-			{type}
-			{placeholder}
-			{disabled}
-			{title}
-			class={[inputClass, '!pl-4']}
-			{required}
-		/>
-	</div>
-{/if}
+	{/if}
+</div>

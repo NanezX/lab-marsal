@@ -1,12 +1,19 @@
 import { UserRegisterSchema } from '$lib/server/utils/zod';
-import { superValidate, fail as failForms, message, type ErrorStatus } from 'sveltekit-superforms';
+import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { hash } from '@node-rs/argon2';
-import { eq } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import type { Actions } from './$types';
 import postgres from 'postgres';
+import { findUserByEmail, findUserByDocumentId } from '$lib/server/utils/dbQueries';
+import { hashingOptions } from '$lib/server/auth';
+import { error as svelteError } from '@sveltejs/kit';
+import { UserRoles } from '$lib/shared/enums';
+
+// TODO: Implement email strategy to verify accounts/users
+// TODO: Maybe the password could be send to the email. But need to add later the email functionality (verification and sents)
+// Example at: https://github.com/lucia-auth/example-sveltekit-email-password-2fa/blob/main/src/lib/server/email-verification.ts
 
 export const load = async () => {
 	const registerForm = await superValidate(zod(UserRegisterSchema));
@@ -16,6 +23,18 @@ export const load = async () => {
 
 export const actions: Actions = {
 	register: async (event) => {
+		// Check for the caller session
+		const { session, user } = event.locals;
+		if (!session || !user) {
+			svelteError(409, { message: 'No se encontro una sesion activa' });
+		}
+
+		// Check for the role of the caller
+		if (user.role !== UserRoles.Admin) {
+			svelteError(409, { message: 'No tiene permisos para registrar usuarios' });
+		}
+
+		// Check the data sent
 		const request = event.request;
 		const form = await superValidate(request, zod(UserRegisterSchema));
 
@@ -24,67 +43,62 @@ export const actions: Actions = {
 			return failForms(400, { form });
 		}
 
-		// TODO: Implement role save
-		const { email, password, name, lastName, role } = form.data;
+		// Obtain all the data from the register form. The repeated password is already checked by Zod
+		const { email, password, firstName, lastName, role, documentId, birthdate } = form.data;
 
-		const passwordHash = await hash(password, {
-			// recommended minimum parameters
-			memoryCost: 19456,
-			timeCost: 2,
-			outputLen: 32,
-			parallelism: 1
-		});
+		// Check for existing email used (if user is soft deleted, the email will be marked as in use)
+		const isEmailUsed = await findUserByEmail(email.toLowerCase(), 'deleted', 'passwordHash');
+		if (isEmailUsed) {
+			// Against some rules to avoid exposing vulnerabilities, we return the 409 error for already taken emails
+			// because this is intented to be an internal application on the organization
+			return message(form, { text: 'El email ya esta en uso', type: 'error' }, { status: 409 });
+		}
+
+		// Check for existing Document ID used (if user is soft deleted, the document ID will be marked as in use)
+		const isDocIdUsed = await findUserByDocumentId(documentId, 'deleted', 'passwordHash');
+		if (isDocIdUsed) {
+			// Against some rules to avoid exposing vulnerabilities, we return the 409 error for already taken emails
+			// because this is intented to be an internal application on the organization
+			return message(form, { text: 'La cédula ya esta en uso', type: 'error' }, { status: 409 });
+		}
 
 		try {
-			// Moch a random ID
-			function getRandomInt(min: number, max: number) {
-				min = Math.ceil(min);
-				max = Math.floor(max);
-				return Math.floor(Math.random() * (max - min + 1)) + min;
-			}
-			// TODO: Send the real data to the database with the new table format and remove the mocked values
+			// Hash the introduced password
+			const passwordHash = await hash(password, hashingOptions);
+
+			// Inserting the user to the database
 			await db.insert(table.user).values({
 				email: email.toLowerCase(),
 				passwordHash,
-				firstName: name,
+				firstName,
 				lastName,
 				role,
-				documentId: getRandomInt(0, 999999999),
-				birthdate: new Date(Date.now())
+				documentId: documentId,
+				birthdate: new Date(birthdate)
 			});
 
-			const results = await db
-				.select({ id: table.user.id })
-				.from(table.user)
-				.where(eq(table.user.email, email.toLowerCase()));
-
-			const existingUser = results.at(0);
+			// Checkinf if the user was saved
+			const existingUser = await findUserByEmail(email.toLowerCase(), 'deleted', 'passwordHash');
 			if (!existingUser) {
 				// TODO: Handle error with a custom error class
 				throw new Error('No se registro el usuario');
 			}
 
-			// TODO: This register will be used to create new users, so it should not create the session here
-			// TODO: Maybe the password could be send to the email. But need to add later the email functionality (verification and sents)
-			// Example at: https://github.com/lucia-auth/example-sveltekit-email-password-2fa/blob/main/src/lib/server/email-verification.ts
-			// const sessionToken = auth.generateSessionToken();
-			// const session = await auth.createSession(sessionToken, existingUser.id);
-			// auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+			// NOTE: This register will be used to create new users, so it should NOT create the session here.
 		} catch (e) {
+			// Default message
 			let errMsg = 'Ha ocurrido un error';
-			let codeStatus: ErrorStatus = 400;
 
 			// Solo el email tiene el UNIQUE Constraint (error code 23505)
-			if (e instanceof postgres.PostgresError && e.code == '23505') {
-				errMsg = 'El email ya esta en uso';
-				codeStatus = 400;
+			if (e instanceof postgres.PostgresError) {
+				console.error('PostgresError');
+				errMsg = errMsg + ' - PG';
 			} else if (e instanceof Error) {
+				console.error('Unknown error');
 				console.error(e);
-				console.error(e.message);
-				errMsg = e.message;
 			}
 
-			return message(form, { text: errMsg, type: 'error' }, { status: codeStatus });
+			return message(form, { text: errMsg, type: 'error' }, { status: 500 });
 		}
 
 		return message(form, { text: 'Usuario creado', type: 'success' });

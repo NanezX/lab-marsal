@@ -4,58 +4,85 @@ import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase64url, encodeHexLowerCase } from '@oslojs/encoding';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
-import type { Session } from '$lib/server/db/types';
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
 export const sessionCookieName = 'auth-session';
 
 export function generateSessionToken() {
-	const bytes = crypto.getRandomValues(new Uint8Array(18));
-	const token = encodeBase64url(bytes);
-	return token;
+	const bytes = crypto.getRandomValues(new Uint8Array(32));
+	return encodeBase64url(bytes);
 }
 
-export async function createSession(token: string, userId: string) {
-	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-	const session: Session = {
-		id: sessionId,
-		userId,
+export function hashSessionToken(sessionToken: string) {
+	return encodeHexLowerCase(sha256(new TextEncoder().encode(sessionToken)));
+}
+
+export async function createSession(sessionToken: string, userId: string) {
+	// Hash the session token
+	const sessionId = hashSessionToken(sessionToken);
+
+	// Object with the data
+	const session = {
+		sessionToken,
 		expiresAt: new Date(Date.now() + DAY_IN_MS * 30)
 	};
-	await db.insert(table.session).values(session);
+
+	// Insert the session
+	await db.insert(table.session).values({
+		...session,
+		sessionId,
+		userId
+	});
+
 	return session;
 }
 
-export async function validateSessionToken(token: string) {
-	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+export async function validateSessionToken(sessionToken: string) {
+	// Hash the token
+	const sessionId = hashSessionToken(sessionToken);
+
+	// Query to the database
 	const [result] = await db
 		.select({
-			// Adjust user table here to tweak returned data
 			user: {
 				id: table.user.id,
+				deleted: table.user.deleted,
+				createdAt: table.user.createdAt,
+				updatedAt: table.user.updatedAt,
 				email: table.user.email,
 				firstName: table.user.firstName,
 				lastName: table.user.lastName,
-				role: table.user.role
+				role: table.user.role,
+				documentId: table.user.documentId,
+				birthdate: table.user.birthdate
 			},
-			session: table.session
+			session: {
+				id: table.session.id,
+				userId: table.session.userId,
+				expiresAt: table.session.expiresAt
+			}
 		})
 		.from(table.session)
 		.innerJoin(table.user, eq(table.session.userId, table.user.id))
-		.where(eq(table.session.id, sessionId));
+		.where(eq(table.session.sessionId, sessionId));
 
-	if (!result) {
+	// If no result or user deleted, invalid session
+	if (!result || result.user.deleted) {
 		return { session: null, user: null };
 	}
+
+	// Deconstruct the result
 	const { session, user } = result;
 
+	// Check if the session has expired
 	const sessionExpired = Date.now() >= session.expiresAt.getTime();
 	if (sessionExpired) {
 		await db.delete(table.session).where(eq(table.session.id, session.id));
 		return { session: null, user: null };
 	}
 
+	// Renew the session (maybe not necessary)
 	const renewSession = Date.now() >= session.expiresAt.getTime() - DAY_IN_MS * 15;
 	if (renewSession) {
 		session.expiresAt = new Date(Date.now() + DAY_IN_MS * 30);
@@ -65,14 +92,17 @@ export async function validateSessionToken(token: string) {
 			.where(eq(table.session.id, session.id));
 	}
 
+	// Return the session and user
 	return { session, user };
 }
 
 export type SessionValidationResult = Awaited<ReturnType<typeof validateSessionToken>>;
 
-export async function invalidateSession(sessionId: string) {
-	// TODO: Should use soft delete with the delete column
-	await db.delete(table.session).where(eq(table.session.id, sessionId));
+export async function invalidateSession(sessionToken: string) {
+	// Hash the token
+	const sessionId = hashSessionToken(sessionToken);
+
+	await db.delete(table.session).where(eq(table.session.sessionId, sessionId));
 }
 
 export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date) {
@@ -93,3 +123,11 @@ export function deleteSessionTokenCookie(event: RequestEvent) {
 		httpOnly: true
 	});
 }
+
+export const hashingOptions = {
+	variant: 'argon2id',
+	memoryCost: 19456,
+	timeCost: 2,
+	outputLen: 32,
+	parallelism: 1
+};

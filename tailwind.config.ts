@@ -35,12 +35,24 @@ export default {
 	},
 
 	plugins: [
-		plugin(function ({ addVariant }) {
+		plugin(function ({ addVariant, addUtilities }) {
 			addVariant('not-first-last', '&:not(:last-child):not(:first-child)');
 			addVariant('first-last', ['&:first-child', '&:last-child']);
 			addVariant('direct-children', '&>*');
 			addVariant('not-first', '&:not(:first-child)');
 			addVariant('not-last', '&:not(:last-child)');
+			addUtilities({
+				'.arrow-hide': {
+					'-moz-appearance': 'textfield !important',
+					appearance: 'textfield !important',
+					'-webkit-appearance': 'none',
+					margin: '0'
+				},
+				'.arrow-hide::-webkit-inner-spin-button, .arrow-hide::-webkit-outer-spin-button': {
+					'-webkit-appearance': 'none',
+					margin: '0'
+				}
+			});
 		})
 	]
 } satisfies Config;

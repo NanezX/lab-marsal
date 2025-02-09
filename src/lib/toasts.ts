@@ -4,6 +4,34 @@ import LoadingToast from './components/toasts/LoadingToast.svelte';
 import ErrorToast from './components/toasts/ErrorToast.svelte';
 import SuccessToast from './components/toasts/SuccessToast.svelte';
 
+export function showToast(
+	text: string,
+	type: App.Superforms.Message['type'] | 'loading',
+	ignore: (App.Superforms.Message['type'] | 'loading')[] = []
+) {
+	// Ignore this message type if specified
+	if (ignore.includes(type)) {
+		return null;
+	}
+
+	// Show the toast based on the type
+	switch (type) {
+		case 'error': {
+			return toastError(text);
+		}
+		case 'warning': {
+			return toast.push('WARNING!');
+		}
+		case 'loading': {
+			return toastLoading(text);
+		}
+		// Success
+		default: {
+			return toastSuccess(text);
+		}
+	}
+}
+
 export const toastLoading = (text: string = 'Cargando...') => {
 	return toast.push({
 		component: {
@@ -26,7 +54,7 @@ export const toastLoading = (text: string = 'Cargando...') => {
 };
 
 export const toastError = (text: string) => {
-	toast.push(text, {
+	return toast.push(text, {
 		component: {
 			src: ErrorToast as unknown as typeof SvelteComponent,
 			props: {
@@ -43,8 +71,8 @@ export const toastError = (text: string) => {
 	});
 };
 
-export const toastSucces = (text: string) => {
-	toast.push(text, {
+export const toastSuccess = (text: string) => {
+	return toast.push(text, {
 		component: {
 			src: SuccessToast as unknown as typeof SvelteComponent,
 			props: {

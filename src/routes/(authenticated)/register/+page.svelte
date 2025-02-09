@@ -3,14 +3,14 @@
 	import addUser from '$lib/assets/add-user.svg';
 	import icon from '$lib/assets/icon.png';
 	import Button from '$lib/components/Button.svelte';
-	import { At, Lock, LockOpen2, User } from '@steeze-ui/tabler-icons';
+	import { At, Cake, Id, Lock, LockOpen2, User } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
 	import Spinner from '$lib/components/Spinner.svelte';
-	import { toastError, toastSucces } from '$lib/toasts.js';
 	import Select from '$lib/components/Select.svelte';
 	import { UserRoles } from '$lib/shared/enums.js';
 	import Checkbox from '$lib/components/Checkbox.svelte';
-	import { formatCapital } from '$lib/shared/utils.js';
+	import { formatCapital, maxDocumentId, minDocumentId } from '$lib/shared/utils.js';
+	import { showToast } from '$lib/toasts.js';
 
 	let { data } = $props();
 
@@ -32,16 +32,10 @@
 		delayMs: 0,
 		applyAction: true,
 
-		// Usage of toastError to display login errors
 		onUpdated({ form }) {
-			// TODO: Function that receive the form.message and show the toast based on the type. Also, it can accept
-			// ignoring types. Like, do not show sucess modal if the response was success which can happen in things like login
+			// Display message based on the response
 			if (form.message) {
-				if (form.message.type == 'error') {
-					toastError(form.message.text);
-				} else if (form.message.type == 'success') {
-					toastSucces(form.message.text);
-				}
+				showToast(form.message.text, form.message.type, ['warning']);
 			}
 		}
 	});
@@ -68,15 +62,6 @@
 	</div>
 </div>
 
-<!-- TODO: Use separated variables for each input/select -->
-<!-- TODO: Validaciones para el form:  
-			- Nombres: solo letras
-			- Apellido: solo letras
-			- Correo: listo
-			- Rol: Solo rol valido
-			- Password: minimo 8 caracteres, etc etc
-			- Repeat Password: debe ser igual que Password
-	 -->
 <!-- Derecha register new process -->
 <div
 	class="flex w-3/5 flex-col justify-center space-y-8 rounded-r-xl border border-gray-200 bg-white"
@@ -85,17 +70,19 @@
 
 	<form class="flex flex-col gap-y-8" method="POST" action="?/register" use:enhance>
 		<div class="grid grid-cols-6 gap-x-2 gap-y-6">
+			<!-- First name -->
 			<Input
-				bind:value={$form.name}
-				name="name"
+				bind:value={$form.firstName}
+				name="firstName"
 				required
 				icon={User}
 				placeholder="Nombre"
 				wrapperClass="col-span-3"
-				{...$constraints.name}
+				{...$constraints.firstName}
 			/>
-			{#if $errors.name}<span class="text-sm text-red-500">{$errors.name}</span>{/if}
+			{#if $errors.firstName}<span class="text-sm text-red-500">{$errors.firstName}</span>{/if}
 
+			<!-- Last name -->
 			<Input
 				bind:value={$form.lastName}
 				name="lastName"
@@ -106,6 +93,37 @@
 				{...$constraints.lastName}
 			/>
 			{#if $errors.lastName}<span class="text-sm text-red-500">{$errors.lastName}</span>{/if}
+
+			<!-- Document ID -->
+			<Input
+				bind:value={$form.documentId}
+				type="number"
+				name="documentId"
+				required
+				icon={Id}
+				placeholder="Cédula"
+				autoComplete={false}
+				min={minDocumentId}
+				max={maxDocumentId}
+				wrapperClass="col-span-3"
+				{...$constraints.documentId}
+			/>
+			{#if $errors.documentId}<span class="text-sm text-red-500">{$errors.documentId}</span>{/if}
+
+			<!-- Cumpleaños -->
+			<Input
+				bind:value={$form.birthdate}
+				type="date"
+				name="birthdate"
+				required
+				icon={Cake}
+				placeholder="Cumpleaños"
+				wrapperClass="col-span-3"
+				{...$constraints.lastName}
+			/>
+			{#if $errors.birthdate}<span class="text-sm text-red-500">{$errors.birthdate}</span>{/if}
+
+			<!-- Email -->
 			<Input
 				bind:value={$form.email}
 				type="email"
@@ -113,11 +131,13 @@
 				required
 				icon={At}
 				placeholder="Correo electrónico"
+				autoComplete={false}
 				wrapperClass="col-span-4"
 				{...$constraints.email}
 			/>
 			{#if $errors.email}<span class="text-sm text-red-500">{$errors.email}</span>{/if}
 
+			<!-- User roles - Select -->
 			<Select
 				bind:value={$form.role}
 				items={Object.values(UserRoles)}
@@ -130,6 +150,7 @@
 			/>
 			{#if $errors.role}<span class="text-sm text-red-500">{$errors.role}</span>{/if}
 
+			<!-- Password -->
 			<Input
 				bind:value={$form.password}
 				required
@@ -137,10 +158,13 @@
 				name="password"
 				icon={iconPassword}
 				placeholder="Contraseña"
+				autoComplete={false}
 				wrapperClass="col-span-3"
 				{...$constraints.password}
 			/>
 			{#if $errors.password}<span class="text-sm text-red-500">{$errors.password}</span>{/if}
+
+			<!-- Repeat Password -->
 			<Input
 				bind:value={$form.repeatPassword}
 				required
@@ -148,24 +172,25 @@
 				name="repeatPassword"
 				icon={iconPassword}
 				placeholder="Repetir contraseña"
+				autoComplete={false}
 				wrapperClass="col-span-3"
 				{...$constraints.repeatPassword}
 			/>
 			{#if $errors.repeatPassword}<span class="text-sm text-red-500">{$errors.repeatPassword}</span
 				>{/if}
 
-			<div class="col-span-3 col-start-4">
-				<Checkbox
-					bind:value={
-						() => showPassword,
-						(value) => {
-							showPassword = value;
-							togglePasswordInput(value);
-						}
+			<!-- Show password checkbox -->
+			<Checkbox
+				bind:value={
+					() => showPassword,
+					(value) => {
+						showPassword = value;
+						togglePasswordInput(value);
 					}
-					text="Mostrar contraseña"
-				/>
-			</div>
+				}
+				wrapperClass="col-span-3 col-start-4 mt-[-1rem]"
+				text="Mostrar contraseña"
+			/>
 		</div>
 
 		<Button type="submit" disabled={$delayed} class="flex w-32 justify-center self-center">
