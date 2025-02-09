@@ -4,7 +4,6 @@ import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase64url, encodeHexLowerCase } from '@oslojs/encoding';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
-import type { Session } from '$lib/server/db/types';
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
@@ -12,18 +11,28 @@ export const sessionCookieName = 'auth-session';
 
 export function generateSessionToken() {
 	const bytes = crypto.getRandomValues(new Uint8Array(18));
-	const token = encodeBase64url(bytes);
-	return token;
+	return encodeBase64url(bytes);
 }
 
-export async function createSession(token: string, userId: string) {
-	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-	const session: Session = {
-		id: sessionId,
+export function hashSessionToken(token: string) {
+	return encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+}
+
+export async function createSession(sessionToken: string, userId: string) {
+	// Hash the session token
+	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(sessionToken)));
+
+	// Object with the data
+	const session = {
+		sessionToken,
+		sessionId,
 		userId,
 		expiresAt: new Date(Date.now() + DAY_IN_MS * 30)
-	};
+	}
+
+	// Insert the session
 	await db.insert(table.session).values(session);
+
 	return session;
 }
 
