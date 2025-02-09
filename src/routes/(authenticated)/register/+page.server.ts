@@ -46,7 +46,7 @@ export const actions: Actions = {
 		// Obtain all the data from the register form. The repeated password is already checked by Zod
 		const { email, password, firstName, lastName, role, documentId, birthdate } = form.data;
 
-		// Check for existing email used
+		// Check for existing email used (if user is soft deleted, the email will be marked as in use)
 		const isEmailUsed = await findUserByEmail(email.toLowerCase(), 'deleted', 'passwordHash');
 		if (isEmailUsed) {
 			// Against some rules to avoid exposing vulnerabilities, we return the 409 error for already taken emails
@@ -54,7 +54,7 @@ export const actions: Actions = {
 			return message(form, { text: 'El email ya esta en uso', type: 'error' }, { status: 409 });
 		}
 
-		// Check for existing Document ID used
+		// Check for existing Document ID used (if user is soft deleted, the document ID will be marked as in use)
 		const isDocIdUsed = await findUserByDocumentId(documentId, 'deleted', 'passwordHash');
 		if (isDocIdUsed) {
 			// Against some rules to avoid exposing vulnerabilities, we return the 409 error for already taken emails
