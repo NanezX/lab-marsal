@@ -18,7 +18,8 @@ export const UserRegisterSchema = UserLoginSchema.extend({
 	documentId: z
 		.number()
 		.min(minDocumentId, 'Solo números positivos pueden ser cédula')
-		.max(maxDocumentId, 'Número muy grande para ser una cédula').default("" as unknown as number),
+		.max(maxDocumentId, 'Número muy grande para ser una cédula')
+		.default('' as unknown as number),
 	birthdate: z
 		.string()
 		.min(1, 'Debe ingresar una fecha')
