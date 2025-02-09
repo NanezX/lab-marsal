@@ -28,6 +28,7 @@ export const actions: Actions = {
 		const { email, password } = form.data;
 
 		// Query for user with the email
+		// TODO: Support for soft deleted. If user is soft deleted, should not let login with it AND also not register it
 		const existingUser = await findUserByEmail(email.toLowerCase(), 'deleted');
 		if (!existingUser) {
 			return message(
