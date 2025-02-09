@@ -22,6 +22,23 @@ export async function findUserByEmail<E extends (keyof InferSelectModel<typeof u
 }
 
 /**
+ * Find a user by document ID, with optional column exclusions.
+ */
+export async function findUserByDocumentId<E extends (keyof InferSelectModel<typeof user>)[]>(
+	documentId: number,
+	...excludes: E
+): Promise<Omit<InferSelectModel<typeof user>, E[number]> | undefined> {
+	// Perform select operation with exclusion
+	const results = await db
+		.select(selectWithout(user, excludes))
+		.from(user)
+		.where(eq(user.documentId, documentId));
+
+	// Return the result with type
+	return results.at(0) as Omit<InferSelectModel<typeof user>, E[number]> | undefined;
+}
+
+/**
  * Function to exclude specific columns from a table while keeping full type safety.
  * @param table - Drizzle table schema
  * @param excludedColumns - Array of column names to exclude
