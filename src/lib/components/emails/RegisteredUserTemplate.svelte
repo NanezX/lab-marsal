@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, Hr, Html, Text, Head, Container, Section, Column } from 'svelte-email-tailwind';
+	import { Hr, Html, Text, Head, Container } from 'svelte-email-tailwind';
 
 	type PropType = {
 		firstName: string;
