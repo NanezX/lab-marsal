@@ -140,7 +140,7 @@ export function deleteSessionTokenCookie(event: RequestEvent) {
 
 export function setPasswordChangedCookie(event: RequestEvent) {
 	event.cookies.set(changedPasswordCookieName, 'true', {
-		expires: new Date(Date.now() + 1000 * 60 * 5), // 5 mins,
+		expires: new Date(Date.now() + 1000 * 60), // 1 min,
 		path: '/',
 		// sameSite: 'lax',
 		secure: false,
