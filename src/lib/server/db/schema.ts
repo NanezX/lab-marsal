@@ -82,6 +82,24 @@ export const sessionRelations = relations(session, ({ one }) => ({
 	})
 }));
 
+// UserRecovery table
+export const userRecovery = pgTable('user_recovery', {
+	id: baseTable.id,
+	userId: uuid('user_id')
+		.notNull()
+		.references(() => user.id),
+	code: text().notNull(),
+	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull()
+});
+
+// User Recovery relations declarations
+export const userRecoveryRelations = relations(userRecovery, ({ one }) => ({
+	user: one(user, {
+		fields: [userRecovery.userId],
+		references: [user.id]
+	})
+}));
+
 // Configuration table
 export const config = pgTable('configuration', {
 	id: varchar({ length: 50 }),
