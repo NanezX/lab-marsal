@@ -2,7 +2,7 @@ import RegisteredUserTemplate from '$lib/components/emails/RegisteredUserTemplat
 import type { ComponentProps } from 'svelte';
 import { render } from 'svelte/server';
 
-export function renderVerifyAccount(props: ComponentProps<typeof RegisteredUserTemplate>) {
+export function renderRegisteredUser(props: ComponentProps<typeof RegisteredUserTemplate>) {
 	const { head, body } = render(RegisteredUserTemplate, {
 		props
 	});

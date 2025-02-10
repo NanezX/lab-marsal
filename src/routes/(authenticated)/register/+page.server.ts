@@ -10,7 +10,7 @@ import { findUserByEmail, findUserByDocumentId } from '$lib/server/utils/dbQueri
 import { hashingOptions } from '$lib/server/auth';
 import { error as svelteError } from '@sveltejs/kit';
 import { UserRoles } from '$lib/shared/enums';
-import { renderVerifyAccount } from '$lib/server/email/renderTemplates';
+import { renderRegisteredUser } from '$lib/server/email/renderTemplates';
 import { sendEmail } from '$lib/server/email';
 
 // TODO: Implement email strategy to verify accounts/users
@@ -104,7 +104,14 @@ export const actions: Actions = {
 		}
 
 		// Send welcome email
-		const { body } = renderVerifyAccount({ email, firstName, lastName, role, documentId, birthdate });
+		const { body } = renderRegisteredUser({
+			email,
+			firstName,
+			lastName,
+			role,
+			documentId,
+			birthdate
+		});
 		await sendEmail(email, 'Bienvenido a LabMarsal', 'Bienvenido a LabMarsal', body);
 
 		return message(form, { text: 'Usuario creado', type: 'success' });
