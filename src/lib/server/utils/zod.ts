@@ -37,3 +37,7 @@ export const UserRegisterSchema = UserLoginSchema.extend({
 	message: 'Las contraseñas no coinciden',
 	path: ['repeatPassword']
 });
+
+export const PasswordRecoverySchema = z.object({
+	email: z.string().min(1, 'Correo electrónico obligatorio').email('Correo electrónico inválido')
+});
