@@ -10,6 +10,8 @@ import { findUserByEmail, findUserByDocumentId } from '$lib/server/utils/dbQueri
 import { hashingOptions } from '$lib/server/auth';
 import { error as svelteError } from '@sveltejs/kit';
 import { UserRoles } from '$lib/shared/enums';
+import { renderVerifyAccount } from '$lib/server/email/renderTemplates';
+import { sendEmail } from '$lib/server/email';
 
 // TODO: Implement email strategy to verify accounts/users
 // TODO: Maybe the password could be send to the email. But need to add later the email functionality (verification and sents)
@@ -100,6 +102,10 @@ export const actions: Actions = {
 
 			return message(form, { text: errMsg, type: 'error' }, { status: 500 });
 		}
+
+		// Send welcome email
+		const { body } = renderVerifyAccount({ email, firstName, lastName, role, documentId, birthdate });
+		await sendEmail(email, 'Bienvenido a LabMarsal', 'Bienvenido a LabMarsal', body);
 
 		return message(form, { text: 'Usuario creado', type: 'success' });
 	}
