@@ -165,9 +165,9 @@ export function deleteRecoverySessionCookie(event: RequestEvent) {
 	});
 }
 
-export function invalidateRecoveryPasswordSession(userId: string) {
+export async function invalidateRecoveryPasswordSession(userId: string) {
 	// Delete the user recovery session
-	db.delete(table.userRecovery).where(eq(table.userRecovery.userId, userId));
+	await db.delete(table.userRecovery).where(eq(table.userRecovery.userId, userId));
 }
 
 export async function createRecoveryPasswordSession(

@@ -42,7 +42,7 @@ export const actions: Actions = {
 		}
 
 		// 1. Invalidate/delete previous reset tokens
-		invalidateRecoveryPasswordSession(existingUser.id);
+		await invalidateRecoveryPasswordSession(existingUser.id);
 
 		// 2. Generate a new reset session token
 		const sessionToken = generateSessionToken();
