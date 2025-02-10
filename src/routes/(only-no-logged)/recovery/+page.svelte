@@ -77,7 +77,7 @@
 			{#if $delayed}
 				<Spinner class="h-6 w-6" />
 			{:else}
-				Recuperar
+				Solicitar
 			{/if}
 		</Button>
 	</form>
