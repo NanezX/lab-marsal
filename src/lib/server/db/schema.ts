@@ -89,6 +89,7 @@ export const userRecovery = pgTable('user_recovery', {
 		.notNull()
 		.references(() => user.id),
 	code: text().notNull(),
+	sessionToken: text('session_token').notNull(),
 	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull()
 });
 
