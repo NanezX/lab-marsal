@@ -13,9 +13,10 @@ const DAY_IN_MS = 1000 * 60 * 60 * 24;
 const HOUR_IN_MS = 1000 * 60 * 60;
 
 export const sessionCookieName = 'auth-session';
+export const recoverySessionCookieName = 'recovery-session';
 
 export function generateRandomOTP(): string {
-	const bytes = new Uint8Array(6);
+	const bytes = new Uint8Array(3);
 	crypto.getRandomValues(bytes);
 	const code = encodeBase32UpperCaseNoPadding(bytes);
 	return code;
@@ -145,6 +146,24 @@ export const hashingOptions = {
 };
 
 // RECOVERY AUTH UTILS
+export function setRecoverySessionCookie(event: RequestEvent, token: string, expiresAt: Date) {
+	event.cookies.set(recoverySessionCookieName, token, {
+		expires: expiresAt,
+		path: '/',
+		// sameSite: 'lax',
+		secure: false,
+		httpOnly: true
+	});
+}
+
+export function deleteRecoverySessionCookie(event: RequestEvent) {
+	event.cookies.delete(recoverySessionCookieName, {
+		path: '/',
+		// sameSite: 'lax',
+		secure: false,
+		httpOnly: true
+	});
+}
 
 export function invalidateRecoveryPasswordSession(userId: string) {
 	// Delete the user recovery session
