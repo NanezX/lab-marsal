@@ -109,7 +109,7 @@
 		</Button>
 	</form>
 
-	<a class="text-primary-blue underline underline-offset-2 hover:text-blue-800" href="/recovery"
-		>Olvidé mi contraseña</a
-	>
+	<a class="text-primary-blue underline underline-offset-2 hover:text-blue-800" href="/recovery">
+		Olvidé mi contraseña
+	</a>
 </div>

@@ -81,4 +81,8 @@
 			{/if}
 		</Button>
 	</form>
+
+	<a class="text-primary-blue underline underline-offset-2 hover:text-blue-800" href="/login">
+		Iniciar sesión
+	</a>
 </div>
