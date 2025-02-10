@@ -14,6 +14,7 @@ const HOUR_IN_MS = 1000 * 60 * 60;
 
 export const sessionCookieName = 'auth-session';
 export const recoverySessionCookieName = 'recovery-session';
+export const changedPasswordCookieName = 'password-changed';
 
 export function generateRandomOTP(): string {
 	const bytes = new Uint8Array(3);
@@ -130,6 +131,25 @@ export function setSessionTokenCookie(event: RequestEvent, token: string, expire
 
 export function deleteSessionTokenCookie(event: RequestEvent) {
 	event.cookies.delete(sessionCookieName, {
+		path: '/',
+		// sameSite: 'lax',
+		secure: false,
+		httpOnly: true
+	});
+}
+
+export function setPasswordChangedCookie(event: RequestEvent) {
+	event.cookies.set(changedPasswordCookieName, 'true', {
+		expires: new Date(Date.now() + 1000 * 60 * 5), // 5 mins,
+		path: '/',
+		// sameSite: 'lax',
+		secure: false,
+		httpOnly: true
+	});
+}
+
+export function deletePasswordChangedCookie(event: RequestEvent) {
+	event.cookies.delete(changedPasswordCookieName, {
 		path: '/',
 		// sameSite: 'lax',
 		secure: false,
