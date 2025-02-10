@@ -1,7 +1,12 @@
 import { redirect } from '@sveltejs/kit';
 import {
+	changedPasswordCookieName,
+	deletePasswordChangedCookie,
 	deleteRecoverySessionCookie,
+	hashingOptions,
+	invalidateRecoveryPasswordSession,
 	recoverySessionCookieName,
+	setPasswordChangedCookie,
 	validateRecoveryPasswordSession
 } from '$lib/server/auth.js';
 import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
@@ -9,12 +14,23 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { VerifyRecoverySchema } from '$lib/server/utils/zod';
 import { error as svelteError } from '@sveltejs/kit';
 import type { Actions } from './$types';
+import { updateUserById } from '$lib/server/utils/dbUpdates';
+import { hash } from '@node-rs/argon2';
 
 export const load = async (event) => {
+	const verifyRecoveryForm = await superValidate(zod(VerifyRecoverySchema));
+
 	const recoverySessionCookie = event.cookies.get(recoverySessionCookieName);
+	const changedPasswordCookie = event.cookies.get(changedPasswordCookieName);
 
 	// If no recovery sesion cookie, redirect to login
 	if (!recoverySessionCookie) {
+		// Cookie to display modal correctly if applies
+		if (changedPasswordCookie) {
+			deletePasswordChangedCookie(event);
+			return { verifyRecoveryForm };
+		}
+
 		return redirect(302, '/login');
 	}
 
@@ -26,8 +42,6 @@ export const load = async (event) => {
 		deleteRecoverySessionCookie(event);
 		return redirect(302, '/login');
 	}
-
-	const verifyRecoveryForm = await superValidate(zod(VerifyRecoverySchema));
 
 	return { user: validatedSession.user, verifyRecoveryForm };
 };
@@ -61,10 +75,10 @@ export const actions: Actions = {
 		}
 
 		// Obtain the data from the form
-		const { code } = form.data;
+		const { code, password } = form.data;
 
 		// Obtain the data from the validated session
-		const { recoverySession } = validatedSession;
+		const { recoverySession, user } = validatedSession;
 
 		// The stored code is uppercsae
 		if (code.toUpperCase() !== recoverySession.code) {
@@ -75,9 +89,20 @@ export const actions: Actions = {
 			);
 		}
 
-		// Change password
+		// Hash the introduced new password
+		const passwordHash = await hash(password, hashingOptions);
+
+		// Update/change the password
+		await updateUserById(user.id, { passwordHash });
+
+		// Invalidate the session token
+		await invalidateRecoveryPasswordSession(user.id);
 
 		// Remove the cookie
+		deleteRecoverySessionCookie(event);
+
+		// Set cookie to display modal correctly
+		setPasswordChangedCookie(event);
 
 		// Return success, the front will redirect with goto to the "/LOGIN"
 		return message(form, { text: '¡Contraseña cambiada exitosamente!', type: 'success' });
