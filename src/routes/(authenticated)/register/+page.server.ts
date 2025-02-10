@@ -108,7 +108,12 @@ export const actions: Actions = {
 			documentId,
 			birthdate
 		});
-		await sendEmail(email, 'Bienvenido a LabMarsal', 'Bienvenido a LabMarsal', body);
+		await sendEmail(
+			email,
+			'Bienvenido a LabMarsal',
+			`Bienvenido a LabMarsal ${firstName} ${lastName}`,
+			body
+		);
 
 		return message(form, { text: 'Usuario creado', type: 'success' });
 	}

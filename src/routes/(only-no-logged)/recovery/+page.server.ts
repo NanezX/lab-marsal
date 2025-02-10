@@ -60,7 +60,7 @@ export const actions: Actions = {
 		await sendEmail(
 			recoverySession.email,
 			'Recuperar usuario - LabMarsal',
-			'Recuperar usuario',
+			`Recuperar usuario - Código: ${recoverySession.code}`,
 			body
 		);
 
