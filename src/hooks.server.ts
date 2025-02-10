@@ -1,8 +1,6 @@
 import { redirect, type Handle } from '@sveltejs/kit';
 import * as auth from '$lib/server/auth.js';
 
-// TODO: Redirect to /home (or /) route if logged users go to /login and /register routes
-
 const handleAuth: Handle = async ({ event, resolve }) => {
 	// Moving root path from `/` to `/home`
 	if (event.url.pathname === '/') {
