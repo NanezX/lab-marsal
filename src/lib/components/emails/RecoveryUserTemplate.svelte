@@ -13,13 +13,13 @@
 	<Text class="text-center text-3xl">Recuperación de constraseña</Text>
 	<Hr />
 	<Container>
-		<Text class="text-xl">¡Hola!</Text>
-		<Text class="text-xl">Hemos recibido una solicitud para reestablecer tu contraseña</Text>
+		<Text class="text-lg">Hemos recibido una solicitud para reestablecer tu contraseña.</Text>
+		<Text class="mt-4 w-fit text-lg">Tu código de recuperación es:</Text>
 
-		<Text class="mt-10 w-fit text-lg">Tu código de recuperación es:</Text>
+		<Text class="text-center font-mono text-3xl font-bold">{code}</Text>
 
-		<Text class="text-center text-xl font-bold">{code}</Text>
+		<Text class="mt-12 w-fit">Si no fuiste tú, ignora este correo.</Text>
 
-		<Preview preview="El código es {code}" />
+		<Preview preview="Código de recuperación de cuenta" />
 	</Container>
 </Html>
