@@ -8,6 +8,7 @@
 	import { superForm } from 'sveltekit-superforms';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import { showToast } from '$lib/toasts.js';
+	import { fade } from 'svelte/transition';
 
 	let { data } = $props();
 
@@ -39,6 +40,7 @@
 
 <!-- Izquierda bienvenida -->
 <div
+	in:fade
 	class="rounded-l-lm from-secondary-blue to-primary-blue w-3/5 space-y-10 rounded-l-xl bg-linear-to-br text-white"
 >
 	<div class="flex items-center justify-around">
@@ -59,6 +61,7 @@
 
 <!-- Derecha login process -->
 <div
+	in:fade
 	class="flex w-2/5 flex-col justify-center space-y-8 rounded-r-xl border border-gray-200 bg-white"
 >
 	<h3 class="text-primary-blue text-center text-2xl">Iniciar sesión</h3>
