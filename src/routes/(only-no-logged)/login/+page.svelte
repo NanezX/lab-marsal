@@ -2,12 +2,13 @@
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import tree from '$lib/assets/tree.svg';
-	import icon from '$lib/assets/icon.png';
+	import IconMarsal from '$lib/components/IconMarsal.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { At, Lock, LockOpen2 } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import { showToast } from '$lib/toasts.js';
+	import { fade } from 'svelte/transition';
 
 	let { data } = $props();
 
@@ -37,14 +38,13 @@
 	});
 </script>
 
-<!-- <Container class={['flex', 'direct-children:p-8', 'rounded-xl', 'w-2/3', 'max-w-5xl']}> -->
 <!-- Izquierda bienvenida -->
 <div
+	in:fade
 	class="rounded-l-lm from-secondary-blue to-primary-blue w-3/5 space-y-10 rounded-l-xl bg-linear-to-br text-white"
 >
 	<div class="flex items-center justify-around">
-		<img alt="El logo de MarsalLab" src={icon} width="100" height="100" />
-
+		<IconMarsal />
 		<h1 class="text-end text-4xl">Bienvenido a MarsalLab</h1>
 	</div>
 
@@ -61,6 +61,7 @@
 
 <!-- Derecha login process -->
 <div
+	in:fade
 	class="flex w-2/5 flex-col justify-center space-y-8 rounded-r-xl border border-gray-200 bg-white"
 >
 	<h3 class="text-primary-blue text-center text-2xl">Iniciar sesión</h3>
@@ -111,11 +112,7 @@
 		</Button>
 	</form>
 
-	<!-- NOTA: No se creara una pantalla para el registro, ya que dicho registro de nuevos usuaros solo lo haran
-		 los usuarios con los Autorizacion para ello, como el Admin role
-		  -->
-	<a class="text-primary-blue underline underline-offset-2 hover:text-blue-800" href="/recovery"
-		>Olvidé mi contraseña</a
-	>
+	<a class="text-primary-blue underline underline-offset-2 hover:text-blue-800" href="/recovery">
+		Olvidé mi contraseña
+	</a>
 </div>
-<!-- </Container> -->

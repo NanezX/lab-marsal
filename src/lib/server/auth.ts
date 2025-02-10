@@ -1,13 +1,27 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { sha256 } from '@oslojs/crypto/sha2';
-import { encodeBase64url, encodeHexLowerCase } from '@oslojs/encoding';
+import {
+	encodeBase32UpperCaseNoPadding,
+	encodeBase64url,
+	encodeHexLowerCase
+} from '@oslojs/encoding';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
+const HOUR_IN_MS = 1000 * 60 * 60;
 
 export const sessionCookieName = 'auth-session';
+export const recoverySessionCookieName = 'recovery-session';
+export const changedPasswordCookieName = 'password-changed';
+
+export function generateRandomOTP(): string {
+	const bytes = new Uint8Array(3);
+	crypto.getRandomValues(bytes);
+	const code = encodeBase32UpperCaseNoPadding(bytes);
+	return code;
+}
 
 export function generateSessionToken() {
 	const bytes = crypto.getRandomValues(new Uint8Array(32));
@@ -124,6 +138,25 @@ export function deleteSessionTokenCookie(event: RequestEvent) {
 	});
 }
 
+export function setPasswordChangedCookie(event: RequestEvent) {
+	event.cookies.set(changedPasswordCookieName, 'true', {
+		expires: new Date(Date.now() + 1000 * 60), // 1 min,
+		path: '/',
+		// sameSite: 'lax',
+		secure: false,
+		httpOnly: true
+	});
+}
+
+export function deletePasswordChangedCookie(event: RequestEvent) {
+	event.cookies.delete(changedPasswordCookieName, {
+		path: '/',
+		// sameSite: 'lax',
+		secure: false,
+		httpOnly: true
+	});
+}
+
 export const hashingOptions = {
 	variant: 'argon2id',
 	memoryCost: 19456,
@@ -131,3 +164,93 @@ export const hashingOptions = {
 	outputLen: 32,
 	parallelism: 1
 };
+
+// RECOVERY AUTH UTILS
+export function setRecoverySessionCookie(event: RequestEvent, token: string, expiresAt: Date) {
+	event.cookies.set(recoverySessionCookieName, token, {
+		expires: expiresAt,
+		path: '/',
+		// sameSite: 'lax',
+		secure: false,
+		httpOnly: true
+	});
+}
+
+export function deleteRecoverySessionCookie(event: RequestEvent) {
+	event.cookies.delete(recoverySessionCookieName, {
+		path: '/',
+		// sameSite: 'lax',
+		secure: false,
+		httpOnly: true
+	});
+}
+
+export async function invalidateRecoveryPasswordSession(userId: string) {
+	// Delete the user recovery session
+	await db.delete(table.userRecovery).where(eq(table.userRecovery.userId, userId));
+}
+
+export async function createRecoveryPasswordSession(
+	sessionToken: string,
+	userId: string,
+	userEmail: string
+) {
+	// Hash the recovery session token
+	const sessionId = hashSessionToken(sessionToken);
+
+	// Object with the data
+	const session = {
+		sessionToken,
+		email: userEmail,
+		code: generateRandomOTP(),
+		expiresAt: new Date(Date.now() + HOUR_IN_MS) // 1 hour,
+	};
+
+	// Insert the recovery session
+	await db.insert(table.userRecovery).values({
+		...session,
+		sessionId,
+		userId
+	});
+
+	return session;
+}
+
+export async function validateRecoveryPasswordSession(sessionToken: string) {
+	// Hash the token
+	const sessionId = hashSessionToken(sessionToken);
+
+	// Query to the database
+	const [result] = await db
+		.select({
+			recoverySession: {
+				id: table.userRecovery.id,
+				code: table.userRecovery.code,
+				expiresAt: table.userRecovery.expiresAt
+			},
+			user: {
+				id: table.user.id,
+				email: table.user.email
+			}
+		})
+		.from(table.userRecovery)
+		.innerJoin(table.user, eq(table.userRecovery.userId, table.user.id))
+		.where(eq(table.userRecovery.sessionId, sessionId));
+
+	// If no result, invalid recovery session
+	if (!result) {
+		return null;
+	}
+
+	// Deconstruct the result
+	const { recoverySession, user } = result;
+
+	// Check if the recovery session has expired
+	const sessionExpired = Date.now() >= recoverySession.expiresAt.getTime();
+	if (sessionExpired) {
+		invalidateRecoveryPasswordSession(user.id);
+		return null;
+	}
+
+	return { recoverySession, user };
+}

@@ -37,3 +37,24 @@ export const UserRegisterSchema = UserLoginSchema.extend({
 	message: 'Las contraseñas no coinciden',
 	path: ['repeatPassword']
 });
+
+export const PasswordRecoverySchema = z.object({
+	email: z.string().min(1, 'Correo electrónico obligatorio').email('Correo electrónico inválido')
+});
+
+export const VerifyRecoverySchema = z
+	.object({
+		password: z
+			.string()
+			.min(8, 'La contraseña debe tener al menos 8 caracteres')
+			.max(20, 'La contraseña debe tener máximo 20 caracteres'),
+		repeatPassword: z.string().min(1, 'Debe repetir la contraseña'),
+		code: z
+			.string()
+			.min(1, 'Debe ingresar el código que recibió en el correo')
+			.max(5, 'Revise el código ingresado')
+	})
+	.refine((obj) => obj.password === obj.repeatPassword, {
+		message: 'Las contraseñas no coinciden',
+		path: ['repeatPassword']
+	});
