@@ -52,16 +52,18 @@
 	<p class="text-justify">Debes tener acceso al correo electrónico para recuperar la cuenta.</p>
 
 	<form class="flex flex-col gap-y-8" method="POST" action="?/recovery" use:enhance>
-		<Input
-			bind:value={$form.email}
-			type="email"
-			name="email"
-			required
-			icon={At}
-			placeholder="Correo electrónico"
-			{...$constraints.email}
-		/>
-		{#if $errors.email}<span class="text-sm text-red-500">{$errors.email}</span>{/if}
+		<div class="space-y-2">
+			<Input
+				bind:value={$form.email}
+				type="email"
+				name="email"
+				required
+				icon={At}
+				placeholder="Correo electrónico"
+				{...$constraints.email}
+			/>
+			{#if $errors.email}<span class="text-sm text-red-500">{$errors.email}</span>{/if}
+		</div>
 
 		<Button type="submit" disabled={$delayed} class="flex w-32 justify-center self-center">
 			{#if $delayed}
