@@ -26,20 +26,25 @@
 		}
 	}
 
-	const { form, errors, constraints, enhance, delayed } = superForm(data.verifyRecoveryForm, {
-		delayMs: 0,
+	const { form, errors, constraints, enhance, delayed, reset } = superForm(
+		data.verifyRecoveryForm,
+		{
+			delayMs: 0,
+			onUpdated({ form }) {
+				// Display recovery messages
+				if (form.message) {
+					showToast(form.message.text, form.message.type, ['warning']);
 
-		onUpdated({ form }) {
-			// Display recovery messages
-			if (form.message) {
-				showToast(form.message.text, form.message.type, ['warning']);
+					// Always reset the form
+					reset();
 
-				if (form.message.type == 'success') {
-					goto('/login');
+					if (form.message.type == 'success') {
+						goto('/login');
+					}
 				}
 			}
 		}
-	});
+	);
 </script>
 
 <!-- Izquierda Verificar recuperacion -->
