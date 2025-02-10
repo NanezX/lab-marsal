@@ -74,5 +74,12 @@ export const actions: Actions = {
 				{ status: 401 }
 			);
 		}
+
+		// Change password
+
+		// Remove the cookie
+
+		// Return success, the front will redirect with goto to the "/LOGIN"
+		return message(form, { text: '¡Contraseña cambiada exitosamente!', type: 'success' });
 	}
 };
