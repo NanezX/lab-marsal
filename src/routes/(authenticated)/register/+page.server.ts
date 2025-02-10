@@ -13,10 +13,6 @@ import { UserRoles } from '$lib/shared/enums';
 import { renderRegisteredUser } from '$lib/server/email/renderTemplates';
 import { sendEmail } from '$lib/server/email';
 
-// TODO: Implement email strategy to verify accounts/users
-// TODO: Maybe the password could be send to the email. But need to add later the email functionality (verification and sents)
-// Example at: https://github.com/lucia-auth/example-sveltekit-email-password-2fa/blob/main/src/lib/server/email-verification.ts
-
 export const load = async () => {
 	const registerForm = await superValidate(zod(UserRegisterSchema));
 
