@@ -12,9 +12,11 @@
 		disabled?: boolean | null;
 		required?: boolean;
 		icon?: IconSource;
+		class?: ClassValue;
 		wrapperClass?: ClassValue;
 		min?: string | number | null;
 		max?: string | number | null;
+		maxlength?: number | null;
 		autoComplete?: boolean;
 	};
 
@@ -28,16 +30,19 @@
 		disabled = false,
 		required = false,
 		icon,
+		class: enteredClass,
 		wrapperClass: wrapperClass,
 		min,
 		max,
+		maxlength,
 		autoComplete = true
 	}: PropType = $props();
 
 	// Reusable classes
 	const inputClass = [
 		'arrow-hide bg-secondary-blue/30 focus:ring-dark-blue w-full rounded-3xl border border-gray-200 py-2 pl-10 pr-4 focus:outline-hidden focus:ring-1',
-		'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600'
+		'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600',
+		enteredClass
 	];
 
 	const iconClass = ['text-primary-blue absolute ml-4 h-5 w-5'];
@@ -55,6 +60,7 @@
 		{required}
 		{min}
 		{max}
+		{maxlength}
 		autocomplete={!autoComplete ? 'new-password' : undefined}
 	/>
 
