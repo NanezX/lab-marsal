@@ -4,13 +4,13 @@
 	type PropType = {
 		firstName: string;
 		lastName: string;
-		rol: string;
+		role: string;
 		documentId: number;
 		email: string;
 		birthdate: string;
 	};
 
-	let { firstName, lastName, rol, documentId, email, birthdate }: PropType = $props();
+	let { firstName, lastName, role, documentId, email, birthdate }: PropType = $props();
 </script>
 
 <Html lang="en">
@@ -26,7 +26,7 @@
 		<Text class="text-lg"><strong>- Nombre y apellido:</strong> {firstName} {lastName}</Text>
 		<Text class="text-lg"><strong>- Cédula de Identidad:</strong> {documentId}</Text>
 		<Text class="text-lg"><strong>- Email:</strong> {email}</Text>
-		<Text class="text-lg"><strong>- Rol:</strong> {rol}</Text>
+		<Text class="text-lg"><strong>- Rol:</strong> {role}</Text>
 		<Text class="text-lg"><strong>- Cumpleaños:</strong> {birthdate}</Text>
 	</Container>
 </Html>
