@@ -195,3 +195,42 @@ export async function createRecoveryPasswordSession(
 
 	return session;
 }
+
+export async function validateRecoveryPasswordSession(sessionToken: string) {
+	// Hash the token
+	const sessionId = hashSessionToken(sessionToken);
+
+	// Query to the database
+	const [result] = await db
+		.select({
+			recoverySession: {
+				id: table.userRecovery.id,
+				code: table.userRecovery.code,
+				expiresAt: table.userRecovery.expiresAt
+			},
+			user: {
+				id: table.user.id,
+				email: table.user.email
+			}
+		})
+		.from(table.userRecovery)
+		.innerJoin(table.user, eq(table.userRecovery.userId, table.user.id))
+		.where(eq(table.userRecovery.sessionId, sessionId));
+
+	// If no result, invalid recovery session
+	if (!result) {
+		return null;
+	}
+
+	// Deconstruct the result
+	const { recoverySession, user } = result;
+
+	// Check if the recovery session has expired
+	const sessionExpired = Date.now() >= recoverySession.expiresAt.getTime();
+	if (sessionExpired) {
+		invalidateRecoveryPasswordSession(user.id);
+		return null;
+	}
+
+	return { recoverySession, user };
+}
