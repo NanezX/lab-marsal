@@ -29,14 +29,17 @@
 	const { form, errors, constraints, enhance, delayed, reset } = superForm(
 		data.verifyRecoveryForm,
 		{
+			resetForm: false,
 			delayMs: 0,
 			onUpdated({ form }) {
 				// Display recovery messages
 				if (form.message) {
 					showToast(form.message.text, form.message.type, ['warning']);
 
-					// Always reset the form
-					reset();
+					if (form.message.type == 'error') {
+						// Only reset the code
+						reset({ data: { ...form.data, code: '' } });
+					}
 
 					if (form.message.type == 'success') {
 						goto('/login');
@@ -82,7 +85,7 @@
 	<h3 class="text-primary-blue text-center text-2xl">Recuperación</h3>
 
 	<p class="text-justify">
-		Utilzia el código de 5 dígitos que recibiste en <strong>{data.user.email}</strong>
+		Utilzia el código de 5 dígitos que recibiste en <strong>{data.user?.email}</strong>
 	</p>
 
 	<form class="flex flex-col gap-y-8" method="POST" action="?/verify-recovery" use:enhance>
