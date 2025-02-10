@@ -109,9 +109,6 @@
 		</Button>
 	</form>
 
-	<!-- NOTA: No se creara una pantalla para el registro, ya que dicho registro de nuevos usuaros solo lo haran
-		 los usuarios con los Autorizacion para ello, como el Admin role
-		  -->
 	<a class="text-primary-blue underline underline-offset-2 hover:text-blue-800" href="/recovery"
 		>Olvidé mi contraseña</a
 	>
