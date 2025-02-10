@@ -1,13 +1,25 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { sha256 } from '@oslojs/crypto/sha2';
-import { encodeBase64url, encodeHexLowerCase } from '@oslojs/encoding';
+import {
+	encodeBase32UpperCaseNoPadding,
+	encodeBase64url,
+	encodeHexLowerCase
+} from '@oslojs/encoding';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
+const HOUR_IN_MS = 1000 * 60 * 60;
 
 export const sessionCookieName = 'auth-session';
+
+export function generateRandomOTP(): string {
+	const bytes = new Uint8Array(6);
+	crypto.getRandomValues(bytes);
+	const code = encodeBase32UpperCaseNoPadding(bytes);
+	return code;
+}
 
 export function generateSessionToken() {
 	const bytes = crypto.getRandomValues(new Uint8Array(32));
@@ -131,3 +143,36 @@ export const hashingOptions = {
 	outputLen: 32,
 	parallelism: 1
 };
+
+// RECOVERY AUTH UTILS
+
+export function invalidateRecoveryPasswordSession(userId: string) {
+	// Delete the user recovery session
+	db.delete(table.userRecovery).where(eq(table.userRecovery.userId, userId));
+}
+
+export async function createRecoveryPasswordSession(
+	sessionToken: string,
+	userId: string,
+	userEmail: string
+) {
+	// Hash the recovery session token
+	const sessionId = hashSessionToken(sessionToken);
+
+	// Object with the data
+	const session = {
+		sessionToken,
+		email: userEmail,
+		code: generateRandomOTP(),
+		expiresAt: new Date(Date.now() + HOUR_IN_MS) // 1 hour,
+	};
+
+	// Insert the recovery session
+	await db.insert(table.userRecovery).values({
+		...session,
+		sessionId,
+		userId
+	});
+
+	return session;
+}
