@@ -37,7 +37,6 @@
 	});
 </script>
 
-<!-- <Container class={['flex', 'direct-children:p-8', 'rounded-xl', 'w-2/3', 'max-w-5xl']}> -->
 <!-- Izquierda bienvenida -->
 <div
 	class="rounded-l-lm from-secondary-blue to-primary-blue w-3/5 space-y-10 rounded-l-xl bg-linear-to-br text-white"
@@ -118,4 +117,3 @@
 		>Olvidé mi contraseña</a
 	>
 </div>
-<!-- </Container> -->
