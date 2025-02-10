@@ -35,7 +35,8 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 
 	// Redirect unauthenticated users to /login
 	if (!event.locals.user) {
-		if (event.url.pathname !== '/recovery' && event.url.pathname !== '/login') {
+		// Support for /recovery, /recovery/verify and /login ONLY for no logged users
+		if (!event.url.pathname.startsWith('/recovery') && event.url.pathname !== '/login') {
 			throw redirect(302, '/login');
 		}
 	}
