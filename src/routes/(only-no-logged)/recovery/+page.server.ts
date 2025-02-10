@@ -10,6 +10,7 @@ import {
 	setRecoverySessionCookie
 } from '$lib/server/auth';
 import { sendEmail } from '$lib/server/email';
+import { renderRecoveryUser } from '$lib/server/email/renderTemplates';
 
 export const load = async () => {
 	const recoveryForm = await superValidate(zod(PasswordRecoverySchema));
@@ -41,10 +42,10 @@ export const actions: Actions = {
 			);
 		}
 
-		// 1. Invalidate/delete previous reset tokens
+		// Invalidate/delete previous reset tokens
 		await invalidateRecoveryPasswordSession(existingUser.id);
 
-		// 2. Generate a new reset session token
+		// Generate a new reset session token
 		const sessionToken = generateSessionToken();
 		const recoverySession = await createRecoveryPasswordSession(
 			sessionToken,
@@ -52,19 +53,21 @@ export const actions: Actions = {
 			existingUser.email
 		);
 
-		// 3. Send the email with the code
-		const html = `<p>Your code is: <strong>${recoverySession.code}</strong></p>`;
+		// Send the email with the code
+		const { body } = renderRecoveryUser({
+			code: recoverySession.code
+		});
 		await sendEmail(
 			recoverySession.email,
 			'Recuperar usuario - LabMarsal',
 			'Recuperar usuario',
-			html
+			body
 		);
 
-		// 4. Set the cookie with the name, the sessionToken and expire time
+		// Set the cookie with the name, the sessionToken and expire time
 		setRecoverySessionCookie(event, sessionToken, recoverySession.expiresAt);
 
-		// 5. Return success, the front will redirect with goto to the "/recovery/verify"
+		// Return success, the front will redirect with goto to the "/recovery/verify"
 		return message(form, { text: 'Solicitud de recuperación enviada', type: 'success' });
 	}
 };
