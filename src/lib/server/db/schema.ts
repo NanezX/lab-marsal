@@ -89,7 +89,6 @@ export const config = pgTable('configuration', {
 });
 
 // User table
-// TODO: Should include a field with "verified -> boolean" that means if the user was verified with the email
 export const user = pgTable('user', {
 	...baseTable,
 	email: text().notNull().unique(),

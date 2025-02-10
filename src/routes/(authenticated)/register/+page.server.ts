@@ -10,10 +10,8 @@ import { findUserByEmail, findUserByDocumentId } from '$lib/server/utils/dbQueri
 import { hashingOptions } from '$lib/server/auth';
 import { error as svelteError } from '@sveltejs/kit';
 import { UserRoles } from '$lib/shared/enums';
-
-// TODO: Implement email strategy to verify accounts/users
-// TODO: Maybe the password could be send to the email. But need to add later the email functionality (verification and sents)
-// Example at: https://github.com/lucia-auth/example-sveltekit-email-password-2fa/blob/main/src/lib/server/email-verification.ts
+import { renderRegisteredUser } from '$lib/server/email/renderTemplates';
+import { sendEmail } from '$lib/server/email';
 
 export const load = async () => {
 	const registerForm = await superValidate(zod(UserRegisterSchema));
@@ -100,6 +98,17 @@ export const actions: Actions = {
 
 			return message(form, { text: errMsg, type: 'error' }, { status: 500 });
 		}
+
+		// Send welcome email
+		const { body } = renderRegisteredUser({
+			email,
+			firstName,
+			lastName,
+			role,
+			documentId,
+			birthdate
+		});
+		await sendEmail(email, 'Bienvenido a LabMarsal', 'Bienvenido a LabMarsal', body);
 
 		return message(form, { text: 'Usuario creado', type: 'success' });
 	}

@@ -32,6 +32,7 @@
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@tailwindcss/postcss": "^4.0.4",
 		"@types/node": "^22.13.1",
+		"@types/nodemailer": "^6.4.17",
 		"@vitest/coverage-v8": "^3.0.5",
 		"@zerodevx/svelte-toast": "^0.9.6",
 		"autoprefixer": "^10.4.20",
@@ -61,7 +62,9 @@
 		"@oslojs/encoding": "^1.1.0",
 		"@steeze-ui/svelte-icon": "^1.6.2",
 		"drizzle-orm": "^0.39.2",
+		"nodemailer": "^6.10.0",
 		"postgres": "^3.4.5",
+		"svelte-email-tailwind": "^2.0.1",
 		"uuid": "^11.0.5"
 	}
 }
