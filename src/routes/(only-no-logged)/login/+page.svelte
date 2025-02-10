@@ -2,7 +2,7 @@
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import tree from '$lib/assets/tree.svg';
-	import icon from '$lib/assets/icon.png';
+	import IconMarsal from '$lib/components/IconMarsal.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { At, Lock, LockOpen2 } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
@@ -42,8 +42,7 @@
 	class="rounded-l-lm from-secondary-blue to-primary-blue w-3/5 space-y-10 rounded-l-xl bg-linear-to-br text-white"
 >
 	<div class="flex items-center justify-around">
-		<img alt="El logo de MarsalLab" src={icon} width="100" height="100" />
-
+		<IconMarsal />
 		<h1 class="text-end text-4xl">Bienvenido a MarsalLab</h1>
 	</div>
 
