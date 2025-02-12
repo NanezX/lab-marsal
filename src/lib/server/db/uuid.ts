@@ -6,7 +6,7 @@ export const Namespaces = {
 	User: 'a1b2c3d4-5e6f-7g8h-9i0j-k1l2m3n4o5p6'
 } as const;
 
-type ValidNamespace = keyof typeof Namespaces;
+type ValidNamespace = typeof Namespaces[keyof typeof Namespaces];
 
 export function generateRandomUUID() {
 	return uuidv4();
