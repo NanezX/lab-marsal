@@ -28,12 +28,13 @@ describe('UUID Utilities', () => {
     describe("generateFromNameUUID function", () => {
         const testValue = 'test value';
         const testNamespace = Namespaces.Patient;
+        const UUID_V5_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
         it('should generate a valid UUID', () => {
             const uuid = generateFromNameUUID(testValue, testNamespace);
 
             expect(uuid).toMatch(
-                /^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+                UUID_V5_REGEX
             );
         });
 
@@ -67,12 +68,12 @@ describe('UUID Utilities', () => {
 
         it('should handle empty strings', () => {
             const uuid = generateFromNameUUID('', testNamespace);
-            expect(uuid).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+            expect(uuid).toMatch(UUID_V5_REGEX);
         });
 
         it('should handle special characters', () => {
             const uuid = generateFromNameUUID('test@value#123', testNamespace);
-            expect(uuid).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+            expect(uuid).toMatch(UUID_V5_REGEX);
         });
 
         it('should throw an error for invalid namespaces', () => {
