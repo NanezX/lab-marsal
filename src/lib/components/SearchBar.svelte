@@ -5,7 +5,7 @@
 
 	type PropType = {
 		inputSearch: string | number;
-		name: string;
+		name?: string;
 		placeholder: string;
 		class?: ClassValue;
 		wrapperClass?: ClassValue;
@@ -13,7 +13,7 @@
 
 	let {
 		inputSearch = $bindable(''),
-		name,
+		name = 'inputSearch',
 		placeholder,
 		class: enteredClass,
 		wrapperClass: wrapperClass
