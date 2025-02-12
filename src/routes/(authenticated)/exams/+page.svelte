@@ -18,6 +18,7 @@
 		FileSearch,
 		UserSearch
 	} from '@steeze-ui/tabler-icons';
+	import SearchBar from '$lib/components/SearchBar.svelte';
 
 	// TODO: Recheck the types laters coming from the DB
 	type Exam = {
@@ -202,11 +203,10 @@
 	<p class="text-center text-3xl">Examenes</p>
 
 	<div class="flex w-full justify-evenly">
-		<Input
-			bind:value={inputSearch}
+		<SearchBar
+			bind:inputSearch
 			name="examSearch"
 			placeholder="Busca un examen por paciente o tipo de examen"
-			icon={Search}
 			wrapperClass="w-4/5"
 		/>
 		<Button class="text-xl" onclick={() => (showModal = true)}>Nuevo +</Button>
