@@ -3,7 +3,6 @@
 	import NavBar from '$lib/components/layout/NavBar.svelte';
 	import SideBar from '$lib/components/layout/SideBar.svelte';
 
-	// TODO: Use the role to know what links/modules show
 	let { children, data } = $props();
 </script>
 
