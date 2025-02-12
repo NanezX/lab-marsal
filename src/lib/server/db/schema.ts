@@ -1,5 +1,4 @@
 import { UserRoles, ExamPriority, ExamStatus, PatientGender } from '../../shared/enums';
-// import { encodeBase32LowerCase } from '@oslojs/encoding';
 import {
 	pgEnum,
 	pgTable,
@@ -13,7 +12,7 @@ import {
 	varchar
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import { v4 as uuidv4 } from 'uuid';
+import { generateRandomUUID } from '../utils/uuid';
 
 // TODO: Check on https://orm.drizzle.team/docs/column-types/pg#jsonb for type inference for jsonb columns on database
 
@@ -49,7 +48,7 @@ const baseTable = {
 	// ID of the row
 	id: uuid()
 		.primaryKey()
-		.$defaultFn(() => uuidv4()),
+		.$defaultFn(() => generateRandomUUID()),
 	// Flag for soft delete
 	deleted: boolean().notNull().default(false),
 	// Time when the row was created
