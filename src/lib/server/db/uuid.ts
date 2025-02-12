@@ -12,6 +12,18 @@ export function generateRandomUUID() {
 	return uuidv4();
 }
 
-export function generateFromNameUUID(value: string, namespace: ValidNamespace) {
+/**
+ * Generate a UUID based on the value and namesapce using uuid V5.
+ * If `whitespaces` is true, the whitespaces are removed from the input before generating the UUID output.
+ * 
+ * The UUID generate is totally deterministic.
+ * @param value 
+ * @param namespace 
+ * @returns 
+ */
+export function generateFromNameUUID(value: string, namespace: ValidNamespace, whitespaces = false) {
+	if (!whitespaces) {
+		value = value.replace(" ", "")
+	}
 	return uuidv5(value, namespace);
 }
