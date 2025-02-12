@@ -12,7 +12,7 @@ import {
 	varchar
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import { generateRandomUUID } from '../utils/uuid';
+import { generateRandomUUID } from './uuid';
 
 // TODO: Check on https://orm.drizzle.team/docs/column-types/pg#jsonb for type inference for jsonb columns on database
 

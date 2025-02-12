@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { generateRandomUUID } from '$lib/shared/uuid';
+	import { v4 as uuidv4 } from 'uuid';
 	import type { ClassValue } from 'svelte/elements';
 
 	// Prop type
@@ -21,7 +21,7 @@
 		wrapperClass
 	}: PropType = $props();
 
-	let instanceId = generateRandomUUID();
+	let instanceId = uuidv4();
 </script>
 
 <div class={['ml-auto flex w-fit items-center gap-x-2', wrapperClass]} {title}>
