@@ -12,7 +12,7 @@
 <div in:fade class="flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
 
-	<form method="POST">
+	<div>
 		<div class="space-y-5">
 			<p class="text-xl">Detalles generales</p>
 
@@ -46,5 +46,5 @@
 		</div>
 
 		<Button type="submit">Click me</Button>
-	</form>
+	</div>
 </div>
