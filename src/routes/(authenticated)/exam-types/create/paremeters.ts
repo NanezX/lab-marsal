@@ -3,6 +3,8 @@
 //     type: number | string;
 // }
 
+// TODO: Porcentual. Dejar elegir desde el 00.00% hasta el 100% por defecto. Pero dejar subir mas allá supongo
+
 /**
  * Este seria para un parametro donde se espera que el resultado sea absoluto basado en texto.
  * Podria ser un parametro que solo necesita una observacion de lo que se hayó o vió. No tengo un ejemplo
