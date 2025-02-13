@@ -3,6 +3,7 @@
 	import Input from '$lib/components/Input.svelte';
 	import Textarea from '$lib/components/Textarea.svelte';
 	import { fade } from 'svelte/transition';
+	import { isObject } from 'lodash-es';
 
 	let examName = $state('');
 	let examDescription = $state('');
