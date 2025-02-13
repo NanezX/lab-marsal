@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Button from '$lib/components/Button.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import Textarea from '$lib/components/Textarea.svelte';
 	import { fade } from 'svelte/transition';
@@ -11,7 +12,7 @@
 <div in:fade class="flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
 
-	<div>
+	<form method="POST">
 		<div class="space-y-5">
 			<p class="text-xl">Detalles generales</p>
 
@@ -43,5 +44,7 @@
 				<Input bind:value={examName} name="name" placeholder="Nombre del exámen" />
 			</div>
 		</div>
-	</div>
+
+		<Button type="submit">Click me</Button>
+	</form>
 </div>
