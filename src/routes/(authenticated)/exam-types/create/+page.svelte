@@ -30,6 +30,8 @@
 		baseParameters.push({ position: baseParameters.length + 1 });
 	}
 
+	let mouseYCoordinate: any = $state(null);
+
 	let draggingItem: any = $state(null);
 	let draggingItemId: any = $state(null);
 	let draggingItemIndex: any = $state(null);
@@ -41,9 +43,12 @@
 		currentTarget: EventTarget & HTMLParagraphElement;
 	};
 
-	function onDrag(e: DragEventFn) {}
+	function onDrag(e: DragEventFn) {
+		mouseYCoordinate = e.clientY;
+	}
 
 	function onDragStart(e: DragEventFn, param: ParameterData, index: number) {
+		mouseYCoordinate = e.clientY;
 		draggingItem = param;
 		draggingItemIndex = index;
 		draggingItemId = param.position;
@@ -59,12 +64,18 @@
 			hoveredItemIndex != null &&
 			draggingItemIndex != hoveredItemIndex
 		) {
-			// Reorganize items
+			// Reorganzize items
 			[baseParameters[draggingItemIndex], baseParameters[hoveredItemIndex]] = [
 				baseParameters[hoveredItemIndex],
 				baseParameters[draggingItemIndex]
 			];
+
+			// Balance
+			draggingItemIndex = hoveredItemIndex;
 		}
+
+		draggingItemId = null;
+		hoveredItemIndex = null;
 	}
 </script>
 
