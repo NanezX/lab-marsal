@@ -7,6 +7,7 @@
 	import { isObject } from 'lodash-es';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { CirclePlus } from '@steeze-ui/tabler-icons';
+	import AddButton from '$lib/components/buttons/AddButton.svelte';
 
 	let examName = $state('');
 	let examDescription = $state('');
@@ -56,19 +57,11 @@
 		<div class="space-y-5">
 			<div class="just flex items-center gap-x-2 text-xl">
 				<p>Valores y parámetros</p>
-
-				<Button
-					class="!bg-inherit !p-0"
+				<AddButton
 					title="Añadir parámetro nuevo"
 					onclick={() => alert('new param')}
-				>
-					<Icon
-						src={CirclePlus}
-						size="32"
-						class="text-primary-blue hover:text-primary-blue/75"
-						theme="filled"
-					/>
-				</Button>
+					theme="filled"
+				/>
 			</div>
 
 			<div class="space-y-4">
