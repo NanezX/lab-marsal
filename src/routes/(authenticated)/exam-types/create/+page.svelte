@@ -14,18 +14,24 @@
 
 	type ParameterData = {
 		position: number;
-		parameter?: ExamParemeterInput;
+		parameter: ExamParemeterInput;
 	};
 
-	let baseParameters: ParameterData[] = $state([
-		{ position: 1 },
-		{ position: 2 },
-		{ position: 3 },
-		{ position: 4 }
-	]);
+	const initParameter: ExamParemeterInput = {
+		name: '',
+		type: 'text', // | "number";
+		category: undefined,
+		unit: '',
+		value: '' // | number
+	};
+
+	let baseParameters: ParameterData[] = $state([{ position: 0, parameter: initParameter }]);
 
 	function addParameter() {
-		baseParameters.push({ position: baseParameters.length + 1 });
+		baseParameters.push({
+			position: baseParameters.length,
+			parameter: initParameter
+		});
 	}
 
 	let draggingItemIndex: number | null = $state(null);
