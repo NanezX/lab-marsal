@@ -30,7 +30,6 @@
 		baseParameters.push({ position: baseParameters.length + 1 });
 	}
 
-	let draggingItemId: any = $state(null);
 	let draggingItemIndex: any = $state(null);
 
 	let hoveredItemIndex: any = $state(null);
@@ -43,7 +42,6 @@
 
 	function onDragStart(e: DragEventFn, param: ParameterData, index: number) {
 		draggingItemIndex = index;
-		draggingItemId = param.position;
 	}
 
 	function onDragOver(event: DragEventFn, index: number) {
@@ -67,7 +65,6 @@
 			draggingItemIndex = hoveredItemIndex;
 		}
 
-		draggingItemId = null;
 		hoveredItemIndex = null;
 	}
 
