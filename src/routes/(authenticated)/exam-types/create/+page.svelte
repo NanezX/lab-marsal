@@ -31,20 +31,15 @@
 	}
 
 	let draggingItemIndex: number | null = $state(null);
-
-	let hoveredItemIndex: any = $state(null);
+	let hoveredItemIndex: number | null = $state(null);
 	let container: HTMLDivElement | null = $state(null);
-	let isOutside = $state(false);
+	let isOutside: boolean = $state(false);
 
-	type DragEventFn = DragEvent & {
-		currentTarget: EventTarget & HTMLParagraphElement;
-	};
-
-	function onDragStart(e: DragEventFn, param: ParameterData, index: number) {
+	function onDragStart(index: number) {
 		draggingItemIndex = index;
 	}
 
-	function onDragOver(event: DragEventFn, index: number) {
+	function onDragOver(index: number) {
 		hoveredItemIndex = index;
 	}
 
@@ -149,7 +144,7 @@
 							aria-label="Drag handle for parameter {param.position}"
 							class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
 							draggable="true"
-							ondragstart={(e) => onDragStart(e, param, index)}
+							ondragstart={(e) => onDragStart(index)}
 							ondragend={() => onDragEnd()}
 						>
 							<svg
@@ -172,7 +167,7 @@
 							class="w-full"
 							role="listitem"
 							aria-label="List of exam parameters"
-							ondragover={(e) => onDragOver(e, index)}
+							ondragover={(e) => onDragOver(index)}
 						>
 							<p class="w-full rounded-lg p-4">
 								Position: {param.position}
