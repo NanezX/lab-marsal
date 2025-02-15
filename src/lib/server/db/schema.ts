@@ -146,6 +146,7 @@ export const examType = pgTable('exam_type', {
 	name: text().notNull().unique(),
 	description: text(),
 	basePrice: decimal('base_price', { precision: 19, scale: 3 }).notNull(),
+	clasification: text().notNull().unique(),
 	parameters: jsonb().notNull(),
 	formulas: jsonb().notNull()
 });
