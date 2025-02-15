@@ -8,6 +8,7 @@
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { CirclePlus } from '@steeze-ui/tabler-icons';
 	import AddButton from '$lib/components/buttons/AddButton.svelte';
+	import { flip } from 'svelte/animate';
 
 	let examName = $state('');
 	let examDescription = $state('');
@@ -15,10 +16,30 @@
 
 	type ParameterData = {
 		position: number;
-		parameter: ExamParemeterInput;
+		parameter?: ExamParemeterInput;
 	};
 
-	let baseParameteers: ParameterData[] = $state([]);
+	let baseParameters: ParameterData[] = $state([
+		{ position: 1 },
+		{ position: 2 },
+		{ position: 3 },
+		{ position: 4 }
+	]);
+
+	function addParameter() {
+		//
+		baseParameters.push({ position: baseParameters.length + 1 });
+	}
+
+	let mouseYCoordinate: any = $state(null); // pointer y coordinate within client
+	let distanceTopGrabbedVsPointer: any = $state(null);
+
+	let draggingItem: any = $state(null);
+	let draggingItemId: any = $state(null);
+	let draggingItemIndex: any = $state(null);
+
+	let hoveredItemIndex: any = $state(null);
+	let container: any = $state(null);
 </script>
 
 <div in:fade class="flex w-full flex-col gap-y-8">
@@ -57,11 +78,78 @@
 		<div class="space-y-5">
 			<div class="just flex items-center gap-x-2 text-xl">
 				<p>Valores y parámetros</p>
-				<AddButton
-					title="Añadir parámetro nuevo"
-					onclick={() => alert('new param')}
-					theme="filled"
-				/>
+				<AddButton title="Añadir parámetro nuevo" onclick={addParameter} theme="filled" />
+			</div>
+
+			<div class="space-y-4" bind:this={container}>
+				{#if mouseYCoordinate}
+					<div
+						class="item ghost"
+						style="top: {mouseYCoordinate +
+							distanceTopGrabbedVsPointer}px; background: {draggingItem.value};"
+					>
+						{draggingItem.value}
+					</div>
+				{/if}
+				{#each baseParameters as param, index (param)}
+					<p
+						draggable="true"
+						transition:fade
+						animate:flip={{ duration: 500 }}
+						id={index.toString()}
+						class={[
+							'cursor-grab bg-red-300',
+							{ 'cursor-grabbing': draggingItemId == param.position }
+						]}
+						ondragstart={(e) => {
+							mouseYCoordinate = e.clientY;
+							//console.log('dragstart', mouseYCoordinate);
+
+							draggingItem = param;
+							draggingItemIndex = index;
+							draggingItemId = param.position;
+							console.log('all');
+
+							if (e.target) {
+								console.log('all22');
+								// @ts-expect-error asfjasf
+								distanceTopGrabbedVsPointer = e.target.getBoundingClientRect().y - e.clientY;
+							}
+						}}
+						ondrag={(e) => {
+							mouseYCoordinate = e.clientY;
+							//console.log('drag', mouseYCoordinate);
+						}}
+						ondragover={(e) => {
+							hoveredItemIndex = index;
+						}}
+						ondragend={(e) => {
+							if (
+								draggingItemIndex != null &&
+								hoveredItemIndex != null &&
+								draggingItemIndex != hoveredItemIndex
+							) {
+								// swap items
+								[baseParameters[draggingItemIndex], baseParameters[hoveredItemIndex]] = [
+									baseParameters[hoveredItemIndex],
+									baseParameters[draggingItemIndex]
+								];
+
+								// balance
+								draggingItemIndex = hoveredItemIndex;
+							}
+							//console.log('dragend', mouseYCoordinate);
+							//console.log('\n');
+
+							// mouseYCoordinate = e.clientY;
+
+							draggingItemId = null; // makes item visible
+							hoveredItemIndex = null; // prevents instant swap
+						}}
+					>
+						Position: {param.position}
+					</p>
+				{/each}
 			</div>
 
 			<div class="space-y-4">
@@ -72,3 +160,21 @@
 		<Button type="submit">Click me</Button>
 	</div>
 </div>
+
+<style>
+	.item {
+		width: 300px;
+		background: white;
+		padding: 10px;
+		margin-bottom: 10px;
+		cursor: grab;
+	}
+	.ghost {
+		margin-bottom: 10px;
+		pointer-events: none;
+		z-index: 99;
+		position: absolute;
+		top: 0;
+		left: 10;
+	}
+</style>
