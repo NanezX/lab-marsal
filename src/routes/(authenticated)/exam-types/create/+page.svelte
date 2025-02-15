@@ -121,7 +121,7 @@
 			<div class="space-y-4" bind:this={container}>
 				{#each baseParameters as param, index (param)}
 					<div
-						class="group relative"
+						class="flex items-center gap-x-2"
 						transition:fade
 						animate:flip={{ duration: 500 }}
 						id={index.toString()}
@@ -131,14 +131,14 @@
 							role="button"
 							tabindex="0"
 							aria-label="Drag handle for parameter {param.position}"
-							class="absolute top-1/2 left-0 h-full w-6 -translate-y-1/2 cursor-grab opacity-0 transition-opacity group-hover:opacity-100 hover:bg-gray-100"
+							class="cursor-grab hover:bg-gray-100"
 							draggable="true"
 							ondrag={onDrag}
 							ondragstart={(e) => onDragStart(e, param, index)}
-							ondragend={(e) => onDragEnd()}
+							ondragend={() => onDragEnd()}
 						>
 							<svg
-								class="h-4 w-4 text-gray-400"
+								class="h-6 w-6 text-gray-400"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24"
@@ -154,12 +154,12 @@
 
 						<!-- Content area -->
 						<div
+							class="w-full"
 							role="listitem"
 							aria-label="List of exam parameters"
-							class="pl-8"
-							ondragover={(e) => onDragOver(index)}
+							ondragover={() => onDragOver(index)}
 						>
-							<p class="rounded-lg bg-red-300 p-4">
+							<p class="w-full rounded-lg bg-red-300 p-4">
 								Position: {param.position}
 							</p>
 						</div>
