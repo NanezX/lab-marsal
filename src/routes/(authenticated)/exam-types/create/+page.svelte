@@ -30,7 +30,7 @@
 		baseParameters.push({ position: baseParameters.length + 1 });
 	}
 
-	let draggingItemIndex: any = $state(null);
+	let draggingItemIndex: number | null = $state(null);
 
 	let hoveredItemIndex: any = $state(null);
 	let container: HTMLDivElement | null = $state(null);
