@@ -42,8 +42,6 @@
 		currentTarget: EventTarget & HTMLParagraphElement;
 	};
 
-	function onDrag(e: DragEventFn) {}
-
 	function onDragStart(e: DragEventFn, param: ParameterData, index: number) {
 		draggingItem = param;
 		draggingItemIndex = index;
