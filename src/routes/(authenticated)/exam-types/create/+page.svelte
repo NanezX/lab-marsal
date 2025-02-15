@@ -30,8 +30,6 @@
 		baseParameters.push({ position: baseParameters.length + 1 });
 	}
 
-	let mouseYCoordinate: any = $state(null);
-
 	let draggingItem: any = $state(null);
 	let draggingItemId: any = $state(null);
 	let draggingItemIndex: any = $state(null);
@@ -44,12 +42,9 @@
 		currentTarget: EventTarget & HTMLParagraphElement;
 	};
 
-	function onDrag(e: DragEventFn) {
-		mouseYCoordinate = e.clientY;
-	}
+	function onDrag(e: DragEventFn) {}
 
 	function onDragStart(e: DragEventFn, param: ParameterData, index: number) {
-		mouseYCoordinate = e.clientY;
 		draggingItem = param;
 		draggingItemIndex = index;
 		draggingItemId = param.position;
@@ -142,7 +137,11 @@
 				<AddButton title="Añadir parámetro nuevo" onclick={addParameter} theme="filled" />
 			</div>
 
-			<div role="definition" class="drag-container space-y-4" bind:this={container}>
+			<div
+				role="definition"
+				class="drag-container space-y-4 rounded-lg border border-gray-200 px-1"
+				bind:this={container}
+			>
 				{#each baseParameters as param, index (param)}
 					<div
 						class="flex items-center gap-x-2"
@@ -157,7 +156,6 @@
 							aria-label="Drag handle for parameter {param.position}"
 							class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
 							draggable="true"
-							ondrag={onDrag}
 							ondragstart={(e) => onDragStart(e, param, index)}
 							ondragend={() => onDragEnd()}
 						>
