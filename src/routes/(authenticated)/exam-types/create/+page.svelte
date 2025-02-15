@@ -30,7 +30,6 @@
 		baseParameters.push({ position: baseParameters.length + 1 });
 	}
 
-	let draggingItem: any = $state(null);
 	let draggingItemId: any = $state(null);
 	let draggingItemIndex: any = $state(null);
 
@@ -43,7 +42,6 @@
 	};
 
 	function onDragStart(e: DragEventFn, param: ParameterData, index: number) {
-		draggingItem = param;
 		draggingItemIndex = index;
 		draggingItemId = param.position;
 	}
