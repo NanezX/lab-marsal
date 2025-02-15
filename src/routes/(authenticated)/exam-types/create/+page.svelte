@@ -155,7 +155,7 @@
 							role="button"
 							tabindex="0"
 							aria-label="Drag handle for parameter {param.position}"
-							class="cursor-grab hover:bg-gray-100"
+							class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
 							draggable="true"
 							ondrag={onDrag}
 							ondragstart={(e) => onDragStart(e, param, index)}
@@ -183,7 +183,7 @@
 							aria-label="List of exam parameters"
 							ondragover={(e) => onDragOver(e, index)}
 						>
-							<p class="w-full rounded-lg bg-red-300 p-4">
+							<p class="w-full rounded-lg p-4">
 								Position: {param.position}
 							</p>
 						</div>
