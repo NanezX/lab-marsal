@@ -33,7 +33,7 @@
 	let draggingItemIndex: any = $state(null);
 
 	let hoveredItemIndex: any = $state(null);
-	let container: any = $state(null);
+	let container: HTMLDivElement | null = $state(null);
 	let isOutside = $state(false);
 
 	type DragEventFn = DragEvent & {
