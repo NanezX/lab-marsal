@@ -26,7 +26,12 @@
 						wrapperClass="w-1/2"
 					/>
 
-					<Input value={examName} name="basePrice" placeholder="Precio base" wrapperClass="w-1/3" />
+					<Input
+						value={examName}
+						name="basePrice"
+						placeholder="Precio base referencia"
+						wrapperClass="w-1/3"
+					/>
 				</div>
 				<Textarea
 					bind:value={examDescription}
