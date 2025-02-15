@@ -4,15 +4,13 @@
 	import Textarea from '$lib/components/Textarea.svelte';
 	import { fade } from 'svelte/transition';
 	import type { ExamParemeterInput } from './params';
-	import { isObject } from 'lodash-es';
-	import { Icon } from '@steeze-ui/svelte-icon';
-	import { CirclePlus } from '@steeze-ui/tabler-icons';
+	// import { isObject } from 'lodash-es';
 	import AddButton from '$lib/components/buttons/AddButton.svelte';
 	import { flip } from 'svelte/animate';
 
 	let examName = $state('');
 	let examDescription = $state('');
-	let basePrice = $state('');
+	// let basePrice = $state('');
 
 	type ParameterData = {
 		position: number;
@@ -127,7 +125,7 @@
 
 			<div
 				role="definition"
-				class="drag-container space-y-4 rounded-lg border border-gray-200 px-1"
+				class="drag-container space-y-4 rounded-lg border border-gray-200 p-1"
 				bind:this={container}
 			>
 				{#each baseParameters as param, index (param)}
@@ -144,7 +142,7 @@
 							aria-label="Drag handle for parameter {param.position}"
 							class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
 							draggable="true"
-							ondragstart={(e) => onDragStart(index)}
+							ondragstart={() => onDragStart(index)}
 							ondragend={() => onDragEnd()}
 						>
 							<svg
@@ -164,10 +162,10 @@
 
 						<!-- Content area -->
 						<div
-							class="w-full"
+							class="w-full rounded-xl bg-gray-100"
 							role="listitem"
 							aria-label="List of exam parameters"
-							ondragover={(e) => onDragOver(index)}
+							ondragover={() => onDragOver(index)}
 						>
 							<p class="w-full rounded-lg p-4">
 								Position: {param.position}
