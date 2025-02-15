@@ -4,6 +4,8 @@
 // }
 
 // TODO: Porcentual. Dejar elegir desde el 00.00% hasta el 100% por defecto. Pero dejar subir mas allá supongo
+// TODO: Unidad tiene que ser opcional
+// TODO: Quizas cambiar el nombre de "valores normales" a "valores de referencia"
 
 /**
  * Este seria para un parametro donde se espera que el resultado sea absoluto basado en texto.
@@ -15,14 +17,14 @@
  * y `Mucho conteo` es el valor que se añadió arbitrariamente segun lo que el bionalista decidió.
  */
 export const basicTextParameter = {
-	name: 'parametro',
-	type: 'text',
-	unit: 'ml/g',
-	input: {
-		type: 'fixed'
-		// value representa el "normal values" de este parametro
-		// value: "something or null or undefined" // This can be a string or just null (no normal values needed)
-	}
+    name: 'parametro',
+    type: 'text',
+    unit: 'ml/g',
+    input: {
+        type: 'fixed'
+        // value representa el "normal values" de este parametro
+        // value: "something or null or undefined" // This can be a string or just null (no normal values needed)
+    }
 };
 
 /**
@@ -31,37 +33,47 @@ export const basicTextParameter = {
  * mas opciones en caso de ser necesario
  */
 export const selectTextParameter = {
-	name: 'parametro',
-	type: 'text',
-	input: {
-		type: 'select',
-		// This array will be modificable. We could change the position of the
-		value: [
-			{
-				id: 101, // Unique ID. Maybe can be generated with UUID V5
-				position: 0, // Use position to organize, reorganize and delete options
-				text: 'Option1'
-			},
-			{
-				id: 102,
-				position: 1,
-				text: 'Option2'
-			},
-			{
-				id: 103,
-				position: 2,
-				text: 'Option3'
-			}
-			// ... more
-		]
-	}
+    name: 'parametro',
+    type: 'text',
+    input: {
+        type: 'select',
+        // This array will be modificable. We could change the position of the
+        value: [
+            {
+                id: 101, // Unique ID. Maybe can be generated with UUID V5
+                position: 0, // Use position to organize, reorganize and delete options
+                text: 'Option1'
+            },
+            {
+                id: 102,
+                position: 1,
+                text: 'Option2'
+            },
+            {
+                id: 103,
+                position: 2,
+                text: 'Option3'
+            }
+            // ... more
+        ]
+    }
 };
 
-export const basicNumberParameter = {
-	name: 'parametro',
-	type: 'number',
-	unit: 'ml/g',
-	input: {
-		type: 'fixed'
-	}
-};
+// /**
+//  * Similar con el texto, sencillamente dejar meter un numero arbitrario
+//  */
+// export const basicNumberParameter = {
+//     name: 'parametro',
+//     type: 'number',
+//     unit: 'ml/g',
+//     input: {
+//         type: 'fixed'
+//     }
+// };
+
+export const numberParemeterWithRefValues = {
+    name: "Glicemia Basal",
+    type: "number", // allow up to two (2) decimals
+    unit: "mg/dl",
+    referenceValues: [70.0, 110.0] // Al final se deberia ver 70.0 - 110.0 mg/dl
+}
