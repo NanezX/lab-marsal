@@ -38,6 +38,7 @@
 
 	let hoveredItemIndex: any = $state(null);
 	let container: any = $state(null);
+	let isOutside = $state(false);
 
 	type DragEventFn = DragEvent & {
 		currentTarget: EventTarget & HTMLParagraphElement;
@@ -54,7 +55,7 @@
 		draggingItemId = param.position;
 	}
 
-	function onDragOver(index: number) {
+	function onDragOver(event: DragEventFn, index: number) {
 		hoveredItemIndex = index;
 	}
 
@@ -62,7 +63,8 @@
 		if (
 			draggingItemIndex != null &&
 			hoveredItemIndex != null &&
-			draggingItemIndex != hoveredItemIndex
+			draggingItemIndex != hoveredItemIndex &&
+			!isOutside
 		) {
 			// Reorganzize items
 			[baseParameters[draggingItemIndex], baseParameters[hoveredItemIndex]] = [
@@ -77,7 +79,29 @@
 		draggingItemId = null;
 		hoveredItemIndex = null;
 	}
+
+	function windowOnDragOver(
+		e: DragEvent & {
+			currentTarget: EventTarget & Window;
+		}
+	) {
+		// Get the target element under the mouse
+		const target = e.target;
+		// const target = e.target as HTMLElement;
+
+		if (target) {
+			// If the target is NOT inside the container, set isOutside to true
+			if (!(target as HTMLElement).closest('.drag-container')) {
+				isOutside = true;
+				return;
+			}
+		}
+		isOutside = false;
+	}
 </script>
+
+<!-- To control when the drag ends outside of th drag container -->
+<svelte:window ondragover={windowOnDragOver} />
 
 <div in:fade class="flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
@@ -118,7 +142,7 @@
 				<AddButton title="Añadir parámetro nuevo" onclick={addParameter} theme="filled" />
 			</div>
 
-			<div class="space-y-4" bind:this={container}>
+			<div role="definition" class="drag-container space-y-4" bind:this={container}>
 				{#each baseParameters as param, index (param)}
 					<div
 						class="flex items-center gap-x-2"
@@ -157,7 +181,7 @@
 							class="w-full"
 							role="listitem"
 							aria-label="List of exam parameters"
-							ondragover={() => onDragOver(index)}
+							ondragover={(e) => onDragOver(e, index)}
 						>
 							<p class="w-full rounded-lg bg-red-300 p-4">
 								Position: {param.position}
