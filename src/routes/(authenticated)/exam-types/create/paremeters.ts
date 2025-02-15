@@ -21,9 +21,9 @@ export const basicTextParameter = {
     type: 'text',
     unit: 'ml/g',
     input: {
-        type: 'fixed'
+        type: 'fixed',
         // value representa el "normal values" de este parametro
-        // value: "something or null or undefined" // This can be a string or just null (no normal values needed)
+        value: null // This can be a string or just null (no normal values needed)
     }
 };
 
@@ -62,14 +62,15 @@ export const selectTextParameter = {
 // /**
 //  * Similar con el texto, sencillamente dejar meter un numero arbitrario
 //  */
-// export const basicNumberParameter = {
-//     name: 'parametro',
-//     type: 'number',
-//     unit: 'ml/g',
-//     input: {
-//         type: 'fixed'
-//     }
-// };
+export const basicNumberParameter = {
+    name: 'parametro',
+    type: 'number',
+    unit: 'ml/g',
+    input: {
+        type: 'fixed',
+        value: null
+    }
+};
 
 export const numberParemeterWithRefValues = {
     name: "Glicemia Basal",
