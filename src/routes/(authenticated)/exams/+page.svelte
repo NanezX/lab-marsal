@@ -12,7 +12,6 @@
 		CircleCheck,
 		CircleChevronsUp,
 		CircleMinus,
-		Search,
 		Trash,
 		Edit,
 		FileSearch,
