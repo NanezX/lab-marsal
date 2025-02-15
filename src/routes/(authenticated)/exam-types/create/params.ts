@@ -1,4 +1,4 @@
-export type ParameterSaved = {
+export type ExamParameterSaved = {
     name: string;
     type: "text" | "number"; // or "number"
     category?: string;
@@ -6,7 +6,7 @@ export type ParameterSaved = {
     value: string | number;
 }
 
-export type ParemeterInput = {
+export type ExamParemeterInput = {
     name: string;
     type: "text"; // | "number";
     category?: string;
