@@ -27,12 +27,8 @@
 	]);
 
 	function addParameter() {
-		//
 		baseParameters.push({ position: baseParameters.length + 1 });
 	}
-
-	let mouseYCoordinate: any = $state(null); // pointer y coordinate within client
-	let distanceTopGrabbedVsPointer: any = $state(null);
 
 	let draggingItem: any = $state(null);
 	let draggingItemId: any = $state(null);
@@ -45,24 +41,12 @@
 		currentTarget: EventTarget & HTMLParagraphElement;
 	};
 
-	function onDrag(e: DragEventFn) {
-		mouseYCoordinate = e.clientY;
-	}
+	function onDrag(e: DragEventFn) {}
 
 	function onDragStart(e: DragEventFn, param: ParameterData, index: number) {
-		mouseYCoordinate = e.clientY;
-		//console.log('dragstart', mouseYCoordinate);
-
 		draggingItem = param;
 		draggingItemIndex = index;
 		draggingItemId = param.position;
-		console.log('all');
-
-		if (e.target) {
-			console.log('all22');
-			// @ts-expect-error asfjasf
-			distanceTopGrabbedVsPointer = e.target.getBoundingClientRect().y - e.clientY;
-		}
 	}
 
 	function onDragOver(index: number) {
@@ -75,18 +59,12 @@
 			hoveredItemIndex != null &&
 			draggingItemIndex != hoveredItemIndex
 		) {
-			// swap items
+			// Reorganize items
 			[baseParameters[draggingItemIndex], baseParameters[hoveredItemIndex]] = [
 				baseParameters[hoveredItemIndex],
 				baseParameters[draggingItemIndex]
 			];
-
-			// balance
-			draggingItemIndex = hoveredItemIndex;
 		}
-
-		draggingItemId = null; // makes item visible
-		hoveredItemIndex = null; // prevents instant swap
 	}
 </script>
 
@@ -131,19 +109,50 @@
 
 			<div class="space-y-4" bind:this={container}>
 				{#each baseParameters as param, index (param)}
-					<p
-						draggable="true"
+					<div
+						class="group relative"
 						transition:fade
 						animate:flip={{ duration: 500 }}
 						id={index.toString()}
-						class="cursor-grab rounded-xl bg-red-300 px-4 py-2"
-						ondrag={onDrag}
-						ondragstart={(e) => onDragStart(e, param, index)}
-						ondragover={() => onDragOver(index)}
-						ondragend={(e) => onDragEnd()}
 					>
-						Position: {param.position}
-					</p>
+						<!-- Drag handle area -->
+						<div
+							role="button"
+							tabindex="0"
+							aria-label="Drag handle for parameter {param.position}"
+							class="absolute top-1/2 left-0 h-full w-6 -translate-y-1/2 cursor-grab opacity-0 transition-opacity group-hover:opacity-100 hover:bg-gray-100"
+							draggable="true"
+							ondrag={onDrag}
+							ondragstart={(e) => onDragStart(e, param, index)}
+							ondragend={(e) => onDragEnd()}
+						>
+							<svg
+								class="h-4 w-4 text-gray-400"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M4 6h16M4 12h16M4 18h16"
+								/>
+							</svg>
+						</div>
+
+						<!-- Content area -->
+						<div
+							role="listitem"
+							aria-label="List of exam parameters"
+							class="pl-8"
+							ondragover={(e) => onDragOver(index)}
+						>
+							<p class="rounded-lg bg-red-300 p-4">
+								Position: {param.position}
+							</p>
+						</div>
+					</div>
 				{/each}
 			</div>
 
