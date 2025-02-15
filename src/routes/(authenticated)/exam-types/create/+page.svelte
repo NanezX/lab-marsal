@@ -40,6 +40,54 @@
 
 	let hoveredItemIndex: any = $state(null);
 	let container: any = $state(null);
+
+	type DragEventFn = DragEvent & {
+		currentTarget: EventTarget & HTMLParagraphElement;
+	};
+
+	function onDrag(e: DragEventFn) {
+		mouseYCoordinate = e.clientY;
+	}
+
+	function onDragStart(e: DragEventFn, param: ParameterData, index: number) {
+		mouseYCoordinate = e.clientY;
+		//console.log('dragstart', mouseYCoordinate);
+
+		draggingItem = param;
+		draggingItemIndex = index;
+		draggingItemId = param.position;
+		console.log('all');
+
+		if (e.target) {
+			console.log('all22');
+			// @ts-expect-error asfjasf
+			distanceTopGrabbedVsPointer = e.target.getBoundingClientRect().y - e.clientY;
+		}
+	}
+
+	function onDragOver(index: number) {
+		hoveredItemIndex = index;
+	}
+
+	function onDragEnd() {
+		if (
+			draggingItemIndex != null &&
+			hoveredItemIndex != null &&
+			draggingItemIndex != hoveredItemIndex
+		) {
+			// swap items
+			[baseParameters[draggingItemIndex], baseParameters[hoveredItemIndex]] = [
+				baseParameters[hoveredItemIndex],
+				baseParameters[draggingItemIndex]
+			];
+
+			// balance
+			draggingItemIndex = hoveredItemIndex;
+		}
+
+		draggingItemId = null; // makes item visible
+		hoveredItemIndex = null; // prevents instant swap
+	}
 </script>
 
 <div in:fade class="flex w-full flex-col gap-y-8">
@@ -82,70 +130,17 @@
 			</div>
 
 			<div class="space-y-4" bind:this={container}>
-				{#if mouseYCoordinate}
-					<div
-						class="item ghost"
-						style="top: {mouseYCoordinate +
-							distanceTopGrabbedVsPointer}px; background: {draggingItem.value};"
-					>
-						{draggingItem.value}
-					</div>
-				{/if}
 				{#each baseParameters as param, index (param)}
 					<p
 						draggable="true"
 						transition:fade
 						animate:flip={{ duration: 500 }}
 						id={index.toString()}
-						class={[
-							'cursor-grab bg-red-300',
-							{ 'cursor-grabbing': draggingItemId == param.position }
-						]}
-						ondragstart={(e) => {
-							mouseYCoordinate = e.clientY;
-							//console.log('dragstart', mouseYCoordinate);
-
-							draggingItem = param;
-							draggingItemIndex = index;
-							draggingItemId = param.position;
-							console.log('all');
-
-							if (e.target) {
-								console.log('all22');
-								// @ts-expect-error asfjasf
-								distanceTopGrabbedVsPointer = e.target.getBoundingClientRect().y - e.clientY;
-							}
-						}}
-						ondrag={(e) => {
-							mouseYCoordinate = e.clientY;
-							//console.log('drag', mouseYCoordinate);
-						}}
-						ondragover={(e) => {
-							hoveredItemIndex = index;
-						}}
-						ondragend={(e) => {
-							if (
-								draggingItemIndex != null &&
-								hoveredItemIndex != null &&
-								draggingItemIndex != hoveredItemIndex
-							) {
-								// swap items
-								[baseParameters[draggingItemIndex], baseParameters[hoveredItemIndex]] = [
-									baseParameters[hoveredItemIndex],
-									baseParameters[draggingItemIndex]
-								];
-
-								// balance
-								draggingItemIndex = hoveredItemIndex;
-							}
-							//console.log('dragend', mouseYCoordinate);
-							//console.log('\n');
-
-							// mouseYCoordinate = e.clientY;
-
-							draggingItemId = null; // makes item visible
-							hoveredItemIndex = null; // prevents instant swap
-						}}
+						class="cursor-grab rounded-xl bg-red-300 px-4 py-2"
+						ondrag={onDrag}
+						ondragstart={(e) => onDragStart(e, param, index)}
+						ondragover={() => onDragOver(index)}
+						ondragend={(e) => onDragEnd()}
 					>
 						Position: {param.position}
 					</p>
@@ -160,21 +155,3 @@
 		<Button type="submit">Click me</Button>
 	</div>
 </div>
-
-<style>
-	.item {
-		width: 300px;
-		background: white;
-		padding: 10px;
-		margin-bottom: 10px;
-		cursor: grab;
-	}
-	.ghost {
-		margin-bottom: 10px;
-		pointer-events: none;
-		z-index: 99;
-		position: absolute;
-		top: 0;
-		left: 10;
-	}
-</style>
