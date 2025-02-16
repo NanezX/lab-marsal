@@ -260,7 +260,7 @@
 					class="drag-container space-y-4 rounded-lg border border-gray-200 p-1"
 					bind:this={container}
 				>
-					<p>
+					<p class="text-center text-lg font-bold">
 						{category}
 					</p>
 
