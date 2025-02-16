@@ -230,13 +230,6 @@
 
 		<hr class="border-primary-gray/50 my-4" />
 
-		<!-- <div> -->
-		<!-- <Button title="Añadir parámetro nuevo" class="inline-flex gap-x-1">
-					<span> Añadir parámetro </span>
-					<Icon src={CirclePlus} size="26" theme="filled" />
-				</Button> -->
-		<!-- </div> -->
-
 		<div class="space-y-5">
 			<div class="just flex items-center gap-x-2 text-xl">
 				<p>Valores y parámetros</p>
