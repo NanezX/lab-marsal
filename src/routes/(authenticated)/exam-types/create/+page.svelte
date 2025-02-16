@@ -15,14 +15,16 @@
 		XboxX,
 		CircleX,
 		TrashX,
-		CircleMinus
+		CircleMinus,
+		Pencil,
+		PencilMinus
 	} from '@steeze-ui/tabler-icons';
 
 	let examName = $state('');
 	let examDescription = $state('');
 	// let basePrice = $state('');
 
-	let categories: string[] = $state([]);
+	let categories: string[] = $state(['Categoria 1']);
 
 	type ParameterData = {
 		position: number;
@@ -32,7 +34,7 @@
 	const initParameter: ExamParemeterInput = {
 		name: '',
 		type: 'text', // | "number";
-		category: undefined,
+		category: 'Categoria 1',
 		unit: '',
 		value: '' // | number
 	};
@@ -267,17 +269,19 @@
 					class="drag-container space-y-4 rounded-lg border border-gray-200 p-1"
 					bind:this={container}
 				>
-					<div class="inline-flex w-full items-center justify-center gap-x-2">
-						<p class="text-lg font-bold capitalize">
-							{category}
-						</p>
+					<div class="inline-flex w-full items-center justify-center gap-x-4">
+						<div class="inline-flex gap-x-1">
+							<p class="text-lg font-bold">
+								{category}
+							</p>
 
-						<!-- onclick={() => {
-							removeParameter(parameters, index);
-						}} -->
+							<Button class="mr-2 !bg-inherit !p-0" title="Editar nombre de la categoria">
+								<Icon src={PencilMinus} size="20" theme="filled" class="text-green-500" />
+							</Button>
+						</div>
+
 						<Button class="!p0 !bg-red-500 !px-2 text-sm" title="Eliminar esta categoria">
 							<p>Eliminar</p>
-							<!-- <Icon src={CircleX} size="24" theme="filled" class="text-red-500" /> -->
 						</Button>
 					</div>
 
