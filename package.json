@@ -66,7 +66,7 @@
 		"lodash-es": "^4.17.21",
 		"nodemailer": "^6.10.0",
 		"postgres": "^3.4.5",
-		"svelte-email-tailwind": "^2.0.1",
+		"svelte-email-tailwind": "^2.1.0",
 		"uuid": "^11.0.5"
 	},
 	"overrides": {
