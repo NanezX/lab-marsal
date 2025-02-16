@@ -59,7 +59,19 @@
 	}
 
 	function addCategory() {
-		const newCategory = `Categoría ${categories.length + 1}`;
+		function generateName(baseNumber: number) {
+			const newCategory = `Categoría ${baseNumber}`;
+
+			if (categories.includes(newCategory)) {
+				// If this name already exist, create a diffrent one
+				return generateName(baseNumber + 1);
+			}
+
+			// End recursivity
+			return newCategory;
+		}
+
+		const newCategory = generateName(categories.length + 1);
 		const newParam = { ...initParameter, category: newCategory };
 
 		if (categories.length == 0) {
