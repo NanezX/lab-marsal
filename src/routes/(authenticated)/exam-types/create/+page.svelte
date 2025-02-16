@@ -7,18 +7,8 @@
 	// import { isObject } from 'lodash-es';
 	import AddButton from '$lib/components/buttons/AddButton.svelte';
 	import { flip } from 'svelte/animate';
-	import Select from '$lib/components/Select.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import {
-		CirclePlus,
-		CopyPlus,
-		XboxX,
-		CircleX,
-		TrashX,
-		CircleMinus,
-		Pencil,
-		PencilMinus
-	} from '@steeze-ui/tabler-icons';
+	import { CirclePlus, CopyPlus, CircleMinus, PencilMinus } from '@steeze-ui/tabler-icons';
 	import { v4 as uuidv4 } from 'uuid';
 
 	let examName = $state('');
