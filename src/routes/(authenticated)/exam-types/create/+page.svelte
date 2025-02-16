@@ -75,10 +75,15 @@
 		const newParam = { ...initParameter, category: newCategory };
 
 		if (categories.length == 0) {
-			// No categories before
-			baseParameters.forEach((param_) => {
-				param_.parameter.category = newCategory;
-			});
+			// No categories yet
+
+			if (baseParameters.length == 0) {
+				baseParameters.push({ position: baseParameters.length, parameter: newParam });
+			} else {
+				baseParameters.forEach((param_) => {
+					param_.parameter.category = newCategory;
+				});
+			}
 		} else {
 			baseParameters.push({ position: baseParameters.length, parameter: newParam });
 		}
