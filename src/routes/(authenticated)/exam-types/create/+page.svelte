@@ -19,6 +19,7 @@
 		Pencil,
 		PencilMinus
 	} from '@steeze-ui/tabler-icons';
+	import { v4 as uuidv4 } from 'uuid';
 
 	let examName = $state('');
 	let examDescription = $state('');
@@ -83,6 +84,12 @@
 		categories.push(newCategory);
 	}
 
+	function removeCategory(category: string, categoryIndex: number) {
+		const newParams = baseParameters.filter((param_) => param_.parameter.category !== category);
+		baseParameters = newParams;
+		categories.splice(categoryIndex, 1);
+	}
+
 	let draggingItemIndex: number | null = $state(null);
 	let hoveredItemIndex: number | null = $state(null);
 	let container: HTMLDivElement | null = $state(null);
@@ -134,6 +141,8 @@
 		}
 		isOutside = false;
 	}
+
+	$inspect(categories);
 </script>
 
 <!-- To control when the drag ends outside of th drag container -->
@@ -255,7 +264,7 @@
 				<Icon src={CopyPlus} size="26" theme="filled" />
 			</Button>
 
-			{#each categories as category, categoryIndex (category)}
+			{#each categories as category, categoryIndex (uuidv4())}
 				<div
 					role="definition"
 					class="drag-container space-y-4 rounded-lg border border-gray-200 p-1"
@@ -272,7 +281,11 @@
 							</Button>
 						</div>
 
-						<Button class="!p0 !bg-red-500 !px-2 text-sm" title="Eliminar esta categoria">
+						<Button
+							onclick={() => removeCategory(category, categoryIndex)}
+							class="!p0 !bg-red-500 !px-2 text-sm"
+							title="Eliminar esta categoria"
+						>
 							<p>Eliminar</p>
 						</Button>
 					</div>
