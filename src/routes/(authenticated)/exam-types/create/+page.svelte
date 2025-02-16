@@ -139,75 +139,67 @@
 <!-- To control when the drag ends outside of th drag container -->
 <svelte:window ondragover={windowOnDragOver} />
 
+{#snippet parameters(parameters: ParameterData[], category?: string)}
+	{#each parameters as param, index (param)}
+		<div
+			class="flex items-center gap-x-2"
+			transition:fade
+			animate:flip={{ duration: 500 }}
+			id={index.toString()}
+		>
+			<!-- Drag handle area -->
+			<div
+				role="button"
+				tabindex="0"
+				aria-label="Drag handle for parameter {param.position}"
+				class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
+				draggable="true"
+				ondragstart={() => onDragStart(index)}
+				ondragend={() => onDragEnd()}
+			>
+				<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M4 6h16M4 12h16M4 18h16"
+					/>
+				</svg>
+			</div>
+
+			<!-- Content area -->
+			<div
+				class="w-full rounded-xl bg-gray-100"
+				role="listitem"
+				aria-label="List of exam parameters"
+				ondragover={() => onDragOver(index)}
+			>
+				<div>
+					<Input bind:value={param.parameter.name} name="name" placeholder="Nombre del parámetro" />
+					<Input bind:value={param.parameter.unit} name="unit" placeholder="Unidad del parámetro" />
+				</div>
+			</div>
+
+			<Button
+				onclick={() => {
+					removeParameter(parameters, index);
+				}}
+				class="!bg-inherit !p-0"
+			>
+				<Icon src={CircleMinus} size="32" theme="filled" class="text-red-500" />
+			</Button>
+		</div>
+	{/each}
+
+	{#if category}
+		<div class="text-center">
+			<AddButton title="Añadir parámetro" onclick={() => addParameter(category)} />
+		</div>
+	{/if}
+{/snippet}
+
 <div in:fade class="mb-4 flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
-
-	{#snippet parameters(parameters: ParameterData[], category?: string)}
-		{#each parameters as param, index (param)}
-			<div
-				class="flex items-center gap-x-2"
-				transition:fade
-				animate:flip={{ duration: 500 }}
-				id={index.toString()}
-			>
-				<!-- Drag handle area -->
-				<div
-					role="button"
-					tabindex="0"
-					aria-label="Drag handle for parameter {param.position}"
-					class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
-					draggable="true"
-					ondragstart={() => onDragStart(index)}
-					ondragend={() => onDragEnd()}
-				>
-					<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M4 6h16M4 12h16M4 18h16"
-						/>
-					</svg>
-				</div>
-
-				<!-- Content area -->
-				<div
-					class="w-full rounded-xl bg-gray-100"
-					role="listitem"
-					aria-label="List of exam parameters"
-					ondragover={() => onDragOver(index)}
-				>
-					<div>
-						<Input
-							bind:value={param.parameter.name}
-							name="name"
-							placeholder="Nombre del parámetro"
-						/>
-						<Input
-							bind:value={param.parameter.unit}
-							name="unit"
-							placeholder="Unidad del parámetro"
-						/>
-					</div>
-				</div>
-
-				<Button
-					onclick={() => {
-						removeParameter(parameters, index);
-					}}
-					class="!bg-inherit !p-0"
-				>
-					<Icon src={CircleMinus} size="32" theme="filled" class="text-red-500" />
-				</Button>
-			</div>
-		{/each}
-
-		{#if category}
-			<div class="text-center">
-				<AddButton title="Añadir parámetro" onclick={() => addParameter(category)} />
-			</div>
-		{/if}
-	{/snippet}
 
 	<div>
 		<div class="space-y-5">
