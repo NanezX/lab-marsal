@@ -125,10 +125,6 @@
 		}
 		isOutside = false;
 	}
-
-	// FIXME REMOVE LOGGER
-	$inspect(baseParameters);
-	$inspect(categories);
 </script>
 
 <!-- To control when the drag ends outside of th drag container -->
