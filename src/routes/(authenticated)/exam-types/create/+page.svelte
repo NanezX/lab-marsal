@@ -9,7 +9,14 @@
 	import { flip } from 'svelte/animate';
 	import Select from '$lib/components/Select.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { CirclePlus, CopyPlus, XboxX } from '@steeze-ui/tabler-icons';
+	import {
+		CirclePlus,
+		CopyPlus,
+		XboxX,
+		CircleX,
+		TrashX,
+		CircleMinus
+	} from '@steeze-ui/tabler-icons';
 
 	let examName = $state('');
 	let examDescription = $state('');
@@ -188,7 +195,7 @@
 					}}
 					class="!bg-inherit !p-0"
 				>
-					<Icon src={XboxX} size="32" theme="filled" class="text-red-500" />
+					<Icon src={CircleMinus} size="32" theme="filled" class="text-red-500" />
 				</Button>
 			</div>
 		{/each}
@@ -260,9 +267,19 @@
 					class="drag-container space-y-4 rounded-lg border border-gray-200 p-1"
 					bind:this={container}
 				>
-					<p class="text-center text-lg font-bold">
-						{category}
-					</p>
+					<div class="inline-flex w-full items-center justify-center gap-x-2">
+						<p class="text-lg font-bold capitalize">
+							{category}
+						</p>
+
+						<!-- onclick={() => {
+							removeParameter(parameters, index);
+						}} -->
+						<Button class="!p0 !bg-red-500 !px-2 text-sm" title="Eliminar esta categoria">
+							<p>Eliminar</p>
+							<!-- <Icon src={CircleX} size="24" theme="filled" class="text-red-500" /> -->
+						</Button>
+					</div>
 
 					{@render parameters(
 						baseParameters.filter((x) => x.parameter.category == category),
