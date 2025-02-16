@@ -202,7 +202,7 @@
 
 	<div>
 		<div class="space-y-5">
-			<p class="text-xl">Detalles generales</p>
+			<p class="text-2xl">Detalles generales</p>
 
 			<div class="space-y-4">
 				<div class="flex gap-x-8">
@@ -231,9 +231,7 @@
 		<hr class="border-primary-gray/50 my-4" />
 
 		<div class="space-y-5">
-			<div class="just flex items-center gap-x-2 text-xl">
-				<p>Valores y parámetros</p>
-			</div>
+			<p class="text-2xl">Valores y parámetros</p>
 
 			{#if categories.length == 0}
 				<Button
