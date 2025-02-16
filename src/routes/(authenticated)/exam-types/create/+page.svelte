@@ -9,7 +9,7 @@
 	import { flip } from 'svelte/animate';
 	import Select from '$lib/components/Select.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { CirclePlus, CopyPlus } from '@steeze-ui/tabler-icons';
+	import { CirclePlus, CopyPlus, XboxX } from '@steeze-ui/tabler-icons';
 
 	let examName = $state('');
 	let examDescription = $state('');
@@ -44,6 +44,18 @@
 			position: baseParameters.length,
 			parameter: newParam
 		});
+	}
+
+	function removeParameter(parameters: ParameterData[], innerIndex: number) {
+		if (parameters.length > 1) {
+			const indexToRemove = baseParameters.findIndex(
+				(x) => x.position === parameters[innerIndex].position
+			);
+
+			if (indexToRemove != -1) {
+				baseParameters.splice(indexToRemove, 1);
+			}
+		}
 	}
 
 	function addCategory() {
@@ -125,8 +137,8 @@
 <div in:fade class="mb-4 flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
 
-	{#snippet parameters(baseParameters: ParameterData[], category?: string)}
-		{#each baseParameters as param, index (param)}
+	{#snippet parameters(parameters: ParameterData[], category?: string)}
+		{#each parameters as param, index (param)}
 			<div
 				class="flex items-center gap-x-2"
 				transition:fade
@@ -173,6 +185,15 @@
 						/>
 					</div>
 				</div>
+
+				<Button
+					onclick={() => {
+						removeParameter(parameters, index);
+					}}
+					class="!bg-inherit !p-0"
+				>
+					<Icon src={XboxX} size="32" theme="filled" class="text-red-500" />
+				</Button>
 			</div>
 		{/each}
 
