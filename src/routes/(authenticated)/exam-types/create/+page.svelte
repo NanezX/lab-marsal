@@ -13,7 +13,7 @@
 
 	let examName = $state('');
 	let examDescription = $state('');
-	// let basePrice = $state('');
+	let basePrice = $state('');
 
 	let categories: string[] = $state(['Categoria 1']);
 
@@ -214,7 +214,7 @@
 					/>
 
 					<Input
-						value={examName}
+						value={basePrice}
 						name="basePrice"
 						placeholder="Precio base referencia"
 						wrapperClass="w-1/3"
