@@ -32,10 +32,17 @@
 
 	let baseParameters: ParameterData[] = $state([{ position: 0, parameter: initParameter }]);
 
-	function addParameter() {
+	function addParameter(category?: string): void {
+		// Fallback if there are categories items and no category passed to the function
+		if (categories.length > 0 && category === undefined) {
+			category = categories[0];
+		}
+
+		const newParam = { ...initParameter, category };
+
 		baseParameters.push({
 			position: baseParameters.length,
-			parameter: initParameter
+			parameter: newParam
 		});
 	}
 
@@ -115,10 +122,10 @@
 <!-- To control when the drag ends outside of th drag container -->
 <svelte:window ondragover={windowOnDragOver} />
 
-<div in:fade class="flex w-full flex-col gap-y-8">
+<div in:fade class="mb-4 flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
 
-	{#snippet parameters(baseParameters: ParameterData[])}
+	{#snippet parameters(baseParameters: ParameterData[], category?: string)}
 		{#each baseParameters as param, index (param)}
 			<div
 				class="flex items-center gap-x-2"
@@ -168,6 +175,10 @@
 				</div>
 			</div>
 		{/each}
+
+		<div class="text-center">
+			<AddButton title="Añadir parámetro" onclick={() => addParameter(category)} />
+		</div>
 	{/snippet}
 
 	<div>
@@ -213,7 +224,11 @@
 			</div>
 
 			{#if categories.length == 0}
-				<Button onclick={addParameter} title="Añadir parámetro nuevo" class="inline-flex gap-x-1">
+				<Button
+					onclick={() => addParameter()}
+					title="Añadir parámetro nuevo"
+					class="inline-flex gap-x-1"
+				>
 					<span> Añadir parámetro </span>
 					<Icon src={CirclePlus} size="26" theme="filled" />
 				</Button>
@@ -242,7 +257,10 @@
 						{category}
 					</p>
 
-					{@render parameters(baseParameters.filter((x) => x.parameter.category == category))}
+					{@render parameters(
+						baseParameters.filter((x) => x.parameter.category == category),
+						category
+					)}
 				</div>
 			{:else}
 				{@render parameters(baseParameters)}
