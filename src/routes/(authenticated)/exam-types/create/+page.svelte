@@ -74,17 +74,13 @@
 		const newCategory = generateName(categories.length + 1);
 		const newParam = { ...initParameter, category: newCategory };
 
-		if (categories.length == 0) {
-			// No categories yet
-
-			if (baseParameters.length == 0) {
-				baseParameters.push({ position: baseParameters.length, parameter: newParam });
-			} else {
-				baseParameters.forEach((param_) => {
-					param_.parameter.category = newCategory;
-				});
-			}
+		if (categories.length == 0 && baseParameters.length > 0) {
+			// Since there was no category created, assign each parameter to the new one
+			baseParameters.forEach((param_) => {
+				param_.parameter.category = newCategory;
+			});
 		} else {
+			// Always create new categories with one parameter
 			baseParameters.push({ position: baseParameters.length, parameter: newParam });
 		}
 
