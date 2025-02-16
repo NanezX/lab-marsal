@@ -9,13 +9,13 @@
 	import { flip } from 'svelte/animate';
 	import Select from '$lib/components/Select.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { AutomaticGearbox, CirclePlus, CopyPlus } from '@steeze-ui/tabler-icons';
+	import { CirclePlus, CopyPlus } from '@steeze-ui/tabler-icons';
 
 	let examName = $state('');
 	let examDescription = $state('');
 	// let basePrice = $state('');
 
-	let categories: string[] = $state(['Categoria 1', 'Categoria 2']);
+	let categories: string[] = $state([]);
 
 	type ParameterData = {
 		position: number;
@@ -30,13 +30,18 @@
 		value: '' // | number
 	};
 
-	let baseParameters: ParameterData[] = $state([{ position: 0, parameter: initParameter }]);
+	let baseParameters: ParameterData[] = $state([]);
+	// let baseParameters: ParameterData[] = $state([{ position: 0, parameter: initParameter }]);
 
 	function addParameter() {
 		baseParameters.push({
 			position: baseParameters.length,
 			parameter: initParameter
 		});
+	}
+
+	function addCategory() {
+		categories.push(`Categoría ${categories.length + 1}`);
 	}
 
 	let draggingItemIndex: number | null = $state(null);
@@ -101,6 +106,68 @@
 <div in:fade class="flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
 
+	{#snippet parameters(baseParameters: ParameterData[])}
+		{#each baseParameters as param, index (param)}
+			<div
+				class="flex items-center gap-x-2"
+				transition:fade
+				animate:flip={{ duration: 500 }}
+				id={index.toString()}
+			>
+				<!-- Drag handle area -->
+				<div
+					role="button"
+					tabindex="0"
+					aria-label="Drag handle for parameter {param.position}"
+					class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
+					draggable="true"
+					ondragstart={() => onDragStart(index)}
+					ondragend={() => onDragEnd()}
+				>
+					<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M4 6h16M4 12h16M4 18h16"
+						/>
+					</svg>
+				</div>
+
+				<!-- Content area -->
+				<div
+					class="w-full rounded-xl bg-gray-100"
+					role="listitem"
+					aria-label="List of exam parameters"
+					ondragover={() => onDragOver(index)}
+				>
+					<div>
+						<p>{param.position}</p>
+						<Input
+							bind:value={param.parameter.name}
+							name="name"
+							placeholder="Nombre del parámetro"
+						/>
+						<Input
+							bind:value={param.parameter.unit}
+							name="unit"
+							placeholder="Unidad del parámetro"
+						/>
+
+						{#if categories && categories.length > 0}
+							<Select
+								name="xd"
+								bind:value={param.parameter.category}
+								items={categories}
+								placeholder="Categorias"
+							/>
+						{/if}
+					</div>
+				</div>
+			</div>
+		{/each}
+	{/snippet}
+
 	<div>
 		<div class="space-y-5">
 			<p class="text-xl">Detalles generales</p>
@@ -141,20 +208,27 @@
 		<div class="space-y-5">
 			<div class="just flex items-center gap-x-2 text-xl">
 				<p>Valores y parámetros</p>
-				<AddButton title="Añadir parámetro nuevo" onclick={addParameter} theme="filled" />
 			</div>
 
+			{#if categories.length == 0}
+				<Button onclick={addParameter} title="Añadir parámetro nuevo" class="inline-flex gap-x-1">
+					<span> Añadir parámetro </span>
+					<Icon src={CirclePlus} size="26" theme="filled" />
+				</Button>
+			{/if}
+
 			<!-- Add category button -->
-			<Button
-				onclick={() => {
-					categories.push(`Categoría ${categories.length + 1}`);
-				}}
-				title="Añadir parámetro nuevo"
-				class="inline-flex gap-x-1"
-			>
-				<span> Añadir categoria </span>
+			<Button onclick={addCategory} title="Añadir categoria nuevo" class="inline-flex gap-x-1">
+				{#if categories.length}
+					<span> Añadir categoria </span>
+				{:else}
+					<span> Crear categoria </span>
+				{/if}
 				<Icon src={CopyPlus} size="26" theme="filled" />
 			</Button>
+
+			<!-- TODO -->
+			<!-- <AddButton title="Añadir parámetro nuevo" onclick={addParameter} theme="filled" /> -->
 
 			{#each categories as category, categoryIndex (category)}
 				<div
@@ -165,78 +239,12 @@
 					<p>
 						{category}
 					</p>
-					{#each baseParameters as param, index (param)}
-						<div
-							class="flex items-center gap-x-2"
-							transition:fade
-							animate:flip={{ duration: 500 }}
-							id={index.toString()}
-						>
-							<!-- Drag handle area -->
-							<div
-								role="button"
-								tabindex="0"
-								aria-label="Drag handle for parameter {param.position}"
-								class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
-								draggable="true"
-								ondragstart={() => onDragStart(index)}
-								ondragend={() => onDragEnd()}
-							>
-								<svg
-									class="h-6 w-6 text-gray-400"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M4 6h16M4 12h16M4 18h16"
-									/>
-								</svg>
-							</div>
 
-							<!-- Content area -->
-							<div
-								class="w-full rounded-xl bg-gray-100"
-								role="listitem"
-								aria-label="List of exam parameters"
-								ondragover={() => onDragOver(index)}
-							>
-								<div>
-									<p>{param.position}</p>
-									<Input
-										bind:value={param.parameter.name}
-										name="name"
-										placeholder="Nombre del parámetro"
-									/>
-									<Input
-										bind:value={param.parameter.unit}
-										name="unit"
-										placeholder="Unidad del parámetro"
-									/>
-
-									{#if categories && categories.length > 0}
-										<Select
-											name="xd"
-											bind:value={param.parameter.category}
-											items={categories}
-											placeholder="Categorias"
-										/>
-									{/if}
-								</div>
-							</div>
-						</div>
-					{/each}
+					{@render parameters(baseParameters)}
 				</div>
+			{:else}
+				{@render parameters(baseParameters)}
 			{/each}
-
-			<div class="space-y-4">
-				<Input bind:value={examName} name="name" placeholder="Nombre del exámen" />
-			</div>
 		</div>
-
-		<Button type="submit">Click me</Button>
 	</div>
 </div>
