@@ -1,14 +1,43 @@
-<script>
+<script lang="ts">
 	import Button from '$lib/components/Button.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { X } from '@steeze-ui/tabler-icons';
 	import { blur } from 'svelte/transition';
 	import { clickedOutside } from '../actions/clickedOutside';
+	import type { Snippet } from 'svelte';
 
-	let { title = 'My title', showModal = $bindable(), children } = $props();
+	type PropType = {
+		title?: string;
+		showModal: Boolean;
+		children: Snippet;
+		onClose?: () => void;
+		onSave?: () => boolean;
+	};
+
+	let {
+		title = 'My title',
+		showModal = $bindable(),
+		children,
+		onClose,
+		onSave
+	}: PropType = $props();
 
 	function closeModal() {
+		if (onClose) {
+			onClose();
+		}
 		showModal = false;
+	}
+
+	function saveModal() {
+		if (onSave) {
+			let isOk = onSave();
+
+			if (!isOk) {
+				return;
+			}
+		}
+		closeModal();
 	}
 </script>
 
@@ -47,12 +76,7 @@
 					class=" flex items-center justify-end gap-x-6 rounded-b border-t border-solid border-t-gray-200 p-6"
 				>
 					<Button class="bg-red-500 hover:bg-red-500/75" onclick={closeModal}>Cerrar</Button>
-					<Button
-						onclick={() => {
-							alert('Guardar!');
-							closeModal();
-						}}>Guardar</Button
-					>
+					<Button onclick={saveModal}>Guardar</Button>
 				</div>
 			</div>
 		</div>
