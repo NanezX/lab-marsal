@@ -9,8 +9,7 @@
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { CirclePlus, CopyPlus, CircleMinus, PencilMinus } from '@steeze-ui/tabler-icons';
 	import { v4 as uuidv4 } from 'uuid';
-	import BaseModal from '$lib/components/modal/BaseModal.svelte';
-	import { toastError, toastSuccess } from '$lib/toasts';
+	import ModalEditCategory from '$lib/components/modal/ModalEditCategory.svelte';
 
 	let examName = $state('');
 	let examDescription = $state('');
@@ -147,12 +146,10 @@
 
 	let isEditingCategory = $state(false);
 	let editingCategoryIndex: null | number = $state(null);
-	let editingCategory = $state('');
 
-	function editCategory(category_: string, categoryIndex_: number) {
-		editingCategory = category_;
-		editingCategoryIndex = categoryIndex_;
+	function editCategory(categoryIndex_: number) {
 		isEditingCategory = true;
+		editingCategoryIndex = categoryIndex_;
 	}
 </script>
 
@@ -219,48 +216,14 @@
 	{/if}
 {/snippet}
 
-<!-- Modal for editing the category name -->
-<BaseModal
-	bind:showModal={isEditingCategory}
-	title="Edita el nombre de la categoria"
-	onClose={() => {
-		editingCategoryIndex = null;
-		editingCategory = '';
-	}}
-	onSave={() => {
-		if (editingCategoryIndex !== null) {
-			// To silent variable marked as null by error
-			let auxIndex = editingCategoryIndex;
-
-			if (categories[auxIndex] === editingCategory) {
-				return true;
-			}
-
-			if (categories[auxIndex] !== editingCategory && categories.includes(editingCategory)) {
-				toastError('Ya existe una categoria con ese nombre');
-				return false;
-			}
-
-			// Chagen the category on each parameter that has this category
-			baseParameters.forEach((param_) => {
-				if (param_.parameter.category == categories[auxIndex]) {
-					param_.parameter.category = editingCategory;
-				}
-			});
-
-			categories[auxIndex] = editingCategory;
-		}
-
-		toastSuccess('Nombre de la categoria actualizado');
-
-		return true;
-	}}
->
-	<p>My modal</p>
-	{#if editingCategoryIndex !== null}
-		<Input bind:value={editingCategory} name="editingCategory" />
-	{/if}
-</BaseModal>
+{#if editingCategoryIndex !== null}
+	<ModalEditCategory
+		bind:showModal={isEditingCategory}
+		bind:categories
+		{baseParameters}
+		bind:editingIndex={editingCategoryIndex}
+	/>
+{/if}
 
 <div in:fade class="mb-4 flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
@@ -334,7 +297,7 @@
 							<Button
 								class="mr-2 !bg-inherit !p-0"
 								title="Editar nombre de la categoria"
-								onclick={() => editCategory(category, categoryIndex)}
+								onclick={() => editCategory(categoryIndex)}
 							>
 								<Icon src={PencilMinus} size="20" theme="filled" class="text-green-500" />
 							</Button>
