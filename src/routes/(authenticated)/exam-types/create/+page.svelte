@@ -7,10 +7,15 @@
 	// import { isObject } from 'lodash-es';
 	import AddButton from '$lib/components/buttons/AddButton.svelte';
 	import { flip } from 'svelte/animate';
+	import Select from '$lib/components/Select.svelte';
+	import { Icon } from '@steeze-ui/svelte-icon';
+	import { AutomaticGearbox, CirclePlus, CopyPlus } from '@steeze-ui/tabler-icons';
 
 	let examName = $state('');
 	let examDescription = $state('');
 	// let basePrice = $state('');
+
+	let categories: string[] = $state(['Categoria 1', 'Categoria 2']);
 
 	type ParameterData = {
 		position: number;
@@ -85,6 +90,9 @@
 		}
 		isOutside = false;
 	}
+
+	// FIXME REMOVE LOGGER
+	$inspect(baseParameters);
 </script>
 
 <!-- To control when the drag ends outside of th drag container -->
@@ -123,63 +131,106 @@
 
 		<hr class="border-primary-gray/50 my-4" />
 
+		<!-- <div> -->
+		<!-- <Button title="Añadir parámetro nuevo" class="inline-flex gap-x-1">
+					<span> Añadir parámetro </span>
+					<Icon src={CirclePlus} size="26" theme="filled" />
+				</Button> -->
+		<!-- </div> -->
+
 		<div class="space-y-5">
 			<div class="just flex items-center gap-x-2 text-xl">
 				<p>Valores y parámetros</p>
 				<AddButton title="Añadir parámetro nuevo" onclick={addParameter} theme="filled" />
 			</div>
 
-			<div
-				role="definition"
-				class="drag-container space-y-4 rounded-lg border border-gray-200 p-1"
-				bind:this={container}
+			<!-- Add category button -->
+			<Button
+				onclick={() => {
+					categories.push(`Categoría ${categories.length + 1}`);
+				}}
+				title="Añadir parámetro nuevo"
+				class="inline-flex gap-x-1"
 			>
-				{#each baseParameters as param, index (param)}
-					<div
-						class="flex items-center gap-x-2"
-						transition:fade
-						animate:flip={{ duration: 500 }}
-						id={index.toString()}
-					>
-						<!-- Drag handle area -->
-						<div
-							role="button"
-							tabindex="0"
-							aria-label="Drag handle for parameter {param.position}"
-							class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
-							draggable="true"
-							ondragstart={() => onDragStart(index)}
-							ondragend={() => onDragEnd()}
-						>
-							<svg
-								class="h-6 w-6 text-gray-400"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M4 6h16M4 12h16M4 18h16"
-								/>
-							</svg>
-						</div>
+				<span> Añadir categoria </span>
+				<Icon src={CopyPlus} size="26" theme="filled" />
+			</Button>
 
-						<!-- Content area -->
+			{#each categories as category, categoryIndex (category)}
+				<div
+					role="definition"
+					class="drag-container space-y-4 rounded-lg border border-gray-200 p-1"
+					bind:this={container}
+				>
+					<p>
+						{category}
+					</p>
+					{#each baseParameters as param, index (param)}
 						<div
-							class="w-full rounded-xl bg-gray-100"
-							role="listitem"
-							aria-label="List of exam parameters"
-							ondragover={() => onDragOver(index)}
+							class="flex items-center gap-x-2"
+							transition:fade
+							animate:flip={{ duration: 500 }}
+							id={index.toString()}
 						>
-							<p class="w-full rounded-lg p-4">
-								Position: {param.position}
-							</p>
+							<!-- Drag handle area -->
+							<div
+								role="button"
+								tabindex="0"
+								aria-label="Drag handle for parameter {param.position}"
+								class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
+								draggable="true"
+								ondragstart={() => onDragStart(index)}
+								ondragend={() => onDragEnd()}
+							>
+								<svg
+									class="h-6 w-6 text-gray-400"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M4 6h16M4 12h16M4 18h16"
+									/>
+								</svg>
+							</div>
+
+							<!-- Content area -->
+							<div
+								class="w-full rounded-xl bg-gray-100"
+								role="listitem"
+								aria-label="List of exam parameters"
+								ondragover={() => onDragOver(index)}
+							>
+								<div>
+									<p>{param.position}</p>
+									<Input
+										bind:value={param.parameter.name}
+										name="name"
+										placeholder="Nombre del parámetro"
+									/>
+									<Input
+										bind:value={param.parameter.unit}
+										name="unit"
+										placeholder="Unidad del parámetro"
+									/>
+
+									{#if categories && categories.length > 0}
+										<Select
+											name="xd"
+											bind:value={param.parameter.category}
+											items={categories}
+											placeholder="Categorias"
+										/>
+									{/if}
+								</div>
+							</div>
 						</div>
-					</div>
-				{/each}
-			</div>
+					{/each}
+				</div>
+			{/each}
 
 			<div class="space-y-4">
 				<Input bind:value={examName} name="name" placeholder="Nombre del exámen" />
