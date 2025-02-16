@@ -8,7 +8,7 @@
 
 	type PropType = {
 		title?: string;
-		showModal: Boolean;
+		showModal: boolean;
 		children: Snippet;
 		onClose?: () => void;
 		onSave?: () => boolean;

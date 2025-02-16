@@ -3,7 +3,7 @@
 	import Input from '$lib/components/Input.svelte';
 	import Textarea from '$lib/components/Textarea.svelte';
 	import { fade } from 'svelte/transition';
-	import type { ExamParemeterInput } from './params';
+	import type { ExamParemeterInput, ParameterData } from './params';
 	import AddButton from '$lib/components/buttons/AddButton.svelte';
 	import { flip } from 'svelte/animate';
 	import { Icon } from '@steeze-ui/svelte-icon';
@@ -16,11 +16,6 @@
 	let basePrice = $state('');
 
 	let categories: string[] = $state(['Categoria 1']);
-
-	type ParameterData = {
-		position: number;
-		parameter: ExamParemeterInput;
-	};
 
 	const initParameter: ExamParemeterInput = {
 		name: '',

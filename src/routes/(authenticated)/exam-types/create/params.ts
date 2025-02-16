@@ -12,8 +12,9 @@ export type ExamParemeterInput = {
 	category?: string;
 	unit: string;
 	value: string; // | number
-	// input: {
-	//     type: "fixed" | "select"
-	//     value: null | { id: string; position: number; text: string }[]
-	// }
+};
+
+export type ParameterData = {
+	position: number;
+	parameter: ExamParemeterInput;
 };

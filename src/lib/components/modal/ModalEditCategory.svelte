@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { toastError, toastSuccess } from '$lib/toasts';
+	import type { ParameterData } from '../../../routes/(authenticated)/exam-types/create/params';
 	import Input from '../Input.svelte';
 	import BaseModal from './BaseModal.svelte';
 
 	type PropType = {
 		showModal: boolean;
 		categories: string[];
-		baseParameters: any[];
+		baseParameters: ParameterData[];
 		editingIndex: number | null;
 	};
 
