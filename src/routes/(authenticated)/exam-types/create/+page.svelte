@@ -176,9 +176,11 @@
 			</div>
 		{/each}
 
-		<div class="text-center">
-			<AddButton title="Añadir parámetro" onclick={() => addParameter(category)} />
-		</div>
+		{#if category}
+			<div class="text-center">
+				<AddButton title="Añadir parámetro" onclick={() => addParameter(category)} />
+			</div>
+		{/if}
 	{/snippet}
 
 	<div>
