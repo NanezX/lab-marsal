@@ -256,9 +256,6 @@
 				<Icon src={CopyPlus} size="26" theme="filled" />
 			</Button>
 
-			<!-- TODO -->
-			<!-- <AddButton title="Añadir parámetro nuevo" onclick={addParameter} theme="filled" /> -->
-
 			{#each categories as category, categoryIndex (category)}
 				<div
 					role="definition"
