@@ -13,7 +13,7 @@
 	let {
 		showModal = $bindable(),
 		categories = $bindable(),
-		baseParameters,
+		baseParameters = $bindable(),
 		editingIndex = $bindable()
 	}: PropType = $props();
 

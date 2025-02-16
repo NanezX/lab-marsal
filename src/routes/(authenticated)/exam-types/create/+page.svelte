@@ -220,8 +220,8 @@
 	<ModalEditCategory
 		bind:showModal={isEditingCategory}
 		bind:categories
-		{baseParameters}
 		bind:editingIndex={editingCategoryIndex}
+		bind:baseParameters
 	/>
 {/if}
 
