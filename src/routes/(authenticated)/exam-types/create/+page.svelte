@@ -4,12 +4,13 @@
 	import Textarea from '$lib/components/Textarea.svelte';
 	import { fade } from 'svelte/transition';
 	import type { ExamParemeterInput } from './params';
-	// import { isObject } from 'lodash-es';
 	import AddButton from '$lib/components/buttons/AddButton.svelte';
 	import { flip } from 'svelte/animate';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { CirclePlus, CopyPlus, CircleMinus, PencilMinus } from '@steeze-ui/tabler-icons';
 	import { v4 as uuidv4 } from 'uuid';
+	import BaseModal from '$lib/components/modal/BaseModal.svelte';
+	import { toastError, toastSuccess } from '$lib/toasts';
 
 	let examName = $state('');
 	let examDescription = $state('');
@@ -60,7 +61,7 @@
 
 	function addCategory() {
 		function generateName(baseNumber: number) {
-			const newCategory = `Categoría ${baseNumber}`;
+			const newCategory = `Categoria ${baseNumber}`;
 
 			if (categories.includes(newCategory)) {
 				// If this name already exist, create a diffrent one
@@ -144,12 +145,21 @@
 		isOutside = false;
 	}
 
-	$inspect(categories);
+	let isEditingCategory = $state(false);
+	let editingCategoryIndex: null | number = $state(null);
+	let editingCategory = $state('');
+
+	function editCategory(category_: string, categoryIndex_: number) {
+		editingCategory = category_;
+		editingCategoryIndex = categoryIndex_;
+		isEditingCategory = true;
+	}
 </script>
 
 <!-- To control when the drag ends outside of th drag container -->
 <svelte:window ondragover={windowOnDragOver} />
 
+<!-- Snippet for generating the params inputs -->
 {#snippet parameters(parameters: ParameterData[], category?: string)}
 	{#each parameters as param, index (param)}
 		<div
@@ -208,6 +218,49 @@
 		</div>
 	{/if}
 {/snippet}
+
+<!-- Modal for editing the category name -->
+<BaseModal
+	bind:showModal={isEditingCategory}
+	title="Edita el nombre de la categoria"
+	onClose={() => {
+		editingCategoryIndex = null;
+		editingCategory = '';
+	}}
+	onSave={() => {
+		if (editingCategoryIndex !== null) {
+			// To silent variable marked as null by error
+			let auxIndex = editingCategoryIndex;
+
+			if (categories[auxIndex] === editingCategory) {
+				return true;
+			}
+
+			if (categories[auxIndex] !== editingCategory && categories.includes(editingCategory)) {
+				toastError('Ya existe una categoria con ese nombre');
+				return false;
+			}
+
+			// Chagen the category on each parameter that has this category
+			baseParameters.forEach((param_) => {
+				if (param_.parameter.category == categories[auxIndex]) {
+					param_.parameter.category = editingCategory;
+				}
+			});
+
+			categories[auxIndex] = editingCategory;
+		}
+
+		toastSuccess('Nombre de la categoria actualizado');
+
+		return true;
+	}}
+>
+	<p>My modal</p>
+	{#if editingCategoryIndex !== null}
+		<Input bind:value={editingCategory} name="editingCategory" />
+	{/if}
+</BaseModal>
 
 <div in:fade class="mb-4 flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
@@ -278,7 +331,11 @@
 								{category}
 							</p>
 
-							<Button class="mr-2 !bg-inherit !p-0" title="Editar nombre de la categoria">
+							<Button
+								class="mr-2 !bg-inherit !p-0"
+								title="Editar nombre de la categoria"
+								onclick={() => editCategory(category, categoryIndex)}
+							>
 								<Icon src={PencilMinus} size="20" theme="filled" class="text-green-500" />
 							</Button>
 						</div>
