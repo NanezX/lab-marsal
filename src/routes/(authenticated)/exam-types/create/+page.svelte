@@ -142,7 +142,6 @@
 					ondragover={() => onDragOver(index)}
 				>
 					<div>
-						<p>{param.position}</p>
 						<Input
 							bind:value={param.parameter.name}
 							name="name"
