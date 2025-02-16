@@ -30,8 +30,7 @@
 		value: '' // | number
 	};
 
-	let baseParameters: ParameterData[] = $state([]);
-	// let baseParameters: ParameterData[] = $state([{ position: 0, parameter: initParameter }]);
+	let baseParameters: ParameterData[] = $state([{ position: 0, parameter: initParameter }]);
 
 	function addParameter() {
 		baseParameters.push({
@@ -41,7 +40,19 @@
 	}
 
 	function addCategory() {
-		categories.push(`Categoría ${categories.length + 1}`);
+		const newCategory = `Categoría ${categories.length + 1}`;
+		const newParam = { ...initParameter, category: newCategory };
+
+		if (categories.length == 0) {
+			// No categories before
+			baseParameters.forEach((param_) => {
+				param_.parameter.category = newCategory;
+			});
+		} else {
+			baseParameters.push({ position: baseParameters.length, parameter: newParam });
+		}
+
+		categories.push(newCategory);
 	}
 
 	let draggingItemIndex: number | null = $state(null);
@@ -98,6 +109,7 @@
 
 	// FIXME REMOVE LOGGER
 	$inspect(baseParameters);
+	$inspect(categories);
 </script>
 
 <!-- To control when the drag ends outside of th drag container -->
@@ -152,15 +164,6 @@
 							name="unit"
 							placeholder="Unidad del parámetro"
 						/>
-
-						{#if categories && categories.length > 0}
-							<Select
-								name="xd"
-								bind:value={param.parameter.category}
-								items={categories}
-								placeholder="Categorias"
-							/>
-						{/if}
 					</div>
 				</div>
 			</div>
@@ -239,7 +242,7 @@
 						{category}
 					</p>
 
-					{@render parameters(baseParameters)}
+					{@render parameters(baseParameters.filter((x) => x.parameter.category == category))}
 				</div>
 			{:else}
 				{@render parameters(baseParameters)}
