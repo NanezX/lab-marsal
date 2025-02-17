@@ -232,10 +232,10 @@
 					/>
 					{#if param.parameter.hasReferences}
 						<div transition:fade class="flex flex-col gap-y-1">
-							{#each param.parameter.referenceValues as _, index (uuidv4())}
+							{#each param.parameter.referenceValues as refValue, index (uuidv4())}
 								<div class="flex gap-x-2">
 									<p class="bg-secondary-blue/30 w-7/8 rounded-3xl px-3 py-1.5">
-										{param.parameter.referenceValues[index]}
+										{refValue}
 									</p>
 									<Button
 										class="!bg-inherit !p-0"

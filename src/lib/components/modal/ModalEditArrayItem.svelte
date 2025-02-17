@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { toastError, toastSuccess } from '$lib/toasts';
+	import { toastSuccess } from '$lib/toasts';
 	import Input from '../Input.svelte';
 	import BaseModal from './BaseModal.svelte';
 
