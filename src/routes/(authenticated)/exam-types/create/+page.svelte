@@ -216,8 +216,18 @@
 				ondragover={() => onDragOver(index)}
 			>
 				<div class="grid grid-cols-2 items-start gap-4">
-					<Input bind:value={param.parameter.name} name="name" placeholder="Nombre del parámetro" />
-					<Input bind:value={param.parameter.unit} name="unit" placeholder="Unidad del parámetro" />
+					<Input
+						bind:value={param.parameter.name}
+						name="name"
+						label="Nombre del parámetro"
+						placeholder="Nombre del parámetro"
+					/>
+					<Input
+						bind:value={param.parameter.unit}
+						name="unit"
+						label="Unidad del parámetro"
+						placeholder="Unidad del parámetro"
+					/>
 
 					<Checkbox
 						bind:value={
