@@ -11,7 +11,7 @@ import {
 	decimal,
 	varchar
 } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import { generateRandomUUID } from './uuid';
 
 // TODO: Check on https://orm.drizzle.team/docs/column-types/pg#jsonb for type inference for jsonb columns on database
@@ -148,7 +148,8 @@ export const examType = pgTable('exam_type', {
 	basePrice: decimal('base_price', { precision: 19, scale: 3 }).notNull(),
 	clasification: text().notNull().unique(),
 	parameters: jsonb().notNull(),
-	formulas: jsonb().notNull()
+	categories: text().array().notNull().default(sql`ARRAY[]::text[]`),
+	// formulas: jsonb().notNull(),
 });
 
 // Exam type relations declarations
