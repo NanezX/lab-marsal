@@ -14,7 +14,6 @@
 		PencilMinus,
 		X,
 		Edit,
-		EyePlus,
 		TextPlus
 	} from '@steeze-ui/tabler-icons';
 	import { v4 as uuidv4 } from 'uuid';
@@ -245,12 +244,7 @@
 											editRefValue(param.parameter.referenceValues, index);
 										}}
 									>
-										<Icon
-											src={Edit}
-											size="22"
-											theme="filled"
-											class="text-green-400 hover:text-green-600"
-										/>
+										<Icon src={Edit} size="22" class="text-green-400 hover:text-green-600" />
 									</Button>
 									<Button
 										class="!bg-inherit !p-0"
@@ -259,12 +253,7 @@
 											removeRefValue(param.parameter.referenceValues, index);
 										}}
 									>
-										<Icon
-											src={X}
-											size="22"
-											theme="filled"
-											class="text-red-400 hover:text-red-600"
-										/>
+										<Icon src={X} size="22" class="text-red-400 hover:text-red-600" />
 									</Button>
 								</div>
 							{/each}
@@ -319,6 +308,7 @@
 	/>
 {/if}
 
+<!-- ACTUAL PAGE -->
 <div in:fade class="mb-4 flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
 
