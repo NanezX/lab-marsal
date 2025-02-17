@@ -29,7 +29,7 @@
 		{
 			href: '/exams',
 			icon: Microscope,
-			text: 'Examanes'
+			text: 'Exámenes'
 		},
 		{
 			href: '/clients',
@@ -39,7 +39,7 @@
 		{
 			href: '/exam-types',
 			icon: Certificate,
-			text: 'Tipos examenes'
+			text: 'Tipos exámenes'
 		},
 		{
 			href: '/users',
@@ -49,7 +49,7 @@
 		{
 			href: '/config',
 			icon: Settings,
-			text: 'Configuracion'
+			text: 'Configuración'
 		}
 	];
 </script>

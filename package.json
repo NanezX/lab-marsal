@@ -31,6 +31,7 @@
 		"@sveltejs/kit": "^2.17.1",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@tailwindcss/postcss": "^4.0.4",
+		"@types/lodash-es": "^4.17.12",
 		"@types/node": "^22.13.1",
 		"@types/nodemailer": "^6.4.17",
 		"@vitest/coverage-v8": "^3.0.5",
@@ -62,9 +63,10 @@
 		"@oslojs/encoding": "^1.1.0",
 		"@steeze-ui/svelte-icon": "^1.6.2",
 		"drizzle-orm": "^0.39.2",
+		"lodash-es": "^4.17.21",
 		"nodemailer": "^6.10.0",
 		"postgres": "^3.4.5",
-		"svelte-email-tailwind": "^2.0.1",
+		"svelte-email-tailwind": "^2.1.0",
 		"uuid": "^11.0.5"
 	},
 	"overrides": {
