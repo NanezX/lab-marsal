@@ -33,10 +33,10 @@
 		category: undefined,
 		unit: '',
 		value: '', // | number
-		hasReferences: true,
-		referenceValues: ['Valor 1', 'Valor 2']
-		// hasReferences: false,
-		// referenceValues: []
+		// hasReferences: true,
+		// referenceValues: ['Valor 1', 'Valor 2']
+		hasReferences: false,
+		referenceValues: []
 	};
 
 	let baseParameters: ParameterData[] = $state([{ position: 0, parameter: initParameter }]);
@@ -231,7 +231,7 @@
 						wrapperClass="!ml-0 !text-base"
 					/>
 					{#if param.parameter.hasReferences}
-						<div transition:fade class="flex flex-col gap-y-1">
+						<div class="flex flex-col gap-y-1">
 							{#each param.parameter.referenceValues as refValue, index (uuidv4())}
 								<div class="flex gap-x-2">
 									<p class="bg-secondary-blue/30 w-7/8 rounded-3xl px-3 py-1.5">
@@ -259,7 +259,7 @@
 							{/each}
 
 							<Button
-								onclick={() => alert('add ref')}
+								onclick={() => param.parameter.referenceValues.push('Valor de referencia')}
 								title="Añadir nuevo valor de referencia"
 								class="not-hover:text-primary-blue hover:text-dark-blue mx-auto mt-1 flex gap-x-1 !bg-inherit !p-0"
 							>
