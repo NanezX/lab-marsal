@@ -15,7 +15,7 @@
 	let examDescription = $state('');
 	let basePrice = $state('');
 
-	let categories: string[] = $state(['Categoria 1']);
+	let categories: string[] = $state([]);
 
 	const initParameter: ExamParemeterInput = {
 		name: '',
@@ -35,10 +35,7 @@
 
 		const newParam = { ...initParameter, category };
 
-		baseParameters.push({
-			position: baseParameters.length,
-			parameter: newParam
-		});
+		baseParameters.push({ position: baseParameters.length, parameter: newParam });
 	}
 
 	function removeParameter(parameters: ParameterData[], innerIndex: number) {
@@ -121,11 +118,7 @@
 		hoveredItemIndex = null;
 	}
 
-	function windowOnDragOver(
-		e: DragEvent & {
-			currentTarget: EventTarget & Window;
-		}
-	) {
+	function windowOnDragOver(e: DragEvent & { currentTarget: EventTarget & Window }) {
 		// Get the target element under the mouse
 		const target = e.target;
 		// const target = e.target as HTMLElement;
