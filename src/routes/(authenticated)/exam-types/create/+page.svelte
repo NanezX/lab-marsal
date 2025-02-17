@@ -20,7 +20,6 @@
 	import ModalEditCategory from '$lib/components/modal/ModalEditCategory.svelte';
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import ModalEditArrayItem from '$lib/components/modal/ModalEditArrayItem.svelte';
-	import ScientificNotations from '$lib/components/helpers/ScientificNotations.svelte';
 
 	let examName = $state('');
 	let examDescription = $state('');
@@ -230,23 +229,17 @@
 						placeholder="Unidad del parámetro"
 					/>
 
-					<div class={{ 'space-y-2': param.parameter.hasReferences }}>
-						<Checkbox
-							bind:value={
-								() => param.parameter.hasReferences,
-								(v) => {
-									if (v) param.parameter.referenceValues = ['Referencia'];
-									param.parameter.hasReferences = v;
-								}
+					<Checkbox
+						bind:value={
+							() => param.parameter.hasReferences,
+							(v) => {
+								if (v) param.parameter.referenceValues = ['Referencia'];
+								param.parameter.hasReferences = v;
 							}
-							text="Añadir valores de referencia"
-							wrapperClass="!ml-0 !text-base"
-						/>
-
-						{#if param.parameter.hasReferences}
-							<ScientificNotations />
-						{/if}
-					</div>
+						}
+						text="Añadir valores de referencia"
+						wrapperClass="!ml-0 !text-base"
+					/>
 
 					{#if param.parameter.hasReferences}
 						<div class="flex flex-col gap-y-1">
