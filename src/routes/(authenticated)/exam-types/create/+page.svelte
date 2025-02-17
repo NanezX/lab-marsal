@@ -328,6 +328,7 @@
 					<Input
 						bind:value={examName}
 						name="name"
+						label="Nombre del exámen"
 						placeholder="Nombre del exámen"
 						wrapperClass="w-1/2"
 					/>
@@ -335,15 +336,22 @@
 					<Input
 						value={basePrice}
 						name="basePrice"
+						label="Precio base (USD)"
 						placeholder="Precio base referencia"
 						wrapperClass="w-1/2"
 					/>
 				</div>
-				<Textarea
-					bind:value={examDescription}
-					name="description"
-					placeholder="Description del exámen"
-				/>
+
+				<div class="flex flex-col gap-y-1">
+					<label for="description-textarea" class="ml-2 font-semibold">
+						Descripción del exámen
+					</label>
+					<Textarea
+						bind:value={examDescription}
+						name="description"
+						placeholder="Description del exámen"
+					/>
+				</div>
 			</div>
 		</div>
 
