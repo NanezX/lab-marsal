@@ -24,7 +24,7 @@
 	let instanceId = uuidv4();
 </script>
 
-<div class={['ml-auto flex w-fit items-center gap-x-2', wrapperClass]} {title}>
+<div class={['ml-auto flex w-fit items-center gap-x-2 text-sm', wrapperClass]} {title}>
 	<label class="relative flex cursor-pointer items-center" for={instanceId}>
 		<input
 			bind:checked={value}
@@ -53,5 +53,5 @@
 			</svg>
 		</span>
 	</label>
-	<label class="cursor-pointer text-sm select-none" for={instanceId}>{text}</label>
+	<label class="cursor-pointer select-none" for={instanceId}>{text}</label>
 </div>
