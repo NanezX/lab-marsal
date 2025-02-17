@@ -20,6 +20,7 @@
 	import ModalEditCategory from '$lib/components/modal/ModalEditCategory.svelte';
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import ModalEditArrayItem from '$lib/components/modal/ModalEditArrayItem.svelte';
+	import ScientificNotations from '$lib/components/helpers/ScientificNotations.svelte';
 
 	let examName = $state('');
 	let examDescription = $state('');
@@ -229,19 +230,27 @@
 						placeholder="Unidad del parámetro"
 					/>
 
-					<Checkbox
-						bind:value={
-							() => param.parameter.hasReferences,
-							(v) => {
-								if (v) param.parameter.referenceValues = ['Valor de referencia'];
-								param.parameter.hasReferences = v;
+					<div class={{ 'space-y-2': param.parameter.hasReferences }}>
+						<Checkbox
+							bind:value={
+								() => param.parameter.hasReferences,
+								(v) => {
+									if (v) param.parameter.referenceValues = ['Valor de referencia'];
+									param.parameter.hasReferences = v;
+								}
 							}
-						}
-						text="Añadir valores de referencia"
-						wrapperClass="!ml-0 !text-base"
-					/>
+							text="Añadir valores de referencia"
+							wrapperClass="!ml-0 !text-base"
+						/>
+
+						{#if param.parameter.hasReferences}
+							<ScientificNotations />
+						{/if}
+					</div>
+
 					{#if param.parameter.hasReferences}
 						<div class="flex flex-col gap-y-1">
+							<p class="ml-2 font-semibold">Valores de referencia</p>
 							{#each param.parameter.referenceValues as refValue, index (uuidv4())}
 								<div class="flex gap-x-2">
 									<p class="bg-secondary-blue/30 w-7/8 rounded-3xl px-3 py-1.5">
@@ -269,7 +278,7 @@
 							{/each}
 
 							<Button
-								onclick={() => param.parameter.referenceValues.push('Valor de referencia')}
+								onclick={() => param.parameter.referenceValues.push('Valor-referencia')}
 								title="Añadir nuevo valor de referencia"
 								class="not-hover:text-primary-blue hover:text-dark-blue mx-auto mt-1 flex gap-x-1 !bg-inherit !p-0"
 							>
