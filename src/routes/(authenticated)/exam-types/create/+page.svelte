@@ -235,7 +235,7 @@
 							bind:value={
 								() => param.parameter.hasReferences,
 								(v) => {
-									if (v) param.parameter.referenceValues = ['Valor de referencia'];
+									if (v) param.parameter.referenceValues = ['Referencia'];
 									param.parameter.hasReferences = v;
 								}
 							}
@@ -278,7 +278,7 @@
 							{/each}
 
 							<Button
-								onclick={() => param.parameter.referenceValues.push('Valor-referencia')}
+								onclick={() => param.parameter.referenceValues.push('Referencia')}
 								title="Añadir nuevo valor de referencia"
 								class="not-hover:text-primary-blue hover:text-dark-blue mx-auto mt-1 flex gap-x-1 !bg-inherit !p-0"
 							>
