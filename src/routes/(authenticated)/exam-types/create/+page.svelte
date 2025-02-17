@@ -7,9 +7,20 @@
 	import AddButton from '$lib/components/buttons/AddButton.svelte';
 	import { flip } from 'svelte/animate';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { CirclePlus, CopyPlus, CircleMinus, PencilMinus } from '@steeze-ui/tabler-icons';
+	import {
+		CirclePlus,
+		CopyPlus,
+		CircleMinus,
+		PencilMinus,
+		X,
+		Edit,
+		EyePlus,
+		TextPlus
+	} from '@steeze-ui/tabler-icons';
 	import { v4 as uuidv4 } from 'uuid';
 	import ModalEditCategory from '$lib/components/modal/ModalEditCategory.svelte';
+	import Checkbox from '$lib/components/Checkbox.svelte';
+	import ModalEditArrayItem from '$lib/components/modal/ModalEditArrayItem.svelte';
 
 	let examName = $state('');
 	let examDescription = $state('');
@@ -22,7 +33,11 @@
 		type: 'text', // | "number";
 		category: undefined,
 		unit: '',
-		value: '' // | number
+		value: '', // | number
+		hasReferences: true,
+		referenceValues: ['Valor 1', 'Valor 2']
+		// hasReferences: false,
+		// referenceValues: []
 	};
 
 	let baseParameters: ParameterData[] = $state([{ position: 0, parameter: initParameter }]);
@@ -140,7 +155,27 @@
 		isEditingCategory = true;
 		editingCategoryIndex = categoryIndex_;
 	}
+
+	let isEditingRefValue = $state(false);
+	let auxRefValues: string[] = $state([]);
+	let auxRefValueIndex: number | null = $state(null);
+
+	function editRefValue(refValues: string[], index: number) {
+		isEditingRefValue = true;
+		auxRefValues = refValues;
+		auxRefValueIndex = index;
+	}
+
+	function removeRefValue(refValues: string[], index: number) {
+		if (refValues.length > 1 && index >= 0 && refValues.length > index) {
+			refValues.splice(index, 1);
+		}
+	}
+
+	$inspect(isEditingRefValue);
 </script>
+
+<!-- TODO: Add the labels above the inputs -->
 
 <!-- To control when the drag ends outside of th drag container -->
 <svelte:window ondragover={windowOnDragOver} />
@@ -176,14 +211,74 @@
 
 			<!-- Content area -->
 			<div
-				class="w-full rounded-xl bg-gray-100"
+				class="w-full rounded-xl bg-gray-100 px-2 py-4"
 				role="listitem"
 				aria-label="List of exam parameters"
 				ondragover={() => onDragOver(index)}
 			>
-				<div>
+				<div class="grid grid-cols-2 items-start gap-4">
 					<Input bind:value={param.parameter.name} name="name" placeholder="Nombre del parámetro" />
 					<Input bind:value={param.parameter.unit} name="unit" placeholder="Unidad del parámetro" />
+
+					<Checkbox
+						bind:value={
+							() => param.parameter.hasReferences,
+							(v) => {
+								if (v) param.parameter.referenceValues = ['Valor de referencia'];
+								param.parameter.hasReferences = v;
+							}
+						}
+						text="Añadir valores de referencia"
+						wrapperClass="!ml-0 !text-base"
+					/>
+					{#if param.parameter.hasReferences}
+						<div transition:fade class="flex flex-col gap-y-1">
+							{#each param.parameter.referenceValues as _, index (uuidv4())}
+								<div class="flex gap-x-2">
+									<p class="bg-secondary-blue/30 w-7/8 rounded-3xl px-3 py-1.5">
+										{param.parameter.referenceValues[index]}
+									</p>
+									<Button
+										class="!bg-inherit !p-0"
+										title="Editar valor de referencia"
+										onclick={() => {
+											editRefValue(param.parameter.referenceValues, index);
+										}}
+									>
+										<Icon
+											src={Edit}
+											size="22"
+											theme="filled"
+											class="text-green-400 hover:text-green-600"
+										/>
+									</Button>
+									<Button
+										class="!bg-inherit !p-0"
+										title="Eliminar valor de referencia"
+										onclick={() => {
+											removeRefValue(param.parameter.referenceValues, index);
+										}}
+									>
+										<Icon
+											src={X}
+											size="22"
+											theme="filled"
+											class="text-red-400 hover:text-red-600"
+										/>
+									</Button>
+								</div>
+							{/each}
+
+							<Button
+								onclick={() => alert('add ref')}
+								title="Añadir nuevo valor de referencia"
+								class="not-hover:text-primary-blue hover:text-dark-blue mx-auto mt-1 flex gap-x-1 !bg-inherit !p-0"
+							>
+								<p class="hover:underline">Añadir</p>
+								<Icon src={TextPlus} size="24" class="" />
+							</Button>
+						</div>
+					{/if}
 				</div>
 			</div>
 
@@ -215,8 +310,24 @@
 	/>
 {/if}
 
+<!-- Modal to edit a specific value reference -->
+{#if auxRefValueIndex !== null}
+	<ModalEditArrayItem
+		bind:showModal={isEditingRefValue}
+		bind:items={auxRefValues}
+		bind:editingIndex={auxRefValueIndex}
+	/>
+{/if}
+
 <div in:fade class="mb-4 flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
+
+	<Button
+		onclick={() => {
+			console.log($state.snapshot(categories));
+			console.log($state.snapshot(baseParameters));
+		}}>Click to see</Button
+	>
 
 	<div>
 		<div class="space-y-5">
@@ -235,7 +346,7 @@
 						value={basePrice}
 						name="basePrice"
 						placeholder="Precio base referencia"
-						wrapperClass="w-1/3"
+						wrapperClass="w-1/2"
 					/>
 				</div>
 				<Textarea
