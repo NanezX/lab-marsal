@@ -20,7 +20,7 @@
 	const initParameter: ExamParemeterInput = {
 		name: '',
 		type: 'text', // | "number";
-		category: 'Categoria 1',
+		category: undefined,
 		unit: '',
 		value: '' // | number
 	};
