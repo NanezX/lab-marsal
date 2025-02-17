@@ -205,6 +205,7 @@
 	{/if}
 {/snippet}
 
+<!-- Modal to edit the category name -->
 {#if editingCategoryIndex !== null}
 	<ModalEditCategory
 		bind:showModal={isEditingCategory}
