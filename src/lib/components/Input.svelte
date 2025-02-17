@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Icon, type IconSource } from '@steeze-ui/svelte-icon';
-	import type { ClassValue } from 'svelte/elements';
+	import type { ClassValue, FocusEventHandler } from 'svelte/elements';
 
 	// Prop type
 	type PropType = {
@@ -18,6 +18,7 @@
 		max?: string | number | null;
 		maxlength?: number | null;
 		autoComplete?: boolean;
+		onfocus?: FocusEventHandler<HTMLInputElement>;
 	};
 
 	// Prop deconstruct
@@ -35,7 +36,8 @@
 		min,
 		max,
 		maxlength,
-		autoComplete = true
+		autoComplete = true,
+		onfocus
 	}: PropType = $props();
 
 	// Reusable classes
@@ -50,6 +52,7 @@
 
 <div class={['flex items-center', wrapperClass]}>
 	<input
+		{onfocus}
 		bind:value
 		{name}
 		{type}
