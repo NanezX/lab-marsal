@@ -13,7 +13,7 @@
 	};
 
 	let {
-		value = $bindable(false),
+		value = $bindable(),
 		text,
 		name,
 		title,
