@@ -12,6 +12,8 @@ export type ExamParemeterInput = {
 	category?: string;
 	unit: string;
 	value: string; // | number
+	hasReferences: boolean;
+	referenceValues: string[];
 };
 
 export type ParameterData = {

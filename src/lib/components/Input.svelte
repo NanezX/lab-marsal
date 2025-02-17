@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { Icon, type IconSource } from '@steeze-ui/svelte-icon';
-	import type { ClassValue } from 'svelte/elements';
+	import type { ClassValue, FocusEventHandler } from 'svelte/elements';
+	import { v4 as uuidv4 } from 'uuid';
 
 	// Prop type
 	type PropType = {
 		value: string | number;
 		name: string;
+		label?: string;
+		id?: string;
 		placeholder?: string;
 		title?: string;
 		type?: 'text' | 'password' | 'email' | 'number' | 'date';
@@ -18,12 +21,15 @@
 		max?: string | number | null;
 		maxlength?: number | null;
 		autoComplete?: boolean;
+		onfocus?: FocusEventHandler<HTMLInputElement>;
 	};
 
 	// Prop deconstruct
 	let {
 		value = $bindable(''),
 		name,
+		label,
+		id,
 		placeholder,
 		title,
 		type = 'text',
@@ -35,7 +41,8 @@
 		min,
 		max,
 		maxlength,
-		autoComplete = true
+		autoComplete = true,
+		onfocus
 	}: PropType = $props();
 
 	// Reusable classes
@@ -46,10 +53,19 @@
 	];
 
 	const iconClass = ['text-primary-blue absolute ml-4 h-5 w-5'];
+
+	if (label && !id) {
+		id = uuidv4();
+	}
 </script>
 
-<div class={['flex items-center', wrapperClass]}>
+<div class={['flex items-center', wrapperClass, { 'flex-col items-start gap-y-1': label }]}>
+	{#if label}
+		<label class="ml-2 font-semibold" for={id}>{label}</label>
+	{/if}
 	<input
+		{id}
+		{onfocus}
 		bind:value
 		{name}
 		{type}
