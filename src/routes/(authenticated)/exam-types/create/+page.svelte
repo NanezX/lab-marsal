@@ -174,8 +174,6 @@
 	$inspect(isEditingRefValue);
 </script>
 
-<!-- TODO: Add the labels above the inputs -->
-
 <!-- To control when the drag ends outside of th drag container -->
 <svelte:window ondragover={windowOnDragOver} />
 
