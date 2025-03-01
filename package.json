@@ -62,12 +62,12 @@
 		"@oslojs/crypto": "^1.0.1",
 		"@oslojs/encoding": "^1.1.0",
 		"@steeze-ui/svelte-icon": "^1.6.2",
-		"drizzle-orm": "^0.39.3",
+		"drizzle-orm": "^0.40.0",
 		"lodash-es": "^4.17.21",
 		"nodemailer": "^6.10.0",
 		"postgres": "^3.4.5",
-		"svelte-email-tailwind": "^2.1.0",
-		"uuid": "^11.0.5"
+		"svelte-email-tailwind": "^2.1.1",
+		"uuid": "^11.1.0"
 	},
 	"overrides": {
 		"cookie": "^0.7.2",
