@@ -39,6 +39,18 @@ const examTypeSchema = z.object({
 				}
 			}
 		]),
+}).superRefine((obj, ctx) => {
+	// Check each parameter
+	obj.parameters.forEach((param, index) => {
+		// If the parameter has a category, it must exist in the categories array
+		if (param.parameter.category && !obj.categories.includes(param.parameter.category)) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: `La categoría "${param.parameter.category}" no existe en la lista de categorías`,
+				path: ["parameters", index, "parameter", "category"],
+			});
+		}
+	});
 });
 
 export type ExamTypeSchema = typeof examTypeSchema;
