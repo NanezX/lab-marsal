@@ -75,10 +75,12 @@
 	}
 
 	function removeCategory(category: string, categoryIndex: number) {
-		// TODO: VERIFIED THIS WORK
-		const newParams = $form.parameters.filter((param_) => param_.parameter.category !== category);
-		$form.parameters = newParams;
-		$form.categories.splice(categoryIndex, 1);
+		form.update(($form) => {
+			const newParams = $form.parameters.filter((param_) => param_.parameter.category !== category);
+			$form.parameters = newParams;
+			$form.categories.splice(categoryIndex, 1);
+			return $form;
+		});
 	}
 
 	let draggingItemIndex: number | null = $state(null);
