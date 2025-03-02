@@ -448,12 +448,7 @@
 				>
 
 				{#each $form.parameters as _, index (uuidv4())}
-					<div
-						class="flex items-center gap-x-2"
-						transition:fade
-						animate:flip={{ duration: 500 }}
-						id={index.toString()}
-					>
+					<div class="flex items-center gap-x-2" id={index.toString()}>
 						<!-- Drag handle area -->
 						<div
 							role="button"
