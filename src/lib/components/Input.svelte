@@ -21,6 +21,7 @@
 		min?: string | number | null;
 		max?: string | number | null;
 		maxlength?: number | null;
+		step?: string | number | null | undefined;
 		autoComplete?: boolean;
 		onfocus?: FocusEventHandler<HTMLInputElement>;
 		error?: string[] | string | undefined;
@@ -43,6 +44,7 @@
 		min,
 		max,
 		maxlength,
+		step,
 		autoComplete = true,
 		onfocus,
 		error
@@ -86,6 +88,7 @@
 		{min}
 		{max}
 		{maxlength}
+		{step}
 		autocomplete={!autoComplete ? 'new-password' : undefined}
 	/>
 
