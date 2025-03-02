@@ -42,6 +42,8 @@ const examTypeSchema = z.object({
 	parameters: z.array(examParameterSchema).min(1).default([{ position: 0, parameter: initParameter }]),
 	categories: z.array(z.string())
 });
+
+export type ExamTypeSchema = typeof examTypeSchema;
 /////
 
 export const load = async () => {
