@@ -8,50 +8,52 @@ const examParameterSchema = z.object({
 	position: z.number().min(0),
 	// Parameter data
 	parameter: z.object({
-		name: z.string().min(1, "El parámetro debe tener un nombre"),
+		name: z.string().min(1, 'El parámetro debe tener un nombre'),
 		type: z.literal('text'),
 		category: z.string().min(1).optional(),
-		unit: z.string().min(1, "Debe especificar la unidad del parámetro"),
+		unit: z.string().min(1, 'Debe especificar la unidad del parámetro'),
 		hasReferences: z.boolean(),
-		referenceValues: z.array(z.string().min(1, "Debe ingresar el valor de referencia"))
+		referenceValues: z.array(z.string().min(1, 'Debe ingresar el valor de referencia'))
 	})
 });
 
-const examTypeSchema = z.object({
-	name: z.string().min(1, "El nombre es obligatorio"),
-	description: z.string().optional(),
-	basePrice: z.number().positive("El precio base debe ser mayor a 0 USD"),
-	clasification: z.string().optional(), // Not sure about this
-	categories: z.array(z.string()),
-	parameters: z
-		.array(examParameterSchema)
-		.min(1)
-		.default([
-			{
-				position: 0,
-				parameter: {
-					name: '',
-					type: 'text', // | "number";
-					category: undefined,
-					unit: '',
-					hasReferences: false,
-					referenceValues: []
+const examTypeSchema = z
+	.object({
+		name: z.string().min(1, 'El nombre es obligatorio'),
+		description: z.string().optional(),
+		basePrice: z.number().positive('El precio base debe ser mayor a 0 USD'),
+		clasification: z.string().optional(), // Not sure about this
+		categories: z.array(z.string()),
+		parameters: z
+			.array(examParameterSchema)
+			.min(1)
+			.default([
+				{
+					position: 0,
+					parameter: {
+						name: '',
+						type: 'text', // | "number";
+						category: undefined,
+						unit: '',
+						hasReferences: false,
+						referenceValues: []
+					}
 				}
+			])
+	})
+	.superRefine((obj, ctx) => {
+		// Check each parameter
+		obj.parameters.forEach((param, index) => {
+			// If the parameter has a category, it must exist in the categories array
+			if (param.parameter.category && !obj.categories.includes(param.parameter.category)) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: `La categoría "${param.parameter.category}" no existe en la lista de categorías`,
+					path: ['parameters', index, 'parameter', 'category']
+				});
 			}
-		]),
-}).superRefine((obj, ctx) => {
-	// Check each parameter
-	obj.parameters.forEach((param, index) => {
-		// If the parameter has a category, it must exist in the categories array
-		if (param.parameter.category && !obj.categories.includes(param.parameter.category)) {
-			ctx.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: `La categoría "${param.parameter.category}" no existe en la lista de categorías`,
-				path: ["parameters", index, "parameter", "category"],
-			});
-		}
+		});
 	});
-});
 
 export type ExamTypeSchema = typeof examTypeSchema;
 
