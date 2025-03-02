@@ -71,6 +71,11 @@
 			const newParams = $form.parameters.filter((param_) => param_.parameter.category !== category);
 			$form.parameters = newParams;
 			$form.categories.splice(categoryIndex, 1);
+
+			if (newParams.length == 0) {
+				addParameter();
+			}
+
 			return $form;
 		});
 	}
