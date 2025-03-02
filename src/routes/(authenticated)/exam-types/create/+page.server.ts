@@ -1,19 +1,7 @@
 import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import type { Actions } from './$types';
-
-////
 import { z } from 'zod';
-import type { ExamParemeterInput } from './params';
-
-const initParameter: ExamParemeterInput = {
-	name: '',
-	type: 'text', // | "number";
-	category: undefined,
-	unit: '',
-	hasReferences: false,
-	referenceValues: []
-};
+import type { Actions } from './$types';
 
 const examParameterSchema = z.object({
 	// Positon of the parameter in the form
@@ -38,7 +26,19 @@ const examTypeSchema = z.object({
 	parameters: z
 		.array(examParameterSchema)
 		.min(1)
-		.default([{ position: 0, parameter: initParameter }]),
+		.default([
+			{
+				position: 0,
+				parameter: {
+					name: '',
+					type: 'text', // | "number";
+					category: undefined,
+					unit: '',
+					hasReferences: false,
+					referenceValues: []
+				}
+			}
+		]),
 	categories: z.array(z.string())
 });
 
