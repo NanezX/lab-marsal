@@ -26,7 +26,7 @@ const examParameterSchema = z.object({
 		category: z.string().min(1).optional(),
 		unit: z.string().min(1),
 		hasReferences: z.boolean(),
-		referenceValues: z.array(z.string())
+		referenceValues: z.array(z.string().min(1))
 	})
 });
 
