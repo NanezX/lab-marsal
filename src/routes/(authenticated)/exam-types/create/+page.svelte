@@ -63,7 +63,10 @@
 			);
 
 			if (indexToRemove != -1) {
-				$form.parameters.splice(indexToRemove, 1);
+				form.update(($form) => {
+					$form.parameters.splice(indexToRemove, 1);
+					return $form;
+				});
 			}
 		}
 	}
