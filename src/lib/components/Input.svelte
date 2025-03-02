@@ -62,7 +62,13 @@
 	}
 </script>
 
-<div class={['flex items-center', wrapperClass, { 'flex-col items-start gap-y-1': label }]}>
+<div
+	class={[
+		'flex items-center',
+		wrapperClass,
+		{ 'flex-col items-start gap-y-1': label || (error !== undefined && error.length > 0) }
+	]}
+>
 	{#if label}
 		<label class="ml-2 font-semibold" for={id}>{label}</label>
 	{/if}
