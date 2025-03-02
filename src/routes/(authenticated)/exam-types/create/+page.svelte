@@ -145,7 +145,6 @@
 		form.update(($form) => {
 			// Rename the category of each parameter to the new one
 			$form.parameters.forEach((param_) => {
-				param_.parameter.category;
 				if (param_.parameter.category === $form.categories[categoryIndex_]) {
 					param_.parameter.category = categoriesStatus[categoryIndex_];
 				}
