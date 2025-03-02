@@ -171,6 +171,7 @@
 						label="Nombre del exámen"
 						placeholder="Nombre del exámen"
 						wrapperClass="w-1/2"
+						error={$errors.name}
 					/>
 
 					<Input
@@ -180,6 +181,7 @@
 						label="Precio base (USD)"
 						placeholder="Precio base referencia"
 						wrapperClass="w-1/2"
+						error={$errors.basePrice}
 					/>
 				</div>
 
@@ -252,10 +254,10 @@
 						</Button>
 					</div>
 
-					<ParametersCompo {form} {category} {addParameter} />
+					<ParametersCompo {form} {errors} {category} {addParameter} />
 				</div>
 			{:else}
-				<ParametersCompo {form} />
+				<ParametersCompo {form} {errors} />
 			{/each}
 		</div>
 	</div>
