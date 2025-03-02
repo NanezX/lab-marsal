@@ -5,7 +5,7 @@
 	import { fade } from 'svelte/transition';
 	import type { ExamParemeterInput } from './params';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { CirclePlus, CopyPlus, PencilMinus } from '@steeze-ui/tabler-icons';
+	import { Cancel, Check, CirclePlus, CopyPlus, PencilMinus } from '@steeze-ui/tabler-icons';
 	import { v4 as uuidv4 } from 'uuid';
 	import ModalEditCategory from '$lib/components/modal/ModalEditCategory.svelte';
 	import { superForm } from 'sveltekit-superforms';
@@ -131,9 +131,32 @@
 	let isEditingCategory = $state(false);
 	let editingCategoryIndex: null | number = $state(null);
 
+	let categoriesStatus: { [key: number]: string } = $state({});
+
 	function editCategory(categoryIndex_: number) {
-		isEditingCategory = true;
-		editingCategoryIndex = categoryIndex_;
+		categoriesStatus[categoryIndex_] = $form.categories[categoryIndex_];
+	}
+
+	function finishEditCategory(categoryIndex_: number) {
+		delete categoriesStatus[categoryIndex_];
+	}
+
+	function saveEditCategory(categoryIndex_: number) {
+		form.update(($form) => {
+			// Rename the category of each parameter to the new one
+			$form.parameters.forEach((param_) => {
+				param_.parameter.category;
+				if (param_.parameter.category === $form.categories[categoryIndex_]) {
+					param_.parameter.category = categoriesStatus[categoryIndex_];
+				}
+			});
+
+			// Rename the category to the new one
+			$form.categories[categoryIndex_] = categoriesStatus[categoryIndex_];
+			return $form;
+		});
+
+		finishEditCategory(categoryIndex_);
 	}
 </script>
 
@@ -230,17 +253,41 @@
 				>
 					<div class="inline-flex w-full items-center justify-center gap-x-4">
 						<div class="inline-flex gap-x-1">
-							<p class="text-lg font-bold">
-								{category}
-							</p>
+							{#if categoriesStatus[categoryIndex]}
+								<Input
+									wrapperClass="w-2/3"
+									bind:value={categoriesStatus[categoryIndex]}
+									name="any"
+								/>
 
-							<Button
-								class="mr-2 !bg-inherit !p-0"
-								title="Editar nombre de la categoria"
-								onclick={() => editCategory(categoryIndex)}
-							>
-								<Icon src={PencilMinus} size="20" theme="filled" class="text-green-500" />
-							</Button>
+								<Button
+									class="mr-2 !bg-inherit !p-0"
+									title="Guardar"
+									onclick={() => saveEditCategory(categoryIndex)}
+								>
+									<Icon src={Check} size="20" theme="filled" class="text-green-500" />
+								</Button>
+
+								<Button
+									class="mr-2 !bg-inherit !p-0"
+									title="Cancelar"
+									onclick={() => finishEditCategory(categoryIndex)}
+								>
+									<Icon src={Cancel} size="20" theme="filled" class="text-red-500" />
+								</Button>
+							{:else}
+								<p class="text-lg font-bold">
+									{category}
+								</p>
+
+								<Button
+									class="mr-2 !bg-inherit !p-0"
+									title="Editar nombre de la categoria"
+									onclick={() => editCategory(categoryIndex)}
+								>
+									<Icon src={PencilMinus} size="20" theme="filled" class="text-green-500" />
+								</Button>
+							{/if}
 						</div>
 
 						<Button
