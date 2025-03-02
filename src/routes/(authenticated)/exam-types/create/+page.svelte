@@ -57,21 +57,6 @@
 		});
 	}
 
-	function removeParameter(parameters: ParameterData[], innerIndex: number) {
-		if (parameters.length > 1) {
-			const indexToRemove = $form.parameters.findIndex(
-				(x) => x.position === parameters[innerIndex].position
-			);
-
-			if (indexToRemove != -1) {
-				form.update(($form) => {
-					$form.parameters.splice(indexToRemove, 1);
-					return $form;
-				});
-			}
-		}
-	}
-
 	function addCategory() {
 		function generateName(baseNumber: number) {
 			const newCategory = `Categoria ${baseNumber}`;
@@ -162,24 +147,6 @@
 		isEditingCategory = true;
 		editingCategoryIndex = categoryIndex_;
 	}
-
-	let isEditingRefValue = $state(false);
-	let auxRefValues: string[] = $state([]);
-	let auxRefValueIndex: number | null = $state(null);
-
-	function editRefValue(refValues: string[], index: number) {
-		isEditingRefValue = true;
-		auxRefValues = refValues;
-		auxRefValueIndex = index;
-	}
-
-	function removeRefValue(refValues: string[], index: number) {
-		if (refValues.length > 1 && index >= 0 && refValues.length > index) {
-			refValues.splice(index, 1);
-		}
-	}
-
-	$inspect(isEditingRefValue);
 </script>
 
 <!-- To control when the drag ends outside of th drag container -->
@@ -192,15 +159,6 @@
 		bind:categories
 		bind:editingIndex={editingCategoryIndex}
 		bind:baseParameters={$form.parameters}
-	/>
-{/if}
-
-<!-- Modal to edit a specific value reference -->
-{#if auxRefValueIndex !== null}
-	<ModalEditArrayItem
-		bind:showModal={isEditingRefValue}
-		bind:items={auxRefValues}
-		bind:editingIndex={auxRefValueIndex}
 	/>
 {/if}
 
