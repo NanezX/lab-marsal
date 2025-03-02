@@ -10,10 +10,11 @@
 	import ModalEditCategory from '$lib/components/modal/ModalEditCategory.svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import ParametersCompo from './ParametersCompo.svelte';
+	import { generateName } from '$lib/shared/utils';
 
 	let { data } = $props();
 
-	const { form, errors, constraints, enhance, delayed } = superForm(data.examTypeForm, {
+	const { form, errors, enhance } = superForm(data.examTypeForm, {
 		dataType: 'json'
 	});
 
@@ -43,18 +44,9 @@
 	}
 
 	function addCategory() {
-		function generateName(baseNumber: number) {
-			const newCategory = `Categoria ${baseNumber}`;
-
-			if ($form.categories.includes(newCategory)) {
-				// If this name already exist, create a diffrent one
-				return generateName(baseNumber + 1);
-			}
-
-			return newCategory;
-		}
-
-		const newCategory = generateName($form.categories.length + 1);
+		const newCategory = generateName('Categoria', $form.categories.length + 1, (v) =>
+			$form.categories.includes(v)
+		);
 
 		if ($form.categories.length == 0 && $form.parameters.length > 0) {
 			// Since there was no category created, assign each parameter to the new one

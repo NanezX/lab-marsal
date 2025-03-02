@@ -11,5 +11,16 @@ export function formatCapital(text: string): string {
 	return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
 
+export function generateName(baseName: string, baseNumber: number, validate: (name: string) => boolean): string {
+	const newCategory = `${baseName} ${baseNumber}`;
+
+	if (validate(newCategory)) {
+		// If this name already exist, create a diffrent one
+		return generateName(baseName, baseNumber + 1, validate);
+	}
+
+	return newCategory;
+}
+
 export const minDocumentId = 0;
 export const maxDocumentId = 999999999;
