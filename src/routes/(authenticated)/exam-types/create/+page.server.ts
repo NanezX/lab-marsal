@@ -39,7 +39,7 @@ const examTypeSchema = z.object({
 	description: z.string().optional(),
 	basePrice: z.number().positive(),
 	clasification: z.string().optional(), // Not sure about this
-	parameters: z.array(examParameterSchema).min(1).default([{ position: 1, parameter: initParameter }]),
+	parameters: z.array(examParameterSchema).min(1).default([{ position: 0, parameter: initParameter }]),
 	categories: z.array(z.string())
 });
 /////
@@ -61,6 +61,6 @@ export const actions: Actions = {
 		console.log('------')
 		console.log('form error: ', JSON.stringify(form.errors, null, 2));
 		console.log('------ ', Date.now())
-		
+
 	}
 };
