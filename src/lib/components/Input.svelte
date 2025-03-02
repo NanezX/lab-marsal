@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Icon, type IconSource } from '@steeze-ui/svelte-icon';
 	import type { ClassValue, FocusEventHandler } from 'svelte/elements';
+	import { fade } from 'svelte/transition';
 	import { v4 as uuidv4 } from 'uuid';
 
 	// Prop type
@@ -22,6 +23,7 @@
 		maxlength?: number | null;
 		autoComplete?: boolean;
 		onfocus?: FocusEventHandler<HTMLInputElement>;
+		error?: string[] | string | undefined;
 	};
 
 	// Prop deconstruct
@@ -42,7 +44,8 @@
 		max,
 		maxlength,
 		autoComplete = true,
-		onfocus
+		onfocus,
+		error
 	}: PropType = $props();
 
 	// Reusable classes
@@ -82,5 +85,9 @@
 
 	{#if icon}
 		<Icon src={icon} class={[iconClass, { 'text-gray-400!': disabled }]} {title} />
+	{/if}
+
+	{#if error !== undefined && error.length > 0}
+		<span in:fade class="text-sm text-red-500">{error}</span>
 	{/if}
 </div>
