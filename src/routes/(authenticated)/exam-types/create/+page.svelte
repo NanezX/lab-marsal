@@ -10,6 +10,7 @@
 	import { superForm } from 'sveltekit-superforms';
 	import ParametersCompo from './ParametersCompo.svelte';
 	import { generateName } from '$lib/shared/utils';
+	import { tick } from 'svelte';
 
 	let { data } = $props();
 
@@ -17,7 +18,7 @@
 		dataType: 'json'
 	});
 
-	function addParameter(category?: string): void {
+	async function addParameter(category?: string): Promise<void> {
 		// Base parameter
 		const initParameter: ExamParemeterInput = {
 			name: '',
@@ -33,13 +34,21 @@
 			category = $form.categories[0];
 		}
 
+		const newIndex = $form.parameters.length;
+
 		form.update(($form) => {
 			$form.parameters.push({
-				position: $form.parameters.length,
+				position: newIndex,
 				parameter: { ...initParameter, category }
 			});
 			return $form;
 		});
+
+		// Wait for DOM update
+		await tick();
+
+		// Go to element parameter
+		gotoElementBySelector(`[data-param-index="${newIndex}"]`);
 	}
 
 	function addCategory() {
@@ -76,6 +85,15 @@
 			}
 
 			return $form;
+		});
+	}
+
+	function gotoElementBySelector(selector: string) {
+		const newElement = document.querySelector(selector);
+		newElement?.scrollIntoView({
+			behavior: 'smooth',
+			block: 'center',
+			inline: 'center'
 		});
 	}
 

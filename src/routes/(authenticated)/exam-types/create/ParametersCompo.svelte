@@ -129,6 +129,7 @@
 			role="definition"
 			class="drag-container flex items-center gap-x-2"
 			bind:this={container}
+			data-param-index={index}
 			id={index.toString()}
 		>
 			<!-- Drag handle area -->
