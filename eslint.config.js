@@ -38,5 +38,16 @@ export default ts.config(
 				T: 'readonly'
 			}
 		}
+	},
+	{
+		rules: {
+			'@typescript-eslint/no-unused-vars': [
+				'error',
+				{
+					varsIgnorePattern: '_',
+					argsIgnorePattern: '_'
+				}
+			]
+		}
 	}
 );
