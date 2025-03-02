@@ -8,21 +8,21 @@ const examParameterSchema = z.object({
 	position: z.number().min(0),
 	// Parameter data
 	parameter: z.object({
-		name: z.string().min(1),
-		// type: z.union([z.literal("text"), z.literal('number')])
+		name: z.string().min(1, "El parámetro debe tener un nombre"),
 		type: z.literal('text'),
 		category: z.string().min(1).optional(),
-		unit: z.string().min(1),
+		unit: z.string().min(1, "Debe especificar la unidad del parámetro"),
 		hasReferences: z.boolean(),
-		referenceValues: z.array(z.string().min(1))
+		referenceValues: z.array(z.string().min(1, "Debe ingresar el valor de referencia"))
 	})
 });
 
 const examTypeSchema = z.object({
-	name: z.string().min(1),
+	name: z.string().min(1, "El nombre es obligatorio"),
 	description: z.string().optional(),
-	basePrice: z.number().positive(),
+	basePrice: z.number().positive("El precio base debe ser mayor a 0 USD"),
 	clasification: z.string().optional(), // Not sure about this
+	categories: z.array(z.string()),
 	parameters: z
 		.array(examParameterSchema)
 		.min(1)
@@ -39,11 +39,9 @@ const examTypeSchema = z.object({
 				}
 			}
 		]),
-	categories: z.array(z.string())
 });
 
 export type ExamTypeSchema = typeof examTypeSchema;
-/////
 
 export const load = async () => {
 	const examTypeForm = await superValidate(zod(examTypeSchema));
