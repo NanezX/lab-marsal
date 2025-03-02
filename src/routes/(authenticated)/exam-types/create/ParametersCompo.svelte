@@ -112,6 +112,7 @@
 						label="Unidad del parámetro"
 						placeholder="Unidad del parámetro"
 						autoComplete={false}
+						error={$errors?.parameters?.[index]?.parameter?.unit}
 					/>
 
 					<Checkbox
@@ -137,6 +138,7 @@
 										name={`parameter-${index}-name-CATEGORY}`}
 										placeholder="Valor de referencia"
 										autoComplete={false}
+										error={$errors?.parameters?.[index]?.parameter?.referenceValues?.[j_index]}
 									/>
 
 									<Button
