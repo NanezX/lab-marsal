@@ -55,11 +55,7 @@ export const actions: Actions = {
 		const form = await superValidate(request, zod(examTypeSchema));
 
 		console.log('form: ', form);
-		console.log('------')
-		console.log('form json: ', JSON.stringify(form.data, null, 2));
-		console.log('------')
-		console.log('form error: ', JSON.stringify(form.errors, null, 2));
-		console.log('------ ', Date.now())
-
+		// console.log('------')
+		// console.log('form json: ', JSON.stringify(form.data, null, 2));
 	}
 };
