@@ -175,6 +175,7 @@
 						bind:value={$form.basePrice}
 						type="number"
 						name="basePrice"
+						step="0.01"
 						label="Precio base (USD)"
 						placeholder="Precio base referencia"
 						wrapperClass="w-1/2"
