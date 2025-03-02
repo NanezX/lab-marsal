@@ -1,4 +1,4 @@
-import { superValidate } from 'sveltekit-superforms';
+import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions } from './$types';
 
@@ -55,7 +55,17 @@ export const actions: Actions = {
 		const form = await superValidate(request, zod(examTypeSchema));
 
 		console.log('form: ', form);
-		// console.log('------')
-		// console.log('form json: ', JSON.stringify(form.data, null, 2));
+		console.log('------')
+		console.log('form json: ', JSON.stringify(form.data, null, 2));
+		console.log('------')
+		console.log('form error: ', JSON.stringify(form.errors, null, 2));
+		console.log('------ ', Date.now())
+
+		if (!form.valid) {
+			// Again, return { form } and things will just work.
+			return failForms(400, { form });
+		}
+
+
 	}
 };
