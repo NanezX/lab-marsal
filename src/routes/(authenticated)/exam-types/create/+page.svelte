@@ -185,130 +185,6 @@
 <!-- To control when the drag ends outside of th drag container -->
 <svelte:window ondragover={windowOnDragOver} />
 
-<!-- Snippet for generating the params inputs -->
-{#snippet parameters(parameters: ParameterData[], category?: string)}
-	{#each parameters as param, index (param)}
-		<div
-			class="flex items-center gap-x-2"
-			transition:fade
-			animate:flip={{ duration: 500 }}
-			id={index.toString()}
-		>
-			<!-- Drag handle area -->
-			<div
-				role="button"
-				tabindex="0"
-				aria-label="Drag handle for parameter {param.position}"
-				class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
-				draggable="true"
-				ondragstart={() => onDragStart(index)}
-				ondragend={() => onDragEnd()}
-			>
-				<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M4 6h16M4 12h16M4 18h16"
-					/>
-				</svg>
-			</div>
-
-			<!-- Content area -->
-			<div
-				class="w-full rounded-xl bg-gray-100 px-2 py-4"
-				role="listitem"
-				aria-label="List of exam parameters"
-				ondragover={() => onDragOver(index)}
-			>
-				<div class="grid grid-cols-2 items-start gap-4">
-					<Input
-						bind:value={param.parameter.name}
-						name={`parameter-${index}-name${category ? `-${category}` : ''}`}
-						label="Nombre del parámetro"
-						placeholder="Nombre del parámetro"
-						autoComplete={false}
-					/>
-					<Input
-						bind:value={param.parameter.unit}
-						name="unit"
-						label="Unidad del parámetro"
-						placeholder="Unidad del parámetro"
-						autoComplete={false}
-					/>
-
-					<Checkbox
-						bind:value={
-							() => param.parameter.hasReferences,
-							(v) => {
-								if (v) param.parameter.referenceValues = [''];
-								param.parameter.hasReferences = v;
-							}
-						}
-						text="Añadir valores de referencia"
-						wrapperClass="!ml-0 !text-base"
-					/>
-
-					{#if param.parameter.hasReferences}
-						<div class="flex flex-col gap-y-1">
-							<p class="ml-2 font-semibold">Valores de referencia</p>
-							{#each param.parameter.referenceValues as refValue, index (uuidv4())}
-								<div class="flex gap-x-2">
-									<p class="bg-secondary-blue/30 w-7/8 rounded-3xl px-3 py-1.5">
-										{refValue}
-									</p>
-									<Button
-										class="!bg-inherit !p-0"
-										title="Editar valor de referencia"
-										onclick={() => {
-											editRefValue(param.parameter.referenceValues, index);
-										}}
-									>
-										<Icon src={Edit} size="22" class="text-green-400 hover:text-green-600" />
-									</Button>
-									<Button
-										class="!bg-inherit !p-0"
-										title="Eliminar valor de referencia"
-										onclick={() => {
-											removeRefValue(param.parameter.referenceValues, index);
-										}}
-									>
-										<Icon src={X} size="22" class="text-red-400 hover:text-red-600" />
-									</Button>
-								</div>
-							{/each}
-
-							<Button
-								onclick={() => param.parameter.referenceValues.push('')}
-								title="Añadir nuevo valor de referencia"
-								class="not-hover:text-primary-blue hover:text-dark-blue mx-auto mt-1 flex gap-x-1 !bg-inherit !p-0"
-							>
-								<p class="hover:underline">Añadir</p>
-								<Icon src={TextPlus} size="24" class="" />
-							</Button>
-						</div>
-					{/if}
-				</div>
-			</div>
-
-			<Button
-				onclick={() => {
-					removeParameter(parameters, index);
-				}}
-				class="!bg-inherit !p-0"
-			>
-				<Icon src={CircleMinus} size="32" theme="filled" class="text-red-500" />
-			</Button>
-		</div>
-	{/each}
-
-	{#if category}
-		<div class="text-center">
-			<AddButton title="Añadir parámetro" onclick={() => addParameter(category)} />
-		</div>
-	{/if}
-{/snippet}
-
 <!-- Modal to edit the category name -->
 {#if editingCategoryIndex !== null}
 	<ModalEditCategory
@@ -434,14 +310,9 @@
 						</Button>
 					</div>
 
-					{@render parameters(
-						$form.parameters.filter((x) => x.parameter.category == category),
-						category
-					)}
+					<ParametersCompo {form} {category} {addParameter} />
 				</div>
 			{:else}
-				<!-- {@render parameters($form.parameters)} -->
-
 				<ParametersCompo {form} />
 			{/each}
 		</div>
