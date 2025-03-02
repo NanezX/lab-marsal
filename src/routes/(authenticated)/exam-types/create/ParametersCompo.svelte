@@ -14,10 +14,18 @@
 	type PropType = {
 		form: SuperFormData<SuperValidated<Infer<ExamTypeSchema>>['data']>;
 		errors?: SuperFormErrors<SuperValidated<Infer<ExamTypeSchema>>['data']>;
-		category?: string;
-	};
+	} & (
+		| {
+				category: string;
+				addParameter: (category?: string) => void;
+		  }
+		| {
+				category?: never;
+				addParameter?: never;
+		  }
+	);
 
-	let { form, errors, category }: PropType = $props();
+	let { form, errors, category, addParameter }: PropType = $props();
 
 	function removeParameter(paramIndex_: number) {
 		// Check if the parameter exists and if it has more than one element
@@ -57,119 +65,123 @@
 </script>
 
 {#each $form.parameters as _, index (index)}
-	<div class="flex items-center gap-x-2">
-		<!-- Drag handle area -->
-		<div
-			role="button"
-			tabindex="0"
-			aria-label="Drag handle for parameter {$form.parameters[index].position}"
-			class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
-			draggable="true"
-		>
-			<!-- ondragstart={() => onDragStart(index)}
+	<!-- Handle rendering:
+     - If no `category` prop is passed, all the parameters will be render
+     - If a `category` prop is passed, only the parameters with the same category will be rendered
+    -->
+	{#if category === undefined || (category && $form.parameters[index].parameter.category === category)}
+		<div class="flex items-center gap-x-2">
+			<!-- Drag handle area -->
+			<div
+				role="button"
+				tabindex="0"
+				aria-label="Drag handle for parameter {$form.parameters[index].position}"
+				class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
+				draggable="true"
+			>
+				<!-- ondragstart={() => onDragStart(index)}
 			ondragend={() => onDragEnd()} -->
-			<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M4 6h16M4 12h16M4 18h16"
-				/>
-			</svg>
-		</div>
-
-		<!-- Content area -->
-		<div
-			class="w-full rounded-xl bg-gray-100 px-2 py-4"
-			role="listitem"
-			aria-label="List of exam parameters"
-		>
-			<!-- ondragover={() => onDragOver(index)} -->
-			<div class="grid grid-cols-2 items-start gap-4">
-				<Input
-					bind:value={$form.parameters[index].parameter.name}
-					name={`parameter-${index}-name-CATEGORY}`}
-					label="Nombre del parámetro"
-					placeholder="Nombre del parámetro"
-					autoComplete={false}
-				/>
-				<Input
-					bind:value={$form.parameters[index].parameter.unit}
-					name="unit"
-					label="Unidad del parámetro"
-					placeholder="Unidad del parámetro"
-					autoComplete={false}
-				/>
-
-				<Checkbox
-					bind:value={
-						() => $form.parameters[index].parameter.hasReferences,
-						(v) => {
-							if (v) $form.parameters[index].parameter.referenceValues = [''];
-							$form.parameters[index].parameter.hasReferences = v;
-						}
-					}
-					text="Añadir valores de referencia"
-					wrapperClass="!ml-0 !text-base"
-				/>
-
-				{#if $form.parameters[index].parameter.hasReferences}
-					<div class="flex flex-col gap-y-1">
-						<p class="ml-2 font-semibold">Valores de referencia</p>
-						{#each $form.parameters[index].parameter.referenceValues as _, j_index (j_index)}
-							<div class="flex gap-x-2">
-								<Input
-									wrapperClass="w-7/8"
-									bind:value={$form.parameters[index].parameter.referenceValues[j_index]}
-									name={`parameter-${index}-name-CATEGORY}`}
-									placeholder="Valor de referencia"
-									autoComplete={false}
-								/>
-
-								<Button
-									class="!bg-inherit !p-0"
-									title="Eliminar valor de referencia"
-									onclick={() => {
-										removeRefValue(index, j_index);
-									}}
-								>
-									<Icon src={X} size="22" class="text-red-400 hover:text-red-600" />
-								</Button>
-							</div>
-						{/each}
-
-						<Button
-							onclick={() => addRefValue(index)}
-							title="Añadir nuevo valor de referencia"
-							class="not-hover:text-primary-blue hover:text-dark-blue mx-auto mt-1 flex gap-x-1 !bg-inherit !p-0"
-						>
-							<p class="hover:underline">Añadir</p>
-							<Icon src={TextPlus} size="24" class="" />
-						</Button>
-					</div>
-				{/if}
+				<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M4 6h16M4 12h16M4 18h16"
+					/>
+				</svg>
 			</div>
-		</div>
 
-		<Button
-			onclick={() => {
-				removeParameter(index);
-			}}
-			class="!bg-inherit !p-0"
-		>
-			<Icon src={CircleMinus} size="32" theme="filled" class="text-red-500" />
-		</Button>
-	</div>
+			<!-- Content area -->
+			<div
+				class="w-full rounded-xl bg-gray-100 px-2 py-4"
+				role="listitem"
+				aria-label="List of exam parameters"
+			>
+				<!-- ondragover={() => onDragOver(index)} -->
+				<div class="grid grid-cols-2 items-start gap-4">
+					<Input
+						bind:value={$form.parameters[index].parameter.name}
+						name={`parameter-${index}-name-CATEGORY}`}
+						label="Nombre del parámetro"
+						placeholder="Nombre del parámetro"
+						autoComplete={false}
+					/>
+					<Input
+						bind:value={$form.parameters[index].parameter.unit}
+						name="unit"
+						label="Unidad del parámetro"
+						placeholder="Unidad del parámetro"
+						autoComplete={false}
+					/>
+
+					<Checkbox
+						bind:value={
+							() => $form.parameters[index].parameter.hasReferences,
+							(v) => {
+								if (v) $form.parameters[index].parameter.referenceValues = [''];
+								$form.parameters[index].parameter.hasReferences = v;
+							}
+						}
+						text="Añadir valores de referencia"
+						wrapperClass="!ml-0 !text-base"
+					/>
+
+					{#if $form.parameters[index].parameter.hasReferences}
+						<div class="flex flex-col gap-y-1">
+							<p class="ml-2 font-semibold">Valores de referencia</p>
+							{#each $form.parameters[index].parameter.referenceValues as _, j_index (j_index)}
+								<div class="flex gap-x-2">
+									<Input
+										wrapperClass="w-7/8"
+										bind:value={$form.parameters[index].parameter.referenceValues[j_index]}
+										name={`parameter-${index}-name-CATEGORY}`}
+										placeholder="Valor de referencia"
+										autoComplete={false}
+									/>
+
+									<Button
+										class="!bg-inherit !p-0"
+										title="Eliminar valor de referencia"
+										onclick={() => {
+											removeRefValue(index, j_index);
+										}}
+									>
+										<Icon src={X} size="22" class="text-red-400 hover:text-red-600" />
+									</Button>
+								</div>
+							{/each}
+
+							<Button
+								onclick={() => addRefValue(index)}
+								title="Añadir nuevo valor de referencia"
+								class="not-hover:text-primary-blue hover:text-dark-blue mx-auto mt-1 flex gap-x-1 !bg-inherit !p-0"
+							>
+								<p class="hover:underline">Añadir</p>
+								<Icon src={TextPlus} size="24" class="" />
+							</Button>
+						</div>
+					{/if}
+				</div>
+			</div>
+
+			<Button
+				onclick={() => {
+					removeParameter(index);
+				}}
+				class="!bg-inherit !p-0"
+			>
+				<Icon src={CircleMinus} size="32" theme="filled" class="text-red-500" />
+			</Button>
+		</div>
+	{/if}
 {/each}
 
-{#if category}
+{#if category && addParameter !== undefined}
 	<div class="text-center">
 		<AddButton
 			title="Añadir parámetro"
 			onclick={() => {
-				// TODO
-				// addParameter(category);
-				alert('ADD PARAMETER');
+				addParameter(category);
 			}}
 		/>
 	</div>
