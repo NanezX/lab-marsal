@@ -13,14 +13,11 @@ const initParameter: ExamParemeterInput = {
 	unit: '',
 	hasReferences: false,
 	referenceValues: []
-	// value: '', // | number
-	// hasReferences: true,
-	// referenceValues: ['Valor 1', 'Valor 2']
 };
 
 const examParameterSchema = z.object({
 	// Positon of the parameter in the form
-	position: z.number().positive(),
+	position: z.number().min(0),
 	// Parameter data
 	parameter: z.object({
 		name: z.string().min(1),
