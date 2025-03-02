@@ -21,6 +21,7 @@
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import ModalEditArrayItem from '$lib/components/modal/ModalEditArrayItem.svelte';
 	import { superForm } from 'sveltekit-superforms';
+	import ParametersCompo from './ParametersCompo.svelte';
 
 	let { data } = $props();
 
@@ -240,7 +241,7 @@
 						bind:value={
 							() => param.parameter.hasReferences,
 							(v) => {
-								if (v) param.parameter.referenceValues = ['Referencia'];
+								if (v) param.parameter.referenceValues = [''];
 								param.parameter.hasReferences = v;
 							}
 						}
@@ -278,7 +279,7 @@
 							{/each}
 
 							<Button
-								onclick={() => param.parameter.referenceValues.push('Referencia')}
+								onclick={() => param.parameter.referenceValues.push('')}
 								title="Añadir nuevo valor de referencia"
 								class="not-hover:text-primary-blue hover:text-dark-blue mx-auto mt-1 flex gap-x-1 !bg-inherit !p-0"
 							>
@@ -439,7 +440,9 @@
 					)}
 				</div>
 			{:else}
-				{@render parameters($form.parameters)}
+				<!-- {@render parameters($form.parameters)} -->
+
+				<ParametersCompo {form} />
 			{/each}
 		</div>
 	</div>
