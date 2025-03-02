@@ -5,15 +5,14 @@
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { CircleMinus, Edit, TextPlus, X } from '@steeze-ui/tabler-icons';
+	import { CircleMinus, TextPlus, X } from '@steeze-ui/tabler-icons';
 	import AddButton from '$lib/components/buttons/AddButton.svelte';
-	import type { ParameterData } from './params';
 	import type { SuperFormData, SuperFormErrors } from 'sveltekit-superforms/client';
 
 	// Prop type
 	type PropType = {
 		form: SuperFormData<SuperValidated<Infer<ExamTypeSchema>>['data']>;
-		errors?: SuperFormErrors<SuperValidated<Infer<ExamTypeSchema>>['data']>;
+		errors: SuperFormErrors<SuperValidated<Infer<ExamTypeSchema>>['data']>;
 	} & (
 		| {
 				category: string;
@@ -101,10 +100,11 @@
 				<div class="grid grid-cols-2 items-start gap-4">
 					<Input
 						bind:value={$form.parameters[index].parameter.name}
-						name={`parameter-${index}-name-CATEGORY}`}
+						name={`parameter-${index}-name${category ? `-${category}` : ''}`}
 						label="Nombre del parámetro"
 						placeholder="Nombre del parámetro"
 						autoComplete={false}
+						error={$errors?.parameters?.[index]?.parameter?.name}
 					/>
 					<Input
 						bind:value={$form.parameters[index].parameter.unit}
