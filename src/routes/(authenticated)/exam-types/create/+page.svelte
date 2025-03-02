@@ -3,23 +3,11 @@
 	import Input from '$lib/components/Input.svelte';
 	import Textarea from '$lib/components/Textarea.svelte';
 	import { fade } from 'svelte/transition';
-	import type { ExamParemeterInput, ParameterData } from './params';
-	import AddButton from '$lib/components/buttons/AddButton.svelte';
-	import { flip } from 'svelte/animate';
+	import type { ExamParemeterInput } from './params';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import {
-		CirclePlus,
-		CopyPlus,
-		CircleMinus,
-		PencilMinus,
-		X,
-		Edit,
-		TextPlus
-	} from '@steeze-ui/tabler-icons';
+	import { CirclePlus, CopyPlus, PencilMinus } from '@steeze-ui/tabler-icons';
 	import { v4 as uuidv4 } from 'uuid';
 	import ModalEditCategory from '$lib/components/modal/ModalEditCategory.svelte';
-	import Checkbox from '$lib/components/Checkbox.svelte';
-	import ModalEditArrayItem from '$lib/components/modal/ModalEditArrayItem.svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import ParametersCompo from './ParametersCompo.svelte';
 
@@ -29,30 +17,27 @@
 		dataType: 'json'
 	});
 
-	let categories: string[] = $state([]);
-
-	const initParameter: ExamParemeterInput = {
-		name: '',
-		type: 'text', // | "number";
-		category: undefined,
-		unit: '',
-		hasReferences: false,
-		referenceValues: []
-		// value: '', // | number
-		// hasReferences: true,
-		// referenceValues: ['Valor 1', 'Valor 2']
-	};
-
 	function addParameter(category?: string): void {
+		// Base parameter
+		const initParameter: ExamParemeterInput = {
+			name: '',
+			type: 'text', // | "number";
+			category: undefined,
+			unit: '',
+			hasReferences: false,
+			referenceValues: []
+		};
+
 		// Fallback if there are categories items and no category passed to the function
-		if (categories.length > 0 && category === undefined) {
-			category = categories[0];
+		if ($form.categories.length > 0 && category === undefined) {
+			category = $form.categories[0];
 		}
 
-		const newParam = { ...initParameter, category };
-
 		form.update(($form) => {
-			$form.parameters.push({ position: $form.parameters.length, parameter: newParam });
+			$form.parameters.push({
+				position: $form.parameters.length,
+				parameter: { ...initParameter, category }
+			});
 			return $form;
 		});
 	}
@@ -61,35 +46,39 @@
 		function generateName(baseNumber: number) {
 			const newCategory = `Categoria ${baseNumber}`;
 
-			if (categories.includes(newCategory)) {
+			if ($form.categories.includes(newCategory)) {
 				// If this name already exist, create a diffrent one
 				return generateName(baseNumber + 1);
 			}
 
-			// End recursivity
 			return newCategory;
 		}
 
-		const newCategory = generateName(categories.length + 1);
-		const newParam = { ...initParameter, category: newCategory };
+		const newCategory = generateName($form.categories.length + 1);
 
-		if (categories.length == 0 && $form.parameters.length > 0) {
+		if ($form.categories.length == 0 && $form.parameters.length > 0) {
 			// Since there was no category created, assign each parameter to the new one
-			$form.parameters.forEach((param_) => {
-				param_.parameter.category = newCategory;
+			form.update(($form) => {
+				$form.parameters.forEach((param_) => {
+					param_.parameter.category = newCategory;
+				});
+				return $form;
 			});
 		} else {
-			// Always create new categories with one parameter
-			$form.parameters.push({ position: $form.parameters.length, parameter: newParam });
+			addParameter(newCategory);
 		}
 
-		categories.push(newCategory);
+		form.update(($form) => {
+			$form.categories.push(newCategory);
+			return $form;
+		});
 	}
 
 	function removeCategory(category: string, categoryIndex: number) {
+		// TODO: VERIFIED THIS WORK
 		const newParams = $form.parameters.filter((param_) => param_.parameter.category !== category);
 		$form.parameters = newParams;
-		categories.splice(categoryIndex, 1);
+		$form.categories.splice(categoryIndex, 1);
 	}
 
 	let draggingItemIndex: number | null = $state(null);
@@ -156,7 +145,7 @@
 {#if editingCategoryIndex !== null}
 	<ModalEditCategory
 		bind:showModal={isEditingCategory}
-		bind:categories
+		bind:categories={$form.categories}
 		bind:editingIndex={editingCategoryIndex}
 		bind:baseParameters={$form.parameters}
 	/>
@@ -165,13 +154,6 @@
 <!-- ACTUAL PAGE -->
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
-
-	<Button
-		onclick={() => {
-			console.log($state.snapshot(categories));
-			console.log($state.snapshot($form.parameters));
-		}}>Click to see</Button
-	>
 
 	<Button type="submit">Submit</Button>
 
@@ -217,7 +199,7 @@
 		<div class="space-y-5">
 			<p class="text-2xl">Valores y parámetros</p>
 
-			{#if categories.length == 0}
+			{#if $form.categories.length == 0}
 				<Button
 					onclick={() => addParameter()}
 					title="Añadir parámetro nuevo"
@@ -230,7 +212,7 @@
 
 			<!-- Add category button -->
 			<Button onclick={addCategory} title="Añadir categoria nuevo" class="inline-flex gap-x-1">
-				{#if categories.length}
+				{#if $form.categories.length}
 					<span> Añadir categoria </span>
 				{:else}
 					<span> Crear categoria </span>
@@ -238,7 +220,7 @@
 				<Icon src={CopyPlus} size="26" theme="filled" />
 			</Button>
 
-			{#each categories as category, categoryIndex (uuidv4())}
+			{#each $form.categories as category, categoryIndex (uuidv4())}
 				<div
 					role="definition"
 					class="drag-container space-y-4 rounded-lg border border-gray-200 p-1"
