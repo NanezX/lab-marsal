@@ -20,10 +20,13 @@
 	import ModalEditCategory from '$lib/components/modal/ModalEditCategory.svelte';
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import ModalEditArrayItem from '$lib/components/modal/ModalEditArrayItem.svelte';
+	import { superForm } from 'sveltekit-superforms';
 
-	let examName = $state('');
-	let examDescription = $state('');
-	let basePrice = $state('');
+	let { data } = $props();
+
+	const { form, errors, constraints, enhance, delayed } = superForm(data.examTypeForm, {
+		dataType: 'json'
+	});
 
 	let categories: string[] = $state([]);
 
@@ -32,34 +35,35 @@
 		type: 'text', // | "number";
 		category: undefined,
 		unit: '',
-		value: '', // | number
-		// hasReferences: true,
-		// referenceValues: ['Valor 1', 'Valor 2']
 		hasReferences: false,
 		referenceValues: []
+		// value: '', // | number
+		// hasReferences: true,
+		// referenceValues: ['Valor 1', 'Valor 2']
 	};
 
-	let baseParameters: ParameterData[] = $state([{ position: 0, parameter: initParameter }]);
-
 	function addParameter(category?: string): void {
+		console.log('category: ', category);
+		console.log('categories: ', categories);
 		// Fallback if there are categories items and no category passed to the function
 		if (categories.length > 0 && category === undefined) {
 			category = categories[0];
 		}
 
 		const newParam = { ...initParameter, category };
+		console.log('newParam: ', newParam);
 
-		baseParameters.push({ position: baseParameters.length, parameter: newParam });
+		$form.parameters.push({ position: $form.parameters.length, parameter: newParam });
 	}
 
 	function removeParameter(parameters: ParameterData[], innerIndex: number) {
 		if (parameters.length > 1) {
-			const indexToRemove = baseParameters.findIndex(
+			const indexToRemove = $form.parameters.findIndex(
 				(x) => x.position === parameters[innerIndex].position
 			);
 
 			if (indexToRemove != -1) {
-				baseParameters.splice(indexToRemove, 1);
+				$form.parameters.splice(indexToRemove, 1);
 			}
 		}
 	}
@@ -80,22 +84,22 @@
 		const newCategory = generateName(categories.length + 1);
 		const newParam = { ...initParameter, category: newCategory };
 
-		if (categories.length == 0 && baseParameters.length > 0) {
+		if (categories.length == 0 && $form.parameters.length > 0) {
 			// Since there was no category created, assign each parameter to the new one
-			baseParameters.forEach((param_) => {
+			$form.parameters.forEach((param_) => {
 				param_.parameter.category = newCategory;
 			});
 		} else {
 			// Always create new categories with one parameter
-			baseParameters.push({ position: baseParameters.length, parameter: newParam });
+			$form.parameters.push({ position: $form.parameters.length, parameter: newParam });
 		}
 
 		categories.push(newCategory);
 	}
 
 	function removeCategory(category: string, categoryIndex: number) {
-		const newParams = baseParameters.filter((param_) => param_.parameter.category !== category);
-		baseParameters = newParams;
+		const newParams = $form.parameters.filter((param_) => param_.parameter.category !== category);
+		$form.parameters = newParams;
 		categories.splice(categoryIndex, 1);
 	}
 
@@ -120,9 +124,9 @@
 			!isOutside
 		) {
 			// Reorganzize items
-			[baseParameters[draggingItemIndex], baseParameters[hoveredItemIndex]] = [
-				baseParameters[hoveredItemIndex],
-				baseParameters[draggingItemIndex]
+			[$form.parameters[draggingItemIndex], $form.parameters[hoveredItemIndex]] = [
+				$form.parameters[hoveredItemIndex],
+				$form.parameters[draggingItemIndex]
 			];
 
 			// Balance
@@ -216,15 +220,17 @@
 				<div class="grid grid-cols-2 items-start gap-4">
 					<Input
 						bind:value={param.parameter.name}
-						name="name"
+						name={`parameter-${index}-name${category ? `-${category}` : ''}`}
 						label="Nombre del parámetro"
 						placeholder="Nombre del parámetro"
+						autoComplete={false}
 					/>
 					<Input
 						bind:value={param.parameter.unit}
 						name="unit"
 						label="Unidad del parámetro"
 						placeholder="Unidad del parámetro"
+						autoComplete={false}
 					/>
 
 					<Checkbox
@@ -305,7 +311,7 @@
 		bind:showModal={isEditingCategory}
 		bind:categories
 		bind:editingIndex={editingCategoryIndex}
-		bind:baseParameters
+		bind:baseParameters={$form.parameters}
 	/>
 {/if}
 
@@ -319,15 +325,17 @@
 {/if}
 
 <!-- ACTUAL PAGE -->
-<div in:fade class="mb-4 flex w-full flex-col gap-y-8">
+<form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
 
 	<Button
 		onclick={() => {
 			console.log($state.snapshot(categories));
-			console.log($state.snapshot(baseParameters));
+			console.log($state.snapshot($form.parameters));
 		}}>Click to see</Button
 	>
+
+	<Button type="submit">Submit</Button>
 
 	<div>
 		<div class="space-y-5">
@@ -336,7 +344,7 @@
 			<div class="space-y-4">
 				<div class="flex gap-x-8">
 					<Input
-						bind:value={examName}
+						bind:value={$form.name}
 						name="name"
 						label="Nombre del exámen"
 						placeholder="Nombre del exámen"
@@ -344,7 +352,8 @@
 					/>
 
 					<Input
-						value={basePrice}
+						bind:value={$form.basePrice}
+						type="number"
 						name="basePrice"
 						label="Precio base (USD)"
 						placeholder="Precio base referencia"
@@ -357,7 +366,7 @@
 						Descripción del exámen
 					</label>
 					<Textarea
-						bind:value={examDescription}
+						bind:value={()=> $form.description ?? "", (v) => $form.description = v}
 						name="description"
 						placeholder="Description del exámen"
 					/>
@@ -422,13 +431,13 @@
 					</div>
 
 					{@render parameters(
-						baseParameters.filter((x) => x.parameter.category == category),
+						$form.parameters.filter((x) => x.parameter.category == category),
 						category
 					)}
 				</div>
 			{:else}
-				{@render parameters(baseParameters)}
+				{@render parameters($form.parameters)}
 			{/each}
 		</div>
 	</div>
-</div>
+</form>

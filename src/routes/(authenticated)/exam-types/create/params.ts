@@ -11,7 +11,7 @@ export type ExamParemeterInput = {
 	type: 'text'; // | "number";
 	category?: string;
 	unit: string;
-	value: string; // | number
+	// value: string; // | number
 	hasReferences: boolean;
 	referenceValues: string[];
 };
