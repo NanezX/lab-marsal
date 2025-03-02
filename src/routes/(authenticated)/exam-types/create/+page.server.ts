@@ -22,21 +22,23 @@ const examParameterSchema = z.object({
 	parameter: z.object({
 		name: z.string().min(1),
 		// type: z.union([z.literal("text"), z.literal('number')])
-		type: z.literal("text"),
+		type: z.literal('text'),
 		category: z.string().min(1).optional(),
 		unit: z.string().min(1),
 		hasReferences: z.boolean(),
 		referenceValues: z.array(z.string())
-
 	})
-})
+});
 
 const examTypeSchema = z.object({
 	name: z.string().min(1),
 	description: z.string().optional(),
 	basePrice: z.number().positive(),
 	clasification: z.string().optional(), // Not sure about this
-	parameters: z.array(examParameterSchema).min(1).default([{ position: 0, parameter: initParameter }]),
+	parameters: z
+		.array(examParameterSchema)
+		.min(1)
+		.default([{ position: 0, parameter: initParameter }]),
 	categories: z.array(z.string())
 });
 
@@ -55,17 +57,15 @@ export const actions: Actions = {
 		const form = await superValidate(request, zod(examTypeSchema));
 
 		console.log('form: ', form);
-		console.log('------')
+		console.log('------');
 		console.log('form json: ', JSON.stringify(form.data, null, 2));
-		console.log('------')
+		console.log('------');
 		console.log('form error: ', JSON.stringify(form.errors, null, 2));
-		console.log('------ ', Date.now())
+		console.log('------ ', Date.now());
 
 		if (!form.valid) {
 			// Again, return { form } and things will just work.
 			return failForms(400, { form });
 		}
-
-
 	}
 };

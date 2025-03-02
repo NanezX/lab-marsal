@@ -11,7 +11,11 @@ export function formatCapital(text: string): string {
 	return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
 
-export function generateName(baseName: string, baseNumber: number, validate: (name: string) => boolean): string {
+export function generateName(
+	baseName: string,
+	baseNumber: number,
+	validate: (name: string) => boolean
+): string {
 	const newCategory = `${baseName} ${baseNumber}`;
 
 	if (validate(newCategory)) {
