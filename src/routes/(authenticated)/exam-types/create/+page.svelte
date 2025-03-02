@@ -6,7 +6,6 @@
 	import type { ExamParemeterInput } from './params';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { Cancel, Check, CirclePlus, CopyPlus, PencilMinus } from '@steeze-ui/tabler-icons';
-	import { v4 as uuidv4 } from 'uuid';
 	import ModalEditCategory from '$lib/components/modal/ModalEditCategory.svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import ParametersCompo from './ParametersCompo.svelte';
@@ -80,54 +79,6 @@
 		});
 	}
 
-	let draggingItemIndex: number | null = $state(null);
-	let hoveredItemIndex: number | null = $state(null);
-	let container: HTMLDivElement | null = $state(null);
-	let isOutside: boolean = $state(false);
-
-	function onDragStart(index: number) {
-		draggingItemIndex = index;
-	}
-
-	function onDragOver(index: number) {
-		hoveredItemIndex = index;
-	}
-
-	function onDragEnd() {
-		if (
-			draggingItemIndex != null &&
-			hoveredItemIndex != null &&
-			draggingItemIndex != hoveredItemIndex &&
-			!isOutside
-		) {
-			// Reorganzize items
-			[$form.parameters[draggingItemIndex], $form.parameters[hoveredItemIndex]] = [
-				$form.parameters[hoveredItemIndex],
-				$form.parameters[draggingItemIndex]
-			];
-
-			// Balance
-			draggingItemIndex = hoveredItemIndex;
-		}
-
-		hoveredItemIndex = null;
-	}
-
-	function windowOnDragOver(e: DragEvent & { currentTarget: EventTarget & Window }) {
-		// Get the target element under the mouse
-		const target = e.target;
-		// const target = e.target as HTMLElement;
-
-		if (target) {
-			// If the target is NOT inside the container, set isOutside to true
-			if (!(target as HTMLElement).closest('.drag-container')) {
-				isOutside = true;
-				return;
-			}
-		}
-		isOutside = false;
-	}
-
 	let isEditingCategory = $state(false);
 	let editingCategoryIndex: null | number = $state(null);
 
@@ -158,9 +109,6 @@
 		finishEditCategory(categoryIndex_);
 	}
 </script>
-
-<!-- To control when the drag ends outside of th drag container -->
-<svelte:window ondragover={windowOnDragOver} />
 
 <!-- Modal to edit the category name -->
 {#if editingCategoryIndex !== null}
@@ -244,12 +192,8 @@
 				<Icon src={CopyPlus} size="26" theme="filled" />
 			</Button>
 
-			{#each $form.categories as category, categoryIndex (uuidv4())}
-				<div
-					role="definition"
-					class="drag-container space-y-4 rounded-lg border border-gray-200 p-1"
-					bind:this={container}
-				>
+			{#each $form.categories as category, categoryIndex (categoryIndex)}
+				<div class="space-y-4 rounded-lg border border-gray-200 p-1">
 					<div class="inline-flex w-full items-center justify-center gap-x-4">
 						<div class="inline-flex gap-x-1">
 							{#if categoriesStatus[categoryIndex]}
