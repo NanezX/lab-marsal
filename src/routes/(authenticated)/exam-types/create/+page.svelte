@@ -10,6 +10,7 @@
 	import ParametersCompo from '$lib/components/ParametersCompo.svelte';
 	import { generateName } from '$lib/shared/utils';
 	import { tick } from 'svelte';
+	import { goto } from '$app/navigation';
 
 	let { data } = $props();
 
@@ -127,8 +128,6 @@
 
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
-
-	<Button type="submit">Submit</Button>
 
 	<div>
 		<div class="space-y-5">
@@ -252,5 +251,23 @@
 				<ParametersCompo {form} {errors} />
 			{/each}
 		</div>
+	</div>
+
+	<hr class="border-primary-gray/50 my-1" />
+
+	<div class="mx-auto w-fit space-x-10">
+		<Button
+			title="Cancelar"
+			class="w-fit !bg-red-500 hover:!bg-red-400"
+			onclick={() => goto('/exam-types')}>Cancelar</Button
+		>
+
+		<Button
+			title="Guardar tipo de exámen"
+			class="w-fit !bg-green-500 hover:!bg-green-400"
+			type="submit"
+		>
+			Guardar
+		</Button>
 	</div>
 </form>
