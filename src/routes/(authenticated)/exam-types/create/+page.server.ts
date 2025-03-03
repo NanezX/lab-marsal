@@ -1,7 +1,11 @@
-import { superValidate, fail as failForms } from 'sveltekit-superforms';
+import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { z } from 'zod';
 import type { Actions } from './$types';
+import { findExamTypeByName } from '$lib/server/utils/dbQueries';
+import postgres from 'postgres';
+import { examType } from '$lib/server/db/schema';
+import { db } from '$lib/server/db';
 
 const examParameterSchema = z.object({
 	// Positon of the parameter in the form
@@ -68,16 +72,59 @@ export const actions: Actions = {
 		const request = event.request;
 		const form = await superValidate(request, zod(examTypeSchema));
 
-		console.log('form: ', form);
-		console.log('------');
-		console.log('form json: ', JSON.stringify(form.data, null, 2));
-		console.log('------');
-		console.log('form error: ', JSON.stringify(form.errors, null, 2));
-		console.log('------ ', Date.now());
-
 		if (!form.valid) {
+			console.log('form not valid');
 			// Again, return { form } and things will just work.
 			return failForms(400, { form });
+		}
+
+		const { name, description, basePrice, parameters, categories } = form.data;
+
+		// Check if there is an exam type with the same name
+		const examTypeCreated = await findExamTypeByName(name);
+
+		if (examTypeCreated) {
+			// Against some rules to avoid exposing vulnerabilities, we return the 409 error for already taken emails
+			// because this is intented to be an internal application on the organization
+			return message(
+				form,
+				{ text: 'Ya existe un tipo de examen con este nombre', type: 'error' },
+				{ status: 409 }
+			);
+		}
+
+		try {
+			// Inserting the exam type to the database
+			const insertResponse = await db
+				.insert(examType)
+				.values({
+					name,
+					description,
+					basePrice: basePrice.toString(),
+					parameters,
+					categories
+				})
+				.returning({ newId: examType.id });
+
+			const newId = insertResponse[0]?.newId;
+			if (!newId) {
+				throw new Error('No se guardo el tipo de exámen');
+			}
+
+			return message(form, { text: 'Tipo de exámen creado correctamente', type: 'success' });
+		} catch (e) {
+			// Default message
+			let errMsg = 'Ha ocurrido un error';
+
+			if (e instanceof postgres.PostgresError) {
+				console.error('PostgresError');
+				errMsg = errMsg + ' - PG';
+			} else if (e instanceof Error) {
+				console.error('Unknown error');
+				console.error(e);
+			}
+
+			return message(form, { text: errMsg, type: 'error' }, { status: 500 });
 		}
 	}
 };
