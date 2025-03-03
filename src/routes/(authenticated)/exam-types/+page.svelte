@@ -12,23 +12,18 @@
 	<p class="text-center text-3xl">Tipos de exámenes</p>
 
 	<div class="flex w-full justify-evenly">
-		<SearchBar
-			bind:inputSearch
-			placeholder="Busca un examen por paciente o tipo de examen"
-			wrapperClass="w-4/5"
-		/>
+		<SearchBar bind:inputSearch placeholder="Buscar tipo exámen por nombre" wrapperClass="w-4/5" />
 		<Link
 			href="/exam-types/create"
-			title="Crear nuevo examen"
+			title="Crear nuevo exámen"
 			class="flex items-center justify-center gap-x-1 text-xl"
 		>
 			<span> Nuevo </span>
-
 			<Icon src={LibraryPlus} size="24" class="mt-1 text-white" />
 		</Link>
 	</div>
 
 	<div class="mt-4 grid grid-cols-2 gap-3">
-		<p>Lista de tipos de examenes</p>
+		<p>Lista de tipos de exámenes</p>
 	</div>
 </div>
