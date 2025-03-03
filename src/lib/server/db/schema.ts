@@ -146,7 +146,7 @@ export const patient = pgTable('patient', {
 });
 
 // Patient relations declarations
-export const patientRelations = relations(user, ({ many }) => ({
+export const patientRelations = relations(patient, ({ many }) => ({
 	exams: many(exam)
 }));
 
