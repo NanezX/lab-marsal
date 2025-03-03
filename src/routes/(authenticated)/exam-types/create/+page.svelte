@@ -10,6 +10,7 @@
 	import { generateName } from '$lib/shared/utils';
 	import { tick } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { showToast } from '$lib/toasts.js';
 
 	type ExamParemeterInput = {
 		name: string;
@@ -23,7 +24,19 @@
 	let { data } = $props();
 
 	const { form, errors, enhance } = superForm(data.examTypeForm, {
-		dataType: 'json'
+		dataType: 'json',
+		delayMs: 0,
+		applyAction: true,
+		onUpdated({ form }) {
+			// Display message based on the response
+			if (form.message) {
+				showToast(form.message.text, form.message.type);
+
+				if (form.message.type == 'success') {
+					goto('/exam-types');
+				}
+			}
+		}
 	});
 
 	// State to active/inactive category edition
