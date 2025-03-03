@@ -88,7 +88,7 @@ export const actions: Actions = {
 			// because this is intented to be an internal application on the organization
 			return message(
 				form,
-				{ text: 'Ya existe un tipo de examen con este nombre', type: 'error' },
+				{ text: 'Nombre de tipo de examen ya existente', type: 'error' },
 				{ status: 409 }
 			);
 		}
