@@ -3,7 +3,6 @@
 	import Input from '$lib/components/Input.svelte';
 	import Textarea from '$lib/components/Textarea.svelte';
 	import { fade } from 'svelte/transition';
-	import type { ExamParemeterInput } from './params';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { Cancel, Check, CirclePlus, CopyPlus, PencilMinus } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
@@ -11,6 +10,15 @@
 	import { generateName } from '$lib/shared/utils';
 	import { tick } from 'svelte';
 	import { goto } from '$app/navigation';
+
+	type ExamParemeterInput = {
+		name: string;
+		type: 'text';
+		category?: string;
+		unit: string;
+		hasReferences: boolean;
+		referenceValues: string[];
+	};
 
 	let { data } = $props();
 
@@ -25,7 +33,7 @@
 		// Base parameter
 		const initParameter: ExamParemeterInput = {
 			name: '',
-			type: 'text', // | "number";
+			type: 'text',
 			category: undefined,
 			unit: '',
 			hasReferences: false,
