@@ -17,6 +17,9 @@
 		dataType: 'json'
 	});
 
+	// State to active/inactive category edition
+	let categoriesStatus: { [key: number]: string } = $state({});
+
 	async function addParameter(category?: string): Promise<void> {
 		// Base parameter
 		const initParameter: ExamParemeterInput = {
@@ -95,8 +98,6 @@
 			inline: 'center'
 		});
 	}
-
-	let categoriesStatus: { [key: number]: string } = $state({});
 
 	function editCategory(categoryIndex_: number) {
 		categoriesStatus[categoryIndex_] = $form.categories[categoryIndex_];
