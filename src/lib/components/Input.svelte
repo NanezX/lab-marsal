@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Icon, type IconSource } from '@steeze-ui/svelte-icon';
-	import type { ClassValue, FocusEventHandler } from 'svelte/elements';
+	import type { ClassValue, FocusEventHandler, FormEventHandler } from 'svelte/elements';
 	import { fade } from 'svelte/transition';
 	import { v4 as uuidv4 } from 'uuid';
 
@@ -25,6 +25,7 @@
 		autoComplete?: boolean;
 		onfocus?: FocusEventHandler<HTMLInputElement>;
 		error?: string[] | string | undefined;
+		oninput?: FormEventHandler<HTMLInputElement> | null;
 	};
 
 	// Prop deconstruct
@@ -47,7 +48,8 @@
 		step,
 		autoComplete = true,
 		onfocus,
-		error
+		error,
+		oninput
 	}: PropType = $props();
 
 	// Reusable classes
@@ -89,6 +91,7 @@
 		{max}
 		{maxlength}
 		{step}
+		{oninput}
 		autocomplete={!autoComplete ? 'new-password' : undefined}
 	/>
 

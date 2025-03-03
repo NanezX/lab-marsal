@@ -5,14 +5,15 @@
 	import { LibraryPlus } from '@steeze-ui/tabler-icons';
 	import { fade } from 'svelte/transition';
 	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
 
 	let { data } = $props();
 
-	let inputSearch = $state('');
+	let nameSearch = $state('');
 
 	let pageSize = $state(3);
 
-	let totalItems = $state(data.countTotal);
+	let totalItems = $derived(data.countTotal);
 	let totalPages = $derived(Math.ceil(totalItems / pageSize));
 
 	let currentPage = $derived(Number(page.url.searchParams.get('skip') || 0) / pageSize);
@@ -22,7 +23,16 @@
 	<p class="text-center text-3xl">Tipos de exámenes</p>
 
 	<div class="flex w-full justify-evenly">
-		<SearchBar bind:inputSearch placeholder="Buscar tipo exámen por nombre" wrapperClass="w-4/5" />
+		<SearchBar
+			id="searchExamType"
+			bind:inputSearch={nameSearch}
+			placeholder="Buscar tipo exámen por nombre"
+			wrapperClass="w-4/5"
+			debounceTime={500}
+			debounceCallback={async () => {
+				goto(`/exam-types?limit=${pageSize}&skip=${pageSize * currentPage}&name=${nameSearch}`);
+			}}
+		/>
 		<Link
 			href="/exam-types/create"
 			title="Crear nuevo exámen"
@@ -48,7 +58,7 @@
 	>
 		<!-- Back -->
 		<a
-			href="/exam-types?limit={pageSize}&skip={pageSize * (currentPage - 1)}"
+			href="/exam-types?limit={pageSize}&skip={pageSize * (currentPage - 1)}&name={nameSearch}"
 			class={{
 				'pointer-events-none opacity-50': currentPage === 0
 			}}
@@ -58,7 +68,7 @@
 
 		{#each Array(totalPages) as _, index}
 			<a
-				href="/exam-types?limit={pageSize}&skip={pageSize * index}"
+				href="/exam-types?limit={pageSize}&skip={pageSize * index}&name={nameSearch}"
 				class={{
 					'text-blue-500': index === currentPage
 				}}
@@ -69,7 +79,7 @@
 
 		<!-- Next -->
 		<a
-			href="/exam-types?limit={pageSize}&skip={pageSize * (currentPage + 1)}"
+			href="/exam-types?limit={pageSize}&skip={pageSize * (currentPage + 1)}&name={nameSearch}"
 			class={{
 				'pointer-events-none opacity-50': totalPages < 1 || currentPage === totalPages - 1
 			}}
