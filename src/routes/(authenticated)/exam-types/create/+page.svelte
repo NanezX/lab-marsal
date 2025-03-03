@@ -6,7 +6,6 @@
 	import type { ExamParemeterInput } from './params';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { Cancel, Check, CirclePlus, CopyPlus, PencilMinus } from '@steeze-ui/tabler-icons';
-	import ModalEditCategory from '$lib/components/modal/ModalEditCategory.svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import ParametersCompo from '$lib/components/ParametersCompo.svelte';
 	import { generateName } from '$lib/shared/utils';
@@ -97,9 +96,6 @@
 		});
 	}
 
-	let isEditingCategory = $state(false);
-	let editingCategoryIndex: null | number = $state(null);
-
 	let categoriesStatus: { [key: number]: string } = $state({});
 
 	function editCategory(categoryIndex_: number) {
@@ -128,17 +124,6 @@
 	}
 </script>
 
-<!-- Modal to edit the category name -->
-{#if editingCategoryIndex !== null}
-	<ModalEditCategory
-		bind:showModal={isEditingCategory}
-		bind:categories={$form.categories}
-		bind:editingIndex={editingCategoryIndex}
-		bind:baseParameters={$form.parameters}
-	/>
-{/if}
-
-<!-- ACTUAL PAGE -->
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
 
