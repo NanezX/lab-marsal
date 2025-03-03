@@ -8,7 +8,7 @@
 	import { Cancel, Check, CirclePlus, CopyPlus, PencilMinus } from '@steeze-ui/tabler-icons';
 	import ModalEditCategory from '$lib/components/modal/ModalEditCategory.svelte';
 	import { superForm } from 'sveltekit-superforms';
-	import ParametersCompo from './ParametersCompo.svelte';
+	import ParametersCompo from '../../../../lib/components/ParametersCompo.svelte';
 	import { generateName } from '$lib/shared/utils';
 	import { tick } from 'svelte';
 
