@@ -4,8 +4,18 @@
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { LibraryPlus } from '@steeze-ui/tabler-icons';
 	import { fade } from 'svelte/transition';
+	import { page } from '$app/state';
+
+	let { data } = $props();
 
 	let inputSearch = $state('');
+
+	let pageSize = $state(3);
+
+	let totalItems = $state(data.countTotal);
+	let totalPages = $derived(Math.ceil(totalItems / pageSize));
+
+	let currentPage = $derived(Number(page.url.searchParams.get('skip') || 0) / pageSize);
 </script>
 
 <div in:fade class="flex w-full flex-col gap-y-8">
@@ -23,7 +33,50 @@
 		</Link>
 	</div>
 
-	<div class="mt-4 grid grid-cols-2 gap-3">
-		<p>Lista de tipos de exámenes</p>
+	<div class="mt-4 flex flex-col gap-y-2">
+		{#each data.examTypesData as examType, index}
+			<p>
+				{pageSize * currentPage + index + 1}.
+				<strong>{examType.name}</strong>
+			</p>
+		{/each}
 	</div>
+
+	<!-- Pagination -->
+	<div
+		class="direct-children:hover:text-blue-700 direct-children:hover:underline mx-auto w-fit space-x-2 text-lg font-semibold"
+	>
+		<!-- Back -->
+		<a
+			href="/exam-types?limit={pageSize}&skip={pageSize * (currentPage - 1)}"
+			class={{
+				'pointer-events-none opacity-50': currentPage === 0
+			}}
+		>
+			{'<'}
+		</a>
+
+		{#each Array(totalPages) as _, index}
+			<a
+				href="/exam-types?limit={pageSize}&skip={pageSize * index}"
+				class={{
+					'text-blue-500': index === currentPage
+				}}
+			>
+				{index + 1}
+			</a>
+		{/each}
+
+		<!-- Next -->
+		<a
+			href="/exam-types?limit={pageSize}&skip={pageSize * (currentPage + 1)}"
+			class={{
+				'pointer-events-none opacity-50': totalPages < 1 || currentPage === totalPages - 1
+			}}
+		>
+			{'>'}
+		</a>
+	</div>
+
+	<p>{data.countTotal}</p>
 </div>
