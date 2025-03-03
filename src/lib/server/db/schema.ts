@@ -9,9 +9,11 @@ import {
 	jsonb,
 	integer,
 	decimal,
-	varchar
+	varchar,
+	uniqueIndex,
+	type AnyPgColumn
 } from 'drizzle-orm/pg-core';
-import { relations, sql } from 'drizzle-orm';
+import { relations, SQL, sql } from 'drizzle-orm';
 import { generateRandomUUID } from './uuid';
 
 // TODO: Check on https://orm.drizzle.team/docs/column-types/pg#jsonb for type inference for jsonb columns on database
@@ -43,6 +45,10 @@ export const patientGenderEnum = pgEnum('patient_gender', [
 	PatientGender.Male,
 	PatientGender.Female
 ]);
+
+export function lower(email: AnyPgColumn): SQL {
+	return sql`lower(${email})`;
+}
 
 const baseTable = {
 	// ID of the row
@@ -107,16 +113,20 @@ export const config = pgTable('configuration', {
 });
 
 // User table
-export const user = pgTable('user', {
-	...baseTable,
-	email: text().notNull().unique(),
-	passwordHash: text('password_hash').notNull(),
-	firstName: text().notNull(),
-	lastName: text().notNull(),
-	role: userRoleEnum().notNull(),
-	documentId: integer('document_id').notNull().unique(),
-	birthdate: timestamp({ withTimezone: true, mode: 'date' }).notNull()
-});
+export const user = pgTable(
+	'user',
+	{
+		...baseTable,
+		email: text().notNull().unique(),
+		passwordHash: text('password_hash').notNull(),
+		firstName: text().notNull(),
+		lastName: text().notNull(),
+		role: userRoleEnum().notNull(),
+		documentId: integer('document_id').notNull().unique(),
+		birthdate: timestamp({ withTimezone: true, mode: 'date' }).notNull()
+	},
+	(table) => [uniqueIndex('emailUniqueIndex').on(lower(table.email))]
+);
 
 // User relations declarations
 export const userRelations = relations(user, ({ many }) => ({
@@ -141,19 +151,23 @@ export const patientRelations = relations(user, ({ many }) => ({
 }));
 
 // Exam type table
-export const examType = pgTable('exam_type', {
-	...baseTable,
-	name: text().notNull().unique(),
-	description: text(),
-	basePrice: decimal('base_price', { precision: 19, scale: 3 }).notNull(),
-	clasification: text().notNull().unique(),
-	parameters: jsonb().notNull(),
-	categories: text()
-		.array()
-		.notNull()
-		.default(sql`ARRAY[]::text[]`)
-	// formulas: jsonb().notNull(),
-});
+export const examType = pgTable(
+	'exam_type',
+	{
+		...baseTable,
+		name: text().notNull().unique(),
+		description: text(),
+		basePrice: decimal('base_price', { precision: 19, scale: 3 }).notNull(),
+		parameters: jsonb().notNull(),
+		categories: text()
+			.array()
+			.notNull()
+			.default(sql`ARRAY[]::text[]`)
+		// clasification: text().notNull().unique(),
+		// formulas: jsonb().notNull(),
+	},
+	(table) => [uniqueIndex('nameUniqueIndex').on(lower(table.name))]
+);
 
 // Exam type relations declarations
 export const examTypeRelations = relations(examType, ({ many }) => ({
