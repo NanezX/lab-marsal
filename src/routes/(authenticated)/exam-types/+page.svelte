@@ -12,7 +12,7 @@
 
 	let nameSearch = $state('');
 
-	let pageSize = $state(3);
+	let pageSize = $state(10);
 
 	let totalItems = $derived(data.countTotal);
 	let totalPages = $derived(Math.ceil(totalItems / pageSize));
@@ -58,40 +58,6 @@
 	</div>
 
 	<!-- Pagination -->
-	<div
-		class="direct-children:hover:text-blue-700 direct-children:hover:underline mx-auto w-fit space-x-2 text-lg font-semibold"
-	>
-		<!-- Back -->
-		<a
-			href="/exam-types?limit={pageSize}&skip={pageSize * (currentPage - 1)}&name={nameSearch}"
-			class={{
-				'pointer-events-none opacity-50': currentPage === 0
-			}}
-		>
-			{'<'}
-		</a>
-
-		{#each Array(totalPages) as _, index}
-			<a
-				href="/exam-types?limit={pageSize}&skip={pageSize * index}&name={nameSearch}"
-				class={{
-					'text-blue-500': index === currentPage
-				}}
-			>
-				{index + 1}
-			</a>
-		{/each}
-
-		<!-- Next -->
-		<a
-			href="/exam-types?limit={pageSize}&skip={pageSize * (currentPage + 1)}&name={nameSearch}"
-			class={{
-				'pointer-events-none opacity-50': totalPages < 1 || currentPage === totalPages - 1
-			}}
-		>
-			{'>'}
-		</a>
-	</div>
 
 	<FilterControls
 		baseUrl="/exam-types"
