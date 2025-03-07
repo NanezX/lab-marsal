@@ -11,7 +11,9 @@
 		class?: ClassValue;
 		wrapperClass?: ClassValue;
 		debounceTime?: number;
-		debounceCallback?: (input: string | number) => Promise<void>;
+		debounceCallback?:
+			| ((input: string | number) => Promise<void>)
+			| ((input: string | number) => void);
 	};
 
 	let {

@@ -17,6 +17,12 @@
 	let totalPages = $derived(Math.ceil(totalItems / pageSize));
 
 	let currentPage = $derived(Number(page.url.searchParams.get('skip') || 0) / pageSize);
+
+	function getExamTypes(limit: number = 10, skip: number = 0) {
+		goto(`/exam-types?name=${nameSearch}`, {
+			keepFocus: true
+		});
+	}
 </script>
 
 <div in:fade class="flex w-full flex-col gap-y-8">
@@ -29,9 +35,7 @@
 			placeholder="Buscar tipo exámen por nombre"
 			wrapperClass="w-4/5"
 			debounceTime={500}
-			debounceCallback={async () => {
-				goto(`/exam-types?limit=${pageSize}&skip=${pageSize * currentPage}&name=${nameSearch}`);
-			}}
+			debounceCallback={() => getExamTypes(pageSize, pageSize * currentPage)}
 		/>
 		<Link
 			href="/exam-types/create"
