@@ -12,7 +12,7 @@
 
 	let nameSearch = $state('');
 
-	let pageSize = $state(10);
+	let pageSize = $state(5);
 
 	let totalItems = $derived(data.countTotal);
 	let totalPages = $derived(Math.ceil(totalItems / pageSize));
@@ -58,11 +58,10 @@
 	</div>
 
 	<!-- Pagination -->
-
 	<FilterControls
 		baseUrl="/exam-types"
+		{pageSize}
 		bind:currentPage={() => currentPage, (v) => (currentPage = v)}
-		bind:pageSize
 		bind:totalPages={() => totalPages, (v) => (totalPages = v)}
 		bind:queryParams={
 			() => {

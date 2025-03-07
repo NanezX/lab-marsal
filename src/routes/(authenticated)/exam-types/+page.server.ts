@@ -3,7 +3,7 @@ import { examType } from '$lib/server/db/schema';
 import { asc, count, ilike } from 'drizzle-orm';
 
 export const load = async ({ url }) => {
-	let limit = Number(url.searchParams.get('limit') || 10);
+	let limit = Number(url.searchParams.get('limit') || 5);
 	const skip = Number(url.searchParams.get('skip') || 0);
 	const name = url.searchParams.get('name');
 
