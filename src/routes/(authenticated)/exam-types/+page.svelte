@@ -6,6 +6,7 @@
 	import { fade } from 'svelte/transition';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
+	import FilterControls from '$lib/components/FilterControls.svelte';
 
 	let { data } = $props();
 
@@ -92,5 +93,18 @@
 		</a>
 	</div>
 
-	<p>{data.countTotal}</p>
+	<FilterControls
+		baseUrl="/exam-types"
+		bind:currentPage={() => currentPage, (v) => (currentPage = v)}
+		bind:pageSize
+		bind:totalPages={() => totalPages, (v) => (totalPages = v)}
+		bind:queryParams={
+			() => {
+				return { name: nameSearch };
+			},
+			(v) => {
+				nameSearch = v['name'];
+			}
+		}
+	/>
 </div>
