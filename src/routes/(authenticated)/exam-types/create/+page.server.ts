@@ -101,7 +101,6 @@ export const actions: Actions = {
 					name,
 					description,
 					basePrice: basePrice.toString(),
-					parameters,
 					categories
 				})
 				.returning({ newId: examType.id });
@@ -110,6 +109,9 @@ export const actions: Actions = {
 			if (!newId) {
 				throw new Error('No se guardo el tipo de exámen');
 			}
+
+			// TODO: Include the parameters into his table with reference to the exam type
+			console.log('parameters: ', parameters);
 
 			return message(form, { text: 'Tipo de exámen creado correctamente', type: 'success' });
 		} catch (e) {
