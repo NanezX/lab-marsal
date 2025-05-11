@@ -74,6 +74,7 @@ export const actions: Actions = {
 
 		if (!form.valid) {
 			console.log('form not valid');
+			console.log(JSON.stringify(form.errors, null, 2));
 			// Again, return { form } and things will just work.
 			return failForms(400, { form });
 		}
