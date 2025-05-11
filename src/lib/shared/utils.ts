@@ -1,3 +1,6 @@
+import type { Dictionary } from 'lodash';
+import { chain } from 'lodash-es';
+
 export function isObject(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -24,6 +27,21 @@ export function generateName(
 	}
 
 	return newCategory;
+}
+
+export function deleteAndReindex<T>(
+	obj: Record<string, T>,
+	keyToDelete: number | string
+): Dictionary<T> {
+	// Convert keyToDelete to string to match object keys
+	const keyStr = String(keyToDelete);
+
+	return chain(obj)
+		.toPairs()
+		.filter(([key]) => key !== keyStr) // Remove the target key
+		.map(([_, value], newIndex) => [String(newIndex), value]) // Reindex
+		.fromPairs()
+		.value();
 }
 
 export const minDocumentId = 0;
