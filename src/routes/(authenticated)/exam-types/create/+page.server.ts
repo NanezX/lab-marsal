@@ -4,21 +4,19 @@ import { z } from 'zod';
 import type { Actions } from './$types';
 import { findExamTypeByName } from '$lib/server/utils/dbQueries';
 import postgres from 'postgres';
-import { examType } from '$lib/server/db/schema';
+import { examType, parameter as parameterTable } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 
 const examParameterSchema = z.object({
 	// Positon of the parameter in the form
-	position: z.number().min(0),
 	// Parameter data
-	parameter: z.object({
-		name: z.string().min(1, 'El parámetro debe tener un nombre'),
-		type: z.literal('text'),
-		category: z.string().min(1).optional(),
-		unit: z.string().min(1, 'Debe especificar la unidad del parámetro'),
-		hasReferences: z.boolean(),
-		referenceValues: z.array(z.string().min(1, 'Debe ingresar el valor de referencia'))
-	})
+	position: z.number().min(0),
+	name: z.string().min(1, 'El parámetro debe tener un nombre'),
+	type: z.literal('text'),
+	category: z.string().min(1).optional(),
+	unit: z.string().min(1, 'Debe especificar la unidad del parámetro'),
+	hasReferences: z.boolean(),
+	referenceValues: z.array(z.string().min(1, 'Debe ingresar el valor de referencia'))
 });
 
 const examTypeSchema = z
@@ -34,14 +32,12 @@ const examTypeSchema = z
 			.default([
 				{
 					position: 0,
-					parameter: {
-						name: '',
-						type: 'text', // | "number";
-						category: undefined,
-						unit: '',
-						hasReferences: false,
-						referenceValues: []
-					}
+					name: '',
+					type: 'text', // | "number";
+					category: undefined,
+					unit: '',
+					hasReferences: false,
+					referenceValues: []
 				}
 			])
 	})
@@ -49,10 +45,10 @@ const examTypeSchema = z
 		// Check each parameter
 		obj.parameters.forEach((param, index) => {
 			// If the parameter has a category, it must exist in the categories array
-			if (param.parameter.category && !obj.categories.includes(param.parameter.category)) {
+			if (param.category && !obj.categories.includes(param.category)) {
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,
-					message: `La categoría "${param.parameter.category}" no existe en la lista de categorías`,
+					message: `La categoría "${param.category}" no existe en la lista de categorías`,
 					path: ['parameters', index, 'parameter', 'category']
 				});
 			}
@@ -113,6 +109,9 @@ export const actions: Actions = {
 
 			// TODO: Include the parameters into his table with reference to the exam type
 			console.log('parameters: ', parameters);
+
+			// parameters
+			db.insert(parameterTable);
 
 			return message(form, { text: 'Tipo de exámen creado correctamente', type: 'success' });
 		} catch (e) {
