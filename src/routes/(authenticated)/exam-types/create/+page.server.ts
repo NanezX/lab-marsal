@@ -92,7 +92,7 @@ export const actions: Actions = {
 
 		try {
 			// Inserting the exam type to the database
-			const insertResponse = await db
+			const insertExamTypeResponse = await db
 				.insert(examType)
 				.values({
 					name,
@@ -102,16 +102,18 @@ export const actions: Actions = {
 				})
 				.returning({ newId: examType.id });
 
-			const newId = insertResponse[0]?.newId;
-			if (!newId) {
+			const newExamTypeId = insertExamTypeResponse[0]?.newId;
+			if (!newExamTypeId) {
 				throw new Error('No se guardo el tipo de exámen');
 			}
 
-			// TODO: Include the parameters into his table with reference to the exam type
-			console.log('parameters: ', parameters);
-
-			// parameters
-			db.insert(parameterTable);
+			// Insert parameters rows
+			await db.insert(parameterTable).values(
+				parameters.map((param_) => ({
+					...param_,
+					examTypeId: newExamTypeId
+				}))
+			);
 
 			return message(form, { text: 'Tipo de exámen creado correctamente', type: 'success' });
 		} catch (e) {
