@@ -95,7 +95,7 @@
 		if ($form.parameters[paramIndex_] !== undefined) {
 			// Add a new reference value
 			form.update(($form) => {
-				$form.parameters[paramIndex_].parameter.referenceValues.push('');
+				$form.parameters[paramIndex_].referenceValues.push('');
 				return $form;
 			});
 		}
@@ -105,11 +105,11 @@
 		// Check if the parameter and ref value exists and if it has more than one element
 		if (
 			$form.parameters[paramIndex_] !== undefined &&
-			$form.parameters[paramIndex_].parameter.referenceValues.length > 1 &&
-			$form.parameters[paramIndex_].parameter.referenceValues !== undefined
+			$form.parameters[paramIndex_].referenceValues.length > 1 &&
+			$form.parameters[paramIndex_].referenceValues !== undefined
 		) {
 			form.update(($form) => {
-				$form.parameters[paramIndex_].parameter.referenceValues.splice(refValueIndex_, 1);
+				$form.parameters[paramIndex_].referenceValues.splice(refValueIndex_, 1);
 				return $form;
 			});
 		}
@@ -124,7 +124,7 @@
      - If no `category` prop is passed, all the parameters will be render
      - If a `category` prop is passed, only the parameters with the same category will be rendered
     -->
-	{#if category === undefined || (category && $form.parameters[index].parameter.category === category)}
+	{#if category === undefined || (category && $form.parameters[index].category === category)}
 		<div
 			role="definition"
 			class="drag-container flex items-center gap-x-2"
@@ -161,46 +161,46 @@
 			>
 				<div class="grid grid-cols-2 items-start gap-4">
 					<Input
-						bind:value={$form.parameters[index].parameter.name}
+						bind:value={$form.parameters[index].name}
 						name={`parameter-${index}-name${category ? `-${category}` : ''}`}
 						label="Nombre del parámetro"
 						placeholder="Nombre del parámetro"
 						autoComplete={false}
-						error={$errors?.parameters?.[index]?.parameter?.name}
+						error={$errors?.parameters?.[index]?.name}
 					/>
 					<Input
-						bind:value={$form.parameters[index].parameter.unit}
+						bind:value={$form.parameters[index].unit}
 						name="unit"
 						label="Unidad del parámetro"
 						placeholder="Unidad del parámetro"
 						autoComplete={false}
-						error={$errors?.parameters?.[index]?.parameter?.unit}
+						error={$errors?.parameters?.[index]?.unit}
 					/>
 
 					<Checkbox
 						bind:value={
-							() => $form.parameters[index].parameter.hasReferences,
+							() => $form.parameters[index].hasReferences,
 							(v) => {
-								if (v) $form.parameters[index].parameter.referenceValues = [''];
-								$form.parameters[index].parameter.hasReferences = v;
+								if (v) $form.parameters[index].referenceValues = [''];
+								$form.parameters[index].hasReferences = v;
 							}
 						}
 						text="Añadir valores de referencia"
 						wrapperClass="!ml-0 !text-base"
 					/>
 
-					{#if $form.parameters[index].parameter.hasReferences}
+					{#if $form.parameters[index].hasReferences}
 						<div class="flex flex-col gap-y-1">
 							<p class="ml-2 font-semibold">Valores de referencia</p>
-							{#each $form.parameters[index].parameter.referenceValues as _, j_index (j_index)}
+							{#each $form.parameters[index].referenceValues as _, j_index (j_index)}
 								<div class="flex gap-x-2">
 									<Input
 										wrapperClass="w-7/8"
-										bind:value={$form.parameters[index].parameter.referenceValues[j_index]}
+										bind:value={$form.parameters[index].referenceValues[j_index]}
 										name={`parameter-${index}-name-CATEGORY}`}
 										placeholder="Valor de referencia"
 										autoComplete={false}
-										error={$errors?.parameters?.[index]?.parameter?.referenceValues?.[j_index]}
+										error={$errors?.parameters?.[index]?.referenceValues?.[j_index]}
 									/>
 
 									<Button

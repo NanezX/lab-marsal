@@ -13,6 +13,7 @@
 	import { showToast } from '$lib/toasts.js';
 
 	type ExamParemeterInput = {
+		position: number;
 		name: string;
 		type: 'text';
 		category?: string;
@@ -43,8 +44,12 @@
 	let categoriesStatus: { [key: number]: string } = $state({});
 
 	async function addParameter(category?: string): Promise<void> {
+		// New position to be added
+		const newPosition = $form.parameters.length;
+
 		// Base parameter
 		const initParameter: ExamParemeterInput = {
+			position: newPosition,
 			name: '',
 			type: 'text',
 			category: undefined,
@@ -58,12 +63,11 @@
 			category = $form.categories[0];
 		}
 
-		const newIndex = $form.parameters.length;
-
 		form.update(($form) => {
 			$form.parameters.push({
-				position: newIndex,
-				parameter: { ...initParameter, category }
+				...initParameter,
+				category,
+				position: newPosition
 			});
 			return $form;
 		});
@@ -72,7 +76,7 @@
 		await tick();
 
 		// Go to element parameter
-		gotoElementBySelector(`[data-param-index="${newIndex}"]`);
+		gotoElementBySelector(`[data-param-index="${newPosition}"]`);
 	}
 
 	function addCategory() {
@@ -84,7 +88,7 @@
 			// Since there was no category created, assign each parameter to the new one
 			form.update(($form) => {
 				$form.parameters.forEach((param_) => {
-					param_.parameter.category = newCategory;
+					param_.category = newCategory;
 				});
 				return $form;
 			});
@@ -100,7 +104,7 @@
 
 	function removeCategory(category: string, categoryIndex: number) {
 		form.update(($form) => {
-			const newParams = $form.parameters.filter((param_) => param_.parameter.category !== category);
+			const newParams = $form.parameters.filter((param_) => param_.category !== category);
 			$form.parameters = newParams;
 			$form.categories.splice(categoryIndex, 1);
 
@@ -133,8 +137,8 @@
 		form.update(($form) => {
 			// Rename the category of each parameter to the new one
 			$form.parameters.forEach((param_) => {
-				if (param_.parameter.category === $form.categories[categoryIndex_]) {
-					param_.parameter.category = categoriesStatus[categoryIndex_];
+				if (param_.category === $form.categories[categoryIndex_]) {
+					param_.category = categoriesStatus[categoryIndex_];
 				}
 			});
 
