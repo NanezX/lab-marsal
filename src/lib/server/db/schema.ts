@@ -153,12 +153,13 @@ export const patientRelations = relations(patient, ({ many }) => ({
 // Parameter table
 export const parameter = pgTable('parameter', {
 	...baseTable,
+	position: integer().notNull(),
 	name: text().notNull(),
 	type: text().notNull(),
 	category: text(),
 	unit: text().notNull(),
-	hasReferences: boolean().notNull(),
-	referenceValues: text()
+	hasReferences: boolean('has_references').notNull(),
+	referenceValues: text('reference_values')
 		.array()
 		.notNull()
 		.default(sql`ARRAY[]::text[]`),
