@@ -91,42 +91,49 @@ export const actions: Actions = {
 		}
 
 		try {
-			// Inserting the exam type to the database
-			const insertExamTypeResponse = await db
-				.insert(examType)
-				.values({
-					name,
-					description,
-					basePrice: basePrice.toString(),
-					categories
-				})
-				.returning({ newId: examType.id });
+			// Doing inserts within the same transaction to handle rollbacks too in case any failure
+			await db.transaction(async (tx) => {
+				// Inserting the exam type to the database
+				const insertExamTypeResponse = await tx
+					.insert(examType)
+					.values({
+						name,
+						description,
+						basePrice: basePrice.toString(),
+						categories
+					})
+					.returning({ insertedId: examType.id });
 
-			const newExamTypeId = insertExamTypeResponse[0]?.newId;
-			if (!newExamTypeId) {
-				throw new Error('No se guardo el tipo de exámen');
-			}
+				// Get and check the inserted ID
+				const insertedId = insertExamTypeResponse[0]?.insertedId;
+				if (!insertedId) {
+					throw new Error('El tipo de exámen no fue insertado en la tabla');
+				}
 
-			// Insert parameters rows
-			await db.insert(parameterTable).values(
-				parameters.map((param_) => ({
-					...param_,
-					examTypeId: newExamTypeId
-				}))
-			);
+				// Insert parameters rows with the exam type relationship
+				await tx.insert(parameterTable).values(
+					parameters.map((param_) => ({
+						...param_,
+						examTypeId: insertedId
+					}))
+				);
+			});
 
 			return message(form, { text: 'Tipo de exámen creado correctamente', type: 'success' });
 		} catch (e) {
 			// Default message
-			let errMsg = 'Ha ocurrido un error';
+			let errMsg = 'No se guardó el tipo de exámen';
 
+			// Print the error type
 			if (e instanceof postgres.PostgresError) {
 				console.error('PostgresError');
 				errMsg = errMsg + ' - PG';
 			} else if (e instanceof Error) {
 				console.error('Unknown error');
-				console.error(e);
 			}
+
+			// Print the error
+			console.error(e);
 
 			return message(form, { text: errMsg, type: 'error' }, { status: 500 });
 		}
