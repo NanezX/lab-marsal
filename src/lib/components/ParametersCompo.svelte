@@ -209,44 +209,44 @@
 						text="Añadir valores de referencia"
 						wrapperClass="!ml-0 !text-base"
 					/>
-
-					{#if $form.parameters[index].hasReferences}
-						<div class="flex flex-col gap-y-1">
-							<p class="ml-2 font-semibold">Valores de referencia</p>
-							{#each $form.parameters[index].referenceValues as _, j_index (j_index)}
-								<div class="flex gap-x-2">
-									<Input
-										wrapperClass="w-7/8"
-										bind:value={$form.parameters[index].referenceValues[j_index]}
-										name={`parameter-${index}-name-CATEGORY}`}
-										placeholder="Valor de referencia"
-										autoComplete={false}
-										error={$errors?.parameters?.[index]?.referenceValues?.[j_index]}
-									/>
-
-									<Button
-										class="!bg-inherit !p-0"
-										title="Eliminar valor de referencia"
-										onclick={() => {
-											removeRefValue(index, j_index);
-										}}
-									>
-										<Icon src={X} size="22" class="text-red-400 hover:text-red-600" />
-									</Button>
-								</div>
-							{/each}
-
-							<Button
-								onclick={() => addRefValue(index)}
-								title="Añadir nuevo valor de referencia"
-								class="not-hover:text-primary-blue hover:text-dark-blue mx-auto mt-1 flex gap-x-1 !bg-inherit !p-0"
-							>
-								<p class="hover:underline">Añadir</p>
-								<Icon src={TextPlus} size="24" class="" />
-							</Button>
-						</div>
-					{/if}
 				</div>
+
+				{#if $form.parameters[index].hasReferences}
+					<div class="mt-2 flex flex-col gap-y-1">
+						<p class="ml-2 font-semibold">Valores de referencia</p>
+						{#each $form.parameters[index].referenceValues as _, j_index (j_index)}
+							<div class="flex gap-x-2">
+								<Input
+									wrapperClass="w-7/8"
+									bind:value={$form.parameters[index].referenceValues[j_index]}
+									name={`parameter-${index}-name-CATEGORY}`}
+									placeholder="Valor de referencia"
+									autoComplete={false}
+									error={$errors?.parameters?.[index]?.referenceValues?.[j_index]}
+								/>
+
+								<Button
+									class="!bg-inherit !p-0"
+									title="Eliminar valor de referencia"
+									onclick={() => {
+										removeRefValue(index, j_index);
+									}}
+								>
+									<Icon src={X} size="22" class="text-red-400 hover:text-red-600" />
+								</Button>
+							</div>
+						{/each}
+
+						<Button
+							onclick={() => addRefValue(index)}
+							title="Añadir nuevo valor de referencia"
+							class="not-hover:text-primary-blue hover:text-dark-blue mx-auto mt-1 flex gap-x-1 !bg-inherit !p-0"
+						>
+							<p class="hover:underline">Añadir</p>
+							<Icon src={TextPlus} size="24" class="" />
+						</Button>
+					</div>
+				{/if}
 			</div>
 
 			<Button
