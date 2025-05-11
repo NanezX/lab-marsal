@@ -7,9 +7,6 @@ export const load = async ({ url }) => {
 	const skip = Number(url.searchParams.get('skip') || 0);
 	const name = url.searchParams.get('name');
 
-	console.log('name: ', name);
-	console.log('name.len: ', name?.length);
-
 	if (limit > 25) {
 		limit = 25;
 	}
@@ -32,7 +29,6 @@ export const load = async ({ url }) => {
 	// const examTypesData = await db.select().from(examType).orderBy(asc(examType.name)).limit(limit).offset(skip)
 	const countTotal = await countTotalQuery;
 	const examTypesData = await examTypesQuery;
-	console.log(countTotal);
 
 	return { examTypesData, countTotal: countTotal[0].count };
 };
