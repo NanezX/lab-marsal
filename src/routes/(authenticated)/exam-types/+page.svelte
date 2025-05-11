@@ -19,7 +19,7 @@
 
 	let currentPage = $derived(Number(page.url.searchParams.get('skip') || 0) / pageSize);
 
-	function getExamTypes(limit: number = 10, skip: number = 0) {
+	function getExamTypes(_limit: number = 10, _skip: number = 0) {
 		goto(`/exam-types?name=${nameSearch}`, {
 			keepFocus: true
 		});
