@@ -8,6 +8,7 @@
 	import { CircleMinus, TextPlus, X } from '@steeze-ui/tabler-icons';
 	import AddButton from '$lib/components/buttons/AddButton.svelte';
 	import type { SuperFormData, SuperFormErrors } from 'sveltekit-superforms/client';
+	import { deleteAndReindex } from '$lib/shared/utils';
 
 	// Prop type
 	type PropType = {
@@ -108,6 +109,18 @@
 			$form.parameters[paramIndex_].referenceValues.length > 1 &&
 			$form.parameters[paramIndex_].referenceValues !== undefined
 		) {
+			// First remove the error on this index if exists
+			errors.update(($errors) => {
+				if ($errors.parameters?.[paramIndex_].referenceValues) {
+					$errors.parameters[paramIndex_].referenceValues = deleteAndReindex(
+						$errors.parameters[paramIndex_].referenceValues,
+						refValueIndex_
+					);
+				}
+				return $errors;
+			});
+
+			// Then update the form
 			form.update(($form) => {
 				$form.parameters[paramIndex_].referenceValues.splice(refValueIndex_, 1);
 				return $form;
@@ -181,7 +194,15 @@
 						bind:value={
 							() => $form.parameters[index].hasReferences,
 							(v) => {
-								if (v) $form.parameters[index].referenceValues = [''];
+								if (v) {
+									$form.parameters[index].referenceValues = [''];
+								} else {
+									$form.parameters[index].referenceValues = [];
+
+									if ($errors?.parameters?.[index]?.referenceValues) {
+										$errors.parameters[index].referenceValues = undefined;
+									}
+								}
 								$form.parameters[index].hasReferences = v;
 							}
 						}
