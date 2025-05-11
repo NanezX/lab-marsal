@@ -52,7 +52,9 @@
 		{#each data.examTypesData as examType, index}
 			<p>
 				{pageSize * currentPage + index + 1}.
-				<strong>{examType.name}</strong>
+				<a href="/exam-type/{examType.id}">
+					<strong>{examType.name}</strong>
+				</a>
 			</p>
 		{/each}
 	</div>
