@@ -11,24 +11,23 @@ export const load = async ({ url }) => {
 		limit = 25;
 	}
 
-	let countTotalQuery = db.select({ count: count() }).from(examType).$dynamic();
-	let examTypesQuery = db
-		.select()
-		.from(examType)
-		.orderBy(asc(examType.name))
-		.limit(limit)
-		.offset(skip)
-		.$dynamic();
+	const { count: countTotal, data: examTypesData } = await db.transaction(async (tx) => {
+		let countTotalQuery = tx.select({ count: count() }).from(examType).$dynamic();
+		let examTypesQuery = tx
+			.select()
+			.from(examType)
+			.orderBy(asc(examType.name))
+			.limit(limit)
+			.offset(skip)
+			.$dynamic();
 
-	if (name) {
-		countTotalQuery = countTotalQuery.where(ilike(examType.name, `%${name}%`));
-		examTypesQuery = examTypesQuery.where(ilike(examType.name, `%${name}%`));
-	}
+		if (name) {
+			countTotalQuery = countTotalQuery.where(ilike(examType.name, `%${name}%`));
+			examTypesQuery = examTypesQuery.where(ilike(examType.name, `%${name}%`));
+		}
 
-	// const countTotal = await db.select({ count: count() }).from(examType);
-	// const examTypesData = await db.select().from(examType).orderBy(asc(examType.name)).limit(limit).offset(skip)
-	const countTotal = await countTotalQuery;
-	const examTypesData = await examTypesQuery;
+		return { count: await countTotalQuery, data: await examTypesQuery };
+	});
 
 	return { examTypesData, countTotal: countTotal[0].count };
 };
