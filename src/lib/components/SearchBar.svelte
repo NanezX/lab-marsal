@@ -28,19 +28,23 @@
 	}: PropType = $props();
 
 	let searching = $state(false);
-	let timeout: NodeJS.Timeout;
+	let timeout: number;
 
 	function handle_search() {
 		if (debounceCallback !== undefined) {
 			searching = true;
 
-			if (timeout) clearTimeout(timeout);
+			if (timeout !== undefined) clearTimeout(timeout);
 
-			timeout = setTimeout(async () => {
+			timeout = window.setTimeout(async () => {
 				//
 				await debounceCallback(inputSearch);
 				searching = false;
 				console.log('after callback');
+
+				if (searching) {
+					console.log('searching...');
+				}
 
 				//
 			}, debounceTime);
