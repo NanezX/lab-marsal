@@ -1,4 +1,4 @@
-import { toast } from '@zerodevx/svelte-toast';
+import { toast, type SvelteToastOptions } from '@zerodevx/svelte-toast';
 import type { SvelteComponent } from 'svelte';
 import LoadingToast from './components/toasts/LoadingToast.svelte';
 import ErrorToast from './components/toasts/ErrorToast.svelte';
@@ -71,8 +71,8 @@ export const toastError = (text: string) => {
 	});
 };
 
-export const toastSuccess = (text: string) => {
-	return toast.push(text, {
+export const toastSuccess = (text: string, duration?: number) => {
+	const options: SvelteToastOptions = {
 		component: {
 			src: SuccessToast as unknown as typeof SvelteComponent,
 			props: {
@@ -86,5 +86,12 @@ export const toastSuccess = (text: string) => {
 			'--toastBorderRadius': '0.75rem',
 			'--toastBarBackground': '#22c55e'
 		}
-	});
+	};
+
+	// Only add duration if it's defined
+	if (duration !== undefined) {
+		options.duration = duration;
+	}
+
+	return toast.push(text, options);
 };

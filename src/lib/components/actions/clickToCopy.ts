@@ -23,7 +23,7 @@ export function clickToCopy(node: HTMLElement, text: string) {
 				})
 			);
 
-			toastSuccess(`Valor copiado: ${text}`);
+			toastSuccess(`Valor copiado: ${text}`, 2000);
 		} catch (error) {
 			node.dispatchEvent(
 				new CustomEvent('copyerror', {
