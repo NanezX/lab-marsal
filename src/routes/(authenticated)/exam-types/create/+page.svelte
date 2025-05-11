@@ -3,225 +3,155 @@
 	import Input from '$lib/components/Input.svelte';
 	import Textarea from '$lib/components/Textarea.svelte';
 	import { fade } from 'svelte/transition';
-	import type { ExamParemeterInput, ParameterData } from './params';
-	import AddButton from '$lib/components/buttons/AddButton.svelte';
-	import { flip } from 'svelte/animate';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { CirclePlus, CopyPlus, CircleMinus, PencilMinus } from '@steeze-ui/tabler-icons';
-	import { v4 as uuidv4 } from 'uuid';
-	import ModalEditCategory from '$lib/components/modal/ModalEditCategory.svelte';
+	import { Cancel, Check, CirclePlus, CopyPlus, PencilMinus } from '@steeze-ui/tabler-icons';
+	import { superForm } from 'sveltekit-superforms';
+	import ParametersCompo from '$lib/components/ParametersCompo.svelte';
+	import { generateName } from '$lib/shared/utils';
+	import { tick } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { showToast } from '$lib/toasts.js';
 
-	let examName = $state('');
-	let examDescription = $state('');
-	let basePrice = $state('');
-
-	let categories: string[] = $state(['Categoria 1']);
-
-	const initParameter: ExamParemeterInput = {
-		name: '',
-		type: 'text', // | "number";
-		category: 'Categoria 1',
-		unit: '',
-		value: '' // | number
+	type ExamParemeterInput = {
+		position: number;
+		name: string;
+		type: 'text';
+		category?: string;
+		unit: string;
+		hasReferences: boolean;
+		referenceValues: string[];
 	};
 
-	let baseParameters: ParameterData[] = $state([{ position: 0, parameter: initParameter }]);
+	let { data } = $props();
 
-	function addParameter(category?: string): void {
-		// Fallback if there are categories items and no category passed to the function
-		if (categories.length > 0 && category === undefined) {
-			category = categories[0];
-		}
+	const { form, errors, enhance } = superForm(data.examTypeForm, {
+		dataType: 'json',
+		delayMs: 0,
+		applyAction: true,
+		onUpdated({ form }) {
+			// Display message based on the response
+			if (form.message) {
+				showToast(form.message.text, form.message.type);
 
-		const newParam = { ...initParameter, category };
-
-		baseParameters.push({
-			position: baseParameters.length,
-			parameter: newParam
-		});
-	}
-
-	function removeParameter(parameters: ParameterData[], innerIndex: number) {
-		if (parameters.length > 1) {
-			const indexToRemove = baseParameters.findIndex(
-				(x) => x.position === parameters[innerIndex].position
-			);
-
-			if (indexToRemove != -1) {
-				baseParameters.splice(indexToRemove, 1);
+				if (form.message.type == 'success') {
+					goto('/exam-types');
+				}
 			}
 		}
+	});
+
+	// State to active/inactive category edition
+	let categoriesStatus: { [key: number]: string } = $state({});
+
+	async function addParameter(category?: string): Promise<void> {
+		// New position to be added
+		const newPosition = $form.parameters.length;
+
+		// Base parameter
+		const initParameter: ExamParemeterInput = {
+			position: newPosition,
+			name: '',
+			type: 'text',
+			category: undefined,
+			unit: '',
+			hasReferences: false,
+			referenceValues: []
+		};
+
+		// Fallback if there are categories items and no category passed to the function
+		if ($form.categories.length > 0 && category === undefined) {
+			category = $form.categories[0];
+		}
+
+		form.update(($form) => {
+			$form.parameters.push({
+				...initParameter,
+				category,
+				position: newPosition
+			});
+			return $form;
+		});
+
+		// Wait for DOM update
+		await tick();
+
+		// Go to element parameter
+		gotoElementBySelector(`[data-param-index="${newPosition}"]`);
 	}
 
 	function addCategory() {
-		function generateName(baseNumber: number) {
-			const newCategory = `Categoria ${baseNumber}`;
+		const newCategory = generateName('Categoria', $form.categories.length + 1, (v) =>
+			$form.categories.includes(v)
+		);
 
-			if (categories.includes(newCategory)) {
-				// If this name already exist, create a diffrent one
-				return generateName(baseNumber + 1);
-			}
-
-			// End recursivity
-			return newCategory;
-		}
-
-		const newCategory = generateName(categories.length + 1);
-		const newParam = { ...initParameter, category: newCategory };
-
-		if (categories.length == 0 && baseParameters.length > 0) {
+		if ($form.categories.length == 0 && $form.parameters.length > 0) {
 			// Since there was no category created, assign each parameter to the new one
-			baseParameters.forEach((param_) => {
-				param_.parameter.category = newCategory;
+			form.update(($form) => {
+				$form.parameters.forEach((param_) => {
+					param_.category = newCategory;
+				});
+				return $form;
 			});
 		} else {
-			// Always create new categories with one parameter
-			baseParameters.push({ position: baseParameters.length, parameter: newParam });
+			addParameter(newCategory);
 		}
 
-		categories.push(newCategory);
+		form.update(($form) => {
+			$form.categories.push(newCategory);
+			return $form;
+		});
 	}
 
 	function removeCategory(category: string, categoryIndex: number) {
-		const newParams = baseParameters.filter((param_) => param_.parameter.category !== category);
-		baseParameters = newParams;
-		categories.splice(categoryIndex, 1);
-	}
+		form.update(($form) => {
+			const newParams = $form.parameters.filter((param_) => param_.category !== category);
+			$form.parameters = newParams;
+			$form.categories.splice(categoryIndex, 1);
 
-	let draggingItemIndex: number | null = $state(null);
-	let hoveredItemIndex: number | null = $state(null);
-	let container: HTMLDivElement | null = $state(null);
-	let isOutside: boolean = $state(false);
-
-	function onDragStart(index: number) {
-		draggingItemIndex = index;
-	}
-
-	function onDragOver(index: number) {
-		hoveredItemIndex = index;
-	}
-
-	function onDragEnd() {
-		if (
-			draggingItemIndex != null &&
-			hoveredItemIndex != null &&
-			draggingItemIndex != hoveredItemIndex &&
-			!isOutside
-		) {
-			// Reorganzize items
-			[baseParameters[draggingItemIndex], baseParameters[hoveredItemIndex]] = [
-				baseParameters[hoveredItemIndex],
-				baseParameters[draggingItemIndex]
-			];
-
-			// Balance
-			draggingItemIndex = hoveredItemIndex;
-		}
-
-		hoveredItemIndex = null;
-	}
-
-	function windowOnDragOver(
-		e: DragEvent & {
-			currentTarget: EventTarget & Window;
-		}
-	) {
-		// Get the target element under the mouse
-		const target = e.target;
-		// const target = e.target as HTMLElement;
-
-		if (target) {
-			// If the target is NOT inside the container, set isOutside to true
-			if (!(target as HTMLElement).closest('.drag-container')) {
-				isOutside = true;
-				return;
+			if (newParams.length == 0) {
+				addParameter();
 			}
-		}
-		isOutside = false;
+
+			return $form;
+		});
 	}
 
-	let isEditingCategory = $state(false);
-	let editingCategoryIndex: null | number = $state(null);
+	function gotoElementBySelector(selector: string) {
+		const newElement = document.querySelector(selector);
+		newElement?.scrollIntoView({
+			behavior: 'smooth',
+			block: 'center',
+			inline: 'center'
+		});
+	}
 
 	function editCategory(categoryIndex_: number) {
-		isEditingCategory = true;
-		editingCategoryIndex = categoryIndex_;
+		categoriesStatus[categoryIndex_] = $form.categories[categoryIndex_];
+	}
+
+	function finishEditCategory(categoryIndex_: number) {
+		delete categoriesStatus[categoryIndex_];
+	}
+
+	function saveEditCategory(categoryIndex_: number) {
+		form.update(($form) => {
+			// Rename the category of each parameter to the new one
+			$form.parameters.forEach((param_) => {
+				if (param_.category === $form.categories[categoryIndex_]) {
+					param_.category = categoriesStatus[categoryIndex_];
+				}
+			});
+
+			// Rename the category to the new one
+			$form.categories[categoryIndex_] = categoriesStatus[categoryIndex_];
+			return $form;
+		});
+
+		finishEditCategory(categoryIndex_);
 	}
 </script>
 
-<!-- To control when the drag ends outside of th drag container -->
-<svelte:window ondragover={windowOnDragOver} />
-
-<!-- Snippet for generating the params inputs -->
-{#snippet parameters(parameters: ParameterData[], category?: string)}
-	{#each parameters as param, index (param)}
-		<div
-			class="flex items-center gap-x-2"
-			transition:fade
-			animate:flip={{ duration: 500 }}
-			id={index.toString()}
-		>
-			<!-- Drag handle area -->
-			<div
-				role="button"
-				tabindex="0"
-				aria-label="Drag handle for parameter {param.position}"
-				class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
-				draggable="true"
-				ondragstart={() => onDragStart(index)}
-				ondragend={() => onDragEnd()}
-			>
-				<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M4 6h16M4 12h16M4 18h16"
-					/>
-				</svg>
-			</div>
-
-			<!-- Content area -->
-			<div
-				class="w-full rounded-xl bg-gray-100"
-				role="listitem"
-				aria-label="List of exam parameters"
-				ondragover={() => onDragOver(index)}
-			>
-				<div>
-					<Input bind:value={param.parameter.name} name="name" placeholder="Nombre del parámetro" />
-					<Input bind:value={param.parameter.unit} name="unit" placeholder="Unidad del parámetro" />
-				</div>
-			</div>
-
-			<Button
-				onclick={() => {
-					removeParameter(parameters, index);
-				}}
-				class="!bg-inherit !p-0"
-			>
-				<Icon src={CircleMinus} size="32" theme="filled" class="text-red-500" />
-			</Button>
-		</div>
-	{/each}
-
-	{#if category}
-		<div class="text-center">
-			<AddButton title="Añadir parámetro" onclick={() => addParameter(category)} />
-		</div>
-	{/if}
-{/snippet}
-
-{#if editingCategoryIndex !== null}
-	<ModalEditCategory
-		bind:showModal={isEditingCategory}
-		bind:categories
-		bind:editingIndex={editingCategoryIndex}
-		bind:baseParameters
-	/>
-{/if}
-
-<div in:fade class="mb-4 flex w-full flex-col gap-y-8">
+<form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
 	<p class="text-center text-3xl">Crear tipo de exámen</p>
 
 	<div>
@@ -231,24 +161,36 @@
 			<div class="space-y-4">
 				<div class="flex gap-x-8">
 					<Input
-						bind:value={examName}
+						bind:value={$form.name}
 						name="name"
+						label="Nombre del exámen"
 						placeholder="Nombre del exámen"
 						wrapperClass="w-1/2"
+						error={$errors.name}
 					/>
 
 					<Input
-						value={basePrice}
+						bind:value={$form.basePrice}
+						type="number"
 						name="basePrice"
+						step="0.01"
+						label="Precio base (USD)"
 						placeholder="Precio base referencia"
-						wrapperClass="w-1/3"
+						wrapperClass="w-1/2"
+						error={$errors.basePrice}
 					/>
 				</div>
-				<Textarea
-					bind:value={examDescription}
-					name="description"
-					placeholder="Description del exámen"
-				/>
+
+				<div class="flex flex-col gap-y-1">
+					<label for="description-textarea" class="ml-2 font-semibold">
+						Descripción del exámen
+					</label>
+					<Textarea
+						bind:value={() => $form.description ?? '', (v) => ($form.description = v)}
+						name="description"
+						placeholder="Description del exámen"
+					/>
+				</div>
 			</div>
 		</div>
 
@@ -257,7 +199,7 @@
 		<div class="space-y-5">
 			<p class="text-2xl">Valores y parámetros</p>
 
-			{#if categories.length == 0}
+			{#if $form.categories.length == 0}
 				<Button
 					onclick={() => addParameter()}
 					title="Añadir parámetro nuevo"
@@ -270,7 +212,7 @@
 
 			<!-- Add category button -->
 			<Button onclick={addCategory} title="Añadir categoria nuevo" class="inline-flex gap-x-1">
-				{#if categories.length}
+				{#if $form.categories.length}
 					<span> Añadir categoria </span>
 				{:else}
 					<span> Crear categoria </span>
@@ -278,25 +220,45 @@
 				<Icon src={CopyPlus} size="26" theme="filled" />
 			</Button>
 
-			{#each categories as category, categoryIndex (uuidv4())}
-				<div
-					role="definition"
-					class="drag-container space-y-4 rounded-lg border border-gray-200 p-1"
-					bind:this={container}
-				>
+			{#each $form.categories as category, categoryIndex (categoryIndex)}
+				<div class="space-y-4 rounded-lg border border-gray-200 p-1">
 					<div class="inline-flex w-full items-center justify-center gap-x-4">
 						<div class="inline-flex gap-x-1">
-							<p class="text-lg font-bold">
-								{category}
-							</p>
+							{#if categoriesStatus[categoryIndex]}
+								<Input
+									wrapperClass="w-2/3"
+									bind:value={categoriesStatus[categoryIndex]}
+									name="any"
+								/>
 
-							<Button
-								class="mr-2 !bg-inherit !p-0"
-								title="Editar nombre de la categoria"
-								onclick={() => editCategory(categoryIndex)}
-							>
-								<Icon src={PencilMinus} size="20" theme="filled" class="text-green-500" />
-							</Button>
+								<Button
+									class="mr-2 !bg-inherit !p-0"
+									title="Guardar"
+									onclick={() => saveEditCategory(categoryIndex)}
+								>
+									<Icon src={Check} size="20" theme="filled" class="text-green-500" />
+								</Button>
+
+								<Button
+									class="mr-2 !bg-inherit !p-0"
+									title="Cancelar"
+									onclick={() => finishEditCategory(categoryIndex)}
+								>
+									<Icon src={Cancel} size="20" theme="filled" class="text-red-500" />
+								</Button>
+							{:else}
+								<p class="text-lg font-bold">
+									{category}
+								</p>
+
+								<Button
+									class="mr-2 !bg-inherit !p-0"
+									title="Editar nombre de la categoria"
+									onclick={() => editCategory(categoryIndex)}
+								>
+									<Icon src={PencilMinus} size="20" theme="filled" class="text-green-500" />
+								</Button>
+							{/if}
 						</div>
 
 						<Button
@@ -308,14 +270,29 @@
 						</Button>
 					</div>
 
-					{@render parameters(
-						baseParameters.filter((x) => x.parameter.category == category),
-						category
-					)}
+					<ParametersCompo {form} {errors} {category} {addParameter} />
 				</div>
 			{:else}
-				{@render parameters(baseParameters)}
+				<ParametersCompo {form} {errors} />
 			{/each}
 		</div>
 	</div>
-</div>
+
+	<hr class="border-primary-gray/50 my-1" />
+
+	<div class="mx-auto w-fit space-x-10">
+		<Button
+			title="Cancelar"
+			class="w-fit !bg-red-500 hover:!bg-red-400"
+			onclick={() => goto('/exam-types')}>Cancelar</Button
+		>
+
+		<Button
+			title="Guardar tipo de exámen"
+			class="w-fit !bg-green-500 hover:!bg-green-400"
+			type="submit"
+		>
+			Guardar
+		</Button>
+	</div>
+</form>

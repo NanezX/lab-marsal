@@ -1,11 +1,15 @@
 <script lang="ts">
 	import { Icon, type IconSource } from '@steeze-ui/svelte-icon';
-	import type { ClassValue } from 'svelte/elements';
+	import type { ClassValue, FocusEventHandler, FormEventHandler } from 'svelte/elements';
+	import { fade } from 'svelte/transition';
+	import { v4 as uuidv4 } from 'uuid';
 
 	// Prop type
 	type PropType = {
 		value: string | number;
 		name: string;
+		label?: string;
+		id?: string;
 		placeholder?: string;
 		title?: string;
 		type?: 'text' | 'password' | 'email' | 'number' | 'date';
@@ -17,13 +21,19 @@
 		min?: string | number | null;
 		max?: string | number | null;
 		maxlength?: number | null;
+		step?: string | number | null | undefined;
 		autoComplete?: boolean;
+		onfocus?: FocusEventHandler<HTMLInputElement>;
+		error?: string[] | string | undefined;
+		oninput?: FormEventHandler<HTMLInputElement> | null;
 	};
 
 	// Prop deconstruct
 	let {
 		value = $bindable(''),
 		name,
+		label,
+		id,
 		placeholder,
 		title,
 		type = 'text',
@@ -35,7 +45,11 @@
 		min,
 		max,
 		maxlength,
-		autoComplete = true
+		step,
+		autoComplete = true,
+		onfocus,
+		error,
+		oninput
 	}: PropType = $props();
 
 	// Reusable classes
@@ -46,10 +60,25 @@
 	];
 
 	const iconClass = ['text-primary-blue absolute ml-4 h-5 w-5'];
+
+	if (label && !id) {
+		id = uuidv4();
+	}
 </script>
 
-<div class={['flex items-center', wrapperClass]}>
+<div
+	class={[
+		'flex items-center',
+		wrapperClass,
+		{ 'flex-col items-start gap-y-1': label || (error !== undefined && error.length > 0) }
+	]}
+>
+	{#if label}
+		<label class="ml-2 font-semibold" for={id}>{label}</label>
+	{/if}
 	<input
+		{id}
+		{onfocus}
 		bind:value
 		{name}
 		{type}
@@ -61,10 +90,16 @@
 		{min}
 		{max}
 		{maxlength}
+		{step}
+		{oninput}
 		autocomplete={!autoComplete ? 'new-password' : undefined}
 	/>
 
 	{#if icon}
 		<Icon src={icon} class={[iconClass, { 'text-gray-400!': disabled }]} {title} />
+	{/if}
+
+	{#if error !== undefined && error.length > 0}
+		<span in:fade class="text-sm text-red-500">{error}</span>
 	{/if}
 </div>
