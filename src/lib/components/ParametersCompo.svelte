@@ -49,11 +49,19 @@
 				draggingItemIndex != hoveredItemIndex &&
 				!isOutside
 			) {
-				// Reorganzize items
+				// Reorganize parameter items
 				[$form.parameters[draggingItemIndex], $form.parameters[hoveredItemIndex]] = [
 					$form.parameters[hoveredItemIndex],
 					$form.parameters[draggingItemIndex]
 				];
+
+				// Reorganize error items
+				if ($errors.parameters) {
+					[$errors.parameters[draggingItemIndex], $errors.parameters[hoveredItemIndex]] = [
+						$errors.parameters[hoveredItemIndex],
+						$errors.parameters[draggingItemIndex]
+					];
+				}
 
 				// Balance
 				draggingItemIndex = hoveredItemIndex;
