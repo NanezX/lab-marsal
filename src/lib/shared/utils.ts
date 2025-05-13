@@ -1,5 +1,5 @@
 import type { Dictionary } from 'lodash';
-import { chain } from 'lodash-es';
+import { chain, sortBy } from 'lodash-es';
 
 export function isObject(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -42,6 +42,10 @@ export function deleteAndReindex<T>(
 		.map(([_, value], newIndex) => [String(newIndex), value]) // Reindex
 		.fromPairs()
 		.value();
+}
+
+export function sortArrayObject<T>(data: Array<T>, key: string): Array<T> {
+	return sortBy(data, [key]);
 }
 
 export const minDocumentId = 0;
