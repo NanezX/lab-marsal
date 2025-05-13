@@ -183,7 +183,7 @@ export const examType = pgTable(
 		...baseTable,
 		name: text().notNull().unique(),
 		description: text(),
-		basePrice: decimal('base_price', { precision: 19, scale: 3 }).notNull(),
+		basePrice: decimal('base_price', { precision: 19, scale: 2 }).notNull(),
 		// parameters: jsonb().notNull(),
 		categories: text()
 			.array()
@@ -212,7 +212,7 @@ export const exam = pgTable('exam', {
 	status: examStatusEnum().notNull().default(ExamStatus.Active),
 	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }),
 	results: jsonb(),
-	price: decimal('base_price', { precision: 19, scale: 3 }).notNull(),
+	price: decimal('base_price', { precision: 19, scale: 2 }).notNull(),
 	paid: boolean().notNull(),
 	paymentMethod: text('payment_method'),
 	paymentRef: text('payment_ref')
