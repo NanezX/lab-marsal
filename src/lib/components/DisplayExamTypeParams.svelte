@@ -24,7 +24,7 @@
 		<tbody class="">
 			{#each params as parameter_, i}
 				<tr
-					class="direct-children:font-normal direct-children:pb-2 border-primary-gray/20 not-last:border-b"
+					class="direct-children:font-normal direct-children:py-1 border-primary-gray/20 not-last:border-b"
 				>
 					<th scope="row" class="w-2/5">
 						<p>
