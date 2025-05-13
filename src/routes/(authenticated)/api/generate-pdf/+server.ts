@@ -1,7 +1,10 @@
 import puppeteer from 'puppeteer';
 
 export async function POST({ request }) {
-	const { html, styles } = await request.json();
+	const { html } = await request.json();
+
+	const baseUrl = new URL(request.url).origin;
+	const cssUrl = `${baseUrl}/pdf.css`;
 
 	// Launch browser (use @sparticuz/chromium for serverless)
 	const browser = await puppeteer.launch({
@@ -18,8 +21,7 @@ export async function POST({ request }) {
     <html>
       <head>
         <meta charset="UTF-8">
-        <script src="https://cdn.tailwindcss.com"></script>
-        <style>${styles}</style>
+        <link rel="stylesheet" href="${cssUrl}" />
       </head>
       <body>${html}</body>
     </html>
