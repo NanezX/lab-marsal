@@ -46,3 +46,36 @@
 		</tbody>
 	</table>
 </div>
+
+<!-- <div class="overflow-hidden">
+	<table class={['w-full text-left', enteredClass]}>
+		<thead>
+			<tr class="underline">
+				<th class="w-2/5 py-1 font-semibold" scope="col"> Nombre </th>
+				<th class="w-3/5 py-1 font-semibold" scope="col"> Referencia </th>
+			</tr>
+		</thead>
+
+		<tbody class="">
+			{#each params as parameter_, i}
+				<tr class={['border-primary-gray/20', { 'border-b': i !== params.length - 1 }]}>
+					<th scope="row" class="w-2/5 py-1 font-normal">
+						<p>
+							{parameter_.name}
+						</p>
+					</th>
+
+					<th scope="row" class="w-3/5 py-1 font-normal">
+						{#if parameter_.hasReferences}
+							{#each parameter_.referenceValues as reference_}
+								<p>{formatCapital(reference_)}</p>
+							{/each}
+						{:else}
+							<p>N/A</p>
+						{/if}
+					</th>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+</div> -->
