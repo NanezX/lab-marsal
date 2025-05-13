@@ -12,7 +12,6 @@
 	let { params, class: enteredClass }: PropType = $props();
 </script>
 
-<!-- TODO: Add button to edit the exam type -->
 <div class="overflow-hidden">
 	<table class={['w-full text-left', enteredClass]}>
 		<thead>

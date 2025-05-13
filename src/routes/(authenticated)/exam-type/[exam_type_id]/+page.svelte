@@ -10,6 +10,7 @@
 	let { examTypeData } = data;
 </script>
 
+<!-- TODO: Add button to edit the exam type -->
 <div in:fade class="mb-4 flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">{examTypeData.name}</p>
 
