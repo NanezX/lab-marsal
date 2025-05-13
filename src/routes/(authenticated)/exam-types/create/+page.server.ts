@@ -7,6 +7,8 @@ import postgres from 'postgres';
 import { examType, parameter as parameterTable } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 
+// TODO: Verify what roles can create an exam type
+
 const examParameterSchema = z.object({
 	// Positon of the parameter in the form
 	// Parameter data
