@@ -2,6 +2,7 @@
 	import type { PageProps } from './$types';
 	import Button from '$lib/components/Button.svelte';
 	import { fade } from 'svelte/transition';
+	import { sortArrayObject } from '$lib/shared/utils';
 
 	let { data }: PageProps = $props();
 
@@ -45,6 +46,21 @@
 
 		<div class="space-y-5">
 			<p class="text-2xl">Valores y parámetros</p>
+
+			<div>
+				{#if examTypeData.categories.length > 0}
+					{#each examTypeData.categories as category_}
+						<p class="font-bold">{category_}</p>
+						{#each sortArrayObject( examTypeData.parameters.filter((p_) => p_.category == category_), 'position' ) as parameter_}
+							<p>
+								{parameter_.name}
+							</p>
+						{/each}
+					{/each}
+				{:else}
+					b
+				{/if}
+			</div>
 		</div>
 	</div>
 </div>
