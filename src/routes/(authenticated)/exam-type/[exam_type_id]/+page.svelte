@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	import Button from '$lib/components/Button.svelte';
+	// import Button from '$lib/components/Button.svelte';
 	import { fade } from 'svelte/transition';
 	import { sortArrayObject } from '$lib/shared/utils';
+	import DisplayExamTypeParams from '$lib/components/DisplayExamTypeParams.svelte';
 
 	let { data }: PageProps = $props();
 
@@ -39,7 +40,6 @@
 				<strong>Descripción: </strong><br />
 				<span>{examTypeData.description}</span>
 			</p>
-			<Button class="w-fit" onclick={() => console.log(examTypeData)}>xdd</Button>
 		</div>
 
 		<hr class="border-primary-gray/50 my-4" />
@@ -51,46 +51,26 @@
 				{#if examTypeData.categories.length > 0}
 					{#each examTypeData.categories as category_}
 						<div class="rounded-xl bg-gray-100 px-2 py-4">
-							<p class="font-bold">{category_}</p>
-							{#each sortArrayObject( examTypeData.parameters.filter((p_) => p_.category == category_), 'position' ) as parameter_}
-								{#if parameter_.hasReferences}
-									<div class="ml-6 grid grid-cols-3">
-										<p>
-											{parameter_.name}
-										</p>
-										<div>
-											{#each parameter_.referenceValues as reference_}
-												<p>{reference_}</p>
-											{/each}
-										</div>
-									</div>
-								{:else}
-									<p>
-										{parameter_.name}
-									</p>
-								{/if}
-							{/each}
+							<p class="text-lg font-bold">{category_}</p>
+
+							<DisplayExamTypeParams
+								class="ml-6"
+								params={sortArrayObject(
+									examTypeData.parameters.filter((p_) => p_.category == category_),
+									'position'
+								).concat(
+									sortArrayObject(
+										examTypeData.parameters.filter((p_) => p_.category == category_),
+										'position'
+									)
+								)}
+							/>
 						</div>
 					{/each}
 				{:else}
-					{#each sortArrayObject(examTypeData.parameters, 'position') as parameter_}
-						<div class="grid grid-cols-3 rounded-xl bg-gray-100 px-2 py-4">
-							{#if parameter_.hasReferences}
-								<p>
-									{parameter_.name}
-								</p>
-								<div>
-									{#each parameter_.referenceValues as reference_}
-										<p>{reference_}</p>
-									{/each}
-								</div>
-							{:else}
-								<p>
-									{parameter_.name}
-								</p>
-							{/if}
-						</div>
-					{/each}
+					<div class="rounded-xl bg-gray-100 p-4">
+						<DisplayExamTypeParams params={sortArrayObject(examTypeData.parameters, 'position')} />
+					</div>
 				{/if}
 			</div>
 		</div>
