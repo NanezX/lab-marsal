@@ -6,7 +6,7 @@ export const load: PageServerLoad = async ({ params }) => {
 	if (!validate(params.exam_type_id)) {
 		svelteError(404, 'Exam type ID not valid');
 	}
-	
+
 	const examTypeData = await findExamTypeById(params.exam_type_id);
 
 	if (examTypeData == undefined) {
