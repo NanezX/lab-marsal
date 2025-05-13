@@ -47,18 +47,50 @@
 		<div class="space-y-5">
 			<p class="text-2xl">Valores y parámetros</p>
 
-			<div>
+			<div class="flex flex-col gap-y-4">
 				{#if examTypeData.categories.length > 0}
 					{#each examTypeData.categories as category_}
-						<p class="font-bold">{category_}</p>
-						{#each sortArrayObject( examTypeData.parameters.filter((p_) => p_.category == category_), 'position' ) as parameter_}
-							<p>
-								{parameter_.name}
-							</p>
-						{/each}
+						<div class="rounded-xl bg-gray-100 px-2 py-4">
+							<p class="font-bold">{category_}</p>
+							{#each sortArrayObject( examTypeData.parameters.filter((p_) => p_.category == category_), 'position' ) as parameter_}
+								{#if parameter_.hasReferences}
+									<div class="ml-6 grid grid-cols-3">
+										<p>
+											{parameter_.name}
+										</p>
+										<div>
+											{#each parameter_.referenceValues as reference_}
+												<p>{reference_}</p>
+											{/each}
+										</div>
+									</div>
+								{:else}
+									<p>
+										{parameter_.name}
+									</p>
+								{/if}
+							{/each}
+						</div>
 					{/each}
 				{:else}
-					b
+					{#each sortArrayObject(examTypeData.parameters, 'position') as parameter_}
+						<div class="grid grid-cols-3 rounded-xl bg-gray-100 px-2 py-4">
+							{#if parameter_.hasReferences}
+								<p>
+									{parameter_.name}
+								</p>
+								<div>
+									{#each parameter_.referenceValues as reference_}
+										<p>{reference_}</p>
+									{/each}
+								</div>
+							{:else}
+								<p>
+									{parameter_.name}
+								</p>
+							{/if}
+						</div>
+					{/each}
 				{/if}
 			</div>
 		</div>
