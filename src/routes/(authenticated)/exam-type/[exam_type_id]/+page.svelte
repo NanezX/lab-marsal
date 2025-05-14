@@ -60,11 +60,6 @@
 								params={sortArrayObject(
 									examTypeData.parameters.filter((p_) => p_.category == category_),
 									'position'
-								).concat(
-									sortArrayObject(
-										examTypeData.parameters.filter((p_) => p_.category == category_),
-										'position'
-									)
 								)}
 							/>
 						</div>
