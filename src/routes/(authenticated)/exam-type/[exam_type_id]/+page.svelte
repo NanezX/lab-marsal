@@ -4,53 +4,24 @@
 	import { fade } from 'svelte/transition';
 	import { sortArrayObject } from '$lib/shared/utils';
 	import DisplayExamTypeParams from '$lib/components/DisplayExamTypeParams.svelte';
+	import { generatePDF } from '$lib/client';
 
 	let { data }: PageProps = $props();
 
 	let { examTypeData } = data;
 
-	async function generatePDF() {
-		const targetId = 'probando';
-
-		try {
-			const element = document.getElementById(targetId);
-			if (!element) throw new Error('Target element not found');
-
-			const response = await fetch('/api/generate-pdf', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					html: element.outerHTML // 💡 full element, not just inner
-					// optionally: styles: customStylesHere
-				})
-			});
-
-			if (!response.ok) throw new Error('PDF generation failed');
-
-			const blob = await response.blob();
-			const url = URL.createObjectURL(blob);
-
-			const a = document.createElement('a');
-			a.href = url;
-			a.download = 'document.pdf';
-			a.click();
-
-			URL.revokeObjectURL(url);
-		} catch (e) {
-			console.error('PDF generation error:', e);
-		}
-	}
+	let container: HTMLElement | null = $state(null);
 </script>
 
 <button
-	onclick={generatePDF}
+	onclick={() => generatePDF(container)}
 	class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
 >
 	Download PDF
 </button>
 
 <!-- TODO: Add button to edit the exam type -->
-<div in:fade class="mb-4 flex w-full flex-col gap-y-8" id="probando">
+<div in:fade class="mb-4 flex w-full flex-col gap-y-8" bind:this={container}>
 	<p class="text-center text-3xl">{examTypeData.name}</p>
 
 	<div>
