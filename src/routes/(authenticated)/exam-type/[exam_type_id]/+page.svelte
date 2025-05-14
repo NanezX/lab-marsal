@@ -9,19 +9,10 @@
 	let { data }: PageProps = $props();
 
 	let { examTypeData } = data;
-
-	let container: HTMLElement | null = $state(null);
 </script>
 
-<button
-	onclick={() => generatePDF(container)}
-	class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
->
-	Download PDF
-</button>
-
 <!-- TODO: Add button to edit the exam type -->
-<div in:fade class="mb-4 flex w-full flex-col gap-y-8" bind:this={container}>
+<div in:fade class="mb-4 flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">{examTypeData.name}</p>
 
 	<div>
