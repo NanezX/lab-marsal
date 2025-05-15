@@ -5,8 +5,9 @@ import { cleanEditExamTypeData } from '$lib/shared/utils';
 import { editExamTypeSchema } from '$lib/server/utils/zod';
 import { findExamTypeById } from '$lib/server/utils/dbQueries';
 import { db } from '$lib/server/db';
-import { examType } from '$lib/server/db/schema';
+import { examType, parameter as parameterTable } from '$lib/server/db/schema';
 import { isUniqueConstraintViolation } from '$lib/server/utils/helpers';
+import { inArray, sql } from 'drizzle-orm';
 
 // TODO: Verify what roles can update an exam type (on the action)
 
@@ -54,11 +55,10 @@ export const actions: Actions = {
 		}
 
 		try {
-			// EXAM TYPES: ID and NAME are uniques
 			// PARAMETERS: ID are uniques
 			// Doing update within the same transaction to handle rollbacks too in case any failure
 			await db.transaction(async (tx) => {
-				//
+				// Upsert the exam type
 				await tx
 					.insert(examType)
 					.values({
@@ -77,6 +77,34 @@ export const actions: Actions = {
 							categories
 						}
 					});
+
+				// Upsert modified exam type params
+				await tx
+					.insert(parameterTable)
+					.values(
+						parameters.map((param_) => ({
+							...param_,
+							examTypeId: id
+						}))
+					)
+					.onConflictDoUpdate({
+						target: parameterTable.id,
+						set: {
+							name: sql.raw(`excluded.${parameterTable.name.name}`),
+							type: sql.raw(`excluded.${parameterTable.type.name}`),
+							position: sql.raw(`excluded.${parameterTable.position.name}`),
+							unit: sql.raw(`excluded.${parameterTable.unit.name}`),
+							hasReferences: sql.raw(`excluded.${parameterTable.hasReferences.name}`),
+							referenceValues: sql.raw(`excluded.${parameterTable.referenceValues.name}`),
+							category: sql.raw(`excluded.${parameterTable.category.name}`)
+						}
+					});
+
+				// Delete the Deleted exam type params
+				await tx
+					.update(parameterTable)
+					.set({ deleted: true })
+					.where(inArray(parameterTable.id, deletedParameters));
 			});
 
 			return message(form, { text: 'Tipo de exámen editado correctamente', type: 'success' });
