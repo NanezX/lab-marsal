@@ -12,6 +12,8 @@
 	import { goto } from '$app/navigation';
 	import { showToast } from '$lib/toasts.js';
 
+	// TODO: Try to reduce the duplicated code from exam-types/create.
+
 	type ExamParemeterInput = {
 		position: number;
 		name: string;

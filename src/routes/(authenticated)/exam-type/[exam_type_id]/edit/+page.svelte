@@ -13,6 +13,8 @@
 	import ParametersCompo from '$lib/components/ParametersCompo.svelte';
 	import { tick } from 'svelte';
 
+	// TODO: Try to reduce the duplicated code from exam-types/create. 
+
 	type ExamParemeterInput = {
 		position: number;
 		name: string;
