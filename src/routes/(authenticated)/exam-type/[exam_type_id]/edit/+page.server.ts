@@ -21,7 +21,11 @@ const editExamTypeSchema = examTypeSchema.innerType().extend({
 	id: z.string().refine((value_) => {
 		return validate(value_);
 	}, 'ID del tipo de exámen no válido'),
-	parameters: z.array(editExamTypeParameterSchema).min(1)
+	parameters: z.array(editExamTypeParameterSchema).min(1),
+
+	deletedParameters: z
+		.array(z.string().refine((value_) => validate(value_), 'ID del parámetro inválido'))
+		.default([])
 });
 
 export const load: PageServerLoad = async ({ parent }) => {
