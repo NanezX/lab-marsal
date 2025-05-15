@@ -173,7 +173,9 @@
 		<!-- TODO: Remove this button -->
 		<!-- <Button
 			onclick={() => {
-				console.log('examTypeData: ', examTypeData);
+				// console.log('examTypeData: ', examTypeData);
+				console.log('$form: ', $form);
+				console.log('original: ', original);
 				console.log('hasChanges: ', hasChanges);
 			}}>XD</Button
 		> -->
@@ -309,11 +311,12 @@
 
 	<div class="mx-auto w-fit space-x-10">
 		<Button
-			title="Guardar tipo de exámen"
-			class="w-fit !bg-green-500 hover:!bg-green-400"
+			disabled={!hasChanges}
+			title="Guardar cambios"
+			class="w-fit !bg-green-500 hover:!bg-green-400 disabled:!bg-gray-200"
 			type="submit"
 		>
-			Guardar
+			Guardar cambios
 		</Button>
 	</div>
 </form>
