@@ -1,63 +1,13 @@
 import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { z } from 'zod';
 import type { Actions } from './$types';
 import { findExamTypeByName } from '$lib/server/utils/dbQueries';
 import postgres from 'postgres';
 import { examType, parameter as parameterTable } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
+import { examTypeSchema } from '$lib/server/utils/zod';
 
 // TODO: Verify what roles can create an exam type
-
-const examParameterSchema = z.object({
-	// Positon of the parameter in the form
-	// Parameter data
-	position: z.number().min(0),
-	name: z.string().min(1, 'El parámetro debe tener un nombre'),
-	type: z.literal('text'),
-	category: z.string().min(1).optional(),
-	unit: z.string().min(1, 'Debe especificar la unidad del parámetro'),
-	hasReferences: z.boolean(),
-	referenceValues: z.array(z.string().min(1, 'Debe ingresar el valor de referencia'))
-});
-
-const examTypeSchema = z
-	.object({
-		name: z.string().min(1, 'El nombre es obligatorio'),
-		description: z.string().optional(),
-		basePrice: z.number().positive('El precio base debe ser mayor a 0 USD'),
-		clasification: z.string().optional(), // Not sure about this
-		categories: z.array(z.string()),
-		parameters: z
-			.array(examParameterSchema)
-			.min(1)
-			.default([
-				{
-					position: 0,
-					name: '',
-					type: 'text', // | "number";
-					category: undefined,
-					unit: '',
-					hasReferences: false,
-					referenceValues: []
-				}
-			])
-	})
-	.superRefine((obj, ctx) => {
-		// Check each parameter
-		obj.parameters.forEach((param, index) => {
-			// If the parameter has a category, it must exist in the categories array
-			if (param.category && !obj.categories.includes(param.category)) {
-				ctx.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: `La categoría "${param.category}" no existe en la lista de categorías`,
-					path: ['parameters', index, 'parameter', 'category']
-				});
-			}
-		});
-	});
-
-export type ExamTypeSchema = typeof examTypeSchema;
 
 export const load = async () => {
 	const examTypeForm = await superValidate(zod(examTypeSchema));

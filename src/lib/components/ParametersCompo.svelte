@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
-	import type { ExamTypeSchema } from '../../routes/(authenticated)/exam-types/create/+page.server';
 	import Input from '$lib/components/Input.svelte';
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import Button from '$lib/components/Button.svelte';
@@ -9,6 +8,7 @@
 	import AddButton from '$lib/components/buttons/AddButton.svelte';
 	import type { SuperFormData, SuperFormErrors } from 'sveltekit-superforms/client';
 	import { deleteAndReindex } from '$lib/shared/utils';
+	import type { ExamTypeSchema } from '$lib/server/utils/zod';
 
 	// Prop type
 	type PropType = {
