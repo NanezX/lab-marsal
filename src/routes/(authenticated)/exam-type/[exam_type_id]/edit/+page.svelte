@@ -34,6 +34,15 @@
 </script>
 
 <div class="space-y-4">
+	<!-- TODO: Remove this beacuse I don't know why is not showing the form data without this -->
+	<button
+		hidden
+		onclick={() => {
+			console.log('aver: ', $form);
+		}}
+	>
+		XD
+	</button>
 	<div class="flex gap-x-8">
 		<Input
 			bind:value={$form.name}
