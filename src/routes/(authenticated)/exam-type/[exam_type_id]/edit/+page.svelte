@@ -119,9 +119,18 @@
 
 	function removeCategory(category: string, categoryIndex: number) {
 		form.update(($form) => {
+			// Params that are removed. The whole category is removed, and we only care about the IDs (so can be deleted on database)
+			const deletedParams = $form.parameters
+				.filter((param_) => param_.category === category && param_.id !== undefined)
+				.map((param_) => param_.id as string);
+
+			// New params array, without the removed category
 			const newParams = $form.parameters.filter((param_) => param_.category !== category);
+
+			// Assign the values correctly
 			$form.parameters = newParams;
 			$form.categories.splice(categoryIndex, 1);
+			$form.deletedParameters = Array.from(new Set([...$form.deletedParameters, ...deletedParams]));
 
 			if (newParams.length == 0) {
 				addParameter();
