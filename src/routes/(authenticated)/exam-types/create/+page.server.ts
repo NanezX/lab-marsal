@@ -7,7 +7,7 @@ import { examType, parameter as parameterTable } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 import { examTypeSchema } from '$lib/server/utils/zod';
 
-// TODO: Verify what roles can create an exam type
+// TODO: Verify what roles can create an exam type (on the action)
 
 export const load = async () => {
 	const examTypeForm = await superValidate(zod(examTypeSchema));

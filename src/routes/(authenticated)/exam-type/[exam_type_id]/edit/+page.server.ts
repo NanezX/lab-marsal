@@ -4,6 +4,8 @@ import type { PageServerLoad } from './$types';
 import type { ExamTypeWithParameters } from '$lib/shared/types';
 import { examTypeSchema } from '$lib/server/utils/zod';
 
+// TODO: Verify what roles can update an exam type (on the action)
+
 export const load: PageServerLoad = async ({ parent }) => {
 	const data = await parent();
 
