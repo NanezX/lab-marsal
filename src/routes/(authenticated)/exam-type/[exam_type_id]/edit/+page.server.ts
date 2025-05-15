@@ -1,8 +1,9 @@
-import { superValidate, fail as failForms } from 'sveltekit-superforms';
+import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { PageServerLoad, Actions } from './$types';
 import { cleanEditExamTypeData } from '$lib/shared/utils';
 import { editExamTypeSchema } from '$lib/server/utils/zod';
+import { findExamTypeById } from '$lib/server/utils/dbQueries';
 
 // TODO: Verify what roles can update an exam type (on the action)
 
@@ -34,7 +35,19 @@ export const actions: Actions = {
 			return failForms(400, { form });
 		}
 
-		// const { name, description, basePrice, parameters, categories } = form.data;
 		console.log(JSON.stringify(form.data, null, 2));
+
+		const { id, name, basePrice, categories, description, parameters, deletedParameters } =
+			form.data;
+
+		// Check if there is a Exam Type with this ID
+		const examTypeSaved = findExamTypeById(id);
+		if (examTypeSaved === undefined) {
+			return message(
+				form,
+				{ text: 'ID de tipo de exámen no encontrado', type: 'error' },
+				{ status: 409 }
+			);
+		}
 	}
 };
