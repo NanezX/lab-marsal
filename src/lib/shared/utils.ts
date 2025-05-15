@@ -54,13 +54,20 @@ export const maxDocumentId = 999999999;
 
 export function cleanEditExamTypeData(data: ExamTypeWithParameters) {
 	return {
-		...data,
+		id: data.id,
+		name: data.name,
 		description: data.description ?? undefined,
 		basePrice: parseFloat(data.basePrice),
+		categories: data.categories,
 		parameters: data.parameters.map((p) => ({
-			...p,
+			id: p.id,
+			position: p.position,
+			name: p.name,
 			type: 'text' as const,
-			category: p.category ?? undefined
+			category: p.category ?? undefined,
+			unit: p.unit,
+			hasReferences: p.hasReferences,
+			referenceValues: p.referenceValues
 		}))
 	};
 }
