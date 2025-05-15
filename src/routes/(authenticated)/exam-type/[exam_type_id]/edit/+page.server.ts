@@ -1,6 +1,6 @@
-import { superValidate } from 'sveltekit-superforms';
+import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import type { PageServerLoad } from './$types';
+import type { PageServerLoad, Actions } from './$types';
 import { z } from 'zod';
 import { validate } from 'uuid';
 import { cleanEditExamTypeData } from '$lib/shared/utils';
@@ -9,9 +9,12 @@ import { examTypeParameterSchema, examTypeSchema } from '$lib/server/utils/zod';
 // TODO: Verify what roles can update an exam type (on the action)
 
 const editExamTypeParameterSchema = examTypeParameterSchema.extend({
-	id: z.string().refine((value_) => {
-		return validate(value_);
-	}, 'ID del tipo de exámen no válido').optional()
+	id: z
+		.string()
+		.refine((value_) => {
+			return validate(value_);
+		}, 'ID del tipo de exámen no válido')
+		.optional()
 });
 
 const editExamTypeSchema = examTypeSchema.innerType().extend({
@@ -34,5 +37,22 @@ export const load: PageServerLoad = async ({ parent }) => {
 	// Create the form
 	const editExamTypeForm = await superValidate(cleaned, zod(editExamTypeSchema));
 
-	return {  editExamTypeForm };
+	return { editExamTypeForm };
+};
+
+export const actions: Actions = {
+	default: async (event) => {
+		const request = event.request;
+		const form = await superValidate(request, zod(examTypeSchema));
+
+		if (!form.valid) {
+			console.log('form not valid');
+			console.log(JSON.stringify(form.errors, null, 2));
+			// Again, return { form } and things will just work.
+			return failForms(400, { form });
+		}
+
+		// const { name, description, basePrice, parameters, categories } = form.data;
+		console.log(JSON.stringify(form.data, null, 2));
+	}
 };
