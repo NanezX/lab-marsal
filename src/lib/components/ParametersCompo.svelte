@@ -57,6 +57,10 @@
 					$form.parameters[draggingItemIndex]
 				];
 
+				const aux = $form.parameters[draggingItemIndex].position;
+				$form.parameters[draggingItemIndex].position = $form.parameters[hoveredItemIndex].position;
+				$form.parameters[hoveredItemIndex].position = aux;
+
 				// Reorganize error items
 				if ($errors.parameters) {
 					[$errors.parameters[draggingItemIndex], $errors.parameters[hoveredItemIndex]] = [
