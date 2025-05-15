@@ -2,7 +2,7 @@
 	import type { PageProps } from './$types';
 	import Button from '$lib/components/Button.svelte';
 	import { fade } from 'svelte/transition';
-	import { generateName } from '$lib/shared/utils';
+	import { cleanExamTypeData, generateName } from '$lib/shared/utils';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { Cancel, Check, CirclePlus, CopyPlus, PencilMinus } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
@@ -13,7 +13,7 @@
 	import ParametersCompo from '$lib/components/ParametersCompo.svelte';
 	import { tick } from 'svelte';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
-	import Link from '$lib/components/Link.svelte';
+	import { isEqual } from 'lodash-es';
 
 	// TODO: Try to reduce the duplicated code from exam-types/create.
 
@@ -46,6 +46,11 @@
 			}
 		}
 	});
+
+	const original = cleanExamTypeData(data.examTypeData);
+
+	// Compare form vs original data
+	const hasChanges = $derived(!isEqual($form, original));
 
 	// State to active/inactive category edition
 	let categoriesStatus: { [key: number]: string } = $state({});
@@ -161,6 +166,13 @@
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
 	<div class="relative flex justify-center">
 		<BackButton href="/exam-type/{examTypeData.id}" size="40" />
+
+		<Button
+			onclick={() => {
+				console.log('examTypeData: ', examTypeData);
+				console.log('hasChanges: ', hasChanges);
+			}}>XD</Button
+		>
 
 		<p class="mx-auto my-0 text-center text-3xl">Editar tipo de exámen</p>
 	</div>
