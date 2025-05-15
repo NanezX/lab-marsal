@@ -47,7 +47,7 @@
 				showToast(form.message.text, form.message.type);
 
 				if (form.message.type == 'success') {
-					goto('/exam-types');
+					goto(`/exam-type/${examTypeData.id}`);
 				}
 			}
 		}
