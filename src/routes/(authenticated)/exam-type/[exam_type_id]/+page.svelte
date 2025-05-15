@@ -1,10 +1,12 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	// import Button from '$lib/components/Button.svelte';
+	import Button from '$lib/components/Button.svelte';
 	import { fade } from 'svelte/transition';
 	import { sortArrayObject } from '$lib/shared/utils';
 	import DisplayExamTypeParams from '$lib/components/DisplayExamTypeParams.svelte';
 	import { generatePDF } from '$lib/client';
+	import { Icon } from '@steeze-ui/svelte-icon';
+	import { PencilMinus } from '@steeze-ui/tabler-icons';
 
 	let { data }: PageProps = $props();
 
@@ -13,7 +15,20 @@
 
 <!-- TODO: Add button to edit the exam type -->
 <div in:fade class="mb-4 flex w-full flex-col gap-y-8">
-	<p class="text-center text-3xl">{examTypeData.name}</p>
+	<div class="relative flex justify-center">
+		<p class="mx-auto my-0 text-center text-3xl">{examTypeData.name}</p>
+
+		<Button
+			class="mr-2 !bg-green-400 hover:!bg-green-500"
+			title="Editar tipo de exámen"
+			onclick={() => {
+				console.log(examTypeData);
+				alert('Editar tipo de examen');
+			}}
+		>
+			Editar
+		</Button>
+	</div>
 
 	<div>
 		<div class="space-y-5">
