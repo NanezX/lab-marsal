@@ -12,8 +12,10 @@
 	import Textarea from '$lib/components/Textarea.svelte';
 	import ParametersCompo from '$lib/components/ParametersCompo.svelte';
 	import { tick } from 'svelte';
+	import BackButton from '$lib/components/buttons/BackButton.svelte';
+	import Link from '$lib/components/Link.svelte';
 
-	// TODO: Try to reduce the duplicated code from exam-types/create. 
+	// TODO: Try to reduce the duplicated code from exam-types/create.
 
 	type ExamParemeterInput = {
 		position: number;
@@ -157,7 +159,11 @@
 </script>
 
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
-	<p class="text-center text-3xl">Editar tipo de exámen</p>
+	<div class="relative flex justify-center">
+		<BackButton href="/exam-type/{examTypeData.id}" size="40" />
+
+		<p class="mx-auto my-0 text-center text-3xl">Editar tipo de exámen</p>
+	</div>
 
 	<div>
 		<div class="space-y-5">
@@ -286,12 +292,6 @@
 	<hr class="border-primary-gray/50 my-1" />
 
 	<div class="mx-auto w-fit space-x-10">
-		<Button
-			title="Cancelar"
-			class="w-fit !bg-red-500 hover:!bg-red-400"
-			onclick={() => goto('/exam-types')}>Cancelar</Button
-		>
-
 		<Button
 			title="Guardar tipo de exámen"
 			class="w-fit !bg-green-500 hover:!bg-green-400"
