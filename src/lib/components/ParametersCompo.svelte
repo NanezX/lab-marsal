@@ -14,18 +14,20 @@
 	type PropType = {
 		form: SuperFormData<SuperValidated<Infer<ExamTypeSchema>>['data']>;
 		errors: SuperFormErrors<SuperValidated<Infer<ExamTypeSchema>>['data']>;
+	} & {
+		removeParameterCallback?: (paramIndex_: number) => void;
 	} & (
-		| {
-				category: string;
-				addParameter: (category?: string) => void;
-		  }
-		| {
-				category?: never;
-				addParameter?: never;
-		  }
-	);
+			| {
+					category: string;
+					addParameter: (category?: string) => void;
+			  }
+			| {
+					category?: never;
+					addParameter?: never;
+			  }
+		);
 
-	let { form, errors, category, addParameter }: PropType = $props();
+	let { form, errors, category, addParameter, removeParameterCallback }: PropType = $props();
 
 	/// DRAGEABLES  STATES
 	let draggingItemIndex: number | null = $state(null);
@@ -91,6 +93,9 @@
 	function removeParameter(paramIndex_: number) {
 		// Check if the parameter exists and if it has more than one element
 		if ($form.parameters.length > 1 && $form.parameters[paramIndex_] !== undefined) {
+			// Use the callback first to not lose the index of the parameter
+			if (removeParameterCallback) removeParameterCallback(paramIndex_);
+
 			// Remove the parameter
 			form.update(($form) => {
 				$form.parameters.splice(paramIndex_, 1);
