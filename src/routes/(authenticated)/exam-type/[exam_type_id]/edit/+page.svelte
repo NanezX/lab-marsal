@@ -117,6 +117,18 @@
 		});
 	}
 
+	function removeParameterCallback(paramIndex_: number) {
+		const deletedParam = $form.parameters.find((_, index) => paramIndex_ == index)?.id;
+
+		if (deletedParam) {
+			form.update(($form) => {
+				$form.deletedParameters = Array.from(new Set([...$form.deletedParameters, deletedParam]));
+
+				return $form;
+			});
+		}
+	}
+
 	function removeCategory(category: string, categoryIndex: number) {
 		form.update(($form) => {
 			// Params that are removed. The whole category is removed, and we only care about the IDs (so can be deleted on database)
@@ -308,10 +320,10 @@
 						</Button>
 					</div>
 
-					<ParametersCompo {form} {errors} {category} {addParameter} />
+					<ParametersCompo {form} {errors} {category} {addParameter} {removeParameterCallback} />
 				</div>
 			{:else}
-				<ParametersCompo {form} {errors} />
+				<ParametersCompo {form} {errors} {removeParameterCallback} />
 			{/each}
 		</div>
 	</div>
