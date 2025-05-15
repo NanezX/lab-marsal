@@ -2,7 +2,7 @@
 	import type { PageProps } from './$types';
 	import Button from '$lib/components/Button.svelte';
 	import { fade } from 'svelte/transition';
-	import { cleanExamTypeData, generateName } from '$lib/shared/utils';
+	import { cleanEditExamTypeData, generateName } from '$lib/shared/utils';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { Cancel, Check, CirclePlus, CopyPlus, PencilMinus } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
@@ -14,10 +14,12 @@
 	import { tick } from 'svelte';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import { isEqual } from 'lodash-es';
+	import type { UUID } from 'crypto';
 
 	// TODO: Try to reduce the duplicated code from exam-types/create.
 
 	type ExamParemeterInput = {
+		id?: UUID;
 		position: number;
 		name: string;
 		type: 'text';
@@ -29,9 +31,9 @@
 
 	let { data }: PageProps = $props();
 
-	let { examTypeForm, examTypeData } = data;
+	let { editExamTypeForm, examTypeData } = data;
 
-	const { form, errors, enhance } = superForm(examTypeForm, {
+	const { form, errors, enhance } = superForm(editExamTypeForm, {
 		dataType: 'json',
 		delayMs: 0,
 		applyAction: true,
@@ -47,7 +49,7 @@
 		}
 	});
 
-	const original = cleanExamTypeData(data.examTypeData);
+	const original = cleanEditExamTypeData(data.examTypeData);
 
 	// Compare form vs original data
 	const hasChanges = $derived(!isEqual($form, original));
@@ -61,6 +63,7 @@
 
 		// Base parameter
 		const initParameter: ExamParemeterInput = {
+			id: undefined,
 			position: newPosition,
 			name: '',
 			type: 'text',
@@ -167,12 +170,13 @@
 	<div class="relative flex justify-center">
 		<BackButton href="/exam-type/{examTypeData.id}" size="40" />
 
-		<Button
+		<!-- TODO: Remove this button -->
+		<!-- <Button
 			onclick={() => {
 				console.log('examTypeData: ', examTypeData);
 				console.log('hasChanges: ', hasChanges);
 			}}>XD</Button
-		>
+		> -->
 
 		<p class="mx-auto my-0 text-center text-3xl">Editar tipo de exámen</p>
 	</div>
