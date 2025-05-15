@@ -39,8 +39,6 @@ export const actions: Actions = {
 			return failForms(400, { form });
 		}
 
-		console.log(JSON.stringify(form.data, null, 2));
-
 		const { id, name, basePrice, categories, description, parameters, deletedParameters } =
 			form.data;
 
