@@ -22,7 +22,7 @@
 		</thead>
 
 		<tbody class="">
-			{#each params as parameter_, i}
+			{#each params as parameter_}
 				<tr
 					class="direct-children:font-normal direct-children:py-1 border-primary-gray/20 not-last:border-b"
 				>
