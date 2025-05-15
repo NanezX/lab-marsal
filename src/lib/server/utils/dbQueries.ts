@@ -63,7 +63,8 @@ export async function findExamTypeById(id: string) {
 					deleted: false,
 					createdAt: false,
 					examTypeId: false
-				}
+				},
+				orderBy: (parameters, { asc }) => [asc(parameters.position)]
 			}
 		}
 	});
