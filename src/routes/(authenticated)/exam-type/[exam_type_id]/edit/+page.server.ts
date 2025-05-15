@@ -4,6 +4,9 @@ import type { PageServerLoad, Actions } from './$types';
 import { cleanEditExamTypeData } from '$lib/shared/utils';
 import { editExamTypeSchema } from '$lib/server/utils/zod';
 import { findExamTypeById } from '$lib/server/utils/dbQueries';
+import { db } from '$lib/server/db';
+import { examType } from '$lib/server/db/schema';
+import { isUniqueConstraintViolation } from '$lib/server/utils/helpers';
 
 // TODO: Verify what roles can update an exam type (on the action)
 
@@ -48,6 +51,49 @@ export const actions: Actions = {
 				{ text: 'ID de tipo de exámen no encontrado', type: 'error' },
 				{ status: 409 }
 			);
+		}
+
+		try {
+			// EXAM TYPES: ID and NAME are uniques
+			// PARAMETERS: ID are uniques
+			// Doing update within the same transaction to handle rollbacks too in case any failure
+			await db.transaction(async (tx) => {
+				//
+				await tx
+					.insert(examType)
+					.values({
+						id,
+						name,
+						description,
+						basePrice: basePrice.toString(),
+						categories
+					})
+					.onConflictDoUpdate({
+						target: examType.id,
+						set: {
+							name,
+							description,
+							basePrice: basePrice.toString(),
+							categories
+						}
+					});
+			});
+
+			return message(form, { text: 'Tipo de exámen editado correctamente', type: 'success' });
+		} catch (e) {
+			let errMsg = 'No se editó el tipo de exámen';
+
+			if (isUniqueConstraintViolation(e, 'exam_type_name_unique')) {
+				errMsg = 'Nombre de tipo de exámen en uso';
+			} else if (e instanceof Error) {
+				// Print the error type
+				console.error('Unknown error');
+			}
+
+			// Print the error
+			console.error(e);
+
+			return message(form, { text: errMsg, type: 'error' }, { status: 500 });
 		}
 	}
 };
