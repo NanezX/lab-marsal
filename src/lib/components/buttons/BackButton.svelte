@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import Button from '../Button.svelte';
-	import type { ClassValue, MouseEventHandler } from 'svelte/elements';
+	import type { ClassValue } from 'svelte/elements';
 	import { ArrowLeft } from '@steeze-ui/tabler-icons';
 	import Link from '../Link.svelte';
 
