@@ -1,5 +1,6 @@
 import { UserRoles } from '$lib/shared/enums';
 import { minDocumentId, maxDocumentId } from '$lib/shared/utils';
+import { validate } from 'uuid';
 import { z } from 'zod';
 
 export const UserLoginSchema = z.object({
@@ -109,3 +110,23 @@ export const examTypeSchema = z
 	});
 
 export type ExamTypeSchema = typeof examTypeSchema;
+
+export const editExamTypeParameterSchema = examTypeParameterSchema.extend({
+	id: z
+		.string()
+		.refine((value_) => {
+			return validate(value_);
+		}, 'ID del tipo de exámen no válido')
+		.optional()
+});
+
+export const editExamTypeSchema = examTypeSchema.innerType().extend({
+	id: z.string().refine((value_) => {
+		return validate(value_);
+	}, 'ID del tipo de exámen no válido'),
+	parameters: z.array(editExamTypeParameterSchema).min(1),
+
+	deletedParameters: z
+		.array(z.string().refine((value_) => validate(value_), 'ID del parámetro inválido'))
+		.default([])
+});
