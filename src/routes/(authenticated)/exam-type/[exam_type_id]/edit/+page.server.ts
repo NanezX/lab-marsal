@@ -17,7 +17,6 @@ export const load: PageServerLoad = async ({ parent }) => {
 			description: data.description ?? undefined,
 			basePrice: parseFloat(data.basePrice),
 			categories: data.categories,
-			clasification: undefined, // or map from your DB if available
 			parameters: data.parameters.map((p) => ({
 				position: p.position,
 				name: p.name,

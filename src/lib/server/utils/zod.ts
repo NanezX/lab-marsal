@@ -78,7 +78,6 @@ export const examTypeSchema = z
 		name: z.string().min(1, 'El nombre es obligatorio'),
 		description: z.string().optional().nullable(),
 		basePrice: z.number().positive('El precio base debe ser mayor a 0 USD'),
-		clasification: z.string().optional(), // Not sure about this
 		categories: z.array(z.string()),
 		parameters: z
 			.array(examTypeParameterSchema)
