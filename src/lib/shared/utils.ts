@@ -52,20 +52,15 @@ export function sortArrayObject<T>(data: Array<T>, key: string): Array<T> {
 export const minDocumentId = 0;
 export const maxDocumentId = 999999999;
 
-export function cleanExamTypeData(data: ExamTypeWithParameters) {
+export function cleanEditExamTypeData(data: ExamTypeWithParameters) {
 	return {
-		name: data.name,
+		...data,
 		description: data.description ?? undefined,
 		basePrice: parseFloat(data.basePrice),
-		categories: data.categories,
 		parameters: data.parameters.map((p) => ({
-			position: p.position,
-			name: p.name,
+			...p,
 			type: 'text' as const,
-			category: p.category ?? undefined,
-			unit: p.unit,
-			hasReferences: p.hasReferences,
-			referenceValues: p.referenceValues
+			category: p.category ?? undefined
 		}))
 	};
 }
