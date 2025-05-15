@@ -43,7 +43,7 @@ export const load: PageServerLoad = async ({ parent }) => {
 export const actions: Actions = {
 	default: async (event) => {
 		const request = event.request;
-		const form = await superValidate(request, zod(examTypeSchema));
+		const form = await superValidate(request, zod(editExamTypeSchema));
 
 		if (!form.valid) {
 			console.log('form not valid');
