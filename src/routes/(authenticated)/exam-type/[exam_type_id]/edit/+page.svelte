@@ -17,6 +17,7 @@
 	import type { UUID } from 'crypto';
 
 	// TODO: Try to reduce the duplicated code from exam-types/create.
+	// TODO: Click back button with changes made will show a confirm modal
 	// TODO: Add delete exam type button. It should have confirmation of delete when
 	// clicking and display info if there are exams created with this exam type
 
