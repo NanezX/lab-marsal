@@ -15,9 +15,9 @@
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import { isEqual } from 'lodash-es';
 	import type { UUID } from 'crypto';
+	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
 
 	// TODO: Try to reduce the duplicated code from exam-types/create.
-	// TODO: Click save button will show a confirm modal
 	// TODO: Click back button with changes made will show a confirm modal
 
 	type ExamParemeterInput = {
@@ -35,7 +35,12 @@
 
 	let { editExamTypeForm, examTypeData } = data;
 
-	const { form, errors, enhance } = superForm(editExamTypeForm, {
+	const {
+		form,
+		errors,
+		enhance,
+		submit: submitChanges
+	} = superForm(editExamTypeForm, {
 		dataType: 'json',
 		delayMs: 0,
 		applyAction: true,
@@ -58,6 +63,8 @@
 
 	// State to active/inactive category edition
 	let categoriesStatus: { [key: number]: string } = $state({});
+
+	let showConfirmModal = $state(false);
 
 	async function addParameter(category?: string): Promise<void> {
 		// New position to be added
@@ -206,6 +213,18 @@
 		<p class="mx-auto text-center text-3xl">Editar tipo de exámen</p>
 	</div>
 
+	<ConfirmModal
+		bind:showModal={showConfirmModal}
+		title="Confirmar cambios"
+		secondaryText="Esto puede afectar en como se muestran los exámenes ya creados"
+		saveButtonText="Guardar cambios"
+		cancelButtonText="Cancelar"
+		onSave={() => {
+			submitChanges();
+			return true;
+		}}
+	/>
+
 	<div>
 		<div class="space-y-5">
 			<p class="text-2xl">Detalles generales</p>
@@ -335,9 +354,9 @@
 	<div class="mx-auto w-fit space-x-10">
 		<Button
 			disabled={!hasChanges}
+			onclick={() => (showConfirmModal = true)}
 			title="Guardar cambios"
 			class="w-fit !bg-green-500 hover:!bg-green-400 disabled:!bg-gray-200"
-			type="submit"
 		>
 			Guardar cambios
 		</Button>
