@@ -6,6 +6,8 @@ import { findExamTypeById } from '$lib/server/utils/dbQueries';
 import { db } from '$lib/server/db';
 import { examType, parameter as parameterTable, exam as examTable } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
+import { redirect as svelteRedirect } from '@sveltejs/kit';
+// import { redirect, setFlash } from 'sveltekit-flash-message/server';
 
 // TODO: Verify what roles can delete an exam type (on the action)
 
@@ -68,7 +70,8 @@ export const actions: Actions = {
 				await tx.update(examType).set({ deleted: true }).where(eq(examType.id, examTypeId));
 			});
 
-			return message(form, { text: 'Tipo de exámen eliminado correctamente', type: 'success' });
+			//
+			// return message(form, { text: 'Tipo de exámen eliminado correctamente', type: 'success' });
 		} catch (e) {
 			const errMsg = 'No se eliminó el tipo de exámen';
 
@@ -82,5 +85,8 @@ export const actions: Actions = {
 
 			return message(form, { text: errMsg, type: 'error' }, { status: 500 });
 		}
+
+		// maybe usage of flash message from sveltekit-flash-message
+		svelteRedirect(303, '/exam-types');
 	}
 };

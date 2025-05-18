@@ -6,22 +6,56 @@
 	import Link from '$lib/components/Link.svelte';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import Button from '$lib/components/Button.svelte';
-
-	// TODO: Add delete exam type button. It should have confirmation of delete when
-	// 		 clicking and display info if there are exams created with this exam type.
-	// 		 ACTUALLY, to simplify things, we will show the modal to confirm the delete
-	// 		 and the user should enter the name of the exam type to confirm it. We are going
-	// 		 to use drop cascade to delete the exams and the exam type. So, we will be displaying
-	// 		 that this is a dangerous action and the user should be careful with it.
+	import { superForm } from 'sveltekit-superforms';
+	import { showToast } from '$lib/toasts';
+	import { goto } from '$app/navigation';
+	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
 
 	// TODO: Verify AND check what roles can remove/delete an exam type
 
 	let { data }: PageProps = $props();
+	let { examTypeData, deleteExamTypeForm } = data;
 
-	let { examTypeData } = data;
+	const {
+		form,
+		errors,
+		enhance,
+		submit: submitDeleteExamType
+	} = superForm(deleteExamTypeForm, {
+		dataType: 'json',
+		delayMs: 0,
+		applyAction: true,
+		onUpdated({ form }) {
+			// Display message based on the response
+			if (form.message) {
+				showToast(form.message.text, form.message.type);
+
+				if (form.message.type == 'success') {
+					goto(`/exam-types`);
+				}
+			}
+		}
+	});
+
+	let showConfirmDeleteModal = $state(false);
 </script>
 
+<ConfirmModal
+	bind:showModal={showConfirmDeleteModal}
+	title="Eliminar exámen"
+	text="¿Estás seguro de eliminar este exámen?"
+	secondaryText="Esto eliminará los exámenes ya creados con este tipo de exámen."
+	saveButtonText="Eliminar"
+	cancelButtonText="Cancelar"
+	onSave={() => {
+		submitDeleteExamType();
+		return true;
+	}}
+/>
+
 <div in:fade class="mb-4 flex w-full flex-col gap-y-8">
+	<form use:enhance method="POST" hidden></form>
+
 	<div class="relative flex justify-center">
 		<BackButton href="/exam-types" size="40" />
 
@@ -34,8 +68,10 @@
 				class="!bg-green-400 hover:!bg-green-500">Editar</Link
 			>
 
-			<Button type="button" onclick={() => alert('delete')} class="bg-red-400 hover:bg-red-500"
-				>Eliminar</Button
+			<Button
+				type="button"
+				onclick={() => (showConfirmDeleteModal = !showConfirmDeleteModal)}
+				class="bg-red-400 hover:bg-red-500">Eliminar</Button
 			>
 		</div>
 	</div>
