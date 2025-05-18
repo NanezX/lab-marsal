@@ -44,7 +44,7 @@
 	bind:showModal={showConfirmDeleteModal}
 	title="Eliminar exámen"
 	text="¿Estás seguro de eliminar este exámen?"
-	secondaryText="Esto eliminará los exámenes ya creados con este tipo de exámen."
+	secondaryText="Esto eliminará los exámenes ya creados con este tipo de exámen. El nombre de este tipo de exámen no podrá ser utilizado nuevamente."
 	saveButtonText="Eliminar"
 	cancelButtonText="Cancelar"
 	onSave={() => {
