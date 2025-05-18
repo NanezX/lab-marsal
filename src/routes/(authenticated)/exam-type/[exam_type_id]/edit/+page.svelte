@@ -20,7 +20,11 @@
 	// TODO: Click save button will show a confirm modal
 	// TODO: Click back button with changes made will show a confirm modal
 	// TODO: Add delete exam type button. It should have confirmation of delete when
-	// 		 clicking and display info if there are exams created with this exam type
+	// 		 clicking and display info if there are exams created with this exam type.
+	// 		 ACTUALLY, to simplify things, we will show the modal to confirm the delete
+	// 		 and the user should enter the name of the exam type to confirm it. We are going
+	// 		 to use drop cascade to delete the exams and the exam type. So, we will be displaying
+	// 		 that this is a dangerous action and the user should be careful with it.
 
 	type ExamParemeterInput = {
 		id?: UUID;
