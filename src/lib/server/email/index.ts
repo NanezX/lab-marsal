@@ -1,5 +1,6 @@
 import { env } from '$env/dynamic/private';
 import nodemailer from 'nodemailer';
+import { AppSendEmailError } from '../error';
 
 // Create a reusable transporter
 export const transporter = nodemailer.createTransport(
@@ -42,6 +43,6 @@ export async function sendEmail(
 		return info.messageId;
 	} catch (error) {
 		console.error('Error sending email:', error);
-		throw new Error('Failed to send email.');
+		throw new AppSendEmailError();
 	}
 }

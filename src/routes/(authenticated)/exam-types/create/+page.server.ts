@@ -6,6 +6,7 @@ import postgres from 'postgres';
 import { examType, parameter as parameterTable } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 import { examTypeSchema } from '$lib/server/utils/zod';
+import { AppDataNotSavedError } from '$lib/server/error';
 
 // TODO: Verify what roles can create an exam type (on the action)
 
@@ -59,7 +60,7 @@ export const actions: Actions = {
 				// Get and check the inserted ID
 				const insertedId = insertExamTypeResponse[0]?.insertedId;
 				if (!insertedId) {
-					throw new Error('El tipo de exámen no fue insertado en la tabla');
+					throw new AppDataNotSavedError('No se guardó el tipo de exámen');
 				}
 
 				// Insert parameters rows with the exam type relationship
@@ -80,6 +81,8 @@ export const actions: Actions = {
 			if (e instanceof postgres.PostgresError) {
 				console.error('PostgresError');
 				errMsg = errMsg + ' - PG';
+			} else if (e instanceof AppDataNotSavedError) {
+				errMsg = e.message;
 			} else if (e instanceof Error) {
 				console.error('Unknown error');
 			}

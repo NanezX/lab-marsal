@@ -12,6 +12,7 @@ import { error as svelteError } from '@sveltejs/kit';
 import { UserRoles } from '$lib/shared/enums';
 import { renderRegisteredUser } from '$lib/server/email/renderTemplates';
 import { sendEmail } from '$lib/server/email';
+import { AppDataNotSavedError } from '$lib/server/error';
 
 export const load = async () => {
 	const registerForm = await superValidate(zod(UserRegisterSchema));
@@ -78,8 +79,7 @@ export const actions: Actions = {
 			// Checkinf if the user was saved
 			const existingUser = await findUserByEmail(email.toLowerCase(), 'deleted', 'passwordHash');
 			if (!existingUser) {
-				// TODO: Handle error with a custom error class
-				throw new Error('No se registro el usuario');
+				throw new AppDataNotSavedError('No se registró el usuario');
 			}
 
 			// NOTE: This register will be used to create new users, so it should NOT create the session here.
@@ -91,6 +91,8 @@ export const actions: Actions = {
 			if (e instanceof postgres.PostgresError) {
 				console.error('PostgresError');
 				errMsg = errMsg + ' - PG';
+			} else if (e instanceof AppDataNotSavedError) {
+				errMsg = e.message;
 			} else if (e instanceof Error) {
 				console.error('Unknown error');
 				console.error(e);
