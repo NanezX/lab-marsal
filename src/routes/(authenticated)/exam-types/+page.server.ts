@@ -12,7 +12,12 @@ export const load = async ({ url }) => {
 	}
 
 	const { count: countTotal, data: examTypesData } = await db.transaction(async (tx) => {
-		let countTotalQuery = tx.select({ count: count() }).from(examType).$dynamic();
+		let countTotalQuery = tx
+			.select({ count: count() })
+			.from(examType)
+			.where(eq(examType.deleted, false))
+			.$dynamic();
+
 		let examTypesQuery = tx
 			.select()
 			.from(examType)
