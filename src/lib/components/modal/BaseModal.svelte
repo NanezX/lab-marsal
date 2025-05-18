@@ -6,7 +6,7 @@
 	import { clickedOutside } from '../actions/clickedOutside';
 	import type { Snippet } from 'svelte';
 
-	type PropType = {
+	export type PropType = {
 		title?: string;
 		showModal: boolean;
 		children: Snippet;
@@ -59,6 +59,7 @@
 						{title}
 					</h3>
 					<button
+						type="button"
 						class="float-right ml-auto border-0 bg-transparent p-1 text-3xl leading-none font-semibold text-gray-500 outline-hidden hover:text-red-500 focus:outline-hidden"
 						onclick={closeModal}
 					>
