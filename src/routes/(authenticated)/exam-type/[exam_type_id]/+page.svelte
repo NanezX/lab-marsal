@@ -5,6 +5,7 @@
 	import DisplayExamTypeParams from '$lib/components/DisplayExamTypeParams.svelte';
 	import Link from '$lib/components/Link.svelte';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
+	import Button from '$lib/components/Button.svelte';
 
 	// TODO: Add delete exam type button. It should have confirmation of delete when
 	// 		 clicking and display info if there are exams created with this exam type.
@@ -26,11 +27,15 @@
 
 		<p class="mx-auto my-0 text-center text-3xl">{examTypeData.name}</p>
 
-		<Link
-			href="/exam-type/{examTypeData.id}/edit"
-			title="Crear nuevo exámen"
-			class="!bg-green-400 hover:!bg-green-500">Editar</Link
-		>
+		<div>
+			<Link
+				href="/exam-type/{examTypeData.id}/edit"
+				title="Crear nuevo exámen"
+				class="!bg-green-400 hover:!bg-green-500">Editar</Link
+			>
+
+			<Button class="bg-red-400 hover:bg-red-500">Eliminar</Button>
+		</div>
 	</div>
 
 	<div>
