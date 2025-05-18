@@ -16,12 +16,7 @@
 	let { data }: PageProps = $props();
 	let { examTypeData, deleteExamTypeForm } = data;
 
-	const {
-		form,
-		errors,
-		enhance,
-		submit: submitDeleteExamType
-	} = superForm(deleteExamTypeForm, {
+	const { enhance, submit: submitDeleteExamType } = superForm(deleteExamTypeForm, {
 		dataType: 'json',
 		delayMs: 0,
 		applyAction: true,
