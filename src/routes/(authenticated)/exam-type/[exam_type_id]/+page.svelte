@@ -13,6 +13,8 @@
 	// 		 to use drop cascade to delete the exams and the exam type. So, we will be displaying
 	// 		 that this is a dangerous action and the user should be careful with it.
 
+	// TODO: Verify AND check what roles can remove/delete an exam type
+
 	let { data }: PageProps = $props();
 
 	let { examTypeData } = data;
