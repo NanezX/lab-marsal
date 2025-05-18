@@ -16,7 +16,7 @@
 	import { isEqual } from 'lodash-es';
 	import type { UUID } from 'crypto';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
-	import OnCloseGuard from '$lib/components/modal/CloseNavigationGuard.svelte';
+	import CloseNavigationGuard from '$lib/components/modal/CloseNavigationGuard.svelte';
 
 	// TODO: Try to reduce the duplicated code from exam-types/create.
 
@@ -197,7 +197,7 @@
 	}
 </script>
 
-<OnCloseGuard validator={() => hasChanges} bind:needConfirm={showDiscardModal} />
+<CloseNavigationGuard validator={() => hasChanges} bind:needConfirm={showDiscardModal} />
 
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
 	<div class="relative flex justify-center">
