@@ -11,6 +11,7 @@
 	import { tick } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { showToast } from '$lib/toasts.js';
+	import BackButton from '$lib/components/buttons/BackButton.svelte';
 
 	// TODO: Try to reduce the duplicated code from exam-types/create.
 
@@ -154,7 +155,11 @@
 </script>
 
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
-	<p class="text-center text-3xl">Crear tipo de exámen</p>
+	<div class="relative flex justify-center">
+		<BackButton href="/exam-types" size="40" />
+
+		<p class="mx-auto text-center text-3xl">Crear tipo de exámen</p>
+	</div>
 
 	<div>
 		<div class="space-y-5">

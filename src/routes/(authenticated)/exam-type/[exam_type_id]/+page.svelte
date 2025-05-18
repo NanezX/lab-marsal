@@ -4,6 +4,7 @@
 	import { sortArrayObject } from '$lib/shared/utils';
 	import DisplayExamTypeParams from '$lib/components/DisplayExamTypeParams.svelte';
 	import Link from '$lib/components/Link.svelte';
+	import BackButton from '$lib/components/buttons/BackButton.svelte';
 
 	let { data }: PageProps = $props();
 
@@ -12,6 +13,8 @@
 
 <div in:fade class="mb-4 flex w-full flex-col gap-y-8">
 	<div class="relative flex justify-center">
+		<BackButton href="/exam-types" size="40" />
+
 		<p class="mx-auto my-0 text-center text-3xl">{examTypeData.name}</p>
 
 		<Link

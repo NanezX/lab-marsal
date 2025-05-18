@@ -205,7 +205,7 @@
 			}}>XD</Button
 		> -->
 
-		<p class="mx-auto my-0 text-center text-3xl">Editar tipo de exámen</p>
+		<p class="mx-auto text-center text-3xl">Editar tipo de exámen</p>
 	</div>
 
 	<div>
