@@ -132,7 +132,7 @@ export const editExamTypeSchema = examTypeSchema.innerType().extend({
 });
 
 export const deleteExamTypeSchema = z.object({
-	id: z.string().refine((value_) => {
+	examTypeId: z.string().refine((value_) => {
 		return validate(value_);
 	}, 'ID del tipo de exámen no válido')
 });
