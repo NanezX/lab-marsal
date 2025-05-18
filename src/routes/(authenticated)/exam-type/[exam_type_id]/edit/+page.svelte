@@ -196,6 +196,7 @@
 		finishEditCategory(categoryIndex_);
 	}
 
+	// Setup to confirm leaving the page
 	let confirmLeave = () => {};
 
 	function handleBlock(continueNav: () => void) {
