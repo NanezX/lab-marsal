@@ -34,7 +34,9 @@
 				class="!bg-green-400 hover:!bg-green-500">Editar</Link
 			>
 
-			<Button class="bg-red-400 hover:bg-red-500">Eliminar</Button>
+			<Button type="button" onclick={() => alert('delete')} class="bg-red-400 hover:bg-red-500"
+				>Eliminar</Button
+			>
 		</div>
 	</div>
 
