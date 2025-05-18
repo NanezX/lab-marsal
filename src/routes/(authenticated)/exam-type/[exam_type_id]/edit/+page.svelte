@@ -16,7 +16,7 @@
 	import { isEqual } from 'lodash-es';
 	import type { UUID } from 'crypto';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
-	import OnCloseGuard from '$lib/components/modal/OnCloseGuard.svelte';
+	import OnCloseGuard from '$lib/components/modal/CloseNavigationGuard.svelte';
 
 	// TODO: Try to reduce the duplicated code from exam-types/create.
 

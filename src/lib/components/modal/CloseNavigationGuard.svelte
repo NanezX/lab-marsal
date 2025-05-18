@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { beforeNavigate } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import ConfirmModal from './ConfirmModal.svelte';
-	import NavigationGuard from './NavigationGuard.svelte';
 
 	type PropType = {
 		validator: () => boolean;
@@ -10,8 +11,17 @@
 
 	let { validator, needConfirm = $bindable(false) }: PropType = $props();
 
-	// Setup to confirm leaving the page
+	let isConfirmed = $state(false);
+	let nextUrl: string | null = null;
 	let confirmLeave = () => {};
+
+	function confirmedNavigation() {
+		if (nextUrl) {
+			isConfirmed = true;
+			goto(nextUrl);
+			nextUrl = null;
+		}
+	}
 
 	function handleBlock(continueNav: () => void) {
 		needConfirm = true;
@@ -36,9 +46,22 @@
 		window.addEventListener('beforeunload', handler);
 		return () => window.removeEventListener('beforeunload', handler);
 	});
-</script>
 
-<NavigationGuard shouldBlock={validator} onBlock={handleBlock} />
+	// This is for internal SvelteKit navigation
+	onMount(() => {
+		const unsubscribe = beforeNavigate((nav) => {
+			if (validator() && !isConfirmed && nav.to?.url) {
+				nav.cancel(); // stop the navigation
+				nextUrl = nav.to.url.pathname + nav.to.url.search + nav.to.url.hash;
+
+				// Execute the onBlock function passed as a prop
+				handleBlock(confirmedNavigation);
+			}
+		});
+
+		return unsubscribe;
+	});
+</script>
 
 <ConfirmModal
 	bind:showModal={needConfirm}
