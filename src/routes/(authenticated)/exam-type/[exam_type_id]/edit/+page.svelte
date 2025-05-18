@@ -16,9 +16,9 @@
 	import { isEqual } from 'lodash-es';
 	import type { UUID } from 'crypto';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
+	import NavigationGuard from '$lib/components/modal/NavigationGuard.svelte';
 
 	// TODO: Try to reduce the duplicated code from exam-types/create.
-	// TODO: Click back button with changes made will show a confirm modal
 
 	type ExamParemeterInput = {
 		id?: UUID;
@@ -65,6 +65,8 @@
 	let categoriesStatus: { [key: number]: string } = $state({});
 
 	let showConfirmModal = $state(false);
+	let showDiscardModal = $state(false);
+	let changesDiscarded = $state(false);
 
 	async function addParameter(category?: string): Promise<void> {
 		// New position to be added
@@ -194,9 +196,40 @@
 
 		finishEditCategory(categoryIndex_);
 	}
+
+	let confirmLeave = () => {};
+
+	function handleBlock(continueNav: () => void) {
+		// Show your confirm modal
+		showDiscardModal = true;
+		confirmLeave = continueNav;
+	}
+
+	function confirmAndLeave() {
+		showDiscardModal = false;
+		changesDiscarded = true;
+		confirmLeave(); // 🔁 Continue to nextUrl
+		return true; // ✅ Let ConfirmModal know to proceed
+	}
 </script>
 
+<NavigationGuard shouldBlock={() => hasChanges && !changesDiscarded} onBlock={handleBlock} />
+
+<ConfirmModal
+	bind:showModal={showDiscardModal}
+	text="Tienes cambios sin guardar. ¿Deseas salir?"
+	onSave={confirmAndLeave}
+	onClose={() => (showConfirmModal = false)}
+/>
+
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
+	<button
+		class="w-fit cursor-pointer bg-green-400 p-2"
+		type="button"
+		onclick={() => {
+			confirmLeave();
+		}}>xddd</button
+	>
 	<div class="relative flex justify-center">
 		<BackButton href="/exam-type/{examTypeData.id}" size="40" />
 
