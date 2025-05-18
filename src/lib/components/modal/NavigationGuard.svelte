@@ -20,7 +20,6 @@
 
 				onBlock(() => {
 					if (nextUrl) {
-						console.log('nextUrl: ', nextUrl);
 						goto(nextUrl);
 						nextUrl = null;
 					}

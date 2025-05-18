@@ -219,17 +219,12 @@
 	bind:showModal={showDiscardModal}
 	text="Tienes cambios sin guardar. ¿Deseas salir?"
 	onSave={confirmAndLeave}
+	saveButtonText="Salir"
 	onClose={() => (showConfirmModal = false)}
+	cancelButtonText="Volver"
 />
 
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
-	<button
-		class="w-fit cursor-pointer bg-green-400 p-2"
-		type="button"
-		onclick={() => {
-			confirmLeave();
-		}}>xddd</button
-	>
 	<div class="relative flex justify-center">
 		<BackButton href="/exam-type/{examTypeData.id}" size="40" />
 
