@@ -1,5 +1,6 @@
 import type { Dictionary } from 'lodash';
-import { chain } from 'lodash-es';
+import { chain, sortBy } from 'lodash-es';
+import type { ExamTypeWithParameters } from './types';
 
 export function isObject(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -44,5 +45,30 @@ export function deleteAndReindex<T>(
 		.value();
 }
 
+export function sortArrayObject<T>(data: Array<T>, key: string): Array<T> {
+	return sortBy(data, [key]);
+}
+
 export const minDocumentId = 0;
 export const maxDocumentId = 999999999;
+
+export function cleanEditExamTypeData(data: ExamTypeWithParameters) {
+	return {
+		id: data.id,
+		name: data.name,
+		description: data.description ?? undefined,
+		basePrice: parseFloat(data.basePrice),
+		categories: data.categories,
+		parameters: data.parameters.map((p) => ({
+			id: p.id,
+			position: p.position,
+			name: p.name,
+			type: 'text' as const,
+			category: p.category ?? undefined,
+			unit: p.unit,
+			hasReferences: p.hasReferences,
+			referenceValues: p.referenceValues
+		})),
+		deletedParameters: []
+	};
+}

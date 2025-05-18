@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
-	import type { ExamTypeSchema } from '../../routes/(authenticated)/exam-types/create/+page.server';
 	import Input from '$lib/components/Input.svelte';
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import Button from '$lib/components/Button.svelte';
@@ -9,23 +8,26 @@
 	import AddButton from '$lib/components/buttons/AddButton.svelte';
 	import type { SuperFormData, SuperFormErrors } from 'sveltekit-superforms/client';
 	import { deleteAndReindex } from '$lib/shared/utils';
+	import type { ExamTypeSchema } from '$lib/server/utils/zod';
 
 	// Prop type
 	type PropType = {
 		form: SuperFormData<SuperValidated<Infer<ExamTypeSchema>>['data']>;
 		errors: SuperFormErrors<SuperValidated<Infer<ExamTypeSchema>>['data']>;
+	} & {
+		removeParameterCallback?: (paramIndex_: number) => void;
 	} & (
-		| {
-				category: string;
-				addParameter: (category?: string) => void;
-		  }
-		| {
-				category?: never;
-				addParameter?: never;
-		  }
-	);
+			| {
+					category: string;
+					addParameter: (category?: string) => void;
+			  }
+			| {
+					category?: never;
+					addParameter?: never;
+			  }
+		);
 
-	let { form, errors, category, addParameter }: PropType = $props();
+	let { form, errors, category, addParameter, removeParameterCallback }: PropType = $props();
 
 	/// DRAGEABLES  STATES
 	let draggingItemIndex: number | null = $state(null);
@@ -54,6 +56,10 @@
 					$form.parameters[hoveredItemIndex],
 					$form.parameters[draggingItemIndex]
 				];
+
+				const aux = $form.parameters[draggingItemIndex].position;
+				$form.parameters[draggingItemIndex].position = $form.parameters[hoveredItemIndex].position;
+				$form.parameters[hoveredItemIndex].position = aux;
 
 				// Reorganize error items
 				if ($errors.parameters) {
@@ -91,6 +97,9 @@
 	function removeParameter(paramIndex_: number) {
 		// Check if the parameter exists and if it has more than one element
 		if ($form.parameters.length > 1 && $form.parameters[paramIndex_] !== undefined) {
+			// Use the callback first to not lose the index of the parameter
+			if (removeParameterCallback) removeParameterCallback(paramIndex_);
+
 			// Remove the parameter
 			form.update(($form) => {
 				$form.parameters.splice(paramIndex_, 1);

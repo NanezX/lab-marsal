@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
-import { user, examType, lower } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { user, examType, lower, parameter } from '$lib/server/db/schema';
+import { and, eq } from 'drizzle-orm';
 import type { InferSelectModel } from 'drizzle-orm';
 import type { PgTable } from 'drizzle-orm/pg-core';
 
@@ -48,6 +48,26 @@ export async function findExamTypeByName<E extends (keyof InferSelectModel<typeo
 		.where(eq(lower(examType.name), name.toLowerCase()));
 
 	return results.at(0) as Omit<InferSelectModel<typeof examType>, E[number]> | undefined;
+}
+
+export async function findExamTypeById(id: string) {
+	return await db.query.examType.findFirst({
+		columns: {
+			deleted: false
+		},
+		where: and(eq(examType.id, id), eq(examType.deleted, false)),
+		with: {
+			parameters: {
+				where: eq(parameter.deleted, false),
+				columns: {
+					deleted: false,
+					createdAt: false,
+					examTypeId: false
+				},
+				orderBy: (parameters, { asc }) => [asc(parameters.position)]
+			}
+		}
+	});
 }
 
 /**

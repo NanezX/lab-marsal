@@ -21,9 +21,9 @@
 
 	function generateHref(skipMultiplier: number): string {
 		const params = {
+			...queryParams,
 			limit: pageSize.toString(),
-			skip: (skipMultiplier * pageSize).toString(),
-			...queryParams
+			skip: (skipMultiplier * pageSize).toString()
 		};
 
 		const queryString = new URLSearchParams(params).toString();

@@ -26,6 +26,8 @@
 	}
 </script>
 
+<!-- TODO: Improve the UI of the type exam list  -->
+
 <div in:fade class="flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Tipos de exámenes</p>
 
@@ -52,7 +54,9 @@
 		{#each data.examTypesData as examType, index}
 			<p>
 				{pageSize * currentPage + index + 1}.
-				<strong>{examType.name}</strong>
+				<a href="/exam-type/{examType.id}">
+					<strong>{examType.name}</strong>
+				</a>
 			</p>
 		{/each}
 	</div>

@@ -1,5 +1,6 @@
 import { UserRoles } from '$lib/shared/enums';
 import { minDocumentId, maxDocumentId } from '$lib/shared/utils';
+import { validate } from 'uuid';
 import { z } from 'zod';
 
 export const UserLoginSchema = z.object({
@@ -58,3 +59,80 @@ export const VerifyRecoverySchema = z
 		message: 'Las contraseñas no coinciden',
 		path: ['repeatPassword']
 	});
+
+// Schema for an Exam type parameter
+export const examTypeParameterSchema = z.object({
+	// Positon of the parameter in the form
+	// Parameter data
+	position: z.number().min(0),
+	name: z.string().min(1, 'El parámetro debe tener un nombre'),
+	type: z.literal('text'),
+	category: z.string().min(1).optional(),
+	unit: z.string().min(1, 'Debe especificar la unidad del parámetro'),
+	hasReferences: z.boolean(),
+	referenceValues: z.array(z.string().min(1, 'Debe ingresar el valor de referencia'))
+});
+
+// Schema for an Exam type
+export const examTypeSchema = z
+	.object({
+		name: z.string().min(1, 'El nombre es obligatorio'),
+		description: z.string().optional().nullable(),
+		basePrice: z.number().positive('El precio base debe ser mayor a 0 USD'),
+		categories: z.array(z.string()),
+		parameters: z
+			.array(examTypeParameterSchema)
+			.min(1)
+			.default([
+				{
+					position: 0,
+					name: '',
+					type: 'text', // | "number";
+					category: undefined,
+					unit: '',
+					hasReferences: false,
+					referenceValues: []
+				}
+			])
+	})
+	.superRefine((obj, ctx) => {
+		// Check each parameter
+		obj.parameters.forEach((param, index) => {
+			// If the parameter has a category, it must exist in the categories array
+			if (param.category && !obj.categories.includes(param.category)) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: `La categoría "${param.category}" no existe en la lista de categorías`,
+					path: ['parameters', index, 'parameter', 'category']
+				});
+			}
+		});
+	});
+
+export type ExamTypeSchema = typeof examTypeSchema;
+
+export const editExamTypeParameterSchema = examTypeParameterSchema.extend({
+	id: z
+		.string()
+		.refine((value_) => {
+			return validate(value_);
+		}, 'ID del tipo de exámen no válido')
+		.optional()
+});
+
+export const editExamTypeSchema = examTypeSchema.innerType().extend({
+	id: z.string().refine((value_) => {
+		return validate(value_);
+	}, 'ID del tipo de exámen no válido'),
+	parameters: z.array(editExamTypeParameterSchema).min(1),
+
+	deletedParameters: z
+		.array(z.string().refine((value_) => validate(value_), 'ID del parámetro inválido'))
+		.default([])
+});
+
+export const deleteExamTypeSchema = z.object({
+	examTypeId: z.string().refine((value_) => {
+		return validate(value_);
+	}, 'ID del tipo de exámen no válido')
+});

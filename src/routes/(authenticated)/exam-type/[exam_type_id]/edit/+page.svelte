@@ -1,21 +1,27 @@
 <script lang="ts">
+	import type { PageProps } from './$types';
 	import Button from '$lib/components/Button.svelte';
-	import Input from '$lib/components/Input.svelte';
-	import Textarea from '$lib/components/Textarea.svelte';
 	import { fade } from 'svelte/transition';
+	import { cleanEditExamTypeData, generateName } from '$lib/shared/utils';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { Cancel, Check, CirclePlus, CopyPlus, PencilMinus } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
-	import ParametersCompo from '$lib/components/ParametersCompo.svelte';
-	import { generateName } from '$lib/shared/utils';
-	import { tick } from 'svelte';
-	import { goto } from '$app/navigation';
 	import { showToast } from '$lib/toasts.js';
+	import { goto } from '$app/navigation';
+	import Input from '$lib/components/Input.svelte';
+	import Textarea from '$lib/components/Textarea.svelte';
+	import ParametersCompo from '$lib/components/ParametersCompo.svelte';
+	import { tick } from 'svelte';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
+	import { isEqual } from 'lodash-es';
+	import type { UUID } from 'crypto';
+	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
+	import CloseNavigationGuard from '$lib/components/modal/CloseNavigationGuard.svelte';
 
 	// TODO: Try to reduce the duplicated code from exam-types/create.
 
 	type ExamParemeterInput = {
+		id?: UUID;
 		position: number;
 		name: string;
 		type: 'text';
@@ -25,9 +31,16 @@
 		referenceValues: string[];
 	};
 
-	let { data } = $props();
+	let { data }: PageProps = $props();
 
-	const { form, errors, enhance } = superForm(data.examTypeForm, {
+	let { editExamTypeForm, examTypeData } = data;
+
+	const {
+		form,
+		errors,
+		enhance,
+		submit: submitChanges
+	} = superForm(editExamTypeForm, {
 		dataType: 'json',
 		delayMs: 0,
 		applyAction: true,
@@ -37,14 +50,22 @@
 				showToast(form.message.text, form.message.type);
 
 				if (form.message.type == 'success') {
-					goto('/exam-types');
+					goto(`/exam-type/${examTypeData.id}`);
 				}
 			}
 		}
 	});
 
+	const original = cleanEditExamTypeData(data.examTypeData);
+
+	// Compare form vs original data
+	const hasChanges = $derived(!isEqual($form, original));
+
 	// State to active/inactive category edition
 	let categoriesStatus: { [key: number]: string } = $state({});
+
+	let showConfirmModal = $state(false);
+	let showDiscardModal = $state(false);
 
 	async function addParameter(category?: string): Promise<void> {
 		// New position to be added
@@ -52,6 +73,7 @@
 
 		// Base parameter
 		const initParameter: ExamParemeterInput = {
+			id: undefined,
 			position: newPosition,
 			name: '',
 			type: 'text',
@@ -105,11 +127,32 @@
 		});
 	}
 
+	function removeParameterCallback(paramIndex_: number) {
+		const deletedParam = $form.parameters.find((_, index) => paramIndex_ == index)?.id;
+
+		if (deletedParam) {
+			form.update(($form) => {
+				$form.deletedParameters = Array.from(new Set([...$form.deletedParameters, deletedParam]));
+
+				return $form;
+			});
+		}
+	}
+
 	function removeCategory(category: string, categoryIndex: number) {
 		form.update(($form) => {
+			// Params that are removed. The whole category is removed, and we only care about the IDs (so can be deleted on database)
+			const deletedParams = $form.parameters
+				.filter((param_) => param_.category === category && param_.id !== undefined)
+				.map((param_) => param_.id as string);
+
+			// New params array, without the removed category
 			const newParams = $form.parameters.filter((param_) => param_.category !== category);
+
+			// Assign the values correctly
 			$form.parameters = newParams;
 			$form.categories.splice(categoryIndex, 1);
+			$form.deletedParameters = Array.from(new Set([...$form.deletedParameters, ...deletedParams]));
 
 			if (newParams.length == 0) {
 				addParameter();
@@ -154,12 +197,26 @@
 	}
 </script>
 
+<CloseNavigationGuard validator={() => hasChanges} bind:needConfirm={showDiscardModal} />
+
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
 	<div class="relative flex justify-center">
-		<BackButton href="/exam-types" size="40" />
+		<BackButton href="/exam-type/{examTypeData.id}" size="40" />
 
-		<p class="mx-auto text-center text-3xl">Crear tipo de exámen</p>
+		<p class="mx-auto text-center text-3xl">Editar tipo de exámen</p>
 	</div>
+
+	<ConfirmModal
+		bind:showModal={showConfirmModal}
+		title="Confirmar cambios"
+		secondaryText="Esto puede afectar en como se muestran los exámenes ya creados"
+		saveButtonText="Guardar cambios"
+		cancelButtonText="Cancelar"
+		onSave={() => {
+			submitChanges();
+			return true;
+		}}
+	/>
 
 	<div>
 		<div class="space-y-5">
@@ -277,10 +334,10 @@
 						</Button>
 					</div>
 
-					<ParametersCompo {form} {errors} {category} {addParameter} />
+					<ParametersCompo {form} {errors} {category} {addParameter} {removeParameterCallback} />
 				</div>
 			{:else}
-				<ParametersCompo {form} {errors} />
+				<ParametersCompo {form} {errors} {removeParameterCallback} />
 			{/each}
 		</div>
 	</div>
@@ -289,17 +346,12 @@
 
 	<div class="mx-auto w-fit space-x-10">
 		<Button
-			title="Cancelar"
-			class="w-fit !bg-red-500 hover:!bg-red-400"
-			onclick={() => goto('/exam-types')}>Cancelar</Button
+			disabled={!hasChanges}
+			onclick={() => (showConfirmModal = true)}
+			title="Guardar cambios"
+			class="w-fit !bg-green-500 hover:!bg-green-400 disabled:!bg-gray-200"
 		>
-
-		<Button
-			title="Guardar tipo de exámen"
-			class="w-fit !bg-green-500 hover:!bg-green-400"
-			type="submit"
-		>
-			Guardar
+			Guardar cambios
 		</Button>
 	</div>
 </form>
