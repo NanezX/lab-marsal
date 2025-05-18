@@ -12,6 +12,10 @@ declare global {
 				text: string;
 			};
 		}
+
+		interface PageData {
+			flash?: { type: 'error' | 'success' | 'warning'; message: string };
+		}
 	}
 }
 
