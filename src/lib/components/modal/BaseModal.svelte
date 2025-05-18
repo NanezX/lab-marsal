@@ -12,6 +12,8 @@
 		children: Snippet;
 		onClose?: () => void;
 		onSave?: () => boolean;
+		saveButtonText?: string;
+		cancelButtonText?: string;
 	};
 
 	let {
@@ -19,7 +21,9 @@
 		showModal = $bindable(),
 		children,
 		onClose,
-		onSave
+		onSave,
+		saveButtonText = 'Guardar',
+		cancelButtonText = 'Cerrar'
 	}: PropType = $props();
 
 	function closeModal() {
@@ -76,8 +80,10 @@
 				<div
 					class=" flex items-center justify-end gap-x-6 rounded-b border-t border-solid border-t-gray-200 p-6"
 				>
-					<Button class="bg-red-500 hover:bg-red-500/75" onclick={closeModal}>Cerrar</Button>
-					<Button onclick={saveModal}>Guardar</Button>
+					<Button class="bg-red-500 hover:bg-red-500/75" onclick={closeModal}
+						>{cancelButtonText}</Button
+					>
+					<Button onclick={saveModal}>{saveButtonText}</Button>
 				</div>
 			</div>
 		</div>
