@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { examType } from '$lib/server/db/schema';
-import { asc, count, ilike } from 'drizzle-orm';
+import { asc, count, eq, ilike } from 'drizzle-orm';
 
 export const load = async ({ url }) => {
 	let limit = Number(url.searchParams.get('limit') || 5);
@@ -19,6 +19,7 @@ export const load = async ({ url }) => {
 			.orderBy(asc(examType.name))
 			.limit(limit)
 			.offset(skip)
+			.where(eq(examType.deleted, false))
 			.$dynamic();
 
 		if (name) {
