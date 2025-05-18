@@ -14,19 +14,22 @@
 
 	let nextUrl: string | null = null;
 
+	function confirmedNavigation() {
+		if (nextUrl) {
+			isConfirmed = true;
+			goto(nextUrl);
+			nextUrl = null;
+		}
+	}
+
 	onMount(() => {
 		const unsubscribe = beforeNavigate((nav) => {
 			if (shouldBlock() && !isConfirmed && nav.to?.url) {
 				nav.cancel(); // stop the navigation
 				nextUrl = nav.to.url.pathname + nav.to.url.search + nav.to.url.hash;
 
-				onBlock(() => {
-					if (nextUrl) {
-						isConfirmed = true;
-						goto(nextUrl);
-						nextUrl = null;
-					}
-				});
+				// Execute the onBlock function passed as a prop
+				onBlock(confirmedNavigation);
 			}
 		});
 
