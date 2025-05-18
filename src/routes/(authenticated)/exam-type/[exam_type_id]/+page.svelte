@@ -6,6 +6,13 @@
 	import Link from '$lib/components/Link.svelte';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 
+	// TODO: Add delete exam type button. It should have confirmation of delete when
+	// 		 clicking and display info if there are exams created with this exam type.
+	// 		 ACTUALLY, to simplify things, we will show the modal to confirm the delete
+	// 		 and the user should enter the name of the exam type to confirm it. We are going
+	// 		 to use drop cascade to delete the exams and the exam type. So, we will be displaying
+	// 		 that this is a dangerous action and the user should be careful with it.
+
 	let { data }: PageProps = $props();
 
 	let { examTypeData } = data;
