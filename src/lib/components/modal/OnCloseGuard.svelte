@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import ConfirmModal from './ConfirmModal.svelte';
 	import NavigationGuard from './NavigationGuard.svelte';
 
@@ -22,6 +23,19 @@
 		confirmLeave(); // Continue to nextUrl
 		return true;
 	}
+
+	// This shows the native browser dialog ("Do you want to leave?").
+	onMount(() => {
+		const handler = (event: BeforeUnloadEvent) => {
+			if (validator()) {
+				event.preventDefault();
+				event.returnValue = ''; // Required for Chrome
+			}
+		};
+
+		window.addEventListener('beforeunload', handler);
+		return () => window.removeEventListener('beforeunload', handler);
+	});
 </script>
 
 <NavigationGuard shouldBlock={validator} onBlock={handleBlock} />
