@@ -14,7 +14,7 @@
 
 <a
 	class={[
-		'bg-primary-blue hover:bg-primary-blue/75 cursor-pointer rounded-3xl px-4 py-1 text-white',
+		'bg-primary-blue hover:bg-primary-blue/75 cursor-pointer rounded-3xl px-4 py-2 text-white',
 		'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600',
 		className
 	]}
