@@ -66,7 +66,6 @@
 
 	let showConfirmModal = $state(false);
 	let showDiscardModal = $state(false);
-	let changesDiscarded = $state(false);
 
 	async function addParameter(category?: string): Promise<void> {
 		// New position to be added
@@ -207,13 +206,12 @@
 
 	function confirmAndLeave() {
 		showDiscardModal = false;
-		changesDiscarded = true;
 		confirmLeave(); // 🔁 Continue to nextUrl
 		return true; // ✅ Let ConfirmModal know to proceed
 	}
 </script>
 
-<NavigationGuard shouldBlock={() => hasChanges && !changesDiscarded} onBlock={handleBlock} />
+<NavigationGuard shouldBlock={() => hasChanges} onBlock={handleBlock} />
 
 <ConfirmModal
 	bind:showModal={showDiscardModal}

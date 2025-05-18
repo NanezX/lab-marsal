@@ -10,16 +10,19 @@
 
 	let { shouldBlock, onBlock }: PropType = $props();
 
+	let isConfirmed = $state(false);
+
 	let nextUrl: string | null = null;
 
 	onMount(() => {
 		const unsubscribe = beforeNavigate((nav) => {
-			if (shouldBlock() && nav.to?.url) {
+			if (shouldBlock() && !isConfirmed && nav.to?.url) {
 				nav.cancel(); // stop the navigation
 				nextUrl = nav.to.url.pathname + nav.to.url.search + nav.to.url.hash;
 
 				onBlock(() => {
 					if (nextUrl) {
+						isConfirmed = true;
 						goto(nextUrl);
 						nextUrl = null;
 					}
