@@ -203,16 +203,6 @@
 	<div class="relative flex justify-center">
 		<BackButton href="/exam-type/{examTypeData.id}" size="40" />
 
-		<!-- TODO: Remove this button -->
-		<!-- <Button
-			onclick={() => {
-				// console.log('examTypeData: ', examTypeData);
-				console.log('$form: ', $form);
-				console.log('original: ', original);
-				console.log('hasChanges: ', hasChanges);
-			}}>XD</Button
-		> -->
-
 		<p class="mx-auto text-center text-3xl">Editar tipo de exámen</p>
 	</div>
 
