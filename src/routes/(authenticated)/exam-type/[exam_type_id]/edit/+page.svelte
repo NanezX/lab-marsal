@@ -16,7 +16,7 @@
 	import { isEqual } from 'lodash-es';
 	import type { UUID } from 'crypto';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
-	import NavigationGuard from '$lib/components/modal/NavigationGuard.svelte';
+	import OnCloseGuard from '$lib/components/modal/OnCloseGuard.svelte';
 
 	// TODO: Try to reduce the duplicated code from exam-types/create.
 
@@ -195,33 +195,9 @@
 
 		finishEditCategory(categoryIndex_);
 	}
-
-	// Setup to confirm leaving the page
-	let confirmLeave = () => {};
-
-	function handleBlock(continueNav: () => void) {
-		// Show your confirm modal
-		showDiscardModal = true;
-		confirmLeave = continueNav;
-	}
-
-	function confirmAndLeave() {
-		showDiscardModal = false;
-		confirmLeave(); // 🔁 Continue to nextUrl
-		return true; // ✅ Let ConfirmModal know to proceed
-	}
 </script>
 
-<NavigationGuard shouldBlock={() => hasChanges} onBlock={handleBlock} />
-
-<ConfirmModal
-	bind:showModal={showDiscardModal}
-	text="Tienes cambios sin guardar. ¿Deseas salir?"
-	onSave={confirmAndLeave}
-	saveButtonText="Salir"
-	onClose={() => (showConfirmModal = false)}
-	cancelButtonText="Volver"
-/>
+<OnCloseGuard validator={() => hasChanges} bind:needConfirm={showDiscardModal} />
 
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
 	<div class="relative flex justify-center">
