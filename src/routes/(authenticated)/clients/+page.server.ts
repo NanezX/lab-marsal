@@ -80,9 +80,6 @@ export const load = async ({ url }) => {
 		};
 	});
 
-	console.log('patientsData', patientsData);
-	console.log('countTotal', countTotal);
-
 	return {
 		patientsData,
 		countTotal: countTotal[0].count
