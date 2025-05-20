@@ -2,6 +2,8 @@ import { db } from '$lib/server/db';
 import { examType } from '$lib/server/db/schema';
 import { asc, count, eq, ilike } from 'drizzle-orm';
 
+// TODO: Add exams quantity of the given exam type. Use the count() function to count the number of exams for each exam type and add it to the response./
+// Try to use the DB transaction to get the count and the exam types in a single query. You can use the `count()` function from drizzle-orm to count the number of exams for each exam type. Use a left join to get the exams for each exam type and group by the exam type ID.
 export const load = async ({ url }) => {
 	let limit = Number(url.searchParams.get('limit') || 5);
 	const skip = Number(url.searchParams.get('skip') || 0);
