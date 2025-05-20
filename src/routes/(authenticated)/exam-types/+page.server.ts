@@ -39,12 +39,9 @@ export const load = async ({ url }) => {
 			.$dynamic();
 
 		if (name) {
-			countTotalQuery = countTotalQuery.where(
-				and(ilike(examType.name, `%${name}%`), eq(examType.deleted, false))
-			);
-			examTypesQuery = examTypesQuery.where(
-				and(ilike(examType.name, `%${name}%`), eq(examType.deleted, false))
-			);
+			const filter = and(ilike(examType.name, `%${name}%`), eq(examType.deleted, false));
+			countTotalQuery = countTotalQuery.where(filter);
+			examTypesQuery = examTypesQuery.where(filter);
 		}
 
 		return { count: await countTotalQuery, data: await examTypesQuery };
