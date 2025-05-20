@@ -72,3 +72,19 @@ export function cleanEditExamTypeData(data: ExamTypeWithParameters) {
 		deletedParameters: []
 	};
 }
+
+/**
+ * Normalizes a string by removing diacritical marks (accents) and converting it to lowercase.
+ *
+ * This function uses Unicode normalization form 'NFD' to decompose combined characters,
+ * then removes all diacritical marks using a regular expression, and finally converts
+ * the result to lowercase.
+ *
+ * @param s - The input string to normalize.
+ * @returns The normalized string, stripped of diacritics and in lowercase.
+ */
+export const normalized = (s: string) =>
+	s
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.toLowerCase();
