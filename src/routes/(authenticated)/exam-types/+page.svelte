@@ -7,10 +7,8 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import FilterControls from '$lib/components/FilterControls.svelte';
-	import { zoom } from '$lib/components/actions/zoom.js';
 	import LabelValue from '$lib/components/LabelValue.svelte';
-	import { formatDate, formatRelativeDate, stringMaxLength } from '$lib';
-	import Button from '$lib/components/Button.svelte';
+	import { formatRelativeDate, stringMaxLength } from '$lib/client';
 
 	let { data } = $props();
 
@@ -54,7 +52,7 @@
 		</Link>
 	</div>
 	<div class="mt-4 grid grid-cols-2 gap-3">
-		{#each data.examTypesData as examType, index}
+		{#each data.examTypesData as examType}
 			<a
 				title={examType.name}
 				href="/exam-type/{examType.id}"
