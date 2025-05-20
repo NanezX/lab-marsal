@@ -1,27 +1,55 @@
 import { db } from '$lib/server/db';
-import { examType, exam as examTable, patient as patientTable } from '$lib/server/db/schema';
-import { and, asc, count, eq, ilike } from 'drizzle-orm';
-
-// TODO: Allow the option to filter by documentId or/and name
-// TODO: Allow the option to select the order, by documentId (min to max) or name (alphabetical order)
+import { exam as examTable, patient as patientTable } from '$lib/server/db/schema';
+import { and, or, ilike, eq, count, asc, desc } from 'drizzle-orm';
 
 export const load = async ({ url }) => {
 	let limit = Number(url.searchParams.get('limit') || 5);
 	const skip = Number(url.searchParams.get('skip') || 0);
-	const name = url.searchParams.get('name');
 
-	if (limit > 25) {
-		limit = 25;
-	}
+	const searchText = url.searchParams.get('search')?.trim();
+	const order = url.searchParams.get('order') || 'documentId'; // 'documentId' or 'name'
+	const direction = url.searchParams.get('direction') || 'asc'; // 'asc' or 'desc'
+
+	if (limit > 25) limit = 25;
 
 	const { count: countTotal, data: patientsData } = await db.transaction(async (tx) => {
-		let countTotalQuery = tx
-			.select({ count: count() })
-			.from(patientTable)
-			.where(eq(patientTable.deleted, false))
-			.$dynamic();
+		// Common filters
+		const whereClauses = [eq(patientTable.deleted, false)];
 
-		let patientQuery = tx
+		// Unified search logic
+		if (searchText) {
+			if (/^\d+$/.test(searchText)) {
+				// All digits → treat as document ID
+				whereClauses.push(eq(patientTable.documentId, Number(searchText)));
+			} else {
+				// Text → search in name fields
+				whereClauses.push(
+					or(
+						ilike(patientTable.firstName, `%${searchText}%`),
+						ilike(patientTable.lastName, `%${searchText}%`)
+					)
+				);
+			}
+		}
+
+		const where = and(...whereClauses);
+
+		// Count query
+		const countTotalQuery = tx.select({ count: count() }).from(patientTable).where(where);
+
+		// Determine order
+		let orderExpr;
+		if (order === 'name') {
+			orderExpr = [
+				direction === 'desc' ? desc(patientTable.firstName) : asc(patientTable.firstName),
+				direction === 'desc' ? desc(patientTable.lastName) : asc(patientTable.lastName)
+			];
+		} else {
+			orderExpr =
+				direction === 'desc' ? desc(patientTable.documentId) : asc(patientTable.documentId);
+		}
+
+		const patientQuery = tx
 			.select({
 				id: patientTable.id,
 				firstName: patientTable.firstName,
@@ -31,21 +59,23 @@ export const load = async ({ url }) => {
 			})
 			.from(patientTable)
 			.leftJoin(examTable, eq(examTable.patientId, patientTable.id))
-			.where(eq(patientTable.deleted, false))
+			.where(where)
 			.groupBy(patientTable.id)
-			.orderBy(asc(patientTable.documentId))
+			.orderBy(...(Array.isArray(orderExpr) ? orderExpr : [orderExpr]))
 			.limit(limit)
-			.offset(skip)
-			.$dynamic();
+			.offset(skip);
 
-		if (name) {
-			const filter = and(ilike(examType.name, `%${name}%`), eq(examType.deleted, false));
-			countTotalQuery = countTotalQuery.where(filter);
-			patientQuery = patientQuery.where(filter);
-		}
-
-		return { count: await countTotalQuery, data: await patientQuery };
+		return {
+			count: await countTotalQuery,
+			data: await patientQuery
+		};
 	});
 
-	return { patientsData, countTotal: countTotal[0].count };
+	console.log('patientsData', patientsData);
+	console.log('countTotal', countTotal);
+
+	return {
+		patientsData,
+		countTotal: countTotal[0].count
+	};
 };
