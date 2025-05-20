@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { exam as examTable, patient as patientTable } from '$lib/server/db/schema';
-import { and, ilike, eq, count, asc, desc, sql } from 'drizzle-orm';
+import { and, or, ilike, eq, count, asc, desc, sql, type SQL } from 'drizzle-orm';
 
 export const load = async ({ url }) => {
 	let limit = Number(url.searchParams.get('limit') || 5);
@@ -18,23 +18,24 @@ export const load = async ({ url }) => {
 
 		// Unified search logic
 		if (searchText) {
-			if (/^\d+$/.test(searchText)) {
-				// All digits → treat as document ID
-				whereClauses.push(eq(patientTable.documentId, Number(searchText)));
+			const normalized = searchText.toLowerCase().replace(/\s+/g, ' ').trim();
+
+			if (/^\d+$/.test(normalized)) {
+				// Search by document ID
+				whereClauses.push(eq(patientTable.documentId, Number(normalized)));
 			} else {
-				// Text → search in name fields
-
-				// Normalize search text
-				const normalizedSearchText = searchText
-					.toLowerCase()
-					.replace(/\s+/g, ' ') // Collapse multiple spaces
-					.trim();
-
+				// Match full name in both directions
 				whereClauses.push(
-					ilike(
-						sql`(${patientTable.firstName} || ' ' || ${patientTable.lastName})`,
-						`%${normalizedSearchText}%`
-					)
+					or(
+						ilike(
+							sql`(${patientTable.firstName} || ' ' || ${patientTable.lastName})`,
+							`%${normalized}%`
+						),
+						ilike(
+							sql`(${patientTable.lastName} || ' ' || ${patientTable.firstName})`,
+							`%${normalized}%`
+						)
+					) as SQL<unknown>
 				);
 			}
 		}
