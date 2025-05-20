@@ -18,8 +18,6 @@
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
 	import CloseNavigationGuard from '$lib/components/modal/CloseNavigationGuard.svelte';
 
-	// TODO: Try to reduce the duplicated code from exam-types/create.
-
 	type ExamParemeterInput = {
 		id?: UUID;
 		position: number;

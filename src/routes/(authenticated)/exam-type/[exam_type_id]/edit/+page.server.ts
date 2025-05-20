@@ -9,7 +9,7 @@ import { examType, parameter as parameterTable } from '$lib/server/db/schema';
 import { isUniqueConstraintViolation } from '$lib/server/utils/helpers';
 import { inArray, sql } from 'drizzle-orm';
 
-// TODO: Verify what roles can update an exam type (on the action)
+// TODO: Verify what roles can update an exam type (on the action) - (maybe just block the page to those user in the backend)
 
 export const load: PageServerLoad = async ({ parent }) => {
 	// Get the data from the layout

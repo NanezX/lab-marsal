@@ -8,7 +8,7 @@ import { db } from '$lib/server/db';
 import { examTypeSchema } from '$lib/server/utils/zod';
 import { AppDataNotSavedError } from '$lib/server/error';
 
-// TODO: Verify what roles can create an exam type (on the action)
+// TODO: Verify what roles can create an exam type (on the action) - (maybe just block the page to those user in the backend)
 
 export const load = async () => {
 	const examTypeForm = await superValidate(zod(examTypeSchema));

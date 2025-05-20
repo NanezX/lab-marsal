@@ -11,7 +11,7 @@
 	import { goto } from '$app/navigation';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
 
-	// TODO: Verify AND check what roles can remove/delete an exam type
+	// TODO: Verify AND check what roles can remove/delete an exam type (maybe just block the page to those user in the backend)
 
 	let { data }: PageProps = $props();
 	let { examTypeData, deleteExamTypeForm } = data;

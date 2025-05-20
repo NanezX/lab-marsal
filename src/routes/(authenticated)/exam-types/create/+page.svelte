@@ -13,8 +13,6 @@
 	import { showToast } from '$lib/toasts.js';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 
-	// TODO: Try to reduce the duplicated code from exam-types/create.
-
 	type ExamParemeterInput = {
 		position: number;
 		name: string;

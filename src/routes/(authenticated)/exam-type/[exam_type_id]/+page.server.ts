@@ -8,7 +8,7 @@ import { examType, parameter as parameterTable, exam as examTable } from '$lib/s
 import { eq } from 'drizzle-orm';
 import { redirect } from 'sveltekit-flash-message/server';
 
-// TODO: Verify what roles can delete an exam type (on the action)
+// TODO: Verify what roles can delete an exam type (on the action) - (maybe just block the page to those user in the backend)
 
 export const load: PageServerLoad = async ({ parent }) => {
 	// Get the data from the layout
