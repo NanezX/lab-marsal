@@ -96,7 +96,7 @@
 
 			<p>
 				<strong>Descripción: </strong><br />
-				<span>{examTypeData.description}</span>
+				<span class="ml-2">{examTypeData.description}</span>
 			</p>
 		</div>
 
