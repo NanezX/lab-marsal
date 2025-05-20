@@ -69,9 +69,6 @@
 					{examType.description ? stringMaxLength(examType.description, 50) : 'Sin descripción'}
 				</p>
 
-				<!-- TODO: Add exams quantity of the given exam type-->
-
-				<!-- <div class="inline-flex w-full justify-between"> -->
 				<div class="w-ful xl:inline-flex xl:justify-between">
 					<!-- TODO: Add exams quantity of the given exam type-->
 					<LabelValue label="Cantidad" value={5} class="text-sm" />
