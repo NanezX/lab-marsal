@@ -1,5 +1,6 @@
 import { db } from '$lib/server/db';
 import { exam as examTable, patient as patientTable } from '$lib/server/db/schema';
+import { normalized } from '$lib/shared/utils.js';
 import { and, or, ilike, eq, count, asc, desc, sql, type SQL } from 'drizzle-orm';
 
 export const load = async ({ url }) => {
@@ -18,22 +19,22 @@ export const load = async ({ url }) => {
 
 		// Unified search logic
 		if (searchText) {
-			const normalized = searchText.toLowerCase().replace(/\s+/g, ' ').trim();
+			const normalizedSearch = normalized(searchText).replace(/\s+/g, ' ').trim();
 
-			if (/^\d+$/.test(normalized)) {
+			if (/^\d+$/.test(normalizedSearch)) {
 				// Search by document ID
-				whereClauses.push(eq(patientTable.documentId, Number(normalized)));
+				whereClauses.push(eq(patientTable.documentId, Number(normalizedSearch)));
 			} else {
 				// Match full name in both directions
 				whereClauses.push(
 					or(
 						ilike(
-							sql`(${patientTable.firstName} || ' ' || ${patientTable.lastName})`,
-							`%${normalized}%`
+							sql`(${patientTable.firstNameNormalized} || ' ' || ${patientTable.lastNameNormalized})`,
+							`%${normalizedSearch}%`
 						),
 						ilike(
-							sql`(${patientTable.lastName} || ' ' || ${patientTable.firstName})`,
-							`%${normalized}%`
+							sql`(${patientTable.lastNameNormalized} || ' ' || ${patientTable.firstNameNormalized})`,
+							`%${normalizedSearch}%`
 						)
 					) as SQL<unknown> // Type assertion to avoid type errors (weird inference issue)
 				);
