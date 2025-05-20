@@ -72,8 +72,7 @@
 				</p>
 
 				<div class="w-ful xl:inline-flex xl:justify-between">
-					<!-- TODO: Add exams quantity of the given exam type-->
-					<LabelValue label="Cantidad" value={5} class="text-sm" />
+					<LabelValue label="Cantidad" value={examType.examCount} class="text-sm" />
 
 					<LabelValue
 						label="Último cambio"
