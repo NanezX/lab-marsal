@@ -121,6 +121,8 @@ export const user = pgTable(
 		passwordHash: text('password_hash').notNull(),
 		firstName: text().notNull(),
 		lastName: text().notNull(),
+		// firstNameNormalized: text().notNull(),
+		// lastNameNormalized: text().notNull(),
 		role: userRoleEnum().notNull(),
 		documentId: integer('document_id').notNull().unique(),
 		birthdate: timestamp({ withTimezone: true, mode: 'date' }).notNull()
@@ -138,6 +140,8 @@ export const patient = pgTable('patient', {
 	...baseTable,
 	firstName: text().notNull(),
 	lastName: text().notNull(),
+	firstNameNormalized: text().notNull(),
+	lastNameNormalized: text().notNull(),
 	documentId: integer('document_id').notNull().unique(),
 	birthdate: timestamp({ withTimezone: true, mode: 'date' }).notNull(),
 	email: text(),
