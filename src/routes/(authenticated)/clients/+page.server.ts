@@ -35,7 +35,7 @@ export const load = async ({ url }) => {
 							sql`(${patientTable.lastName} || ' ' || ${patientTable.firstName})`,
 							`%${normalized}%`
 						)
-					) as SQL<unknown>
+					) as SQL<unknown> // Type assertion to avoid type errors (weird inference issue)
 				);
 			}
 		}
