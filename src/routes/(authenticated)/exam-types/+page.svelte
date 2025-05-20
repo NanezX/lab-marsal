@@ -2,11 +2,15 @@
 	import Link from '$lib/components/Link.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { LibraryPlus } from '@steeze-ui/tabler-icons';
+	import { FileSearch, LibraryPlus } from '@steeze-ui/tabler-icons';
 	import { fade } from 'svelte/transition';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import FilterControls from '$lib/components/FilterControls.svelte';
+	import { zoom } from '$lib/components/actions/zoom.js';
+	import LabelValue from '$lib/components/LabelValue.svelte';
+	import { formatDate, formatRelativeDate, stringMaxLength } from '$lib';
+	import Button from '$lib/components/Button.svelte';
 
 	let { data } = $props();
 
@@ -49,15 +53,38 @@
 			<Icon src={LibraryPlus} size="24" class="mt-1 text-white" />
 		</Link>
 	</div>
-
-	<div class="mt-4 flex flex-col gap-y-2">
+	<div class="mt-4 grid grid-cols-2 gap-3">
 		{#each data.examTypesData as examType, index}
-			<p>
-				{pageSize * currentPage + index + 1}.
-				<a href="/exam-type/{examType.id}">
-					<strong>{examType.name}</strong>
-				</a>
-			</p>
+			<a
+				title={examType.name}
+				href="/exam-type/{examType.id}"
+				class="hover:border-primary-blue flex flex-col gap-y-2 rounded-sm border bg-white px-4 py-2 transition-all select-none hover:-translate-y-1 hover:border hover:shadow-2xl"
+			>
+				<div class="inline-flex w-full items-center justify-between">
+					<p class="text-lg font-bold">{examType.name}</p>
+					<Icon src={FileSearch} size="24" />
+				</div>
+
+				<LabelValue label="Ref." value={`${examType.basePrice}$`} />
+
+				<p class="bg-gray-100/80 p-2 break-all text-gray-800">
+					{examType.description ? stringMaxLength(examType.description, 50) : 'Sin descripción'}
+				</p>
+
+				<!-- TODO: Add exams quantity of the given exam type-->
+
+				<!-- <div class="inline-flex w-full justify-between"> -->
+				<div class="w-ful xl:inline-flex xl:justify-between">
+					<!-- TODO: Add exams quantity of the given exam type-->
+					<LabelValue label="Cantidad" value={5} class="text-sm" />
+
+					<LabelValue
+						label="Último cambio"
+						value={formatRelativeDate(examType.updatedAt)}
+						class="text-sm"
+					/>
+				</div>
+			</a>
 		{/each}
 	</div>
 
