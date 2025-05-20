@@ -12,13 +12,11 @@ export const load = async ({ url }) => {
 	}
 
 	const { count: countTotal, data: examTypesData } = await db.transaction(async (tx) => {
-		let countTotalQuery = tx
-			.select({ count: count() })
-			.from(examType)
-			.where(eq(examType.deleted, false))
-			.$dynamic();
+		// Save all the where clauses in an array
+		const whereClauses = [eq(examType.deleted, false)];
 
-		let examTypesQuery = tx
+		const countTotalQuery = tx.select({ count: count() }).from(examType).$dynamic();
+		const examTypesQuery = tx
 			.select({
 				id: examType.id,
 				name: examType.name,
@@ -31,7 +29,6 @@ export const load = async ({ url }) => {
 			})
 			.from(examType)
 			.leftJoin(examTable, eq(examTable.examTypeId, examType.id))
-			.where(eq(examType.deleted, false))
 			.groupBy(examType.id)
 			.orderBy(asc(examType.name))
 			.limit(limit)
@@ -39,12 +36,13 @@ export const load = async ({ url }) => {
 			.$dynamic();
 
 		if (name) {
-			const filter = and(ilike(examType.name, `%${name}%`), eq(examType.deleted, false));
-			countTotalQuery = countTotalQuery.where(filter);
-			examTypesQuery = examTypesQuery.where(filter);
+			whereClauses.push(ilike(examType.name, `%${name}%`));
 		}
 
-		return { count: await countTotalQuery, data: await examTypesQuery };
+		// where filters
+		const where = and(...whereClauses);
+
+		return { count: await countTotalQuery.where(where), data: await examTypesQuery.where(where) };
 	});
 
 	return { examTypesData, countTotal: countTotal[0].count };
