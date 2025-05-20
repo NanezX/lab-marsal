@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { exam as examTable, patient as patientTable } from '$lib/server/db/schema';
-import { and, or, ilike, eq, count, asc, desc, type SQL } from 'drizzle-orm';
+import { and, ilike, eq, count, asc, desc, sql } from 'drizzle-orm';
 
 export const load = async ({ url }) => {
 	let limit = Number(url.searchParams.get('limit') || 5);
@@ -23,11 +23,18 @@ export const load = async ({ url }) => {
 				whereClauses.push(eq(patientTable.documentId, Number(searchText)));
 			} else {
 				// Text → search in name fields
+
+				// Normalize search text
+				const normalizedSearchText = searchText
+					.toLowerCase()
+					.replace(/\s+/g, ' ') // Collapse multiple spaces
+					.trim();
+
 				whereClauses.push(
-					or(
-						ilike(patientTable.firstName, `%${searchText}%`),
-						ilike(patientTable.lastName, `%${searchText}%`)
-					) as SQL<unknown> // Type assertion to avoid type error
+					ilike(
+						sql`(${patientTable.firstName} || ' ' || ${patientTable.lastName})`,
+						`%${normalizedSearchText}%`
+					)
 				);
 			}
 		}
