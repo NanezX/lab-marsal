@@ -28,7 +28,6 @@
 	}
 </script>
 
-
 <div in:fade class="flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Tipos de exámenes</p>
 
@@ -55,11 +54,15 @@
 			<a
 				title={examType.name}
 				href="/exam-type/{examType.id}"
-				class="hover:border-primary-blue flex flex-col gap-y-2 rounded-sm border bg-white px-4 py-2 transition-all select-none hover:-translate-y-1 hover:border hover:shadow-2xl"
+				class="group hover:border-primary-blue flex flex-col gap-y-2 rounded-sm border bg-white px-4 py-2 transition-all select-none hover:-translate-y-1 hover:border hover:shadow-2xl"
 			>
 				<div class="inline-flex w-full items-center justify-between">
 					<p class="text-lg font-bold">{examType.name}</p>
-					<Icon src={FileSearch} size="24" />
+					<Icon
+						src={FileSearch}
+						size="24"
+						class="group-hover:text-primary-blue transition-all group-hover:scale-125"
+					/>
 				</div>
 
 				<LabelValue label="Ref." value={`${examType.basePrice}$`} />
