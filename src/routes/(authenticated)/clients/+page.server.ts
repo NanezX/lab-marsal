@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { exam as examTable, patient as patientTable } from '$lib/server/db/schema';
-import { and, or, ilike, eq, count, asc, desc } from 'drizzle-orm';
+import { and, or, ilike, eq, count, asc, desc, type SQL } from 'drizzle-orm';
 
 export const load = async ({ url }) => {
 	let limit = Number(url.searchParams.get('limit') || 5);
@@ -27,7 +27,7 @@ export const load = async ({ url }) => {
 					or(
 						ilike(patientTable.firstName, `%${searchText}%`),
 						ilike(patientTable.lastName, `%${searchText}%`)
-					)
+					) as SQL<unknown> // Type assertion to avoid type error
 				);
 			}
 		}
