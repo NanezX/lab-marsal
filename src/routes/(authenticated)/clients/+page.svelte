@@ -15,12 +15,19 @@
 		{ value: 'documentId', label: 'Cédula' },
 		{ value: 'firstName', label: 'Nombre' }
 	];
+	const orderDirectionOptions = [
+		{ value: 'asc', label: 'Ascendente' },
+		{ value: 'desc', label: 'Descente' }
+	];
 
 	let nameSearch = $state(page.url.searchParams.get('search') || '');
 	let orderBy = $state(page.url.searchParams.get('orderBy') || orderByOptions[0].value);
+	let orderDirection = $state(
+		page.url.searchParams.get('orderDirection') || orderDirectionOptions[0].value
+	);
 
 	function getPatiens() {
-		goto(`/clients?search=${nameSearch}&orderBy=${orderBy}`, {
+		goto(`/clients?search=${nameSearch}&orderBy=${orderBy}&orderDirection=${orderDirection}`, {
 			keepFocus: true
 		});
 	}
@@ -43,9 +50,15 @@
 			items={orderByOptions}
 			name="orderBy"
 			required
-			placeholder="Seleccionar el tipo de examen"
+			placeholder="Ordenar por"
 		/>
-		<!-- formatter={formatCapital} -->
+		<Select
+			bind:value={orderDirection}
+			items={orderDirectionOptions}
+			name="orderDirection"
+			required
+			placeholder="Dirección de orden"
+		/>
 		<!-- <Link
 			href="/exam-types/create"
 			title="Crear nuevo exámen"
@@ -90,11 +103,12 @@
 		pageSize={10}
 		bind:queryParams={
 			() => {
-				return { search: nameSearch, orderBy };
+				return { search: nameSearch, orderBy, orderDirection };
 			},
 			(v) => {
 				nameSearch = v['search'];
 				orderBy = v['orderBy'];
+				orderDirection = v['orderDirection'];
 			}
 		}
 	/>
