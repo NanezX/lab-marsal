@@ -31,7 +31,6 @@
 	const { form, errors, constraints, enhance, delayed } = superForm(data.registerForm, {
 		delayMs: 0,
 		applyAction: true,
-
 		onUpdated({ form }) {
 			// Display message based on the response
 			if (form.message) {
@@ -141,6 +140,7 @@
 			<Select
 				bind:value={$form.role}
 				items={Object.values(UserRoles)}
+				forcePlaceholder
 				name="role"
 				required
 				placeholder="Selecciona un rol"

@@ -4,13 +4,14 @@
 	// Prop type
 	type PropType = {
 		name: string;
-		value: T;
+		value: T | null | undefined;
 		items: T[];
 		placeholder: string;
 		title?: string;
 		disabled?: boolean | null;
 		required?: boolean;
 		class?: ClassValue;
+		forcePlaceholder?: boolean;
 		formatter?: (item: T) => string;
 	};
 
@@ -24,14 +25,14 @@
 		disabled = false,
 		required = false,
 		class: classes,
-		formatter
+		formatter,
+		forcePlaceholder = false
 	}: PropType = $props();
 
-	// If this cause future issues, the issue comes from the zod validation at role. This is required and .nativeEnum
-	// provide, as default value, the first element at the enum. This cause that the select never start with a "empty" state
-	// which does not starting showing the placeholder.
-	// @ts-expect-error This is to allow the select to start at the placehorder
-	value = '';
+	// If placeholder should be shown, reset value to null
+	if (forcePlaceholder) {
+		value = null;
+	}
 
 	// Reusable classes
 	const selectClass = [
@@ -43,12 +44,11 @@
 </script>
 
 <select bind:value {name} {required} class={selectClass} {title} {disabled}>
-	<!-- Default option -->
-	<option value="" disabled selected>{placeholder}</option>
+	<!-- Placeholder option, shown when value is null or undefined -->
+	<option value={null} disabled>{placeholder}</option>
 
 	{#each items as item}
 		<option value={item}>
-			<!-- The consumer decide how to display the data -->
 			{#if formatter}
 				{formatter(item)}
 			{:else}
