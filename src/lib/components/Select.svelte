@@ -1,5 +1,5 @@
 <script lang="ts" generics="T">
-	import type { ClassValue } from 'svelte/elements';
+	import type { ChangeEventHandler, ClassValue } from 'svelte/elements';
 
 	type Option<T> = T | { value: T; label: string };
 
@@ -14,6 +14,7 @@
 		required?: boolean;
 		class?: ClassValue;
 		forcePlaceholder?: boolean;
+		onchange?: ChangeEventHandler<HTMLSelectElement>;
 	};
 
 	let {
@@ -26,7 +27,8 @@
 		disabled = false,
 		required = false,
 		class: classes,
-		forcePlaceholder = false
+		forcePlaceholder = false,
+		onchange
 	}: PropType = $props();
 
 	// If forcePlaceholder is active, unset the value to allow placeholder to appear
@@ -42,7 +44,7 @@
 	];
 </script>
 
-<select bind:value {name} {required} class={selectClass} {title} {disabled} {id}>
+<select bind:value {name} {required} class={selectClass} {title} {disabled} {id} {onchange}>
 	<option value={null} disabled>{placeholder}</option>
 
 	{#each items as item}

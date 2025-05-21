@@ -55,6 +55,7 @@
 				required
 				placeholder="Ordenar por"
 				class="!w-fit"
+				onchange={getPatiens}
 			/>
 		</div>
 		<div class="flex w-3/10 flex-col items-start justify-center gap-x-2">
@@ -67,6 +68,7 @@
 				required
 				placeholder="Dirección de orden"
 				class="!w-fit"
+				onchange={getPatiens}
 			/>
 		</div>
 		<!-- <Link
