@@ -9,6 +9,7 @@
 		items: Option<T>[];
 		placeholder: string;
 		title?: string;
+		id?: string;
 		disabled?: boolean | null;
 		required?: boolean;
 		class?: ClassValue;
@@ -21,6 +22,7 @@
 		items,
 		placeholder,
 		title,
+		id,
 		disabled = false,
 		required = false,
 		class: classes,
@@ -40,7 +42,7 @@
 	];
 </script>
 
-<select bind:value {name} {required} class={selectClass} {title} {disabled}>
+<select bind:value {name} {required} class={selectClass} {title} {disabled} {id}>
 	<option value={null} disabled>{placeholder}</option>
 
 	{#each items as item}

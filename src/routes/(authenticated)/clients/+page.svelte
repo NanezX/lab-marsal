@@ -36,29 +36,39 @@
 <div in:fade class="flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Pacientes</p>
 
-	<div class="flex w-full justify-evenly">
+	<div class="flex w-full justify-evenly gap-x-2">
 		<SearchBar
 			id="searchExamType"
 			bind:inputSearch={nameSearch}
-			placeholder="Buscar paciente por nombre o cédula"
-			wrapperClass="w-4/5"
+			placeholder="Buscar por nombre o cédula"
+			wrapperClass="w-5/10"
 			debounceTime={500}
 			debounceCallback={() => getPatiens()}
 		/>
-		<Select
-			bind:value={orderBy}
-			items={orderByOptions}
-			name="orderBy"
-			required
-			placeholder="Ordenar por"
-		/>
-		<Select
-			bind:value={orderDirection}
-			items={orderDirectionOptions}
-			name="orderDirection"
-			required
-			placeholder="Dirección de orden"
-		/>
+		<div class="flex w-3/10 items-center justify-center gap-x-2">
+			<p id="orderBy" class="w-fit text-sm font-semibold">Ordenar por:</p>
+			<Select
+				id="orderBy"
+				bind:value={orderBy}
+				items={orderByOptions}
+				name="orderBy"
+				required
+				placeholder="Ordenar por"
+				class="!w-fit"
+			/>
+		</div>
+		<div class="flex w-3/10 items-center justify-center gap-x-2">
+			<p id="orderDirection" class="w-fit text-sm font-semibold">Dirección:</p>
+			<Select
+				id="orderDirection"
+				bind:value={orderDirection}
+				items={orderDirectionOptions}
+				name="orderDirection"
+				required
+				placeholder="Dirección de orden"
+				class="!w-fit"
+			/>
+		</div>
 		<!-- <Link
 			href="/exam-types/create"
 			title="Crear nuevo exámen"
