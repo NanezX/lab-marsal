@@ -8,10 +8,11 @@
 	import FilterControls from '$lib/components/FilterControls.svelte';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { formatRelativeDate, stringMaxLength } from '$lib/client';
+	import { page } from '$app/state';
 
 	let { data } = $props();
 
-	let nameSearch = $state('');
+	let nameSearch = $state(page.url.searchParams.get('name') || '');
 
 	function getExamTypes() {
 		goto(`/exam-types?name=${nameSearch}`, {
@@ -73,6 +74,10 @@
 					/>
 				</div>
 			</a>
+		{:else}
+			<div class="col-span-2">
+				<p class="text-center text-lg font-semibold text-gray-500">No se encontraron resultados</p>
+			</div>
 		{/each}
 	</div>
 
