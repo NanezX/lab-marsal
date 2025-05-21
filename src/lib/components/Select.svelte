@@ -38,7 +38,7 @@
 		'bg-secondary-blue/30 focus:ring-dark-blue w-full rounded-3xl border py-2 px-4 focus:outline-hidden focus:ring-1',
 		'disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-600',
 		classes,
-		'border-r-8 border-transparent'
+		'border-r-8 border-transparent cursor-pointer'
 	];
 </script>
 
