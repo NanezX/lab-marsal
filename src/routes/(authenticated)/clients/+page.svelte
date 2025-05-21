@@ -13,7 +13,7 @@
 
 	const orderByOptions = [
 		{ value: 'documentId', label: 'Cédula' },
-		{ value: 'firstName', label: 'Nombre' }
+		{ value: 'name', label: 'Nombre' }
 	];
 	const orderDirectionOptions = [
 		{ value: 'asc', label: 'Ascendente' },
