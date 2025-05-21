@@ -139,13 +139,15 @@
 			<!-- User roles - Select -->
 			<Select
 				bind:value={$form.role}
-				items={Object.values(UserRoles)}
+				items={Object.values(UserRoles).map((role_) => ({
+					value: role_,
+					label: formatCapital(role_)
+				}))}
 				forcePlaceholder
 				name="role"
 				required
 				placeholder="Selecciona un rol"
 				class="col-span-2"
-				formatter={formatCapital}
 				{...$constraints.role}
 			/>
 			{#if $errors.role}<span class="text-sm text-red-500">{$errors.role}</span>{/if}
