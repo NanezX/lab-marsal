@@ -8,7 +8,7 @@ export const load = async ({ url }) => {
 	const skip = Number(url.searchParams.get('skip') || 0);
 
 	const searchText = url.searchParams.get('search')?.trim();
-	const order = url.searchParams.get('order') || 'documentId'; // 'documentId' or 'name'
+	const order = url.searchParams.get('orderBy') || 'documentId'; // 'documentId' or 'name'
 	const direction = url.searchParams.get('direction') || 'asc'; // 'asc' or 'desc'
 
 	if (limit > 25) limit = 25;
