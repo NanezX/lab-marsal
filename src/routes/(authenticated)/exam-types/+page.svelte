@@ -13,7 +13,7 @@
 	let { data } = $props();
 
 	let nameSearch = $state('');
-	let pageSize = $state(5);
+	let pageSize = $state(6);
 
 	let totalItems = $derived(data.countTotal);
 	let totalPages = $derived(Math.ceil(totalItems / pageSize));
