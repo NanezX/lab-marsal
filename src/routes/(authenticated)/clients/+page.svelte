@@ -3,6 +3,7 @@
 	import { page } from '$app/state';
 	import FilterControls from '$lib/components/FilterControls.svelte';
 	import LabelValue from '$lib/components/LabelValue.svelte';
+	import Link from '$lib/components/Link.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import Select from '$lib/components/Select.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
@@ -71,14 +72,14 @@
 				onchange={getPatiens}
 			/>
 		</div>
-		<!-- <Link
-			href="/exam-types/create"
-			title="Crear nuevo exámen"
-			class="flex items-center justify-center gap-x-1 text-xl"
+		<Link
+			href="/clients/create"
+			title="Nuevo paciente"
+			class="text- mt-5 flex items-center justify-center gap-x-1 transition-all hover:-translate-y-0.25 hover:shadow-lg"
 		>
 			<span> Nuevo </span>
-			<Icon src={LibraryPlus} size="24" class="mt-1 text-white" />
-		</Link> -->
+			<Icon src={UserPlus} size="24" class=" text-white" />
+		</Link>
 	</div>
 
 	<div class="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-3">
