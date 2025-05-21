@@ -36,16 +36,16 @@
 <div in:fade class="flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Pacientes</p>
 
-	<div class="flex w-full justify-evenly gap-x-2">
+	<div class="flex w-full flex-col justify-evenly gap-x-2 xl:flex-row">
 		<SearchBar
 			id="searchExamType"
 			bind:inputSearch={nameSearch}
 			placeholder="Buscar por nombre o cédula"
-			wrapperClass="w-5/10"
+			wrapperClass="w-full mt-5"
 			debounceTime={500}
 			debounceCallback={() => getPatiens()}
 		/>
-		<div class="flex w-3/10 items-center justify-center gap-x-2">
+		<div class="flex w-3/10 flex-col items-start justify-center gap-x-2">
 			<p id="orderBy" class="w-fit text-sm font-semibold">Ordenar por:</p>
 			<Select
 				id="orderBy"
@@ -57,7 +57,7 @@
 				class="!w-fit"
 			/>
 		</div>
-		<div class="flex w-3/10 items-center justify-center gap-x-2">
+		<div class="flex w-3/10 flex-col items-start justify-center gap-x-2">
 			<p id="orderDirection" class="w-fit text-sm font-semibold">Dirección:</p>
 			<Select
 				id="orderDirection"
@@ -79,7 +79,7 @@
 		</Link> -->
 	</div>
 
-	<div class="mt-4 grid grid-cols-2 gap-3">
+	<div class="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-3">
 		{#each data.patientsData as patient}
 			<a
 				title="{patient.firstName} {patient.lastName}"
