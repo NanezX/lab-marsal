@@ -23,7 +23,9 @@ export const load = async ({ url }) => {
 
 			if (/^\d+$/.test(normalizedSearch)) {
 				// Search by document ID
-				whereClauses.push(eq(patientTable.documentId, Number(normalizedSearch)));
+				whereClauses.push(
+					ilike(sql`CAST(${patientTable.documentId} AS TEXT)`, `${normalizedSearch}%`)
+				);
 			} else {
 				// Match full name in both directions
 				whereClauses.push(
