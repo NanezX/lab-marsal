@@ -13,6 +13,7 @@ import { UserRoles } from '$lib/shared/enums';
 import { renderRegisteredUser } from '$lib/server/email/renderTemplates';
 import { sendEmail } from '$lib/server/email';
 import { AppDataNotSavedError } from '$lib/server/error';
+import { normalized } from '$lib/shared/utils';
 
 export const load = async () => {
 	const registerForm = await superValidate(zod(UserRegisterSchema));
@@ -71,6 +72,8 @@ export const actions: Actions = {
 				passwordHash,
 				firstName,
 				lastName,
+				firstNameNormalized: normalized(firstName),
+				lastNameNormalized: normalized(lastName),
 				role,
 				documentId: documentId,
 				birthdate: new Date(birthdate)
