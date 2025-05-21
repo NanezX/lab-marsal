@@ -4,7 +4,6 @@
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { FileSearch, LibraryPlus } from '@steeze-ui/tabler-icons';
 	import { fade } from 'svelte/transition';
-	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import FilterControls from '$lib/components/FilterControls.svelte';
 	import LabelValue from '$lib/components/LabelValue.svelte';
@@ -13,7 +12,6 @@
 	let { data } = $props();
 
 	let nameSearch = $state('');
-	let pageSize = $state(6);
 
 	function getExamTypes() {
 		goto(`/exam-types?name=${nameSearch}`, {
@@ -81,7 +79,6 @@
 	<!-- Pagination -->
 	<FilterControls
 		baseUrl="/exam-types"
-		{pageSize}
 		totalItems={data.countTotal}
 		bind:queryParams={
 			() => {
