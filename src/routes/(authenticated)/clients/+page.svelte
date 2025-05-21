@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 	import FilterControls from '$lib/components/FilterControls.svelte';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
@@ -9,7 +10,7 @@
 
 	let { data } = $props();
 
-	let nameSearch = $state('');
+	let nameSearch = $state(page.url.searchParams.get('search') || '');
 
 	function getPatiens() {
 		goto(`/clients?search=${nameSearch}`, {
