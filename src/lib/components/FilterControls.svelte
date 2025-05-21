@@ -1,23 +1,25 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { ArrowLeft, ArrowRight } from '@steeze-ui/tabler-icons';
 
 	// Prop type
 	type PropType = {
 		baseUrl: string;
-		currentPage: number;
-		pageSize: number;
-		totalPages: number;
-		queryParams: Record<string, string | number>;
+		totalItems: number;
+		pageSize?: number;
+		queryParams?: Record<string, string | number>;
 	};
 
 	let {
 		baseUrl,
-		currentPage = $bindable(),
-		pageSize = $bindable(),
-		totalPages = $bindable(),
-		queryParams = $bindable()
+		totalItems,
+		pageSize = $bindable(6),
+		queryParams = $bindable({})
 	}: PropType = $props();
+
+	let currentPage = $derived(Number(page.url.searchParams.get('skip') || 0) / pageSize);
+	let totalPages = $derived(Math.ceil(totalItems / pageSize));
 
 	function generateHref(skipMultiplier: number): string {
 		const params = {

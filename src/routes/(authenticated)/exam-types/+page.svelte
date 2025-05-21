@@ -15,10 +15,6 @@
 	let nameSearch = $state('');
 	let pageSize = $state(6);
 
-	let totalItems = $derived(data.countTotal);
-	let totalPages = $derived(Math.ceil(totalItems / pageSize));
-	let currentPage = $derived(Number(page.url.searchParams.get('skip') || 0) / pageSize);
-
 	function getExamTypes() {
 		goto(`/exam-types?name=${nameSearch}`, {
 			keepFocus: true
@@ -27,7 +23,7 @@
 </script>
 
 <div in:fade class="flex w-full flex-col gap-y-8">
-	<p class="text-center text-3xl">Tipos de exámenes</p>
+	<p class="text-center text-3xl">Tipos de exámenes ({data.countTotal})</p>
 
 	<div class="flex w-full justify-evenly">
 		<SearchBar
@@ -86,8 +82,7 @@
 	<FilterControls
 		baseUrl="/exam-types"
 		{pageSize}
-		bind:currentPage={() => currentPage, (v) => (currentPage = v)}
-		bind:totalPages={() => totalPages, (v) => (totalPages = v)}
+		totalItems={data.countTotal}
 		bind:queryParams={
 			() => {
 				return { name: nameSearch };
