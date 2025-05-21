@@ -21,7 +21,7 @@
 </script>
 
 <div in:fade class="flex w-full flex-col gap-y-8">
-	<p class="text-center text-3xl">Tipos de exámenes ({data.countTotal})</p>
+	<p class="text-center text-3xl">Tipos de exámenes</p>
 
 	<div class="flex w-full justify-evenly">
 		<SearchBar
