@@ -1,7 +1,21 @@
-import { UserRoles } from '$lib/shared/enums';
+import { PatientGender, UserRoles } from '$lib/shared/enums';
 import { minDocumentId, maxDocumentId } from '$lib/shared/utils';
 import { validate } from 'uuid';
 import { z } from 'zod';
+
+function birthdateRefine(value_: string): boolean {
+	// Get the current date
+	const minAgeDate = new Date();
+	//  Set full date minus 18 years
+	minAgeDate.setFullYear(minAgeDate.getFullYear() - 18);
+	// Get a new date instance using the passed date
+	const inputDate = new Date(value_);
+	return inputDate <= minAgeDate;
+}
+
+function uuidRefine(value_: string): boolean {
+	return validate(value_);
+}
 
 export const UserLoginSchema = z.object({
 	email: z.string().min(1, 'Correo electrónico obligatorio').email('Correo electrónico inválido'),
@@ -25,15 +39,7 @@ export const UserRegisterSchema = UserLoginSchema.extend({
 		.string()
 		.min(1, 'Debe ingresar una fecha')
 		.date('No es una fecha valida')
-		.refine((value_) => {
-			// Get the current date
-			const minAgeDate = new Date();
-			//  Set full date minus 18 years
-			minAgeDate.setFullYear(minAgeDate.getFullYear() - 18);
-			// Get a new date instance using the passed date
-			const inputDate = new Date(value_);
-			return inputDate <= minAgeDate;
-		}, 'Debe tener mínimo 18 años')
+		.refine(birthdateRefine, 'Debe tener mínimo 18 años')
 }).refine((obj) => obj.password === obj.repeatPassword, {
 	message: 'Las contraseñas no coinciden',
 	path: ['repeatPassword']
@@ -112,27 +118,42 @@ export const examTypeSchema = z
 export type ExamTypeSchema = typeof examTypeSchema;
 
 export const editExamTypeParameterSchema = examTypeParameterSchema.extend({
-	id: z
-		.string()
-		.refine((value_) => {
-			return validate(value_);
-		}, 'ID del tipo de exámen no válido')
-		.optional()
+	id: z.string().refine(uuidRefine, 'ID del tipo de exámen no válido').optional()
 });
 
 export const editExamTypeSchema = examTypeSchema.innerType().extend({
-	id: z.string().refine((value_) => {
-		return validate(value_);
-	}, 'ID del tipo de exámen no válido'),
+	id: z.string().refine(uuidRefine, 'ID del tipo de exámen no válido'),
 	parameters: z.array(editExamTypeParameterSchema).min(1),
 
-	deletedParameters: z
-		.array(z.string().refine((value_) => validate(value_), 'ID del parámetro inválido'))
-		.default([])
+	deletedParameters: z.array(z.string().refine(uuidRefine, 'ID del parámetro inválido')).default([])
 });
 
 export const deleteExamTypeSchema = z.object({
-	examTypeId: z.string().refine((value_) => {
-		return validate(value_);
-	}, 'ID del tipo de exámen no válido')
+	examTypeId: z.string().refine(uuidRefine, 'ID del tipo de exámen no válido')
+});
+
+export const createPatientSchema = z.object({
+	firstName: z.string().min(1, 'El nombre es obligatorio'),
+	lastName: z.string().min(1, 'El apellido es obligatorio'),
+	documentId: z
+		.number({ required_error: 'Debe ingresar la cédula del paciente' })
+		.min(1, 'Debe ingresar una cédula válida')
+		.max(maxDocumentId, 'Debe ingresar una cédula válida'),
+	birthdate: z.string().min(1, 'Debe ingresar una fecha').date('No es una fecha valida'),
+	email: z.string().email('Correo electrónico inválido').optional(),
+	phoneNumber: z
+		.string()
+		.min(7, { message: 'Número de teléfono demasiado corto' })
+		.max(15, { message: 'Número de teléfono demasiado largo' })
+		.regex(/^\+?[0-9\s\-()]+$/, { message: 'Número de teléfono inválido' })
+		.optional(),
+	gender: z.nativeEnum(PatientGender, { errorMap: () => ({ message: 'Genero no válido' }) })
+});
+
+export const editPatientSchema = createPatientSchema.extend({
+	patientId: z.string().refine(uuidRefine, 'ID del paciente no válido')
+});
+
+export const deletePatientSchema = z.object({
+	patientId: z.string().refine(uuidRefine, 'ID del paciente no válido')
 });
