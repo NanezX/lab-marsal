@@ -13,15 +13,13 @@
 	let { data } = $props();
 
 	let nameSearch = $state('');
-
 	let pageSize = $state(5);
 
 	let totalItems = $derived(data.countTotal);
 	let totalPages = $derived(Math.ceil(totalItems / pageSize));
-
 	let currentPage = $derived(Number(page.url.searchParams.get('skip') || 0) / pageSize);
 
-	function getExamTypes(_limit: number = 10, _skip: number = 0) {
+	function getExamTypes() {
 		goto(`/exam-types?name=${nameSearch}`, {
 			keepFocus: true
 		});
@@ -38,7 +36,7 @@
 			placeholder="Buscar tipo exámen por nombre"
 			wrapperClass="w-4/5"
 			debounceTime={500}
-			debounceCallback={() => getExamTypes(pageSize, pageSize * currentPage)}
+			debounceCallback={() => getExamTypes()}
 		/>
 		<Link
 			href="/exam-types/create"
