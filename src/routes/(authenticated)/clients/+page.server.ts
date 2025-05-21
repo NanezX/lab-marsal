@@ -66,7 +66,6 @@ export const load = async ({ url }) => {
 				documentId: patientTable.documentId,
 				createdAt: patientTable.createdAt,
 				examCount: count(examTable.id).as('exam_count')
-				
 			})
 			.from(patientTable)
 			.leftJoin(examTable, eq(examTable.patientId, patientTable.id))

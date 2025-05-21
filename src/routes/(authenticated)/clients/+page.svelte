@@ -12,7 +12,7 @@
 	let nameSearch = $state('');
 
 	function getPatiens() {
-		goto(`/clients?name=${nameSearch}`, {
+		goto(`/clients?search=${nameSearch}`, {
 			keepFocus: true
 		});
 	}
@@ -70,10 +70,10 @@
 		pageSize={10}
 		bind:queryParams={
 			() => {
-				return { name: nameSearch };
+				return { search: nameSearch };
 			},
 			(v) => {
-				nameSearch = v['name'];
+				nameSearch = v['search'];
 			}
 		}
 	/>
