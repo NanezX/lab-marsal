@@ -60,6 +60,10 @@
 
 				<LabelValue label="Cantidad" value={patient.examCount} class="text-sm" />
 			</a>
+		{:else}
+			<div class="col-span-2">
+				<p class="text-center text-lg font-semibold text-gray-500">No se encontraron resultados</p>
+			</div>
 		{/each}
 	</div>
 
