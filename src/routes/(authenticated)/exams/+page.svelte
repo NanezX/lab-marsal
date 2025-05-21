@@ -115,10 +115,10 @@
 	let autoId = $state(true);
 
 	let priority = $state('');
-	const priorities = ['normal', 'urgente'];
+	const priorities = ['Normal', 'Urgente'];
 
 	let examType = $state('');
-	const examTypes = ['hematologia', 'tipiaje sanguineo', 'otros'];
+	const examTypes = ['Hematologia', 'Tipiaje sanguineo', 'Otros'];
 
 	let createNewPacient = $state(false);
 	let pacientId = $state('23875912');
@@ -152,7 +152,6 @@
 						name="examType"
 						required
 						placeholder="Seleccionar el tipo de examen"
-						formatter={formatCapital}
 					/>
 
 					<Select
@@ -161,7 +160,6 @@
 						name="priority"
 						required
 						placeholder="Seleccionar prioridad"
-						formatter={formatCapital}
 					/>
 				</div>
 			</div>
