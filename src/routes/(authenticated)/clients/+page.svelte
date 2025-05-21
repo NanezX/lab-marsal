@@ -4,16 +4,23 @@
 	import FilterControls from '$lib/components/FilterControls.svelte';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
+	import Select from '$lib/components/Select.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { UserPlus, UserSearch } from '@steeze-ui/tabler-icons';
 	import { fade } from 'svelte/transition';
 
 	let { data } = $props();
 
+	const orderByOptions = [
+		{ value: 'documentId', label: 'Cédula' },
+		{ value: 'firstName', label: 'Nombre' }
+	];
+
 	let nameSearch = $state(page.url.searchParams.get('search') || '');
+	let orderBy = $state(page.url.searchParams.get('orderBy') || orderByOptions[0].value);
 
 	function getPatiens() {
-		goto(`/clients?search=${nameSearch}`, {
+		goto(`/clients?search=${nameSearch}&orderBy=${orderBy}`, {
 			keepFocus: true
 		});
 	}
@@ -31,6 +38,14 @@
 			debounceTime={500}
 			debounceCallback={() => getPatiens()}
 		/>
+		<Select
+			bind:value={orderBy}
+			items={orderByOptions}
+			name="orderBy"
+			required
+			placeholder="Seleccionar el tipo de examen"
+		/>
+		<!-- formatter={formatCapital} -->
 		<!-- <Link
 			href="/exam-types/create"
 			title="Crear nuevo exámen"
@@ -75,10 +90,11 @@
 		pageSize={10}
 		bind:queryParams={
 			() => {
-				return { search: nameSearch };
+				return { search: nameSearch, orderBy };
 			},
 			(v) => {
 				nameSearch = v['search'];
+				orderBy = v['orderBy'];
 			}
 		}
 	/>
