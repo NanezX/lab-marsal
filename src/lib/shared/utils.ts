@@ -49,7 +49,7 @@ export function sortArrayObject<T>(data: Array<T>, key: string): Array<T> {
 	return sortBy(data, [key]);
 }
 
-export const minDocumentId = 0;
+export const minDocumentId = 1;
 export const maxDocumentId = 999999999;
 
 export function cleanEditExamTypeData(data: ExamTypeWithParameters) {
