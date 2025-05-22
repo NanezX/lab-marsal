@@ -9,7 +9,13 @@
 		labelClass?: ClassValue;
 	};
 
-	let { label, value, class: className, title, labelClass }: PropType = $props();
+	let {
+		label,
+		value,
+		class: className = 'flex items-center gap-x-1',
+		title,
+		labelClass
+	}: PropType = $props();
 </script>
 
 <p {title} class={className}>
