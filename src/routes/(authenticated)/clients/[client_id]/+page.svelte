@@ -10,6 +10,21 @@
 	import { showToast } from '$lib/toasts';
 	import { goto } from '$app/navigation';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
+	import { getAgeFromDate } from '$lib/client';
+	import { PatientGender } from '$lib/shared/enums';
+	import {
+		Id,
+		GenderMale,
+		GenderFemale,
+		Cake,
+		Man,
+		Woman,
+		Mail,
+		Phone,
+		ClockPlus,
+		ClockEdit
+	} from '@steeze-ui/tabler-icons';
+	import LabelValue from '$lib/components/LabelValue.svelte';
 
 	// TODO: Verify AND check what roles can remove/delete an exam type (maybe just block the page to those user in the backend)
 
@@ -48,3 +63,74 @@
 		return true;
 	}}
 />
+
+<div in:fade class="mb-4 flex w-full flex-col gap-y-8">
+	<form use:enhance method="POST" hidden></form>
+
+	<div class="relative flex justify-center">
+		<BackButton href="/exam-types" size="40" />
+
+		<p class="mx-auto my-0 text-center text-3xl">{patientData.firstName} {patientData.lastName}</p>
+
+		<div>
+			<Link
+				href="/exam-type/{patientData.id}/edit"
+				title="Crear nuevo exámen"
+				class="!bg-green-400 hover:!bg-green-500">Editar</Link
+			>
+
+			<Button
+				type="button"
+				onclick={() => (showConfirmDeleteModal = !showConfirmDeleteModal)}
+				class="bg-red-400 hover:bg-red-500">Eliminar</Button
+			>
+		</div>
+	</div>
+
+	<div>
+		<div class="space-y-5">
+			<p class="text-2xl">Datos personales</p>
+
+			<div class="grid grid-cols-2 gap-x-4 gap-y-3">
+				<LabelValue label="Cédula" value={patientData.documentId} icon={Id} />
+
+				<LabelValue
+					label="Género"
+					value={patientData.gender == PatientGender.Male ? 'Hombre' : 'Mujer'}
+					icon={patientData.gender == PatientGender.Male ? GenderMale : GenderFemale}
+				/>
+
+				<LabelValue
+					label="Edad"
+					value={getAgeFromDate(patientData.birthdate)}
+					icon={patientData.gender == PatientGender.Male ? Man : Woman}
+				/>
+
+				<LabelValue label="Correo electrónico" value={patientData.email ?? 'N/A'} icon={Mail} />
+
+				<LabelValue
+					label="Fecha de nacimiento"
+					value={patientData.birthdate.toLocaleDateString()}
+					icon={Cake}
+				/>
+				<LabelValue label="Teléfono" value={patientData.phoneNumber ?? 'N/A'} icon={Phone} />
+
+				<LabelValue
+					class="mt-2 flex items-center gap-x-1"
+					label="Creado"
+					value={patientData.createdAt.toLocaleString()}
+					icon={ClockPlus}
+				/>
+
+				{#if patientData.createdAt.getTime() !== patientData.updatedAt.getTime()}
+					<LabelValue
+						class="mt-2 flex items-center gap-x-1"
+						label="Última vez actualizado"
+						value={patientData.createdAt.toLocaleString()}
+						icon={ClockEdit}
+					/>
+				{/if}
+			</div>
+		</div>
+	</div>
+</div>
