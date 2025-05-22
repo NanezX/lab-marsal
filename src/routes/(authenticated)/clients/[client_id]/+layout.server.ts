@@ -8,7 +8,12 @@ export const load: LayoutServerLoad = async ({ params }) => {
 		svelteError(404, 'ID de paciente no válido');
 	}
 
-	const patientData = await findPatientById(params.client_id);
+	const patientData = await findPatientById(
+		params.client_id,
+		'deleted',
+		'firstNameNormalized',
+		'lastNameNormalized'
+	);
 
 	if (!patientData) {
 		svelteError(404, 'Paciente no encontrado');
