@@ -70,7 +70,7 @@
 						wrapperClass="w-1/3"
 						type="number"
 						autoComplete={false}
-						error={$errors.firstName}
+						error={$errors.documentId}
 					/>
 
 					<div class="flex flex-col items-start gap-y-1">
@@ -99,6 +99,30 @@
 						placeholder="Cumpleaños"
 						wrapperClass="w-1/3"
 						{...$constraints.birthdate}
+					/>
+				</div>
+
+				<div class="mt-8 flex gap-x-8">
+					<Input
+						bind:value={() => $form.email ?? '', (v) => ($form.email = v)}
+						type="email"
+						name="email"
+						required
+						label="Correo electrónico (opcional)"
+						placeholder="Correo electrónico"
+						autoComplete={false}
+						wrapperClass="w-1/2"
+						error={$errors.email}
+					/>
+
+					<Input
+						bind:value={() => $form.phoneNumber ?? '', (v) => ($form.phoneNumber = v)}
+						name="phoneNumber"
+						label="Teléfono (opcional)"
+						placeholder="Número de teléfono"
+						wrapperClass="w-1/2"
+						autoComplete={false}
+						error={$errors.documentId}
 					/>
 				</div>
 			</div>
