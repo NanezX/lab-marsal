@@ -25,6 +25,7 @@
 		ClockEdit
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
+	import FilterControls from '$lib/components/FilterControls.svelte';
 
 	// TODO: Verify AND check what roles can remove/delete an exam type (maybe just block the page to those user in the backend)
 
@@ -132,5 +133,25 @@
 				{/if}
 			</div>
 		</div>
+
+		<hr class="border-primary-gray/50 my-4" />
+
+		<div class="space-y-5">
+			<p class="text-2xl">Últimos exámenes</p>
+		</div>
+
+		<!-- Pagination -->
+		<!-- <FilterControls
+			baseUrl="/exam-types"
+			totalItems={data.countTotal}
+			bind:queryParams={
+				() => {
+					return { name: nameSearch };
+				},
+				(v) => {
+					nameSearch = v['name'];
+				}
+			}
+		/> -->
 	</div>
 </div>
