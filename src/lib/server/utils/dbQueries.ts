@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { user, examType, lower, parameter } from '$lib/server/db/schema';
+import { user, examType, patient as patientTable, lower, parameter } from '$lib/server/db/schema';
 import { and, eq } from 'drizzle-orm';
 import type { InferSelectModel } from 'drizzle-orm';
 import type { PgTable } from 'drizzle-orm/pg-core';
@@ -68,6 +68,20 @@ export async function findExamTypeById(id: string) {
 			}
 		}
 	});
+}
+
+export async function findPatientByDocumentId<
+	E extends (keyof InferSelectModel<typeof patientTable>)[]
+>(
+	documentId: number,
+	...excludes: E
+): Promise<Omit<InferSelectModel<typeof patientTable>, E[number]> | undefined> {
+	const results = await db
+		.select(selectWithout(patientTable, excludes))
+		.from(patientTable)
+		.where(eq(patientTable.documentId, documentId));
+
+	return results.at(0) as Omit<InferSelectModel<typeof patientTable>, E[number]> | undefined;
 }
 
 /**
