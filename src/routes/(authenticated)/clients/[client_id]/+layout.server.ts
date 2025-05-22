@@ -9,8 +9,6 @@ export const load: LayoutServerLoad = async ({ params }) => {
 	}
 
 	const patientData = await findPatientById(params.client_id);
-	console.log('patientData');
-	console.log(JSON.stringify(patientData, null, 2));
 
 	if (!patientData) {
 		svelteError(404, 'Paciente no encontrado');
