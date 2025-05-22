@@ -5,8 +5,7 @@
 	import { fade } from 'svelte/transition';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import Input from '$lib/components/Input.svelte';
-	import { Cake, Id } from '@steeze-ui/tabler-icons';
-	import { formatCapital, maxDocumentId, minDocumentId } from '$lib/shared/utils.js';
+	import { formatCapital } from '$lib/shared/utils.js';
 	import Select from '$lib/components/Select.svelte';
 	import { PatientGender } from '$lib/shared/enums.js';
 	import Button from '$lib/components/Button.svelte';
@@ -64,7 +63,10 @@
 
 				<div class="flex gap-x-8">
 					<Input
-						bind:value={$form.documentId}
+						bind:value={
+							() => ($form.documentId === 0 ? '' : $form.documentId),
+							(v) => ($form.documentId = v === '' ? 0 : v)
+						}
 						name="documentId"
 						label="Cédula de Identidad"
 						placeholder="Cédula"
