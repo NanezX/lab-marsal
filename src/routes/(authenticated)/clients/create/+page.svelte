@@ -9,6 +9,7 @@
 	import { formatCapital, maxDocumentId, minDocumentId } from '$lib/shared/utils.js';
 	import Select from '$lib/components/Select.svelte';
 	import { PatientGender } from '$lib/shared/enums.js';
+	import Button from '$lib/components/Button.svelte';
 
 	let { data } = $props();
 
@@ -107,7 +108,6 @@
 						bind:value={() => $form.email ?? '', (v) => ($form.email = v)}
 						type="email"
 						name="email"
-						required
 						label="Correo electrónico (opcional)"
 						placeholder="Correo electrónico"
 						autoComplete={false}
@@ -127,5 +127,19 @@
 				</div>
 			</div>
 		</div>
+	</div>
+
+	<hr class="border-primary-gray/50 my-1" />
+
+	<div class="mx-auto w-fit space-x-10">
+		<Button
+			title="Cancelar"
+			class="w-fit !bg-red-500 hover:!bg-red-400"
+			onclick={() => goto('/clients')}>Cancelar</Button
+		>
+
+		<Button title="Guardar paciente" class="w-fit !bg-green-500 hover:!bg-green-400" type="submit">
+			Guardar
+		</Button>
 	</div>
 </form>
