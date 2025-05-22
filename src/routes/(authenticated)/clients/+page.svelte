@@ -13,8 +13,8 @@
 	let { data } = $props();
 
 	const orderByOptions = [
-		{ value: 'documentId', label: 'Cédula' },
-		{ value: 'name', label: 'Nombre' }
+		{ value: 'name', label: 'Nombre' },
+		{ value: 'documentId', label: 'Cédula' }
 	];
 	const orderDirectionOptions = [
 		{ value: 'asc', label: 'Ascendente' },
@@ -118,7 +118,7 @@
 	<FilterControls
 		baseUrl="/clients"
 		totalItems={data.countTotal}
-		pageSize={10}
+		pageSize={12}
 		bind:queryParams={
 			() => {
 				return { search: nameSearch, orderBy, orderDirection };
