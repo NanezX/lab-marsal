@@ -18,7 +18,12 @@
 	];
 	const orderDirectionOptions = [
 		{ value: 'asc', label: 'Ascendente' },
-		{ value: 'desc', label: 'Descente' }
+		{ value: 'desc', label: 'Descendente' }
+	];
+
+	const orderDirectionName = [
+		{ value: 'asc', label: 'A-Z' },
+		{ value: 'desc', label: 'Z-A' }
 	];
 
 	let nameSearch = $state(page.url.searchParams.get('search') || '');
@@ -64,7 +69,7 @@
 			<Select
 				id="orderDirection"
 				bind:value={orderDirection}
-				items={orderDirectionOptions}
+				items={orderBy == 'documentId' ? orderDirectionOptions : orderDirectionName}
 				name="orderDirection"
 				required
 				placeholder="Dirección de orden"
