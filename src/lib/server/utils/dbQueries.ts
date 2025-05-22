@@ -1,12 +1,5 @@
 import { db } from '$lib/server/db';
-import {
-	user,
-	exam as examTable,
-	examType,
-	patient as patientTable,
-	lower,
-	parameter
-} from '$lib/server/db/schema';
+import { user, examType, patient as patientTable, lower, parameter } from '$lib/server/db/schema';
 import { and, eq } from 'drizzle-orm';
 import type { InferSelectModel } from 'drizzle-orm';
 import type { PgTable } from 'drizzle-orm/pg-core';
@@ -96,29 +89,9 @@ export async function findPatientById(id: string) {
 		columns: {
 			deleted: false,
 			firstNameNormalized: false,
-			lastNameNormalized: false,
+			lastNameNormalized: false
 		},
-		where: and(eq(patientTable.id, id), eq(patientTable.deleted, false)),
-		with: {
-			exams: {
-				where: eq(examTable.deleted, false),
-				limit: 5,
-				orderBy: (exams, { desc }) => [desc(exams.createdAt)],
-				columns: {
-					priority: true,
-					status: true,
-					paid: true,
-					createdAt: true,
-				},
-				with: {
-					examType: {
-						columns: {
-							name: true
-						}
-					}
-				},
-			}
-		}
+		where: and(eq(patientTable.id, id), eq(patientTable.deleted, false))
 	});
 }
 
