@@ -6,11 +6,11 @@ import type { PageServerLoad } from './$types';
 // TODO: Verify what roles can delete an patient (on the action) - (maybe just block the page to those user in the backend)
 
 export const load: PageServerLoad = async ({ params }) => {
+	// Load exams for this patientId
+	const patientId = params.client_id;
+
 	// Create the form
-	const deletePatientForm = await superValidate(
-		{ patientId: params.client_id },
-		zod(deletePatientSchema)
-	);
+	const deletePatientForm = await superValidate({ patientId }, zod(deletePatientSchema));
 
 	return { deletePatientForm };
 };
