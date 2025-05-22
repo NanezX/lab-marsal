@@ -51,5 +51,5 @@ export const load: PageServerLoad = async ({ params, url }) => {
 	// Create the form for deleting (if desired)
 	const deletePatientForm = await superValidate({ patientId }, zod(deletePatientSchema));
 
-	return { deletePatientForm, patienExamsData, countTotal: countTotal[0].count };
+	return { deletePatientForm, patienExamsData, totalExamsCount: countTotal[0].count };
 };

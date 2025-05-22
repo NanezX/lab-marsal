@@ -31,7 +31,7 @@
 
 	let { data }: PageProps = $props();
 
-	let { patientData, deletePatientForm } = data;
+	let { patientData, deletePatientForm, patienExamsData, totalExamsCount } = data;
 
 	const { enhance, submit: submitDelete } = superForm(deletePatientForm, {
 		dataType: 'json',
