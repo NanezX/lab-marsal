@@ -58,7 +58,7 @@
 						label="Apellido"
 						placeholder="Apellido del paciente"
 						wrapperClass="w-1/2"
-						error={$errors.firstName}
+						error={$errors.lastName}
 					/>
 				</div>
 
@@ -122,7 +122,7 @@
 						placeholder="Número de teléfono"
 						wrapperClass="w-1/2"
 						autoComplete={false}
-						error={$errors.documentId}
+						error={$errors.phoneNumber}
 					/>
 				</div>
 			</div>
