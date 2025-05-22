@@ -84,15 +84,16 @@ export async function findPatientByDocumentId<
 	return results.at(0) as Omit<InferSelectModel<typeof patientTable>, E[number]> | undefined;
 }
 
-export async function findPatientById(id: string) {
-	return await db.query.patient.findFirst({
-		columns: {
-			deleted: false,
-			firstNameNormalized: false,
-			lastNameNormalized: false
-		},
-		where: and(eq(patientTable.id, id), eq(patientTable.deleted, false))
-	});
+export async function findPatientById<E extends (keyof InferSelectModel<typeof patientTable>)[]>(
+	id: string,
+	...excludes: E
+): Promise<Omit<InferSelectModel<typeof patientTable>, E[number]> | undefined> {
+	const results = await db
+		.select(selectWithout(patientTable, excludes))
+		.from(patientTable)
+		.where(and(eq(patientTable.id, id), eq(patientTable.deleted, false)));
+
+	return results.at(0) as Omit<InferSelectModel<typeof patientTable>, E[number]> | undefined;
 }
 
 /**
