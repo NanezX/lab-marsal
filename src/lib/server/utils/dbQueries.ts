@@ -1,5 +1,12 @@
 import { db } from '$lib/server/db';
-import { user, examType, patient as patientTable, lower, parameter } from '$lib/server/db/schema';
+import {
+	user,
+	exam as examTable,
+	examType,
+	patient as patientTable,
+	lower,
+	parameter
+} from '$lib/server/db/schema';
 import { and, eq } from 'drizzle-orm';
 import type { InferSelectModel } from 'drizzle-orm';
 import type { PgTable } from 'drizzle-orm/pg-core';
@@ -82,6 +89,37 @@ export async function findPatientByDocumentId<
 		.where(eq(patientTable.documentId, documentId));
 
 	return results.at(0) as Omit<InferSelectModel<typeof patientTable>, E[number]> | undefined;
+}
+
+export async function findPatientById(id: string) {
+	return await db.query.patient.findFirst({
+		columns: {
+			deleted: false,
+			firstNameNormalized: false,
+			lastNameNormalized: false,
+		},
+		where: and(eq(patientTable.id, id), eq(patientTable.deleted, false)),
+		with: {
+			exams: {
+				where: eq(examTable.deleted, false),
+				limit: 5,
+				orderBy: (exams, { desc }) => [desc(exams.createdAt)],
+				columns: {
+					priority: true,
+					status: true,
+					paid: true,
+					createdAt: true,
+				},
+				with: {
+					examType: {
+						columns: {
+							name: true
+						}
+					}
+				},
+			}
+		}
+	});
 }
 
 /**
