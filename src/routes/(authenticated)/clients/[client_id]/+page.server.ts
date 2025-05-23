@@ -106,6 +106,6 @@ export const actions: Actions = {
 		}
 
 		// Redirect outside of the try/catch block to the clients page with a success message
-		redirect('/exam-types', { type: 'success', message: 'Eliminado correctamente' }, event.cookies);
+		redirect('/clients', { type: 'success', message: 'Eliminado correctamente' }, event.cookies);
 	}
 };
