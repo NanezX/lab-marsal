@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
-	import { showToast } from '$lib/toasts.js';
-	import { goto } from '$app/navigation';
 	import { fade } from 'svelte/transition';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import Input from '$lib/components/Input.svelte';
@@ -27,21 +25,17 @@
 		dataType: 'json',
 		delayMs: 0,
 		applyAction: true,
-		onUpdated({ form }) {
-			// Display message based on the response
-			if (form.message) {
-				showToast(form.message.text, form.message.type);
-
-				if (form.message.type == 'success') {
-					goto(`/clients/${patientData.id}`);
-				}
+		onResult(event) {
+			// If forms result type is a redirect or success, we assume that the changes were saved
+			if (event.result.type === 'redirect' || event.result.type === 'success') {
+				hasChanges = false;
 			}
 		}
 	});
 
 	const original = cleanEditPatientData(patientData);
 
-	const hasChanges = $derived(!isEqual($form, original));
+	let hasChanges = $derived(!isEqual($form, original));
 	let showConfirmModal = $state(false);
 	let showDiscardModal = $state(false);
 </script>

@@ -1,4 +1,4 @@
-import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
+import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { editPatientSchema } from '$lib/server/utils/zod';
 import { zod } from 'sveltekit-superforms/adapters';
 import { cleanEditPatientData, normalized } from '$lib/shared/utils';
@@ -7,6 +7,8 @@ import { findPatientById } from '$lib/server/utils/dbQueries';
 import { db } from '$lib/server/db';
 import { patient as patientTable } from '$lib/server/db/schema';
 import { isUniqueConstraintViolation } from '$lib/server/utils/helpers';
+import { failFormResponse } from '$lib/server/utils/failFormResponse';
+import { redirect } from 'sveltekit-flash-message/server';
 
 // TODO: Support edit. Like firstName, lastName, documentId, birthdate, gender, email phoneNumber
 
@@ -44,11 +46,7 @@ export const actions: Actions = {
 		// Check if already exists
 		const patientSaved = await findPatientById(patientId);
 		if (patientSaved === undefined) {
-			return message(
-				form,
-				{ text: 'ID de paciente no encontrado', type: 'error' },
-				{ status: 409 }
-			);
+			return failFormResponse(form, 'ID de paciente no encontrado', event.cookies, 409);
 		}
 
 		const patientDataUpdate = {
@@ -77,8 +75,6 @@ export const actions: Actions = {
 						...patientDataUpdate
 					}
 				});
-
-			return message(form, { text: 'Paciente editado correctamente', type: 'success' });
 		} catch (e) {
 			let errMsg = 'No se editó el paciente';
 
@@ -92,7 +88,13 @@ export const actions: Actions = {
 			// Print the error
 			console.error(e);
 
-			return message(form, { text: errMsg, type: 'error' }, { status: 500 });
+			return failFormResponse(form, errMsg, event.cookies, 403);
 		}
+
+		redirect(
+			`/clients/${patientId}`,
+			{ type: 'success', message: 'Paciente editado correctamente' },
+			event.cookies
+		);
 	}
 };
