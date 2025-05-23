@@ -1,6 +1,6 @@
 import type { Dictionary } from 'lodash';
 import { chain, sortBy } from 'lodash-es';
-import type { ExamTypeWithParameters } from './types';
+import type { ExamTypeWithParameters, Patient } from './types';
 
 export function isObject(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -70,6 +70,21 @@ export function cleanEditExamTypeData(data: ExamTypeWithParameters) {
 			referenceValues: p.referenceValues
 		})),
 		deletedParameters: []
+	};
+}
+
+export function cleanEditPatientData(
+	data: Patient<['firstNameNormalized', 'lastNameNormalized', 'deleted']>
+) {
+	return {
+		patientId: data.id,
+		firstName: data.firstName,
+		lastName: data.lastName,
+		documentId: data.documentId,
+		birthdate: data.birthdate.toISOString(),
+		email: data.email ?? undefined,
+		phoneNumber: data.phoneNumber ?? undefined,
+		gender: data.gender
 	};
 }
 
