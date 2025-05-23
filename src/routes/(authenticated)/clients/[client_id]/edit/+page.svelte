@@ -5,17 +5,25 @@
 	import { fade } from 'svelte/transition';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import Input from '$lib/components/Input.svelte';
-	import { formatCapital } from '$lib/shared/utils.js';
+	import { cleanEditPatientData, formatCapital } from '$lib/shared/utils.js';
 	import Select from '$lib/components/Select.svelte';
 	import { PatientGender } from '$lib/shared/enums.js';
 	import Button from '$lib/components/Button.svelte';
 	import CloseNavigationGuard from '$lib/components/modal/CloseNavigationGuard.svelte';
+	import { isEqual } from 'lodash-es';
+	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
 
 	let { data } = $props();
 
 	let { editPatientForm, patientData } = data;
 
-	const { form, errors, constraints, enhance } = superForm(editPatientForm, {
+	const {
+		form,
+		errors,
+		constraints,
+		enhance,
+		submit: submitChanges
+	} = superForm(editPatientForm, {
 		dataType: 'json',
 		delayMs: 0,
 		applyAction: true,
@@ -31,16 +39,30 @@
 		}
 	});
 
-	let hasChanges = $state(false);
+	const original = cleanEditPatientData(patientData);
+
+	const hasChanges = $derived(!isEqual($form, original));
 	let showConfirmModal = $state(false);
 	let showDiscardModal = $state(false);
 </script>
 
 <CloseNavigationGuard validator={() => hasChanges} bind:needConfirm={showDiscardModal} />
 
+<ConfirmModal
+	bind:showModal={showConfirmModal}
+	title="Confirmar cambios"
+	secondaryText="Esto puede afectar en como se muestran los exámenes ya creados"
+	saveButtonText="Guardar cambios"
+	cancelButtonText="Cancelar"
+	onSave={() => {
+		submitChanges();
+		return true;
+	}}
+/>
+
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
 	<div class="relative flex justify-center">
-		<BackButton href="/clients" size="40" />
+		<BackButton href="/clients/{patientData.id}" size="40" />
 
 		<p class="mx-auto text-center text-3xl">Editar paciente</p>
 	</div>
@@ -138,5 +160,18 @@
 				</div>
 			</div>
 		</div>
+	</div>
+
+	<hr class="border-primary-gray/50 my-1" />
+
+	<div class="mx-auto w-fit space-x-10">
+		<Button
+			disabled={!hasChanges}
+			onclick={() => (showConfirmModal = true)}
+			title="Guardar cambios"
+			class="w-fit !bg-green-500 hover:!bg-green-400 disabled:!bg-gray-200"
+		>
+			Guardar cambios
+		</Button>
 	</div>
 </form>
