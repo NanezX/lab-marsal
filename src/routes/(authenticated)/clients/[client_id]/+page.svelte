@@ -1,8 +1,6 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
 	import { fade } from 'svelte/transition';
-	import { sortArrayObject } from '$lib/shared/utils';
-	import DisplayExamTypeParams from '$lib/components/DisplayExamTypeParams.svelte';
 	import Link from '$lib/components/Link.svelte';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import Button from '$lib/components/Button.svelte';
@@ -69,7 +67,7 @@
 	<form use:enhance method="POST" hidden></form>
 
 	<div class="relative flex justify-center">
-		<BackButton href="/exam-types" size="40" />
+		<BackButton href="/clients" size="40" />
 
 		<p class="mx-auto my-0 text-center text-3xl">{patientData.firstName} {patientData.lastName}</p>
 
