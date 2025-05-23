@@ -10,7 +10,6 @@
 	import { UserRoles } from '$lib/shared/enums.js';
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import { formatCapital, maxDocumentId, minDocumentId } from '$lib/shared/utils.js';
-	import { showToast } from '$lib/toasts.js';
 
 	let { data } = $props();
 
@@ -30,13 +29,7 @@
 
 	const { form, errors, constraints, enhance, delayed } = superForm(data.registerForm, {
 		delayMs: 0,
-		applyAction: true,
-		onUpdated({ form }) {
-			// Display message based on the response
-			if (form.message) {
-				showToast(form.message.text, form.message.type, ['warning']);
-			}
-		}
+		applyAction: true
 	});
 </script>
 

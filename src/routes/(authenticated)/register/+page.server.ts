@@ -1,5 +1,5 @@
 import { UserRegisterSchema } from '$lib/server/utils/zod';
-import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
+import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { hash } from '@node-rs/argon2';
 import { db } from '$lib/server/db';
@@ -14,6 +14,8 @@ import { renderRegisteredUser } from '$lib/server/email/renderTemplates';
 import { sendEmail } from '$lib/server/email';
 import { AppDataNotSavedError } from '$lib/server/error';
 import { normalized } from '$lib/shared/utils';
+import { failFormResponse } from '$lib/server/utils/failFormResponse';
+import { redirect } from 'sveltekit-flash-message/server';
 
 export const load = async () => {
 	const registerForm = await superValidate(zod(UserRegisterSchema));
@@ -51,7 +53,7 @@ export const actions: Actions = {
 		if (isEmailUsed) {
 			// Against some rules to avoid exposing vulnerabilities, we return the 409 error for already taken emails
 			// because this is intented to be an internal application on the organization
-			return message(form, { text: 'El email ya esta en uso', type: 'error' }, { status: 409 });
+			return failFormResponse(form, 'El email ya esta en uso', event.cookies, 409);
 		}
 
 		// Check for existing Document ID used (if user is soft deleted, the document ID will be marked as in use)
@@ -59,7 +61,7 @@ export const actions: Actions = {
 		if (isDocIdUsed) {
 			// Against some rules to avoid exposing vulnerabilities, we return the 409 error for already taken emails
 			// because this is intented to be an internal application on the organization
-			return message(form, { text: 'La cédula ya esta en uso', type: 'error' }, { status: 409 });
+			return failFormResponse(form, 'La cédula ya esta en uso', event.cookies, 409);
 		}
 
 		try {
@@ -101,7 +103,7 @@ export const actions: Actions = {
 				console.error(e);
 			}
 
-			return message(form, { text: errMsg, type: 'error' }, { status: 500 });
+			return failFormResponse(form, errMsg, event.cookies, 500);
 		}
 
 		// Send welcome email
@@ -120,6 +122,6 @@ export const actions: Actions = {
 			body
 		);
 
-		return message(form, { text: 'Usuario creado', type: 'success' });
+		redirect(303, '/users', { type: 'success', message: 'Usuario creado' }, event.cookies);
 	}
 };
