@@ -1,4 +1,4 @@
-import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
+import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { PageServerLoad, Actions } from './$types';
 import { cleanEditExamTypeData } from '$lib/shared/utils';
@@ -9,7 +9,7 @@ import { examType, parameter as parameterTable } from '$lib/server/db/schema';
 import { isUniqueConstraintViolation } from '$lib/server/utils/helpers';
 import { inArray, sql } from 'drizzle-orm';
 import { redirect } from 'sveltekit-flash-message/server';
-import { setFlash } from 'sveltekit-flash-message/server';
+import { failFormResponse } from '$lib/server/utils/failFormResponse';
 
 // TODO: Verify what roles can update an exam type (on the action) - (maybe just block the page to those user in the backend)
 
@@ -47,11 +47,7 @@ export const actions: Actions = {
 		// Check if there is a Exam Type with this ID
 		const examTypeSaved = findExamTypeById(id);
 		if (examTypeSaved === undefined) {
-			return message(
-				form,
-				{ text: 'ID de tipo de exámen no encontrado', type: 'error' },
-				{ status: 409 }
-			);
+			return failFormResponse(form, 'ID de tipo de exámen no encontrado', event.cookies, 409);
 		}
 
 		try {
@@ -119,8 +115,7 @@ export const actions: Actions = {
 			// Print the error
 			console.error(e);
 
-			setFlash({ type: 'error', message: errMsg }, event.cookies);
-			return failForms(403, { form });
+			return failFormResponse(form, errMsg, event.cookies, 403);
 		}
 
 		redirect(
