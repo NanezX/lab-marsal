@@ -6,8 +6,6 @@
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { Cancel, Check, CirclePlus, CopyPlus, PencilMinus } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
-	import { showToast } from '$lib/toasts.js';
-	import { goto } from '$app/navigation';
 	import Input from '$lib/components/Input.svelte';
 	import Textarea from '$lib/components/Textarea.svelte';
 	import ParametersCompo from '$lib/components/ParametersCompo.svelte';

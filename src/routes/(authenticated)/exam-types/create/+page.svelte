@@ -10,7 +10,6 @@
 	import { generateName } from '$lib/shared/utils';
 	import { tick } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { showToast } from '$lib/toasts.js';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 
 	type ExamParemeterInput = {

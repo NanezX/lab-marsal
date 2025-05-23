@@ -24,18 +24,15 @@
 		}
 	}
 
-	const { form, errors, constraints, enhance, delayed, reset } = superForm(
-		data.verifyRecoveryForm,
-		{
-			resetForm: false,
-			delayMs: 0,
-			onUpdate({ form, result }) {
-				if (result.type === 'failure') {
-					form.data.code = '';
-				}
+	const { form, errors, constraints, enhance, delayed } = superForm(data.verifyRecoveryForm, {
+		resetForm: false,
+		delayMs: 0,
+		onUpdate({ form, result }) {
+			if (result.type === 'failure') {
+				form.data.code = '';
 			}
 		}
-	);
+	});
 </script>
 
 <!-- Izquierda Verificar recuperacion -->
