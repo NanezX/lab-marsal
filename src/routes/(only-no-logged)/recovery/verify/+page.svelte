@@ -3,11 +3,9 @@
 	import VerifyRecoveryIcon from '$lib/assets/verify-recovery.svg';
 	import { Lock, LockOpen2, Key } from '@steeze-ui/tabler-icons';
 	import { superForm } from 'sveltekit-superforms';
-	import { showToast } from '$lib/toasts';
 	import Input from '$lib/components/Input.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import Spinner from '$lib/components/Spinner.svelte';
-	import { goto } from '$app/navigation';
 	import { fade } from 'svelte/transition';
 	import Checkbox from '$lib/components/Checkbox.svelte';
 
@@ -31,19 +29,9 @@
 		{
 			resetForm: false,
 			delayMs: 0,
-			onUpdated({ form }) {
-				// Display recovery messages
-				if (form.message) {
-					showToast(form.message.text, form.message.type, ['warning']);
-
-					if (form.message.type == 'error') {
-						// Only reset the code
-						reset({ data: { ...form.data, code: '' } });
-					}
-
-					if (form.message.type == 'success') {
-						goto('/login');
-					}
+			onUpdate({ form, result }) {
+				if (result.type === 'failure') {
+					form.data.code = '';
 				}
 			}
 		}
