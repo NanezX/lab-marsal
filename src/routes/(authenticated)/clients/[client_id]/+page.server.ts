@@ -1,12 +1,13 @@
 import { db } from '$lib/server/db';
 import { exam as examTable, patient as patientTable } from '$lib/server/db/schema';
-import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
+import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { deletePatientSchema } from '$lib/server/utils/zod';
 import type { Actions, PageServerLoad } from './$types';
 import { count, eq, and } from 'drizzle-orm';
 import { findPatientById } from '$lib/server/utils/dbQueries';
 import { redirect } from 'sveltekit-flash-message/server';
+import { failFormResponse } from '$lib/server/utils/failFormResponse';
 
 // TODO: Verify what roles can delete an patient (on the action) - (maybe just block the page to those user in the backend)
 
@@ -73,11 +74,7 @@ export const actions: Actions = {
 		// Check if there is a Patient with this ID
 		const patientFound = await findPatientById(patientId);
 		if (patientFound === undefined) {
-			return message(
-				form,
-				{ text: 'ID del paciente no encontrado', type: 'error' },
-				{ status: 409 }
-			);
+			return failFormResponse(form, 'ID del paciente no encontrado', event.cookies, 409);
 		}
 
 		try {
@@ -102,7 +99,7 @@ export const actions: Actions = {
 			// Print the error
 			console.error(e);
 
-			return message(form, { text: errMsg, type: 'error' }, { status: 500 });
+			return failFormResponse(form, errMsg, event.cookies, 500);
 		}
 
 		// Redirect outside of the try/catch block to the clients page with a success message

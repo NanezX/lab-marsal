@@ -5,8 +5,6 @@
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { superForm } from 'sveltekit-superforms';
-	import { showToast } from '$lib/toasts';
-	import { goto } from '$app/navigation';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
 	import { getAgeFromDate } from '$lib/client';
 	import { PatientGender } from '$lib/shared/enums';
@@ -34,17 +32,7 @@
 	const { enhance, submit: submitDelete } = superForm(deletePatientForm, {
 		dataType: 'json',
 		delayMs: 0,
-		applyAction: true,
-		onUpdated({ form }) {
-			// Display message based on the response
-			if (form.message) {
-				showToast(form.message.text, form.message.type);
-
-				if (form.message.type == 'success') {
-					goto(`/clients`);
-				}
-			}
-		}
+		applyAction: true
 	});
 
 	let showConfirmDeleteModal = $state(false);
