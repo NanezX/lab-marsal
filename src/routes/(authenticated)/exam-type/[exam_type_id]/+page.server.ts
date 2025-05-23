@@ -1,4 +1,4 @@
-import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
+import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { PageServerLoad, Actions } from './$types';
 import { deleteExamTypeSchema } from '$lib/server/utils/zod';
@@ -7,6 +7,7 @@ import { db } from '$lib/server/db';
 import { examType, parameter as parameterTable, exam as examTable } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { redirect } from 'sveltekit-flash-message/server';
+import { failFormResponse } from '$lib/server/utils/failFormResponse';
 
 // TODO: Verify what roles can delete an exam type (on the action) - (maybe just block the page to those user in the backend)
 
@@ -42,11 +43,7 @@ export const actions: Actions = {
 		// Check if there is a Exam Type with this ID
 		const examTypeFound = await findExamTypeById(examTypeId);
 		if (examTypeFound === undefined) {
-			return message(
-				form,
-				{ text: 'ID de tipo de exámen no encontrado', type: 'error' },
-				{ status: 409 }
-			);
+			return failFormResponse(form, 'ID de tipo de exámen no encontrado', event.cookies, 409);
 		}
 
 		try {
@@ -79,7 +76,7 @@ export const actions: Actions = {
 			// Print the error
 			console.error(e);
 
-			return message(form, { text: errMsg, type: 'error' }, { status: 500 });
+			return failFormResponse(form, errMsg, event.cookies, 500);
 		}
 
 		// Redirect outside of the try/catch block to the exam types page with a success message

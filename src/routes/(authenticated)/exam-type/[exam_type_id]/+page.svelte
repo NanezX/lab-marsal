@@ -7,8 +7,6 @@
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { superForm } from 'sveltekit-superforms';
-	import { showToast } from '$lib/toasts';
-	import { goto } from '$app/navigation';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
 
 	// TODO: Verify AND check what roles can remove/delete an exam type (maybe just block the page to those user in the backend)
@@ -19,17 +17,7 @@
 	const { enhance, submit: submitDeleteExamType } = superForm(deleteExamTypeForm, {
 		dataType: 'json',
 		delayMs: 0,
-		applyAction: true,
-		onUpdated({ form }) {
-			// Display message based on the response
-			if (form.message) {
-				showToast(form.message.text, form.message.type);
-
-				if (form.message.type == 'success') {
-					goto(`/exam-types`);
-				}
-			}
-		}
+		applyAction: true
 	});
 
 	let showConfirmDeleteModal = $state(false);
