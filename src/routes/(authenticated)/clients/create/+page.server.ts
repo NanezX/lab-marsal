@@ -35,7 +35,8 @@ export const actions: Actions = {
 		// Check if there is a patient with this document ID
 		const patientCreated = await findPatientByDocumentId(documentId);
 
-		if (patientCreated) {
+		// Allow to "add" a previous deleted patient
+		if (patientCreated !== undefined && patientCreated.deleted === false) {
 			// Against some rules to avoid exposing vulnerabilities, we return the 409 error for already taken emails
 			// because this is intented to be an internal application on the organization
 			return message(
@@ -45,19 +46,29 @@ export const actions: Actions = {
 			);
 		}
 		try {
+			// Data to add
+			const patientData = {
+				firstName,
+				lastName,
+				firstNameNormalized: normalized(firstName),
+				lastNameNormalized: normalized(lastName),
+				documentId,
+				birthdate: new Date(birthdate),
+				gender,
+				// These two are optional
+				email,
+				phoneNumber
+			};
+
 			const insertedPatient = await db
 				.insert(patientTable)
-				.values({
-					firstName,
-					lastName,
-					firstNameNormalized: normalized(firstName),
-					lastNameNormalized: normalized(lastName),
-					documentId,
-					birthdate: new Date(birthdate),
-					gender,
-					// These two are optional
-					email,
-					phoneNumber
+				.values(patientData)
+				.onConflictDoUpdate({
+					target: patientTable.documentId,
+					set: {
+						...patientData,
+						deleted: false
+					}
 				})
 				.returning({ insertedId: patientTable.id });
 
