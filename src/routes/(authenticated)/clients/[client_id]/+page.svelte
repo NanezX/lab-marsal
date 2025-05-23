@@ -125,7 +125,7 @@
 					<LabelValue
 						class="mt-2 flex items-center gap-x-1"
 						label="Última vez actualizado"
-						value={patientData.createdAt.toLocaleString()}
+						value={patientData.updatedAt.toLocaleString()}
 						icon={ClockEdit}
 					/>
 				{/if}
