@@ -75,7 +75,7 @@
 
 		<div>
 			<Link
-				href="/exam-type/{patientData.id}/edit"
+				href="/clients/{patientData.id}/edit"
 				title="Crear nuevo exámen"
 				class="!bg-green-400 hover:!bg-green-500">Editar</Link
 			>
