@@ -40,7 +40,7 @@ export const actions: Actions = {
 		const { examTypeId } = form.data;
 
 		// Check if there is a Exam Type with this ID
-		const examTypeFound = findExamTypeById(examTypeId);
+		const examTypeFound = await findExamTypeById(examTypeId);
 		if (examTypeFound === undefined) {
 			return message(
 				form,
