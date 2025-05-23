@@ -1,4 +1,5 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect as svekteRedirect } from '@sveltejs/kit';
+import { redirect } from 'sveltekit-flash-message/server';
 import {
 	changedPasswordCookieName,
 	deletePasswordChangedCookie,
@@ -9,13 +10,14 @@ import {
 	setPasswordChangedCookie,
 	validateRecoveryPasswordSession
 } from '$lib/server/auth.js';
-import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
+import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { VerifyRecoverySchema } from '$lib/server/utils/zod';
 import { error as svelteError } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { updateUserById } from '$lib/server/utils/dbUpdates';
 import { hash } from '@node-rs/argon2';
+import { failFormResponse } from '$lib/server/utils/failFormResponse';
 
 export const load = async (event) => {
 	const verifyRecoveryForm = await superValidate(zod(VerifyRecoverySchema));
@@ -31,7 +33,7 @@ export const load = async (event) => {
 			return { verifyRecoveryForm };
 		}
 
-		return redirect(302, '/login');
+		return svekteRedirect(302, '/login');
 	}
 
 	// Check and validate the recovery session
@@ -40,7 +42,7 @@ export const load = async (event) => {
 	// If invalid recovery session, redirect to login
 	if (!validatedSession) {
 		deleteRecoverySessionCookie(event);
-		return redirect(302, '/login');
+		return svekteRedirect(302, '/login');
 	}
 
 	return { user: validatedSession.user, verifyRecoveryForm };
@@ -82,11 +84,7 @@ export const actions: Actions = {
 
 		// The stored code is uppercsae
 		if (code.toUpperCase() !== recoverySession.code) {
-			return message(
-				form,
-				{ text: 'El código ingresado es incorrecto', type: 'error' },
-				{ status: 401 }
-			);
+			return failFormResponse(form, 'El código ingresado es incorrecto', event.cookies, 401);
 		}
 
 		// Hash the introduced new password
@@ -104,7 +102,11 @@ export const actions: Actions = {
 		// Set cookie to display modal correctly
 		setPasswordChangedCookie(event);
 
-		// Return success, the front will redirect with goto to the "/LOGIN"
-		return message(form, { text: '¡Contraseña cambiada exitosamente!', type: 'success' });
+		redirect(
+			302,
+			'/login',
+			{ type: 'success', message: '¡Contraseña cambiada exitosamente!' },
+			event.cookies
+		);
 	}
 };
