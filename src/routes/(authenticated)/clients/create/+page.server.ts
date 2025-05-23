@@ -1,4 +1,4 @@
-import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
+import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { createPatientSchema } from '$lib/server/utils/zod';
 import type { Actions } from './$types';
@@ -8,6 +8,8 @@ import { patient as patientTable } from '$lib/server/db/schema';
 import { normalized } from '$lib/shared/utils';
 import { AppDataNotSavedError } from '$lib/server/error';
 import postgres from 'postgres';
+import { failFormResponse } from '$lib/server/utils/failFormResponse';
+import { redirect } from 'sveltekit-flash-message/server';
 
 // TODO: Verify what roles can create an exam type (on the action) - (maybe just block the page to those user in the backend)
 
@@ -29,7 +31,6 @@ export const actions: Actions = {
 			return failForms(400, { form });
 		}
 
-		console.log('form.data: ', JSON.stringify(form.data, null, 2));
 		const { firstName, lastName, documentId, birthdate, gender, email, phoneNumber } = form.data;
 
 		// Check if there is a patient with this document ID
@@ -39,11 +40,7 @@ export const actions: Actions = {
 		if (patientCreated !== undefined && patientCreated.deleted === false) {
 			// Against some rules to avoid exposing vulnerabilities, we return the 409 error for already taken emails
 			// because this is intented to be an internal application on the organization
-			return message(
-				form,
-				{ text: 'Cédula de identidad ya registrada', type: 'error' },
-				{ status: 409 }
-			);
+			return failFormResponse(form, 'Cédula de identidad ya registrada', event.cookies, 409);
 		}
 		try {
 			// Data to add
@@ -77,8 +74,6 @@ export const actions: Actions = {
 			if (!insertedId) {
 				throw new AppDataNotSavedError('No se añadió el paciente');
 			}
-
-			return message(form, { text: 'Paciente añadido correctamente', type: 'success' });
 		} catch (e) {
 			// Default message
 			let errMsg = 'No se añadió el paciente';
@@ -96,7 +91,13 @@ export const actions: Actions = {
 			// Print the error
 			console.error(e);
 
-			return message(form, { text: errMsg, type: 'error' }, { status: 500 });
+			return failFormResponse(form, errMsg, event.cookies, 500);
 		}
+
+		redirect(
+			'/clients',
+			{ type: 'success', message: 'Paciente añadido correctamente' },
+			event.cookies
+		);
 	}
 };

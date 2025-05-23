@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
-	import { showToast } from '$lib/toasts.js';
-	import { goto } from '$app/navigation';
 	import { fade } from 'svelte/transition';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import Input from '$lib/components/Input.svelte';
@@ -9,23 +7,14 @@
 	import Select from '$lib/components/Select.svelte';
 	import { PatientGender } from '$lib/shared/enums.js';
 	import Button from '$lib/components/Button.svelte';
+	import Link from '$lib/components/Link.svelte';
 
 	let { data } = $props();
 
 	const { form, errors, constraints, enhance } = superForm(data.createPatientForm, {
 		dataType: 'json',
 		delayMs: 0,
-		applyAction: true,
-		onUpdated({ form }) {
-			// Display message based on the response
-			if (form.message) {
-				showToast(form.message.text, form.message.type);
-
-				if (form.message.type == 'success') {
-					goto('/clients');
-				}
-			}
-		}
+		applyAction: true
 	});
 </script>
 
@@ -134,11 +123,9 @@
 	<hr class="border-primary-gray/50 my-1" />
 
 	<div class="mx-auto w-fit space-x-10">
-		<Button
-			title="Cancelar"
-			class="w-fit !bg-red-500 hover:!bg-red-400"
-			onclick={() => goto('/clients')}>Cancelar</Button
-		>
+		<Link href="/clients" title="Cancelar" class="w-fit !bg-red-500 hover:!bg-red-400">
+			Cancelar
+		</Link>
 
 		<Button title="Guardar paciente" class="w-fit !bg-green-500 hover:!bg-green-400" type="submit">
 			Guardar
