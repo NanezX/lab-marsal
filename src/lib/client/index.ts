@@ -130,3 +130,18 @@ export function formatRelativeDate(date_: Date): string {
 
 	return formatter.format(date_);
 }
+
+export function getAgeFromDate(birthdate: Date): string {
+	const today = new Date();
+	let age = today.getFullYear() - birthdate.getFullYear();
+
+	const hasHadBirthdayThisYear =
+		today.getMonth() > birthdate.getMonth() ||
+		(today.getMonth() === birthdate.getMonth() && today.getDate() >= birthdate.getDate());
+
+	if (!hasHadBirthdayThisYear) {
+		age -= 1;
+	}
+
+	return age < 1 ? 'Menor de 1 año' : `${age} años`;
+}

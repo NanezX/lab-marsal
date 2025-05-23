@@ -86,7 +86,7 @@
 					<span>{examTypeData.createdAt.toLocaleString()}</span>
 				</p>
 
-				{#if examTypeData.createdAt.getTime() == examTypeData.updatedAt.getTime()}
+				{#if examTypeData.createdAt.getTime() !== examTypeData.updatedAt.getTime()}
 					<p class="col-start-2">
 						<strong>Última vez actualizado: </strong>
 						<span>{examTypeData.updatedAt.toLocaleString()}</span>
@@ -96,7 +96,7 @@
 
 			<p>
 				<strong>Descripción: </strong><br />
-				<span class="ml-2">{examTypeData.description}</span>
+				<span class="ml-2">{examTypeData.description ?? 'Sin descripción'}</span>
 			</p>
 		</div>
 

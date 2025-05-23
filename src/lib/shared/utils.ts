@@ -1,6 +1,6 @@
 import type { Dictionary } from 'lodash';
 import { chain, sortBy } from 'lodash-es';
-import type { ExamTypeWithParameters } from './types';
+import type { ExamTypeWithParameters, Patient } from './types';
 
 export function isObject(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -49,7 +49,7 @@ export function sortArrayObject<T>(data: Array<T>, key: string): Array<T> {
 	return sortBy(data, [key]);
 }
 
-export const minDocumentId = 0;
+export const minDocumentId = 1;
 export const maxDocumentId = 999999999;
 
 export function cleanEditExamTypeData(data: ExamTypeWithParameters) {
@@ -70,6 +70,21 @@ export function cleanEditExamTypeData(data: ExamTypeWithParameters) {
 			referenceValues: p.referenceValues
 		})),
 		deletedParameters: []
+	};
+}
+
+export function cleanEditPatientData(
+	data: Patient<['firstNameNormalized', 'lastNameNormalized', 'deleted']>
+) {
+	return {
+		patientId: data.id,
+		firstName: data.firstName,
+		lastName: data.lastName,
+		documentId: data.documentId,
+		birthdate: data.birthdate.toISOString().split('T')[0], // This is to only to format date from '1998-11-17T00:00:00.000Z' to '1998-11-17'
+		email: data.email ?? undefined,
+		phoneNumber: data.phoneNumber ?? undefined,
+		gender: data.gender
 	};
 }
 

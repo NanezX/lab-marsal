@@ -4,11 +4,11 @@ import { normalized } from '$lib/shared/utils.js';
 import { and, or, ilike, eq, count, asc, desc, sql, type SQL } from 'drizzle-orm';
 
 export const load = async ({ url }) => {
-	let limit = Number(url.searchParams.get('limit') || 5);
+	let limit = Number(url.searchParams.get('limit') || 12);
 	const skip = Number(url.searchParams.get('skip') || 0);
 
 	const searchText = url.searchParams.get('search')?.trim();
-	const order = url.searchParams.get('orderBy') || 'documentId'; // 'documentId' or 'name'
+	const order = url.searchParams.get('orderBy') || 'name'; // 'documentId' or 'name'
 	const direction = url.searchParams.get('orderDirection') || 'asc'; // 'asc' or 'desc'
 
 	if (limit > 25) limit = 25;
