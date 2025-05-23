@@ -8,6 +8,8 @@ import { db } from '$lib/server/db';
 import { examType, parameter as parameterTable } from '$lib/server/db/schema';
 import { isUniqueConstraintViolation } from '$lib/server/utils/helpers';
 import { inArray, sql } from 'drizzle-orm';
+import { redirect } from 'sveltekit-flash-message/server';
+import { setFlash } from 'sveltekit-flash-message/server';
 
 // TODO: Verify what roles can update an exam type (on the action) - (maybe just block the page to those user in the backend)
 
@@ -104,8 +106,6 @@ export const actions: Actions = {
 					.set({ deleted: true })
 					.where(inArray(parameterTable.id, deletedParameters));
 			});
-
-			return message(form, { text: 'Tipo de exámen editado correctamente', type: 'success' });
 		} catch (e) {
 			let errMsg = 'No se editó el tipo de exámen';
 
@@ -119,7 +119,14 @@ export const actions: Actions = {
 			// Print the error
 			console.error(e);
 
-			return message(form, { text: errMsg, type: 'error' }, { status: 500 });
+			setFlash({ type: 'error', message: errMsg }, event.cookies);
+			return failForms(403, { form });
 		}
+
+		redirect(
+			`/exam-type/${id}`,
+			{ type: 'success', message: 'Tipo de exámen editado correctamente' },
+			event.cookies
+		);
 	}
 };

@@ -42,14 +42,10 @@
 		dataType: 'json',
 		delayMs: 0,
 		applyAction: true,
-		onUpdated({ form }) {
-			// Display message based on the response
-			if (form.message) {
-				showToast(form.message.text, form.message.type);
-
-				if (form.message.type == 'success') {
-					goto(`/exam-type/${examTypeData.id}`);
-				}
+		onResult(event) {
+			// If forms result type is a redirect or success, we assume that the changes were saved
+			if (event.result.type === 'redirect' || event.result.type === 'success') {
+				hasChanges = false;
 			}
 		}
 	});
@@ -57,7 +53,7 @@
 	const original = cleanEditExamTypeData(data.examTypeData);
 
 	// Compare form vs original data
-	const hasChanges = $derived(!isEqual($form, original));
+	let hasChanges = $derived(!isEqual($form, original));
 
 	// State to active/inactive category edition
 	let categoriesStatus: { [key: number]: string } = $state({});
