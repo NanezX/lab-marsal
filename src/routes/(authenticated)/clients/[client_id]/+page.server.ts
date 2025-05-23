@@ -75,7 +75,7 @@ export const actions: Actions = {
 		if (patientFound === undefined) {
 			return message(
 				form,
-				{ text: 'ID de tipo de exámen no encontrado', type: 'error' },
+				{ text: 'ID del paciente no encontrado', type: 'error' },
 				{ status: 409 }
 			);
 		}
