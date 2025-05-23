@@ -1,4 +1,4 @@
-import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
+import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions } from './$types';
 import { findExamTypeByName } from '$lib/server/utils/dbQueries';
@@ -7,6 +7,8 @@ import { examType, parameter as parameterTable } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 import { examTypeSchema } from '$lib/server/utils/zod';
 import { AppDataNotSavedError } from '$lib/server/error';
+import { failFormResponse } from '$lib/server/utils/failFormResponse';
+import { redirect } from 'sveltekit-flash-message/server';
 
 // TODO: Verify what roles can create an exam type (on the action) - (maybe just block the page to those user in the backend)
 
@@ -36,11 +38,7 @@ export const actions: Actions = {
 		if (examTypeCreated) {
 			// Against some rules to avoid exposing vulnerabilities, we return the 409 error for already taken emails
 			// because this is intented to be an internal application on the organization
-			return message(
-				form,
-				{ text: 'Nombre de tipo de examen ya existente', type: 'error' },
-				{ status: 409 }
-			);
+			return failFormResponse(form, 'Nombre de tipo de examen ya existente', event.cookies, 409);
 		}
 
 		try {
@@ -71,8 +69,6 @@ export const actions: Actions = {
 					}))
 				);
 			});
-
-			return message(form, { text: 'Tipo de exámen creado correctamente', type: 'success' });
 		} catch (e) {
 			// Default message
 			let errMsg = 'No se guardó el tipo de exámen';
@@ -90,7 +86,13 @@ export const actions: Actions = {
 			// Print the error
 			console.error(e);
 
-			return message(form, { text: errMsg, type: 'error' }, { status: 500 });
+			return failFormResponse(form, errMsg, event.cookies, 500);
 		}
+
+		redirect(
+			`/exam-types`,
+			{ type: 'success', message: 'Tipo de exámen creado correctamente' },
+			event.cookies
+		);
 	}
 };

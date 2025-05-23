@@ -28,17 +28,7 @@
 	const { form, errors, enhance } = superForm(data.examTypeForm, {
 		dataType: 'json',
 		delayMs: 0,
-		applyAction: true,
-		onUpdated({ form }) {
-			// Display message based on the response
-			if (form.message) {
-				showToast(form.message.text, form.message.type);
-
-				if (form.message.type == 'success') {
-					goto('/exam-types');
-				}
-			}
-		}
+		applyAction: true
 	});
 
 	// State to active/inactive category edition
