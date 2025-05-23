@@ -1,5 +1,5 @@
 import { PasswordRecoverySchema } from '$lib/server/utils/zod';
-import { superValidate, fail as failForms, message } from 'sveltekit-superforms';
+import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions } from './$types';
 import { findUserByEmail } from '$lib/server/utils/dbQueries';
@@ -11,6 +11,8 @@ import {
 } from '$lib/server/auth';
 import { sendEmail } from '$lib/server/email';
 import { renderRecoveryUser } from '$lib/server/email/renderTemplates';
+import { failFormResponse } from '$lib/server/utils/failFormResponse';
+import { redirect } from 'sveltekit-flash-message/server';
 
 export const load = async () => {
 	const recoveryForm = await superValidate(zod(PasswordRecoverySchema));
@@ -35,11 +37,7 @@ export const actions: Actions = {
 		// Search the user
 		const existingUser = await findUserByEmail(email.toLowerCase());
 		if (!existingUser || existingUser.deleted) {
-			return message(
-				form,
-				{ text: 'Correo electrónico no encontrado', type: 'error' },
-				{ status: 401 }
-			);
+			return failFormResponse(form, 'Correo electrónico no encontrado', event.cookies, 401);
 		}
 
 		// Invalidate/delete previous reset tokens
@@ -67,7 +65,11 @@ export const actions: Actions = {
 		// Set the cookie with the name, the sessionToken and expire time
 		setRecoverySessionCookie(event, sessionToken, recoverySession.expiresAt);
 
-		// Return success, the front will redirect with goto to the "/recovery/verify"
-		return message(form, { text: 'Solicitud de recuperación enviada', type: 'success' });
+		redirect(
+			302,
+			'/recovery/verify',
+			{ type: 'success', message: 'Solicitud de recuperación enviada' },
+			event.cookies
+		);
 	}
 };

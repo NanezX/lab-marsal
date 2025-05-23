@@ -2,29 +2,16 @@
 	import IconMarsal from '$lib/components/IconMarsal.svelte';
 	import recoveryIcon from '$lib/assets/recovery-user.svg';
 	import { superForm } from 'sveltekit-superforms';
-	import { showToast } from '$lib/toasts';
 	import Input from '$lib/components/Input.svelte';
 	import { At } from '@steeze-ui/tabler-icons';
 	import Button from '$lib/components/Button.svelte';
 	import Spinner from '$lib/components/Spinner.svelte';
-	import { goto } from '$app/navigation';
 	import { fade } from 'svelte/transition';
 
 	let { data } = $props();
 
 	const { form, errors, constraints, enhance, delayed } = superForm(data.recoveryForm, {
-		delayMs: 0,
-
-		onUpdated({ form }) {
-			// Display recovery messages
-			if (form.message) {
-				showToast(form.message.text, form.message.type, ['warning']);
-
-				if (form.message.type == 'success') {
-					goto('/recovery/verify');
-				}
-			}
-		}
+		delayMs: 0
 	});
 </script>
 
