@@ -124,7 +124,7 @@
 				{#if patientData.createdAt.getTime() !== patientData.updatedAt.getTime()}
 					<LabelValue
 						class="mt-2 flex items-center gap-x-1"
-						label="Última vez actualizado"
+						label="Último cambio"
 						value={patientData.updatedAt.toLocaleString()}
 						icon={ClockEdit}
 					/>
