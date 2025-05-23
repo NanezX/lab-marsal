@@ -81,7 +81,7 @@ export function cleanEditPatientData(
 		firstName: data.firstName,
 		lastName: data.lastName,
 		documentId: data.documentId,
-		birthdate: data.birthdate.toISOString(),
+		birthdate: data.birthdate.toISOString().split('T')[0], // This is to only to format date from '1998-11-17T00:00:00.000Z' to '1998-11-17'
 		email: data.email ?? undefined,
 		phoneNumber: data.phoneNumber ?? undefined,
 		gender: data.gender
