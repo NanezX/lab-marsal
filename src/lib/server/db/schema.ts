@@ -161,7 +161,7 @@ export const parameter = pgTable('parameter', {
 	name: text().notNull(),
 	type: text().notNull(),
 	category: text(),
-	unit: text().notNull(),
+	unit: text(),
 	hasReferences: boolean('has_references').notNull(),
 	referenceValues: text('reference_values')
 		.array()
