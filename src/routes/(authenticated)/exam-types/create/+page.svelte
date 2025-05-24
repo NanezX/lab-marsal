@@ -167,7 +167,10 @@
 					/>
 
 					<Input
-						bind:value={$form.basePrice}
+						bind:value={
+							() => ($form.basePrice === 0 ? '' : $form.basePrice),
+							(v) => ($form.basePrice = v === '' ? 0 : v)
+						}
 						type="number"
 						name="basePrice"
 						step="0.01"
