@@ -87,47 +87,68 @@
 		</Link>
 	</div>
 
-	<div class="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-3">
-		{#each data.patientsData as patient}
-			<a
-				title="{patient.firstName} {patient.lastName}"
-				href="/clients/{patient.id}"
-				class="group hover:border-primary-blue flex flex-col gap-y-2 rounded-sm border bg-white px-4 py-2 transition-all select-none hover:-translate-y-1 hover:border hover:shadow-2xl"
-			>
-				<div class="inline-flex w-full items-center justify-between">
-					<p class="text-lg font-bold">{patient.firstName} {patient.lastName}</p>
-					<Icon
-						src={UserSearch}
-						size="24"
-						class="group-hover:text-primary-blue transition-all group-hover:scale-125"
-					/>
-				</div>
-
-				<LabelValue label="CI" value={patient.documentId} />
-
-				<LabelValue label="Cantidad" value={patient.examCount} class="text-sm" />
-			</a>
-		{:else}
-			<div class="col-span-2">
-				<p class="text-center text-lg font-semibold text-gray-500">No se encontraron resultados</p>
-			</div>
-		{/each}
-	</div>
-
-	<!-- Pagination -->
-	<FilterControls
-		baseUrl="/clients"
-		totalItems={data.countTotal}
-		pageSize={12}
-		bind:queryParams={
-			() => {
-				return { search: nameSearch, orderBy, orderDirection };
-			},
-			(v) => {
-				nameSearch = v['search'];
-				orderBy = v['orderBy'];
-				orderDirection = v['orderDirection'];
+	<div class="flex flex-col gap-y-4">
+		<!-- Pagination -->
+		<FilterControls
+			baseUrl="/clients"
+			totalItems={data.countTotal}
+			pageSize={12}
+			bind:queryParams={
+				() => {
+					return { search: nameSearch, orderBy, orderDirection };
+				},
+				(v) => {
+					nameSearch = v['search'];
+					orderBy = v['orderBy'];
+					orderDirection = v['orderDirection'];
+				}
 			}
-		}
-	/>
+		/>
+
+		<div class="mt4 grid grid-cols-2 gap-3 xl:grid-cols-3">
+			{#each data.patientsData as patient}
+				<a
+					title="{patient.firstName} {patient.lastName}"
+					href="/clients/{patient.id}"
+					class="group hover:border-primary-blue flex flex-col gap-y-2 rounded-sm border bg-white px-4 py-2 transition-all select-none hover:-translate-y-1 hover:border hover:shadow-2xl"
+				>
+					<div class="inline-flex w-full items-center justify-between">
+						<p class="text-lg font-bold">{patient.firstName} {patient.lastName}</p>
+						<Icon
+							src={UserSearch}
+							size="24"
+							class="group-hover:text-primary-blue transition-all group-hover:scale-125"
+						/>
+					</div>
+
+					<LabelValue label="CI" value={patient.documentId} />
+
+					<LabelValue label="Cantidad" value={patient.examCount} class="text-sm" />
+				</a>
+			{:else}
+				<div class="col-span-2 xl:col-span-3">
+					<p class="text-center text-lg font-semibold text-gray-500">
+						No se encontraron resultados
+					</p>
+				</div>
+			{/each}
+		</div>
+
+		<!-- Pagination -->
+		<FilterControls
+			baseUrl="/clients"
+			totalItems={data.countTotal}
+			pageSize={12}
+			bind:queryParams={
+				() => {
+					return { search: nameSearch, orderBy, orderDirection };
+				},
+				(v) => {
+					nameSearch = v['search'];
+					orderBy = v['orderBy'];
+					orderDirection = v['orderDirection'];
+				}
+			}
+		/>
+	</div>
 </div>
