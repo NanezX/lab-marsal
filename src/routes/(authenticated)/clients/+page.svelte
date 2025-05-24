@@ -105,7 +105,7 @@
 			}
 		/>
 
-		<div class="mt4 grid grid-cols-2 gap-3 xl:grid-cols-3">
+		<div class="grid grid-cols-2 gap-3 xl:grid-cols-3">
 			{#each data.patientsData as patient}
 				<a
 					title="{patient.firstName} {patient.lastName}"
