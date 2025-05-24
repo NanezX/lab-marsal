@@ -69,6 +69,7 @@ export function cleanEditExamTypeData(data: ExamTypeWithParameters) {
 			hasReferences: p.hasReferences,
 			referenceValues: p.referenceValues
 		})),
+		classification: data.classificationId,
 		deletedParameters: []
 	};
 }

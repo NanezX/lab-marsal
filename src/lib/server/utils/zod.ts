@@ -125,7 +125,6 @@ export const editExamTypeParameterSchema = examTypeParameterSchema.extend({
 export const editExamTypeSchema = examTypeSchema.innerType().extend({
 	id: z.string().refine(uuidRefine, 'ID del tipo de exámen no válido'),
 	parameters: z.array(editExamTypeParameterSchema).min(1),
-
 	deletedParameters: z.array(z.string().refine(uuidRefine, 'ID del parámetro inválido')).default([])
 });
 
