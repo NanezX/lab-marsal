@@ -24,6 +24,7 @@
 	import FilterControls from '$lib/components/FilterControls.svelte';
 
 	// TODO: Verify AND check what roles can remove/delete an exam type (maybe just block the page to those user in the backend)
+	// TODO: Add exams created (and NOT deleted) for the users
 
 	let { data }: PageProps = $props();
 
