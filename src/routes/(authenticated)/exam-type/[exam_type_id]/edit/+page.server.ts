@@ -48,7 +48,7 @@ export const actions: Actions = {
 			basePrice,
 			categories,
 			description,
-			clasification,
+			classification,
 			parameters,
 			deletedParameters
 		} = form.data;
@@ -64,7 +64,7 @@ export const actions: Actions = {
 			// Doing update within the same transaction to handle rollbacks too in case any failure
 			await db.transaction(async (tx) => {
 				// Find or create the classification name
-				const classificationId = await getOrCreateClassification(clasification, tx);
+				const classificationId = await getOrCreateClassification(classification, tx);
 
 				const examTypeData = {
 					name,
