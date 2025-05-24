@@ -122,6 +122,11 @@ export async function findExamTypeById(id: string) {
 		},
 		where: and(eq(examType.id, id), eq(examType.deleted, false)),
 		with: {
+			classification: {
+				columns: {
+					name: true
+				}
+			},
 			parameters: {
 				where: eq(parameter.deleted, false),
 				columns: {

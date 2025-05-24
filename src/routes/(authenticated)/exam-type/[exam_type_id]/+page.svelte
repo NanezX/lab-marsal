@@ -70,6 +70,11 @@
 				</p>
 
 				<p>
+					<strong> Clasificación: </strong>
+					<span>{examTypeData.classification.name}</span>
+				</p>
+
+				<p>
 					<strong>Creado: </strong>
 					<span>{examTypeData.createdAt.toLocaleString()}</span>
 				</p>
