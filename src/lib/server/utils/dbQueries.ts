@@ -26,10 +26,8 @@ export async function getOrCreateClassification(
 
 	tx: PgTransaction<
 		PostgresJsQueryResultHKT,
-		typeof import('/home/nanezx/proyecto/lab-marsal/src/lib/server/db/schema'),
-		ExtractTablesWithRelations<
-			typeof import('/home/nanezx/proyecto/lab-marsal/src/lib/server/db/schema')
-		>
+		typeof import('$lib/server/db/schema'),
+		ExtractTablesWithRelations<typeof import('$lib/server/db/schema')>
 	>
 ): Promise<string> {
 	if (!input) {
