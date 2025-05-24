@@ -32,8 +32,7 @@ export const actions: Actions = {
 		const form = await superValidate(request, zod(deleteExamTypeSchema));
 
 		if (!form.valid) {
-			console.log('form not valid');
-			console.log(JSON.stringify(form.errors, null, 2));
+			console.error(JSON.stringify(form.errors, null, 2));
 			// Again, return { form } and things will just work.
 			return failForms(400, { form });
 		}

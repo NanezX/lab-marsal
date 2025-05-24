@@ -47,7 +47,5 @@ export const load = async ({ url }) => {
 		return { count: await countTotalQuery.where(where), data: await examTypesQuery.where(where) };
 	});
 
-	console.log('aaa: ', examTypesData);
-
 	return { examTypesData, countTotal: countTotal[0].count };
 };
