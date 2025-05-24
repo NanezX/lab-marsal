@@ -16,7 +16,7 @@
 		listHeader: listHeaderPassed,
 		createRow: createRowPassed,
 		placeholder = 'Seleccionar',
-		// selection,
+		selection: selectionPassed,
 		creatable,
 		disabled,
 
@@ -43,8 +43,8 @@
 	</div>
 {/snippet}
 
-{#snippet selection(selectedOptions: any, _: unknown)}
-	{#each selectedOptions as option}
+{#snippet selection(selectedOptions: unknown, _: unknown)}
+	{#each selectedOptions as Options as option}
 		<div class={['', { ' text-gray-600': disabled }]}>
 			{#if 'id' in option}
 				{option.name}
@@ -70,7 +70,7 @@ optionClass=""
 	{placeholder}
 	{creatable}
 	clearable
-	{selection}
+	selection={selectionPassed ?? selection}
 	listHeader={listHeaderPassed ?? listHeader}
 	createRow={createRowPassed ?? createRow}
 	{...rest}
