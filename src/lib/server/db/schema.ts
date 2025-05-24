@@ -197,6 +197,7 @@ export const examType = pgTable(
 	{
 		...baseTable,
 		name: text().notNull().unique(),
+		nameNormalized: text().notNull().unique(),
 		description: text(),
 		basePrice: decimal('base_price', { precision: 19, scale: 2 }).notNull(),
 		categories: text()

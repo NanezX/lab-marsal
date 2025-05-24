@@ -108,7 +108,7 @@ export async function findExamTypeByName<E extends (keyof InferSelectModel<typeo
 	const results = await db
 		.select(selectWithout(examType, excludes))
 		.from(examType)
-		.where(eq(lower(examType.name), name.toLowerCase()));
+		.where(eq(lower(examType.nameNormalized), normalized(name)));
 
 	return results.at(0) as Omit<InferSelectModel<typeof examType>, E[number]> | undefined;
 }
