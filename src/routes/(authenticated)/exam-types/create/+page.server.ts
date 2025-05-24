@@ -1,7 +1,7 @@
 import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions } from './$types';
-import { findExamTypeByName } from '$lib/server/utils/dbQueries';
+import { findExamTypeByName, getOrCreateClassification } from '$lib/server/utils/dbQueries';
 import postgres from 'postgres';
 import { examType, parameter as parameterTable } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
@@ -30,7 +30,9 @@ export const actions: Actions = {
 			return failForms(400, { form });
 		}
 
-		const { name, description, basePrice, parameters, categories } = form.data;
+		const { name, description, basePrice, parameters, clasification, categories } = form.data;
+
+		console.log('clasification: ', clasification);
 
 		// Check if there is an exam type with the same name
 		const examTypeCreated = await findExamTypeByName(name);
@@ -44,6 +46,10 @@ export const actions: Actions = {
 		try {
 			// Doing inserts within the same transaction to handle rollbacks too in case any failure
 			await db.transaction(async (tx) => {
+				// Find or create the classification name
+				const classificationId = await getOrCreateClassification(clasification, tx);
+				console.log('classificationId: ', classificationId);
+
 				// Inserting the exam type to the database
 				const insertExamTypeResponse = await tx
 					.insert(examType)
@@ -51,7 +57,8 @@ export const actions: Actions = {
 						name,
 						description,
 						basePrice: basePrice.toString(),
-						categories
+						categories,
+						classificationId
 					})
 					.returning({ insertedId: examType.id });
 
