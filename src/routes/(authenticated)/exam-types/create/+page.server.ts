@@ -9,6 +9,7 @@ import { examTypeSchema } from '$lib/server/utils/zod';
 import { AppDataNotSavedError } from '$lib/server/error';
 import { failFormResponse } from '$lib/server/utils/failFormResponse';
 import { redirect } from 'sveltekit-flash-message/server';
+import { normalized } from '$lib/shared/utils';
 
 // TODO: Verify what roles can create an exam type (on the action) - (maybe just block the page to those user in the backend)
 
@@ -32,12 +33,10 @@ export const actions: Actions = {
 
 		const { name, description, basePrice, parameters, clasification, categories } = form.data;
 
-		console.log('clasification: ', clasification);
-
 		// Check if there is an exam type with the same name
 		const examTypeCreated = await findExamTypeByName(name);
 
-		if (examTypeCreated) {
+		if (examTypeCreated && examTypeCreated.deleted === false) {
 			// Against some rules to avoid exposing vulnerabilities, we return the 409 error for already taken emails
 			// because this is intented to be an internal application on the organization
 			return failFormResponse(form, 'Nombre de tipo de examen ya existente', event.cookies, 409);
@@ -48,17 +47,27 @@ export const actions: Actions = {
 			await db.transaction(async (tx) => {
 				// Find or create the classification name
 				const classificationId = await getOrCreateClassification(clasification, tx);
-				console.log('classificationId: ', classificationId);
+
+				// Construct the exam type data
+				const examTypeData = {
+					name,
+					nameNormalized: normalized(name),
+					description,
+					basePrice: basePrice.toString(),
+					categories,
+					classificationId
+				};
 
 				// Inserting the exam type to the database
 				const insertExamTypeResponse = await tx
 					.insert(examType)
-					.values({
-						name,
-						description,
-						basePrice: basePrice.toString(),
-						categories,
-						classificationId
+					.values(examTypeData)
+					.onConflictDoUpdate({
+						target: examType.nameNormalized,
+						set: {
+							...examTypeData,
+							deleted: false
+						}
 					})
 					.returning({ insertedId: examType.id });
 
