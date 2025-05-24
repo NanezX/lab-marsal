@@ -17,7 +17,9 @@ import { validate as validateUUID } from 'uuid';
 // TODO: Maybe make `tx` optional, relay on db if not passed the tx
 
 /**
- * Get the classification ID or create it if not found
+ * Get the classification ID or create it if not found.
+ *
+ * This could receive an ID of UUID type, but it would NOT verify that exist on the Classification table
  */
 export async function getOrCreateClassification(
 	input: string | undefined,
