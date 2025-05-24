@@ -1,7 +1,7 @@
 import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { PageServerLoad, Actions } from './$types';
-import { cleanEditExamTypeData } from '$lib/shared/utils';
+import { cleanEditExamTypeData, normalized } from '$lib/shared/utils';
 import { editExamTypeSchema } from '$lib/server/utils/zod';
 import { findExamTypeById } from '$lib/server/utils/dbQueries';
 import { db } from '$lib/server/db';
@@ -10,6 +10,7 @@ import { isUniqueConstraintViolation } from '$lib/server/utils/helpers';
 import { inArray, sql } from 'drizzle-orm';
 import { redirect } from 'sveltekit-flash-message/server';
 import { failFormResponse } from '$lib/server/utils/failFormResponse';
+import { getOrCreateClassification } from '$lib/server/utils/dbQueries';
 
 // TODO: Verify what roles can update an exam type (on the action) - (maybe just block the page to those user in the backend)
 
@@ -41,8 +42,16 @@ export const actions: Actions = {
 			return failForms(400, { form });
 		}
 
-		const { id, name, basePrice, categories, description, parameters, deletedParameters } =
-			form.data;
+		const {
+			id,
+			name,
+			basePrice,
+			categories,
+			description,
+			clasification,
+			parameters,
+			deletedParameters
+		} = form.data;
 
 		// Check if there is a Exam Type with this ID
 		const examTypeSaved = findExamTypeById(id);
@@ -54,23 +63,29 @@ export const actions: Actions = {
 			// PARAMETERS: ID are uniques
 			// Doing update within the same transaction to handle rollbacks too in case any failure
 			await db.transaction(async (tx) => {
+				// Find or create the classification name
+				const classificationId = await getOrCreateClassification(clasification, tx);
+
+				const examTypeData = {
+					name,
+					nameNormalized: normalized(name),
+					description,
+					basePrice: basePrice.toString(),
+					categories,
+					classificationId
+				};
+
 				// Upsert the exam type
 				await tx
 					.insert(examType)
 					.values({
 						id,
-						name,
-						description,
-						basePrice: basePrice.toString(),
-						categories
+						...examTypeData
 					})
 					.onConflictDoUpdate({
 						target: examType.id,
 						set: {
-							name,
-							description,
-							basePrice: basePrice.toString(),
-							categories
+							...examTypeData
 						}
 					});
 
