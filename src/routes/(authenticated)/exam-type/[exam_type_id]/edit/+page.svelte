@@ -15,6 +15,7 @@
 	import type { UUID } from 'crypto';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
 	import CloseNavigationGuard from '$lib/components/modal/CloseNavigationGuard.svelte';
+	import SelectInput from '$lib/components/SelectInput.svelte';
 
 	type ExamParemeterInput = {
 		id?: UUID;
@@ -29,7 +30,7 @@
 
 	let { data }: PageProps = $props();
 
-	let { editExamTypeForm, examTypeData } = data;
+	let { editExamTypeForm, examTypeData, classifications } = data;
 
 	const {
 		form,
@@ -48,7 +49,7 @@
 		}
 	});
 
-	const original = cleanEditExamTypeData(data.examTypeData);
+	const original = cleanEditExamTypeData(examTypeData);
 
 	// Compare form vs original data
 	let hasChanges = $derived(!isEqual($form, original));
@@ -234,6 +235,21 @@
 						placeholder="Precio base referencia"
 						wrapperClass="w-1/2"
 						error={$errors.basePrice}
+					/>
+				</div>
+
+				<div class="flex w-1/2 flex-col gap-y-1 px-0.5">
+					<label for="classification" class="ml-2 font-semibold"> Clasificación del exámen </label>
+
+					<SelectInput
+						bind:value={$form.classification}
+						options={classifications}
+						name="classification"
+						inputId="classification"
+						creatable
+						valueField="id"
+						labelField="name"
+						placeholder="Seleccionar o crear clasificación"
 					/>
 				</div>
 
