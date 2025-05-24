@@ -37,7 +37,7 @@ export const actions: Actions = {
 			return failForms(400, { form });
 		}
 
-		const { name, description, basePrice, parameters, clasification, categories } = form.data;
+		const { name, description, basePrice, parameters, classification, categories } = form.data;
 
 		// Check if there is an exam type with the same name
 		const examTypeCreated = await findExamTypeByName(name);
@@ -52,7 +52,7 @@ export const actions: Actions = {
 			// Doing inserts within the same transaction to handle rollbacks too in case any failure
 			await db.transaction(async (tx) => {
 				// Find or create the classification name
-				const classificationId = await getOrCreateClassification(clasification, tx);
+				const classificationId = await getOrCreateClassification(classification, tx);
 
 				// Construct the exam type data
 				const examTypeData = {
