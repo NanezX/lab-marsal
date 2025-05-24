@@ -1,7 +1,11 @@
 import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions } from './$types';
-import { findExamTypeByName, getOrCreateClassification } from '$lib/server/utils/dbQueries';
+import {
+	findExamTypeByName,
+	getAllExamTypeClassifications,
+	getOrCreateClassification
+} from '$lib/server/utils/dbQueries';
 import postgres from 'postgres';
 import { examType, parameter as parameterTable } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
@@ -16,7 +20,9 @@ import { normalized } from '$lib/shared/utils';
 export const load = async () => {
 	const examTypeForm = await superValidate(zod(examTypeSchema));
 
-	return { examTypeForm };
+	const classifications = await getAllExamTypeClassifications();
+
+	return { examTypeForm, classifications };
 };
 
 export const actions: Actions = {

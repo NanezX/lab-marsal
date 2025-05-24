@@ -159,6 +159,16 @@ export async function findPatientById<E extends (keyof InferSelectModel<typeof p
 	return results.at(0) as Omit<InferSelectModel<typeof patientTable>, E[number]> | undefined;
 }
 
+export async function getAllExamTypeClassifications() {
+	return await db.query.examTypeClassification.findMany({
+		columns: {
+			id: true,
+			name: true
+		},
+		where: (c, { eq }) => eq(c.deleted, false)
+	});
+}
+
 /**
  * Function to exclude specific columns from a table while keeping full type safety.
  * @param table - Drizzle table schema
