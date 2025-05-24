@@ -15,6 +15,10 @@ import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js';
 import { validate as validateUUID } from 'uuid';
 
 // TODO: Maybe make `tx` optional, relay on db if not passed the tx
+
+/**
+ * Get the classification ID or create it if not found
+ */
 export async function getOrCreateClassification(
 	input: string | undefined,
 
