@@ -183,7 +183,8 @@ export const parameterRelations = relations(parameter, ({ one }) => ({
 // Exam type Classification table
 export const examTypeClassification = pgTable('exam_type_classification', {
 	...baseTable,
-	name: text().notNull().unique()
+	name: text().notNull().unique(),
+	nameNormalized: text().notNull().unique(),
 });
 
 export const examTypeClassificationRelations = relations(examTypeClassification, ({ many }) => ({
