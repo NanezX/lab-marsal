@@ -204,7 +204,7 @@ export const examType = pgTable(
 			.notNull()
 			.default(sql`ARRAY[]::text[]`),
 
-		clasificationId: uuid('clasification_id')
+		classificationId: uuid('classification_id')
 			.notNull()
 			.references(() => examTypeClassification.id)
 	},
@@ -215,8 +215,8 @@ export const examType = pgTable(
 export const examTypeRelations = relations(examType, ({ one, many }) => ({
 	exams: many(exam),
 	parameters: many(parameter),
-	clasification: one(examTypeClassification, {
-		fields: [examType.clasificationId],
+	classification: one(examTypeClassification, {
+		fields: [examType.classificationId],
 		references: [examTypeClassification.id]
 	})
 }));
