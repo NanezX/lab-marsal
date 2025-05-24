@@ -66,23 +66,17 @@
 		<div class="space-y-5">
 			<p class="text-2xl">Detalles generales</p>
 
-			<div class="grid grid-cols-2 gap-2">
-				<LabelValue
-					class="mt-2 flex items-center gap-x-1"
-					label="Precio"
-					value={`${examTypeData.basePrice} $`}
-					icon={Cash}
-				/>
+			<div class="grid grid-cols-2 gap-x-4 gap-y-3">
+				<!-- class="mt-2 flex items-center gap-x-1" -->
+				<LabelValue label="Precio" value={`${examTypeData.basePrice} $`} icon={Cash} />
 
 				<LabelValue
-					class="mt-2 flex items-center gap-x-1"
 					label="Clasificación"
 					value={examTypeData.classification.name}
 					icon={ListTree}
 				/>
 
 				<LabelValue
-					class="mt-2 flex items-center gap-x-1"
 					label="Creado"
 					value={examTypeData.createdAt.toLocaleString()}
 					icon={ClockPlus}
@@ -90,24 +84,23 @@
 
 				{#if examTypeData.createdAt.getTime() !== examTypeData.updatedAt.getTime()}
 					<LabelValue
-						class="mt-2 flex items-center gap-x-1"
 						label="Último cambio"
 						value={examTypeData.updatedAt.toLocaleString()}
 						icon={ClockEdit}
 					/>
 				{/if}
+
+				<p class="col-span-full flex flex-col gap-y-2" title="Descripción del tipo de exámen">
+					<span class="flex items-center gap-x-1">
+						<Icon src={FileDescription} class="h-5 w-5" />
+						<strong>Descripción: </strong><br />
+					</span>
+
+					<span class="ml-2 rounded-xl border border-gray-200 bg-gray-100 px-2 py-4"
+						>{examTypeData.description ?? 'Sin descripción'}</span
+					>
+				</p>
 			</div>
-
-			<p class="mt-2 flex flex-col gap-y-2">
-				<span class="flex items-center gap-x-1">
-					<Icon src={FileDescription} class="h-5 w-5" />
-					<strong>Descripción: </strong><br />
-				</span>
-
-				<span class="ml-2 rounded-xl border border-gray-200 bg-gray-100 px-2 py-4"
-					>{examTypeData.description ?? 'Sin descripción'}</span
-				>
-			</p>
 		</div>
 
 		<hr class="border-primary-gray/50 my-4" />
