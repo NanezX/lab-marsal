@@ -198,13 +198,17 @@
 						autoComplete={false}
 						error={$errors?.parameters?.[index]?.name}
 					/>
+
 					<Input
-						bind:value={$form.parameters[index].unit}
+						bind:value={
+							() => $form.parameters[index].unit ?? '',
+							(v) => ($form.parameters[index].unit = v === '' ? undefined : v)
+						}
 						name="unit"
 						label="Unidad del parámetro"
 						placeholder="Unidad del parámetro"
 						autoComplete={false}
-						error={$errors?.parameters?.[index]?.unit}
+						error={$errors?.parameters?.[index]?.unit as string | string[] | undefined}
 					/>
 
 					<Checkbox
