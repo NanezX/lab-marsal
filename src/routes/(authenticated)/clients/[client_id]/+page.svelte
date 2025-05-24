@@ -24,6 +24,8 @@
 	import FilterControls from '$lib/components/FilterControls.svelte';
 
 	// TODO: Verify AND check what roles can remove/delete an exam type (maybe just block the page to those user in the backend)
+	// TODO: Add exams created (and NOT deleted) for the users
+	// TODO: Add fallback when no data found (no exams)
 
 	let { data }: PageProps = $props();
 
@@ -124,20 +126,15 @@
 
 		<div class="space-y-5">
 			<p class="text-2xl">Últimos exámenes</p>
-		</div>
+			<FilterControls baseUrl="/clients/{patientData.id}" totalItems={totalExamsCount} />
+			{#each patienExamsData as exam}
+				<!-- content here -->
+				<p class="text-center">{exam.examType.name}</p>
+			{:else}
+				<p class="text-center">No hay exámenes</p>
+			{/each}
 
-		<!-- Pagination -->
-		<!-- <FilterControls
-			baseUrl="/exam-types"
-			totalItems={data.countTotal}
-			bind:queryParams={
-				() => {
-					return { name: nameSearch };
-				},
-				(v) => {
-					nameSearch = v['name'];
-				}
-			}
-		/> -->
+			<FilterControls baseUrl="/clients/{patientData.id}" totalItems={totalExamsCount} />
+		</div>
 	</div>
 </div>

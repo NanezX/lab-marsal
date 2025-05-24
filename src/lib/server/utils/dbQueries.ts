@@ -1,8 +1,71 @@
 import { db } from '$lib/server/db';
-import { user, examType, patient as patientTable, lower, parameter } from '$lib/server/db/schema';
+import {
+	user,
+	examType,
+	patient as patientTable,
+	lower,
+	parameter,
+	examTypeClassification
+} from '$lib/server/db/schema';
+import { normalized } from '$lib/shared/utils';
 import { and, eq } from 'drizzle-orm';
-import type { InferSelectModel } from 'drizzle-orm';
-import type { PgTable } from 'drizzle-orm/pg-core';
+import type { ExtractTablesWithRelations, InferSelectModel } from 'drizzle-orm';
+import type { PgTable, PgTransaction } from 'drizzle-orm/pg-core';
+import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js';
+import { validate as validateUUID } from 'uuid';
+
+// TODO: Maybe make `tx` optional, relay on db if not passed the tx
+
+/**
+ * Get the classification ID or create it if not found.
+ *
+ * This could receive an ID of UUID type, but it would NOT verify that exist on the Classification table
+ */
+export async function getOrCreateClassification(
+	input: string | undefined,
+
+	tx: PgTransaction<
+		PostgresJsQueryResultHKT,
+		typeof import('$lib/server/db/schema'),
+		ExtractTablesWithRelations<typeof import('$lib/server/db/schema')>
+	>
+): Promise<string> {
+	if (!input) {
+		input = 'Sin clasificación';
+	}
+
+	let classificationId: string | null = null;
+
+	if (validateUUID(input)) {
+		// It's an uuid
+		classificationId = input;
+	} else {
+		// It's a text (a name)
+		const name = input;
+		const nameNormalized = normalized(input);
+
+		// Try to find existing by name on the classification table
+		const existingClas = await tx.query.examTypeClassification.findFirst({
+			columns: { id: true },
+			where: (clasTable, { eq }) => eq(clasTable.nameNormalized, nameNormalized)
+		});
+
+		// If found, then use the ID
+		if (existingClas) {
+			classificationId = existingClas.id;
+		} else {
+			// If no classification found, then create it
+			const inserted = await tx
+				.insert(examTypeClassification)
+				.values({ name, nameNormalized })
+				.returning({ id: examTypeClassification.id });
+
+			classificationId = inserted[0].id;
+		}
+	}
+
+	return classificationId;
+}
 
 /**
  * Find a user by email, with optional column exclusions.
@@ -45,7 +108,7 @@ export async function findExamTypeByName<E extends (keyof InferSelectModel<typeo
 	const results = await db
 		.select(selectWithout(examType, excludes))
 		.from(examType)
-		.where(eq(lower(examType.name), name.toLowerCase()));
+		.where(eq(lower(examType.nameNormalized), normalized(name)));
 
 	return results.at(0) as Omit<InferSelectModel<typeof examType>, E[number]> | undefined;
 }
@@ -57,6 +120,11 @@ export async function findExamTypeById(id: string) {
 		},
 		where: and(eq(examType.id, id), eq(examType.deleted, false)),
 		with: {
+			classification: {
+				columns: {
+					name: true
+				}
+			},
 			parameters: {
 				where: eq(parameter.deleted, false),
 				columns: {
@@ -94,6 +162,16 @@ export async function findPatientById<E extends (keyof InferSelectModel<typeof p
 		.where(and(eq(patientTable.id, id), eq(patientTable.deleted, false)));
 
 	return results.at(0) as Omit<InferSelectModel<typeof patientTable>, E[number]> | undefined;
+}
+
+export async function getAllExamTypeClassifications() {
+	return await db.query.examTypeClassification.findMany({
+		columns: {
+			id: true,
+			name: true
+		},
+		where: (c, { eq }) => eq(c.deleted, false)
+	});
 }
 
 /**

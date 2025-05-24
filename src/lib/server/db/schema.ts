@@ -161,7 +161,7 @@ export const parameter = pgTable('parameter', {
 	name: text().notNull(),
 	type: text().notNull(),
 	category: text(),
-	unit: text().notNull(),
+	unit: text(),
 	hasReferences: boolean('has_references').notNull(),
 	referenceValues: text('reference_values')
 		.array()
@@ -180,26 +180,46 @@ export const parameterRelations = relations(parameter, ({ one }) => ({
 	})
 }));
 
+// Exam type Classification table
+export const examTypeClassification = pgTable('exam_type_classification', {
+	...baseTable,
+	name: text().notNull().unique(),
+	nameNormalized: text().notNull().unique()
+});
+
+export const examTypeClassificationRelations = relations(examTypeClassification, ({ many }) => ({
+	examTypes: many(examType)
+}));
+
 // Exam type table
 export const examType = pgTable(
 	'exam_type',
 	{
 		...baseTable,
 		name: text().notNull().unique(),
+		nameNormalized: text().notNull().unique(),
 		description: text(),
 		basePrice: decimal('base_price', { precision: 19, scale: 2 }).notNull(),
 		categories: text()
 			.array()
 			.notNull()
-			.default(sql`ARRAY[]::text[]`)
+			.default(sql`ARRAY[]::text[]`),
+
+		classificationId: uuid('classification_id')
+			.notNull()
+			.references(() => examTypeClassification.id)
 	},
 	(table) => [uniqueIndex('nameUniqueIndex').on(lower(table.name))]
 );
 
 // Exam type relations declarations
-export const examTypeRelations = relations(examType, ({ many }) => ({
+export const examTypeRelations = relations(examType, ({ one, many }) => ({
 	exams: many(exam),
-	parameters: many(parameter)
+	parameters: many(parameter),
+	classification: one(examTypeClassification, {
+		fields: [examType.classificationId],
+		references: [examTypeClassification.id]
+	})
 }));
 
 // Exam table

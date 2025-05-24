@@ -76,6 +76,8 @@
 
 					<LabelValue labelClass="font-semibold" label="Ref." value={`${examType.basePrice}$`} />
 
+					<p class="font-semibold">{examType.clasification}</p>
+
 					<p class="bg-gray-100/80 p-2 break-all text-gray-800">
 						{examType.description ? stringMaxLength(examType.description, 50) : 'Sin descripción'}
 					</p>

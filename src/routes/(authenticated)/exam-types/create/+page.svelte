@@ -11,6 +11,7 @@
 	import { tick } from 'svelte';
 	import { goto } from '$app/navigation';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
+	import SelectInput from '$lib/components/SelectInput.svelte';
 
 	type ExamParemeterInput = {
 		position: number;
@@ -24,7 +25,9 @@
 
 	let { data } = $props();
 
-	const { form, errors, enhance } = superForm(data.examTypeForm, {
+	let { examTypeForm, classifications } = data;
+
+	const { form, errors, enhance } = superForm(examTypeForm, {
 		dataType: 'json',
 		delayMs: 0,
 		applyAction: true
@@ -164,7 +167,10 @@
 					/>
 
 					<Input
-						bind:value={$form.basePrice}
+						bind:value={
+							() => ($form.basePrice === 0 ? '' : $form.basePrice),
+							(v) => ($form.basePrice = v === '' ? 0 : v)
+						}
 						type="number"
 						name="basePrice"
 						step="0.01"
@@ -174,10 +180,24 @@
 						error={$errors.basePrice}
 					/>
 				</div>
+				<div class="flex w-1/2 flex-col gap-y-1 px-0.5">
+					<label for="classification" class="ml-2 font-semibold"> Clasificación del exámen </label>
+
+					<SelectInput
+						bind:value={$form.classification}
+						options={classifications}
+						name="classification"
+						inputId="classification"
+						creatable
+						valueField="id"
+						labelField="name"
+						placeholder="Seleccionar o crear clasificación"
+					/>
+				</div>
 
 				<div class="flex flex-col gap-y-1">
 					<label for="description-textarea" class="ml-2 font-semibold">
-						Descripción del exámen
+						Descripción del exámen (opcional)
 					</label>
 					<Textarea
 						bind:value={() => $form.description ?? '', (v) => ($form.description = v)}

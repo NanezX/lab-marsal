@@ -8,6 +8,9 @@
 	import Button from '$lib/components/Button.svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
+	import LabelValue from '$lib/components/LabelValue.svelte';
+	import { Cash, ClockEdit, ClockPlus, FileDescription, ListTree } from '@steeze-ui/tabler-icons';
+	import { Icon } from '@steeze-ui/svelte-icon';
 
 	// TODO: Verify AND check what roles can remove/delete an exam type (maybe just block the page to those user in the backend)
 
@@ -63,29 +66,41 @@
 		<div class="space-y-5">
 			<p class="text-2xl">Detalles generales</p>
 
-			<div class="grid grid-cols-2 gap-2">
-				<p>
-					<strong> Precio: </strong>
-					<span>{examTypeData.basePrice} $</span>
-				</p>
+			<div class="grid grid-cols-2 gap-x-4 gap-y-3">
+				<!-- class="mt-2 flex items-center gap-x-1" -->
+				<LabelValue label="Precio" value={`${examTypeData.basePrice} $`} icon={Cash} />
 
-				<p>
-					<strong>Creado: </strong>
-					<span>{examTypeData.createdAt.toLocaleString()}</span>
-				</p>
+				<LabelValue
+					label="Clasificación"
+					value={examTypeData.classification.name}
+					icon={ListTree}
+				/>
+
+				<LabelValue
+					label="Creado"
+					value={examTypeData.createdAt.toLocaleString()}
+					icon={ClockPlus}
+				/>
 
 				{#if examTypeData.createdAt.getTime() !== examTypeData.updatedAt.getTime()}
-					<p class="col-start-2">
-						<strong>Última vez actualizado: </strong>
-						<span>{examTypeData.updatedAt.toLocaleString()}</span>
-					</p>
+					<LabelValue
+						label="Último cambio"
+						value={examTypeData.updatedAt.toLocaleString()}
+						icon={ClockEdit}
+					/>
 				{/if}
-			</div>
 
-			<p>
-				<strong>Descripción: </strong><br />
-				<span class="ml-2">{examTypeData.description ?? 'Sin descripción'}</span>
-			</p>
+				<p class="col-span-full flex flex-col gap-y-2" title="Descripción del tipo de exámen">
+					<span class="flex items-center gap-x-1">
+						<Icon src={FileDescription} class="h-5 w-5" />
+						<strong>Descripción: </strong><br />
+					</span>
+
+					<span class="ml-2 rounded-xl border border-gray-200 bg-gray-100 px-2 py-4"
+						>{examTypeData.description ?? 'Sin descripción'}</span
+					>
+				</p>
+			</div>
 		</div>
 
 		<hr class="border-primary-gray/50 my-4" />
@@ -96,7 +111,7 @@
 			<div class="flex flex-col gap-y-4">
 				{#if examTypeData.categories.length > 0}
 					{#each examTypeData.categories as category_}
-						<div class="rounded-xl bg-gray-100 px-2 py-4">
+						<div class="rounded-xl border border-gray-200 bg-gray-100 px-2 py-4">
 							<p class="text-lg font-bold">{category_}</p>
 
 							<DisplayExamTypeParams
@@ -109,7 +124,7 @@
 						</div>
 					{/each}
 				{:else}
-					<div class="rounded-xl bg-gray-100 p-4">
+					<div class="rounded-xl border border-gray-200 bg-gray-100 px-2 py-4">
 						<DisplayExamTypeParams params={sortArrayObject(examTypeData.parameters, 'position')} />
 					</div>
 				{/if}
