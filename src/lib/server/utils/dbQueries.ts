@@ -1,8 +1,67 @@
 import { db } from '$lib/server/db';
-import { user, examType, patient as patientTable, lower, parameter } from '$lib/server/db/schema';
+import {
+	user,
+	examType,
+	patient as patientTable,
+	lower,
+	parameter,
+	examTypeClassification
+} from '$lib/server/db/schema';
+import { normalized } from '$lib/shared/utils';
 import { and, eq } from 'drizzle-orm';
-import type { InferSelectModel } from 'drizzle-orm';
-import type { PgTable } from 'drizzle-orm/pg-core';
+import type { ExtractTablesWithRelations, InferSelectModel } from 'drizzle-orm';
+import type { PgTable, PgTransaction } from 'drizzle-orm/pg-core';
+import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js';
+import { validate as validateUUID } from 'uuid';
+
+// TODO: Maybe make `tx` optional, relay on db if not passed the tx
+export async function getOrCreateClassification(
+	input: string | undefined,
+
+	tx: PgTransaction<
+		PostgresJsQueryResultHKT,
+		typeof import('/home/nanezx/proyecto/lab-marsal/src/lib/server/db/schema'),
+		ExtractTablesWithRelations<
+			typeof import('/home/nanezx/proyecto/lab-marsal/src/lib/server/db/schema')
+		>
+	>
+): Promise<string> {
+	if (!input) {
+		input = 'Sin clasificación';
+	}
+
+	let classificationId: string | null = null;
+
+	if (validateUUID(input)) {
+		// It's an uuid
+		classificationId = input;
+	} else {
+		// It's a text (a name)
+		const name = input;
+		const nameNormalized = normalized(input);
+
+		// Try to find existing by name on the classification table
+		const existingClas = await tx.query.examTypeClassification.findFirst({
+			columns: { id: true },
+			where: (clasTable, { eq }) => eq(clasTable.nameNormalized, nameNormalized)
+		});
+
+		// If found, then use the ID
+		if (existingClas) {
+			classificationId = existingClas.id;
+		} else {
+			// If no classification found, then create it
+			const inserted = await tx
+				.insert(examTypeClassification)
+				.values({ name, nameNormalized })
+				.returning({ id: examTypeClassification.id });
+
+			classificationId = inserted[0].id;
+		}
+	}
+
+	return classificationId;
+}
 
 /**
  * Find a user by email, with optional column exclusions.
