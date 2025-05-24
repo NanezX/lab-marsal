@@ -15,9 +15,13 @@
 		Trash,
 		Edit,
 		FileSearch,
-		UserSearch
+		UserSearch,
+		FilePlus
 	} from '@steeze-ui/tabler-icons';
 	import SearchBar from '$lib/components/SearchBar.svelte';
+	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
+	import Link from '$lib/components/Link.svelte';
 
 	// TODO: Recheck the types laters coming from the DB
 	type Exam = {
@@ -106,6 +110,7 @@
 
 	// TODO: Maybe can exist an search component
 	let inputSearch = $state('');
+	let textSearch = $state(page.url.searchParams.get('textSearch') || '');
 
 	// TODO: Move modal to single component AddExamModal
 	let showModal = $state(false);
@@ -123,6 +128,12 @@
 	let createNewPacient = $state(false);
 	let pacientId = $state('23875912');
 	let pacientFullname = $state('Andres Bello');
+
+	function getExams() {
+		goto(`/exams?textSearch=${textSearch}`, {
+			keepFocus: true
+		});
+	}
 </script>
 
 <div in:fade class="flex w-full flex-col gap-y-8">
@@ -201,12 +212,21 @@
 
 	<div class="flex w-full justify-evenly">
 		<SearchBar
-			bind:inputSearch
-			name="examSearch"
+			id="textSearch"
+			bind:inputSearch={textSearch}
 			placeholder="Busca un examen por paciente o tipo de examen"
 			wrapperClass="w-4/5"
+			debounceTime={500}
+			debounceCallback={() => getExams()}
 		/>
-		<Button class="text-xl" onclick={() => (showModal = true)}>Nuevo +</Button>
+		<Link
+			href="/exams/create"
+			title="Crear nuevo exámen"
+			class="flex items-center justify-center gap-x-1 text-xl"
+		>
+			<span> Nuevo </span>
+			<Icon src={FilePlus} size="24" class="mt-1 text-white" />
+		</Link>
 	</div>
 
 	<div class="mt-4 grid grid-cols-2 gap-3">
