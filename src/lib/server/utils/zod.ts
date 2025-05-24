@@ -74,7 +74,7 @@ export const examTypeParameterSchema = z.object({
 	name: z.string().min(1, 'El parámetro debe tener un nombre'),
 	type: z.literal('text'),
 	category: z.string().min(1).optional(),
-	unit: z.string().min(1, 'Debe especificar la unidad del parámetro').optional(),
+	unit: z.string().min(1, 'Debe ingresar un texto válido como unidad').optional(),
 	hasReferences: z.boolean(),
 	referenceValues: z.array(z.string().min(1, 'Debe ingresar el valor de referencia'))
 });
@@ -96,7 +96,7 @@ export const examTypeSchema = z
 					name: '',
 					type: 'text', // | "number";
 					category: undefined,
-					unit: '',
+					unit: undefined,
 					hasReferences: false,
 					referenceValues: []
 				}
