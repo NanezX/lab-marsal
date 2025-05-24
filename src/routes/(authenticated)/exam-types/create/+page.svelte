@@ -11,6 +11,7 @@
 	import { tick } from 'svelte';
 	import { goto } from '$app/navigation';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
+	import Svelecte from 'svelecte';
 
 	type ExamParemeterInput = {
 		position: number;
@@ -23,6 +24,8 @@
 	};
 
 	let { data } = $props();
+
+	let { examTypeForm, classifications } = data;
 
 	const { form, errors, enhance } = superForm(data.examTypeForm, {
 		dataType: 'json',
@@ -139,6 +142,13 @@
 
 		finishEditCategory(categoryIndex_);
 	}
+
+	let selected: string | undefined = $state(
+		classifications.length > 0 ? classifications[0].id : undefined
+	);
+	let selected2: string | undefined = $state(
+		classifications.length > 0 ? classifications[0].id : undefined
+	);
 </script>
 
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
@@ -148,8 +158,38 @@
 		<p class="mx-auto text-center text-3xl">Crear tipo de exámen</p>
 	</div>
 
+	{#snippet listHeader()}
+		<p class="ml-2 cursor-default text-gray-500">
+			Selecciona o escribe para crear una nueva opción
+		</p>
+	{/snippet}
+
 	<div>
 		<div class="space-y-5">
+			<Svelecte
+				bind:value={selected}
+				options={classifications}
+				valueField="id"
+				labelField="name"
+				creatable
+				clearable
+				placeholder="Seleccionar or crear clasificación del exámen"
+			/>
+			<p class="text-lg">Selected: {selected}</p>
+
+			<Svelecte
+				bind:value={selected2}
+				options={classifications}
+				valueField="id"
+				labelField="name"
+				creatable
+				clearable
+				placeholder="Seleccionar or crear clasificación del exámen"
+				{listHeader}
+			/>
+
+			<p class="text-lg">Selected: {selected2}</p>
+
 			<p class="text-2xl">Detalles generales</p>
 
 			<div class="space-y-4">
