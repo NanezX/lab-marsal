@@ -142,10 +142,6 @@
 
 		finishEditCategory(categoryIndex_);
 	}
-
-	let selected: string | undefined = $state(
-		classifications.length > 0 ? classifications[0].id : undefined
-	);
 </script>
 
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
@@ -181,7 +177,7 @@
 						error={$errors.basePrice}
 					/>
 				</div>
-				<div class="flex w-1/2 flex-col gap-y-1">
+				<div class="flex w-1/2 flex-col gap-y-1 px-0.5">
 					<label for="classification" class="ml-2 font-semibold"> Clasificación del exámen </label>
 
 					<SelectInput
@@ -192,7 +188,7 @@
 						creatable
 						valueField="id"
 						labelField="name"
-						placeholder="Seleccionar o crear clasificación del exámen"
+						placeholder="Seleccionar o crear clasificación"
 					/>
 				</div>
 
