@@ -86,10 +86,7 @@ export const examTypeSchema = z
 		description: z.string().optional().nullable(),
 		basePrice: z.number().positive('El precio base debe ser mayor a 0 USD'),
 		categories: z.array(z.string()),
-		clasification: z
-			.union([z.string().uuid(), z.string().min(1)])
-			.optional()
-			.default('Sin clasificación'),
+		clasification: z.union([z.string().uuid(), z.string().min(1)]).optional(),
 		parameters: z
 			.array(examTypeParameterSchema)
 			.min(1)
