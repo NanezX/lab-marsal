@@ -127,8 +127,13 @@
 		<div class="space-y-5">
 			<p class="text-2xl">Últimos exámenes</p>
 			<FilterControls baseUrl="/clients/{patientData.id}" totalItems={totalExamsCount} />
+			{#each patienExamsData as exam}
+				<!-- content here -->
+				<p class="text-center">{exam.examType.name}</p>
+			{:else}
+				<p class="text-center">No hay exámenes</p>
+			{/each}
 
-			<p class="text-center">No data found</p>
 			<FilterControls baseUrl="/clients/{patientData.id}" totalItems={totalExamsCount} />
 		</div>
 	</div>
