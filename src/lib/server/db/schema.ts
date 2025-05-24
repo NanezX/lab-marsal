@@ -184,7 +184,7 @@ export const parameterRelations = relations(parameter, ({ one }) => ({
 export const examTypeClassification = pgTable('exam_type_classification', {
 	...baseTable,
 	name: text().notNull().unique(),
-	nameNormalized: text().notNull().unique(),
+	nameNormalized: text().notNull().unique()
 });
 
 export const examTypeClassificationRelations = relations(examTypeClassification, ({ many }) => ({
@@ -204,7 +204,9 @@ export const examType = pgTable(
 			.notNull()
 			.default(sql`ARRAY[]::text[]`),
 
-		clasificationId: uuid('clasification_id').references(() => examTypeClassification.id)
+		clasificationId: uuid('clasification_id')
+			.notNull()
+			.references(() => examTypeClassification.id)
 	},
 	(table) => [uniqueIndex('nameUniqueIndex').on(lower(table.name))]
 );
