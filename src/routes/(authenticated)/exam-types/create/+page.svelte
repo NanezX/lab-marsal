@@ -11,7 +11,7 @@
 	import { tick } from 'svelte';
 	import { goto } from '$app/navigation';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
-	import Svelecte from 'svelecte';
+	import SelectInput from '$lib/components/SelectInput.svelte';
 
 	type ExamParemeterInput = {
 		position: number;
@@ -27,7 +27,7 @@
 
 	let { examTypeForm, classifications } = data;
 
-	const { form, errors, enhance } = superForm(data.examTypeForm, {
+	const { form, errors, enhance } = superForm(examTypeForm, {
 		dataType: 'json',
 		delayMs: 0,
 		applyAction: true
@@ -146,9 +146,6 @@
 	let selected: string | undefined = $state(
 		classifications.length > 0 ? classifications[0].id : undefined
 	);
-	let selected2: string | undefined = $state(
-		classifications.length > 0 ? classifications[0].id : undefined
-	);
 </script>
 
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
@@ -158,38 +155,8 @@
 		<p class="mx-auto text-center text-3xl">Crear tipo de exámen</p>
 	</div>
 
-	{#snippet listHeader()}
-		<p class="ml-2 cursor-default text-gray-500">
-			Selecciona o escribe para crear una nueva opción
-		</p>
-	{/snippet}
-
 	<div>
 		<div class="space-y-5">
-			<Svelecte
-				bind:value={selected}
-				options={classifications}
-				valueField="id"
-				labelField="name"
-				creatable
-				clearable
-				placeholder="Seleccionar or crear clasificación del exámen"
-			/>
-			<p class="text-lg">Selected: {selected}</p>
-
-			<Svelecte
-				bind:value={selected2}
-				options={classifications}
-				valueField="id"
-				labelField="name"
-				creatable
-				clearable
-				placeholder="Seleccionar or crear clasificación del exámen"
-				{listHeader}
-			/>
-
-			<p class="text-lg">Selected: {selected2}</p>
-
 			<p class="text-2xl">Detalles generales</p>
 
 			<div class="space-y-4">
@@ -214,10 +181,24 @@
 						error={$errors.basePrice}
 					/>
 				</div>
+				<div class="flex w-1/2 flex-col gap-y-1">
+					<label for="classification" class="ml-2 font-semibold"> Clasificación del exámen </label>
+
+					<SelectInput
+						bind:value={$form.classification}
+						options={classifications}
+						name="classification"
+						inputId="classification"
+						creatable
+						valueField="id"
+						labelField="name"
+						placeholder="Seleccionar o crear clasificación del exámen"
+					/>
+				</div>
 
 				<div class="flex flex-col gap-y-1">
 					<label for="description-textarea" class="ml-2 font-semibold">
-						Descripción del exámen
+						Descripción del exámen (opcional)
 					</label>
 					<Textarea
 						bind:value={() => $form.description ?? '', (v) => ($form.description = v)}
