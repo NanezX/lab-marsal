@@ -65,7 +65,7 @@ export function cleanEditExamTypeData(data: ExamTypeWithParameters) {
 			name: p.name,
 			type: 'text' as const,
 			category: p.category ?? undefined,
-			unit: p.unit,
+			unit: p.unit ?? undefined,
 			hasReferences: p.hasReferences,
 			referenceValues: p.referenceValues
 		})),
