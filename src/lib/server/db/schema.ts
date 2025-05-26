@@ -231,6 +231,7 @@ export const exam = pgTable('exam', {
 	examTypeId: uuid('exam_type_id')
 		.notNull()
 		.references(() => examType.id),
+	customId: text('custom_id').notNull(),
 	priority: examPriorityEnum().notNull().default(ExamPriority.Normal),
 	status: examStatusEnum().notNull().default(ExamStatus.Active),
 	pricePaid: decimal('price_paid', { precision: 19, scale: 2 }),
