@@ -50,6 +50,10 @@
 						placeholder="Identificador del examen"
 						bind:value={inputExamId}
 						name="customIdInput"
+						disabled={$form.customId.kind === 'auto'}
+						title={$form.customId.kind === 'auto'
+							? 'Generando identificador automáticamente'
+							: 'Ingrese un identificador'}
 					/>
 					<Checkbox
 						name="customIdType"
