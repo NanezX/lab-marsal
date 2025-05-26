@@ -233,13 +233,14 @@ export const exam = pgTable('exam', {
 		.references(() => examType.id),
 	priority: examPriorityEnum().notNull().default(ExamPriority.Normal),
 	status: examStatusEnum().notNull().default(ExamStatus.Active),
-	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }),
-	results: jsonb(),
 	pricePaid: decimal('price_paid', { precision: 19, scale: 2 }),
+	observation: text(),
+	//
+	results: jsonb(),
+	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }),
 	paid: boolean().notNull(),
 	paymentMethod: text('payment_method'),
-	paymentRef: text('payment_ref'),
-	observation: text(),
+	paymentRef: text('payment_ref')
 });
 
 // Exam relations declarations
