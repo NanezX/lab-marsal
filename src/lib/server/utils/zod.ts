@@ -160,7 +160,7 @@ export const deletePatientSchema = z.object({
 
 // EXAMS
 
-const patientDiscrimatorSchema = z.discriminatedUnion('kind', [
+const patientDiscriminatorSchema = z.discriminatedUnion('kind', [
 	z.object({
 		kind: z.literal('existing'),
 		id: z.string().min(1, 'Debe seleccionar un paciente').uuid()
@@ -171,10 +171,21 @@ const patientDiscrimatorSchema = z.discriminatedUnion('kind', [
 	})
 ]);
 
+const customIdDiscriminatorSchema = z.discriminatedUnion('kind', [
+	z.object({
+		kind: z.literal('auto'),
+		id: z.null().optional()
+	}),
+	z.object({
+		kind: z.literal('manual'),
+		id: z.string().min(1, 'Debe ingresar un identificador')
+	})
+]);
+
 export const createExamSchema = z.object({
-	patient: patientDiscrimatorSchema.default({ kind: 'existing', id: '' }),
+	patient: patientDiscriminatorSchema.default({ kind: 'existing', id: '' }),
 	examTypeId: z.string().uuid(),
-	customId: z.string().min(1, 'Debe ingresar un identificar para el exámen'),
+	customId: customIdDiscriminatorSchema.default({ kind: 'auto', id: null }),
 	priority: z.nativeEnum(ExamPriority, { errorMap: () => ({ message: 'Prioridad no definida' }) }),
 	status: z.nativeEnum(ExamStatus, { errorMap: () => ({ message: 'Prioridad no definida' }) }),
 	pricePaid: z.number().positive('El precio al pagar debe ser mayor a 0'),
