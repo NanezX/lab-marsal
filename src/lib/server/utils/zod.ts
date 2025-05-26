@@ -1,4 +1,4 @@
-import { PatientGender, UserRoles } from '$lib/shared/enums';
+import { ExamPriority, ExamStatus, PatientGender, UserRoles } from '$lib/shared/enums';
 import { minDocumentId, maxDocumentId } from '$lib/shared/utils';
 import { validate } from 'uuid';
 import { z } from 'zod';
@@ -156,4 +156,26 @@ export const editPatientSchema = createPatientSchema.extend({
 
 export const deletePatientSchema = z.object({
 	patientId: z.string().refine(uuidRefine, 'ID del paciente no válido')
+});
+
+// EXAMS
+
+const patientDiscrimatorSchema = z.discriminatedUnion('kind', [
+	z.object({
+		kind: z.literal('existing'),
+		id: z.string().uuid()
+	}),
+	z.object({
+		kind: z.literal('new'),
+		data: createPatientSchema
+	})
+]);
+
+export const createExamSchema = z.object({
+	patient: patientDiscrimatorSchema,
+	examTypeId: z.string().uuid(),
+	priority: z.nativeEnum(ExamPriority, { errorMap: () => ({ message: 'Prioridad no definida' }) }),
+	status: z.nativeEnum(ExamStatus, { errorMap: () => ({ message: 'Prioridad no definida' }) }),
+	pricePaid: z.number().positive('El precio al pagar debe ser mayor a 0'),
+	observation: z.string().optional()
 });
