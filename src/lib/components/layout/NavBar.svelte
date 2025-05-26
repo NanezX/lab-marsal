@@ -47,7 +47,7 @@
 
 			{#if isOpen}
 				<div
-					class="border-secondary-blue absolute top-full right-0 rounded-sm border bg-gray-200 p-1 text-center shadow-lg select-none"
+					class="border-secondary-blue absolute top-full right-0 z-50 rounded-sm border bg-gray-200 p-1 text-center shadow-lg select-none"
 					transition:slide
 				>
 					<p class="text-primary-gray m-2">{email}</p>
