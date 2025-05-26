@@ -235,10 +235,11 @@ export const exam = pgTable('exam', {
 	status: examStatusEnum().notNull().default(ExamStatus.Active),
 	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }),
 	results: jsonb(),
-	price: decimal('base_price', { precision: 19, scale: 2 }).notNull(),
+	pricePaid: decimal('price_paid', { precision: 19, scale: 2 }),
 	paid: boolean().notNull(),
 	paymentMethod: text('payment_method'),
-	paymentRef: text('payment_ref')
+	paymentRef: text('payment_ref'),
+	observation: text(),
 });
 
 // Exam relations declarations
