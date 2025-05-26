@@ -222,10 +222,10 @@
 		<Link
 			href="/exams/create"
 			title="Crear nuevo exámen"
-			class="flex items-center justify-center gap-x-1 text-xl"
+			class="flex items-center justify-center gap-x-1 text-lg transition-all hover:-translate-y-0.25 hover:shadow-lg"
 		>
 			<span> Nuevo </span>
-			<Icon src={FilePlus} size="24" class="mt-1 text-white" />
+			<Icon src={FilePlus} size="24" class="text-white" />
 		</Link>
 	</div>
 
