@@ -127,6 +127,8 @@
 				</div>
 			</div>
 
+			<hr class="border-primary-gray/50 my-4" />
+
 			<p class="text-2xl">Paciente</p>
 			<div class="space-y-4">
 				<!-- Paciente data-->
