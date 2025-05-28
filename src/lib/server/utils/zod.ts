@@ -186,7 +186,9 @@ export const createExamSchema = z.object({
 	patient: patientDiscriminatorSchema.default({ kind: 'existing', id: '' }),
 	examTypeId: z.string({ message: 'Debe seleccionar un tipo de exámen' }).uuid(),
 	customId: customIdDiscriminatorSchema.default({ kind: 'auto', id: null }),
-	priority: z.nativeEnum(ExamPriority, { errorMap: () => ({ message: 'Prioridad no definida' }) }),
+	priority: z
+		.nativeEnum(ExamPriority, { errorMap: () => ({ message: 'Prioridad no definida' }) })
+		.default(ExamPriority.Normal),
 	status: z.nativeEnum(ExamStatus, { errorMap: () => ({ message: 'Prioridad no definida' }) }),
 	pricePaid: z.number().positive('El precio al pagar debe ser mayor a 0'),
 	observation: z.string().optional()
