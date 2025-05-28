@@ -155,13 +155,13 @@
 					</div>
 
 					<p>
-						createNewPacient: {$form.patient.kind}
-					</p>
-					<p>
 						pacient id: {$form.patient.id}
 					</p>
 				{/if}
 
+				<p>
+					createNewPacient: {$form.patient.kind}
+				</p>
 				<p>
 					err:
 					<span in:fade class="text-sm text-red-500">
