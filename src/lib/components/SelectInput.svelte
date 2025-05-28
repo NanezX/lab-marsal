@@ -66,7 +66,7 @@ optionClass=""
 <Svelecte
 	controlClass={`${controlClass} ${disabled ? '!cursor-not-allowed !bg-gray-200' : '!cursor-pointer !bg-secondary-blue/30'}`}
 	dropdownClass="!rounded-lg !border !p-[1px] !bg-[#d9f2f8]"
-	optionClass="!rounded !bg-[#d9f2f8] hover:!bg-[#BFD6DB]"
+	optionClass="!rounded !bg-[#d9f2f8] hover:!bg-[#BFD6DB] hover:cursor-pointer"
 	bind:value
 	{disabled}
 	{placeholder}
