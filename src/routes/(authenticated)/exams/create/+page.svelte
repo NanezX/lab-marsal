@@ -129,18 +129,19 @@
 
 			<hr class="border-primary-gray/50 my-4" />
 
-			<p class="text-2xl">Paciente</p>
-			<div class="space-y-4">
-				<!-- Paciente data-->
+			<div class="mb-4 inline-flex gap-x-4">
+				<p class="text-2xl">Paciente</p>
 				<Checkbox
 					name="createNewPacient"
 					text="Crear nuevo paciente"
-					wrapperClass="!m-0"
+					wrapperClass="my-auto !text-base border border-transparent hover:border-primary-blue/75 rounded-lg px-1 py-0.5"
 					bind:value={
 						() => $form.patient.kind === 'new', (v) => ($form.patient.kind = v ? 'new' : 'existing')
 					}
 				/>
-				<!-- error={$errors.patient?.id} -->
+			</div>
+			<div class="space-y-4">
+				<!-- Paciente data-->
 
 				<p>
 					createNewPacient: {$form.patient.kind}
