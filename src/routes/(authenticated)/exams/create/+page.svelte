@@ -91,20 +91,19 @@
 
 				<div class="flex gap-x-6">
 					<div class="flex w-1/2 flex-col gap-y-1 px-0.5">
-						<label class="ml-2 font-semibold" for="examType"> Tipo de exámen </label>
+						<label class="ml-2 font-semibold" for="examTypeId"> Tipo de exámen </label>
 
 						<SelectInput
 							bind:value={$form.examTypeId}
 							options={initialOptions}
 							placeholder="Buscar tipo de examen"
 							fetch="/api/exam-types/search?q=[query]"
-							name="classification"
-							inputId="classification"
+							name="examTypeId"
+							inputId="examTypeId"
 							valueField="id"
 							labelField="name"
+							error={$errors.examTypeId}
 						/>
-
-						<p>selectedExamType: {$form.examTypeId}</p>
 					</div>
 
 					<!-- <Select
