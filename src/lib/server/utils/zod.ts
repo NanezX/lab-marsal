@@ -1,4 +1,4 @@
-import { ExamPriority, ExamStatus, PatientGender, UserRoles } from '$lib/shared/enums';
+import { ExamPriority, PatientGender, UserRoles } from '$lib/shared/enums';
 import { minDocumentId, maxDocumentId } from '$lib/shared/utils';
 import { validate } from 'uuid';
 import { z } from 'zod';
@@ -189,7 +189,10 @@ export const createExamSchema = z.object({
 	priority: z
 		.nativeEnum(ExamPriority, { errorMap: () => ({ message: 'Prioridad no definida' }) })
 		.default(ExamPriority.Normal),
-	status: z.nativeEnum(ExamStatus, { errorMap: () => ({ message: 'Prioridad no definida' }) }),
+	// NO Need for status when creating exam, always active by default on DB
+	// status: z
+	// 	.nativeEnum(ExamStatus, { errorMap: () => ({ message: 'Estado del exámen no definido' }) })
+	// 	.default(ExamStatus.Active),
 	pricePaid: z.number().positive('El precio al pagar debe ser mayor a 0'),
 	observation: z.string().optional()
 });
