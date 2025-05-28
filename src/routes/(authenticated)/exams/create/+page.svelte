@@ -5,7 +5,7 @@
 	import Input from '$lib/components/Input.svelte';
 	import { formatCapital } from '$lib/shared/utils.js';
 	import Select from '$lib/components/Select.svelte';
-	import { PatientGender } from '$lib/shared/enums.js';
+	import { ExamPriority, PatientGender } from '$lib/shared/enums.js';
 	import Button from '$lib/components/Button.svelte';
 	import Link from '$lib/components/Link.svelte';
 	import Checkbox from '$lib/components/Checkbox.svelte';
@@ -43,6 +43,12 @@
 
 	let priority = $state('');
 	const priorities = ['Normal', 'Urgente'];
+	const priorityItems = Object.values(ExamPriority).map((priority_) => ({
+		value: priority_,
+		label: formatCapital(
+			priority_ === ExamPriority.Low ? 'Baja' : priority_ === ExamPriority.High ? 'Alta' : 'Normal'
+		)
+	}));
 
 	const initialOptions = [
 		{ id: 'uuid-1', name: 'Hematología' },
@@ -106,13 +112,18 @@
 						/>
 					</div>
 
-					<!-- <Select
-						bind:value={priority}
-						items={priorities}
-						name="priority"
-						required
-						placeholder="Seleccionar prioridad"
-					/> -->
+					<div class="flex flex-col items-start gap-y-1">
+						<label class="ml-2 font-semibold" for="select-priority"> Prioridad </label>
+
+						<Select
+							bind:value={$form.priority}
+							items={priorityItems}
+							name="priority"
+							id="select-priority"
+							required
+							placeholder="Seleccionar prioridad"
+						/>
+					</div>
 				</div>
 			</div>
 
