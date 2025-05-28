@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { ComponentProps } from 'svelte';
 	import Svelecte from 'svelecte';
+	import { fade } from 'svelte/transition';
 
 	type SvelecteProps = ComponentProps<typeof Svelecte>;
 	type Options =
@@ -9,6 +10,7 @@
 
 	type PropType = Omit<SvelecteProps, 'options'> & {
 		options?: Options;
+		error?: string[] | string | undefined;
 	};
 
 	let {
@@ -19,7 +21,7 @@
 		selection: selectionPassed,
 		creatable,
 		disabled,
-
+		error,
 		...rest
 	}: PropType = $props();
 
@@ -57,23 +59,22 @@
 	{/each}
 {/snippet}
 
-<!-- 
-controlClass="!bg-red-500"
-dropdownClass="!bg-green-500"
-optionClass="" 
--->
-<!-- !bg-[#81d4e7]/30 -->
-<Svelecte
-	controlClass={`${controlClass} ${disabled ? '!cursor-not-allowed !bg-gray-200' : '!cursor-pointer !bg-secondary-blue/30'}`}
-	dropdownClass="!rounded-lg !border !p-[1px] !bg-[#d9f2f8]"
-	optionClass="!rounded !bg-[#d9f2f8] hover:!bg-[#BFD6DB] hover:cursor-pointer"
-	bind:value
-	{disabled}
-	{placeholder}
-	{creatable}
-	clearable
-	selection={selectionPassed ?? selection}
-	listHeader={listHeaderPassed ?? listHeader}
-	createRow={createRowPassed ?? createRow}
-	{...rest}
-/>
+<div class="">
+	<Svelecte
+		controlClass={`${controlClass} ${disabled ? '!cursor-not-allowed !bg-gray-200' : '!cursor-pointer !bg-secondary-blue/30'}`}
+		dropdownClass="!rounded-lg !border !p-[1px] !bg-[#d9f2f8]"
+		optionClass="!rounded !bg-[#d9f2f8] hover:!bg-[#BFD6DB] hover:cursor-pointer"
+		bind:value
+		{disabled}
+		{placeholder}
+		{creatable}
+		clearable
+		selection={selectionPassed ?? selection}
+		listHeader={listHeaderPassed ?? listHeader}
+		createRow={createRowPassed ?? createRow}
+		{...rest}
+	/>
+	{#if error !== undefined && error.length > 0}
+		<span in:fade class="text-sm text-red-500">{typeof error === 'string' ? error : error[0]}</span>
+	{/if}
+</div>
