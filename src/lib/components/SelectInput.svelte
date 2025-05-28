@@ -8,7 +8,7 @@
 		| Array<{ name: string; id: string | number }>;
 
 	type PropType = Omit<SvelecteProps, 'options'> & {
-		options: Options;
+		options?: Options;
 	};
 
 	let {
@@ -45,7 +45,9 @@
 
 {#snippet selection(selectedOptions: unknown, _: unknown)}
 	{#each selectedOptions as Options as option}
-		<div class={['', { ' text-gray-600': disabled }]}>
+		<div
+			class={['bg-primary-blue rounded-lg px-1 py-0.5 text-white', { ' text-gray-600': disabled }]}
+		>
 			{#if 'id' in option}
 				{option.name}
 			{:else}
