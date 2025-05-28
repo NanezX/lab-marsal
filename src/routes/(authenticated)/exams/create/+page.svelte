@@ -49,12 +49,6 @@
 			priority_ === ExamPriority.Low ? 'Baja' : priority_ === ExamPriority.High ? 'Alta' : 'Normal'
 		)
 	}));
-
-	const initialOptions = [
-		{ id: 'uuid-1', name: 'Hematología' },
-		{ id: 'uuid-2', name: 'Tipiaje' },
-		{ id: 'uuid-3', name: 'Prueba de embarazo' }
-	];
 </script>
 
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
@@ -101,7 +95,6 @@
 
 						<SelectInput
 							bind:value={$form.examTypeId}
-							options={initialOptions}
 							placeholder="Buscar tipo de examen"
 							fetch="/api/exam-types/search?q=[query]"
 							name="examTypeId"
@@ -109,6 +102,7 @@
 							valueField="id"
 							labelField="name"
 							error={$errors.examTypeId}
+							creatable
 						/>
 					</div>
 
@@ -142,12 +136,38 @@
 			</div>
 			<div class="space-y-4">
 				<!-- Paciente data-->
+				{#if $form.patient.kind === 'new'}
+					<p>new</p>
+				{:else}
+					<!-- else content here -->
+					<div class="flex w-1/2 flex-col gap-y-1 px-0.5">
+						<label class="ml-2 font-semibold" for="examTypeId"> Buscar </label>
+
+						<SelectInput
+							bind:value={$form.patient.id}
+							placeholder="Buscar paciente por nombre o cédula"
+							fetch="/api/exam-types/search?q=[query]"
+							name="patientId"
+							inputId="patientId"
+							valueField="id"
+							labelField="name"
+							error={$errors.patient?.id}
+						/>
+					</div>
+
+					<p>
+						createNewPacient: {$form.patient.kind}
+					</p>
+					<p>
+						pacient id: {$form.patient.id}
+					</p>
+				{/if}
 
 				<p>
-					createNewPacient: {$form.patient.kind}
-				</p>
-				<p>
-					err: {$errors?.patient?.id?.[0]}
+					err:
+					<span in:fade class="text-sm text-red-500">
+						{$errors?.patient?.id?.[0]}
+					</span>
 				</p>
 
 				<button
