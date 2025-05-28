@@ -102,7 +102,6 @@
 							valueField="id"
 							labelField="name"
 							error={$errors.examTypeId}
-							creatable
 						/>
 					</div>
 
@@ -146,7 +145,7 @@
 						<SelectInput
 							bind:value={$form.patient.id}
 							placeholder="Buscar paciente por nombre o cédula"
-							fetch="/api/exam-types/search?q=[query]"
+							fetch="/api/patients/search?minimal=true&q=[query]"
 							name="patientId"
 							inputId="patientId"
 							valueField="id"
