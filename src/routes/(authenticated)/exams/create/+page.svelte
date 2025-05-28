@@ -90,7 +90,7 @@
 				</div>
 
 				<div class="flex gap-x-6">
-					<div>
+					<div class="flex w-1/2 flex-col gap-y-1 px-0.5">
 						<label class="ml-2 font-semibold" for="examType"> Tipo de exámen </label>
 
 						<SelectInput
