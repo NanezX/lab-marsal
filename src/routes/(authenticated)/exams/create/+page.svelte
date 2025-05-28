@@ -9,7 +9,22 @@
 	import Button from '$lib/components/Button.svelte';
 	import Link from '$lib/components/Link.svelte';
 	import Checkbox from '$lib/components/Checkbox.svelte';
+	/////////////
+	import Svelecte from 'svelecte';
+	import SelectInput from '$lib/components/SelectInput.svelte';
 
+	let selectedExamType = $state<any>(null);
+
+	const fetchExamTypes = async (input: string) => {
+		'/api/exam-types/search?q=[query]';
+		const response = await fetch(`/api/exam-types/search?q=${encodeURIComponent(input)}`);
+		const data = await response.json();
+		return data.map((item: any) => ({
+			value: item.id,
+			label: item.name
+		}));
+	};
+	/////////////////////
 	let { data } = $props();
 
 	let { createExamForm } = data;
@@ -28,6 +43,12 @@
 
 	let priority = $state('');
 	const priorities = ['Normal', 'Urgente'];
+
+	const initialOptions = [
+		{ id: 'uuid-1', name: 'Hematología' },
+		{ id: 'uuid-2', name: 'Tipiaje' },
+		{ id: 'uuid-3', name: 'Prueba de embarazo' }
+	];
 </script>
 
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
@@ -72,15 +93,18 @@
 					<div>
 						<label class="ml-2 font-semibold" for="examType"> Tipo de exámen </label>
 
-						<Select
-							bind:value={() => $form.examTypeId, (v) => ($form.examTypeId = v)}
-							items={examTypes}
-							id="examType"
-							name="examType"
-							required
-							forcePlaceholder
-							placeholder="Seleccionar el tipo de examen"
+						<SelectInput
+							bind:value={$form.examTypeId}
+							options={initialOptions}
+							placeholder="Buscar tipo de examen"
+							fetch="/api/exam-types/search?q=[query]"
+							name="classification"
+							inputId="classification"
+							valueField="id"
+							labelField="name"
 						/>
+
+						<p>selectedExamType: {$form.examTypeId}</p>
 					</div>
 
 					<!-- <Select
@@ -103,7 +127,6 @@
 					bind:value={
 						() => $form.patient.kind === 'new', (v) => ($form.patient.kind = v ? 'new' : 'existing')
 					}
-					error={'Debe seleccionar un usuario'}
 				/>
 				<!-- error={$errors.patient?.id} -->
 
