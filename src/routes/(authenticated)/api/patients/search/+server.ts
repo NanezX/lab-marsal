@@ -7,6 +7,7 @@ import { normalized } from '$lib/shared/utils';
 
 export async function GET({ url }) {
 	const q = url.searchParams.get('q')?.trim();
+	const minimal = url.searchParams.get('minimal') === 'true';
 
 	if (!q) return json([]);
 
@@ -34,17 +35,33 @@ export async function GET({ url }) {
 
 	const where = sql`${sql.join(whereClauses, sql` AND `)}`;
 
-	const results = await db
-		.select({
-			id: patientTable.id,
-			firstName: patientTable.firstName,
-			lastName: patientTable.lastName,
-			documentId: patientTable.documentId
-		})
-		.from(patientTable)
-		.where(where)
-		.orderBy(asc(patientTable.documentId))
-		.limit(10);
+	if (minimal) {
+		const results = await db
+			.select({
+				id: patientTable.id,
+				name: sql<string>`concat_ws(' ', ${patientTable.firstName}, ${patientTable.lastName}, '(' || ${patientTable.documentId} || ')')`.as(
+					'name'
+				)
+			})
+			.from(patientTable)
+			.where(where)
+			.orderBy(asc(patientTable.documentId))
+			.limit(10);
 
-	return json(results);
+		return json(results);
+	} else {
+		const results = await db
+			.select({
+				id: patientTable.id,
+				firstName: patientTable.firstName,
+				lastName: patientTable.lastName,
+				documentId: patientTable.documentId
+			})
+			.from(patientTable)
+			.where(where)
+			.orderBy(asc(patientTable.documentId))
+			.limit(10);
+
+		return json(results);
+	}
 }
