@@ -2,6 +2,7 @@ import type { RequestEvent } from './$types';
 import { db } from '$lib/server/db';
 import { examType } from '$lib/server/db/schema';
 import { and, eq, ilike } from 'drizzle-orm';
+import { json } from '@sveltejs/kit';
 
 export async function GET({ url }: RequestEvent) {
 	const searchTerm = url.searchParams.get('q')?.trim() || '';
@@ -18,7 +19,5 @@ export async function GET({ url }: RequestEvent) {
 
 	const results = await query;
 
-	return new Response(JSON.stringify(results), {
-		headers: { 'Content-Type': 'application/json' }
-	});
+	return json(results);
 }
