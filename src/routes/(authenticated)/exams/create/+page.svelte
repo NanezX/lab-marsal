@@ -56,6 +56,33 @@
 	): patient is Extract<PatientDiscriminator, { kind: 'new' }> {
 		return patient.kind === 'new';
 	}
+
+	function togglePatient(kind_: 'new' | 'existing') {
+		form.update(($form) => {
+			if (kind_ === 'existing') {
+				// Change to existing
+				$form.patient = {
+					kind: 'existing',
+					id: ''
+				};
+			} else {
+				// Change to new
+				$form.patient = {
+					kind: 'new',
+					data: {
+						firstName: '',
+						lastName: '',
+						documentId: 0,
+						birthdate: '',
+						gender: PatientGender.Female
+						// Email and phone number are optional
+					}
+				};
+			}
+
+			return $form;
+		});
+	}
 </script>
 
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
@@ -136,7 +163,10 @@
 					text="Crear nuevo paciente"
 					wrapperClass="my-auto !text-base border border-transparent hover:border-primary-blue/75 rounded-lg px-1 py-0.5"
 					bind:value={
-						() => $form.patient.kind === 'new', (v) => ($form.patient.kind = v ? 'new' : 'existing')
+						() => $form.patient.kind === 'new',
+						(v) => {
+							togglePatient(v ? 'new' : 'existing');
+						}
 					}
 				/>
 			</div>
