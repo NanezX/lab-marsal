@@ -138,7 +138,6 @@
 				{#if $form.patient.kind === 'new'}
 					<p>new</p>
 				{:else}
-					<!-- else content here -->
 					<div class="flex w-1/2 flex-col gap-y-1 px-0.5">
 						<label class="ml-2 font-semibold" for="examTypeId"> Buscar </label>
 
@@ -153,10 +152,6 @@
 							error={$errors.patient?.id}
 						/>
 					</div>
-
-					<p>
-						pacient id: {$form.patient.id}
-					</p>
 				{/if}
 
 				<p>
