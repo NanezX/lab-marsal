@@ -22,8 +22,18 @@
 		creatable,
 		disabled,
 		error,
+		i18n,
 		...rest
 	}: PropType = $props();
+
+	const i18nInternal: object = {
+		// empty: 'Vacio',
+		// nomatch: 'No ',
+		// fetchInit: 'paverr',
+		fetchEmpty: 'No hay coincidencias',
+		fetchBefore: 'Escribe para buscar',
+		...i18n
+	};
 
 	const controlClass =
 		'focus-within:!ring-dark-blue !rounded-3xl !border !py-[2.5px] !px-2 focus-within:!outline-hidden focus-within:!ring-1 !ring-1 !ring-transparent !border-r-8 !border-transparent';
@@ -72,6 +82,7 @@
 		selection={selectionPassed ?? selection}
 		listHeader={listHeaderPassed ?? listHeader}
 		createRow={createRowPassed ?? createRow}
+		i18n={i18nInternal}
 		{...rest}
 	/>
 	{#if error !== undefined && error.length > 0}
