@@ -12,6 +12,7 @@
 	/////////////
 	import Svelecte from 'svelecte';
 	import SelectInput from '$lib/components/SelectInput.svelte';
+	import type { PatientDiscriminator } from '$lib/server/utils/zod';
 
 	let selectedExamType = $state<any>(null);
 
@@ -49,6 +50,12 @@
 			priority_ === ExamPriority.Low ? 'Baja' : priority_ === ExamPriority.High ? 'Alta' : 'Normal'
 		)
 	}));
+
+	function isNewPatient(
+		patient: PatientDiscriminator
+	): patient is Extract<PatientDiscriminator, { kind: 'new' }> {
+		return patient.kind === 'new';
+	}
 </script>
 
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
@@ -136,7 +143,99 @@
 			<div class="space-y-4">
 				<!-- Paciente data-->
 				{#if $form.patient.kind === 'new'}
-					<p>new</p>
+					<div class="space-y-4">
+						<div class="flex gap-x-8">
+							<Input
+								bind:value={$form.patient.data.firstName}
+								name="firstName"
+								label="Nombre"
+								placeholder="Nombre del paciente"
+								wrapperClass="w-1/2"
+								error={$errors.patient?.data?.firstName}
+							/>
+
+							<Input
+								bind:value={$form.patient.data.lastName}
+								name="lastName"
+								label="Apellido"
+								placeholder="Apellido del paciente"
+								wrapperClass="w-1/2"
+								error={$errors.patient?.data?.lastName}
+							/>
+						</div>
+
+						<div class="flex gap-x-8">
+							<Input
+								bind:value={
+									() => ($form.patient.data.documentId === 0 ? '' : $form.patient.data.documentId),
+									(v) => ($form.patient.data.documentId = v === '' ? 0 : v)
+								}
+								name="documentId"
+								label="Cédula de Identidad"
+								placeholder="Cédula"
+								wrapperClass="w-1/3"
+								type="number"
+								autoComplete={false}
+								error={$errors.patient?.data?.documentId}
+							/>
+
+							<div class="flex flex-col items-start gap-y-1">
+								<label class="ml-2 font-semibold" for="select-gender"> Género </label>
+								<Select
+									bind:value={$form.patient.data.gender}
+									name="gender"
+									id="select-gender"
+									items={Object.values(PatientGender).map((role_) => ({
+										value: role_,
+										label: formatCapital(role_ === PatientGender.Female ? 'Mujer' : 'Hombre')
+									}))}
+									forcePlaceholder
+									required
+									placeholder="Selecciona género"
+									class="w-1/3"
+								/>
+							</div>
+
+							<Input
+								bind:value={$form.patient.data.birthdate}
+								name="birthdate"
+								label="Cumpleaños"
+								type="date"
+								required
+								placeholder="Cumpleaños"
+								wrapperClass="w-1/3"
+								{...$constraints.patient?.data?.birthdate}
+							/>
+						</div>
+
+						<div class="mt-8 flex gap-x-8">
+							<Input
+								bind:value={
+									() => $form.patient.data.email ?? '', (v) => ($form.patient.data.email = v)
+								}
+								type="email"
+								name="email"
+								label="Correo electrónico (opcional)"
+								placeholder="Correo electrónico"
+								autoComplete={false}
+								wrapperClass="w-1/2"
+								error={$errors.patient?.data?.email as string | string[] | undefined}
+							/>
+
+							<Input
+								bind:value={
+									() => $form.patient.data.phoneNumber ?? '',
+									(v) => ($form.patient.data.phoneNumber = v)
+								}
+								name="phoneNumber"
+								label="Teléfono (opcional)"
+								placeholder="Número de teléfono"
+								wrapperClass="w-1/2"
+								autoComplete={false}
+								error={$errors.patient?.data?.phoneNumber as string | string[] | undefined}
+							/>
+						</div>
+					</div>
 				{:else}
 					<div class="flex w-1/2 flex-col gap-y-1 px-0.5">
 						<label class="ml-2 font-semibold" for="examTypeId"> Buscar </label>
