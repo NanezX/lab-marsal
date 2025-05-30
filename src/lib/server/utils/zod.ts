@@ -1,6 +1,7 @@
-import { PatientGender, UserRoles } from '$lib/shared/enums';
+import { ExamPriority, PatientGender, UserRoles } from '$lib/shared/enums';
 import { minDocumentId, maxDocumentId } from '$lib/shared/utils';
 import { validate } from 'uuid';
+import { parsePhoneNumberFromString } from 'libphonenumber-js/min';
 import { z } from 'zod';
 
 function birthdateRefine(value_: string): boolean {
@@ -74,7 +75,7 @@ export const examTypeParameterSchema = z.object({
 	name: z.string().min(1, 'El parámetro debe tener un nombre'),
 	type: z.literal('text'),
 	category: z.string().min(1).optional(),
-	unit: z.string().min(1, 'Debe especificar la unidad del parámetro'),
+	unit: z.string().min(1, 'Debe ingresar un texto válido como unidad').optional(),
 	hasReferences: z.boolean(),
 	referenceValues: z.array(z.string().min(1, 'Debe ingresar el valor de referencia'))
 });
@@ -86,6 +87,7 @@ export const examTypeSchema = z
 		description: z.string().optional().nullable(),
 		basePrice: z.number().positive('El precio base debe ser mayor a 0 USD'),
 		categories: z.array(z.string()),
+		classification: z.union([z.string().uuid(), z.string().min(1)]).optional(),
 		parameters: z
 			.array(examTypeParameterSchema)
 			.min(1)
@@ -95,7 +97,7 @@ export const examTypeSchema = z
 					name: '',
 					type: 'text', // | "number";
 					category: undefined,
-					unit: '',
+					unit: undefined,
 					hasReferences: false,
 					referenceValues: []
 				}
@@ -124,7 +126,6 @@ export const editExamTypeParameterSchema = examTypeParameterSchema.extend({
 export const editExamTypeSchema = examTypeSchema.innerType().extend({
 	id: z.string().refine(uuidRefine, 'ID del tipo de exámen no válido'),
 	parameters: z.array(editExamTypeParameterSchema).min(1),
-
 	deletedParameters: z.array(z.string().refine(uuidRefine, 'ID del parámetro inválido')).default([])
 });
 
@@ -143,10 +144,29 @@ export const createPatientSchema = z.object({
 	email: z.string().email('Correo electrónico inválido').optional(),
 	phoneNumber: z
 		.string()
-		.min(7, { message: 'Número de teléfono demasiado corto' })
-		.max(15, { message: 'Número de teléfono demasiado largo' })
-		.regex(/^\+?[0-9\s\-()]+$/, { message: 'Número de teléfono inválido' })
-		.optional(),
+		.optional()
+		.refine(
+			(value) => {
+				if (!value) return true; // Optional = OK
+				const phone = parsePhoneNumberFromString(value, 'VE');
+				return phone?.isValid();
+			},
+			{
+				message: 'Número de teléfono inválido'
+			}
+		)
+		.transform((value) => {
+			if (!value) return undefined;
+			const phone = parsePhoneNumberFromString(value, 'VE');
+
+			// Fallback just in case because we already validate it
+			if (!phone) return value;
+
+			return phone.country === 'VE'
+				? phone.formatNational().replace(/\s/g, '-')
+				: phone.formatInternational();
+		}),
+
 	gender: z.nativeEnum(PatientGender, { errorMap: () => ({ message: 'Genero no válido' }) })
 });
 
@@ -156,4 +176,43 @@ export const editPatientSchema = createPatientSchema.extend({
 
 export const deletePatientSchema = z.object({
 	patientId: z.string().refine(uuidRefine, 'ID del paciente no válido')
+});
+
+// EXAMS
+
+const patientDiscriminatorSchema = z.discriminatedUnion('kind', [
+	z.object({
+		kind: z.literal('existing'),
+		id: z
+			.string({ message: 'Debe seleccionar un paciente' })
+			.min(1, 'Debe seleccionar un paciente')
+			.uuid()
+	}),
+	z.object({
+		kind: z.literal('new'),
+		data: createPatientSchema
+	})
+]);
+
+export type PatientDiscriminator = z.infer<typeof patientDiscriminatorSchema>;
+
+const customTagDiscriminatorSchema = z.discriminatedUnion('kind', [
+	z.object({
+		kind: z.literal('auto'),
+		tag: z.null().optional()
+	}),
+	z.object({
+		kind: z.literal('manual'),
+		tag: z.string().min(1, 'Debe ingresar un identificador')
+	})
+]);
+
+export const createExamSchema = z.object({
+	patient: patientDiscriminatorSchema.default({ kind: 'existing', id: '' }),
+	examTypeId: z.string({ message: 'Debe seleccionar un tipo de exámen' }).uuid(),
+	customTag: customTagDiscriminatorSchema.default({ kind: 'auto', tag: null }),
+	priority: z
+		.nativeEnum(ExamPriority, { errorMap: () => ({ message: 'Prioridad no definida' }) })
+		.default(ExamPriority.Normal)
+	// NO Need for status when creating exam, always is ACTIVE by default on DB when missing
 });

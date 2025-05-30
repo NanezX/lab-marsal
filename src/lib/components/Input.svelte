@@ -12,7 +12,7 @@
 		id?: string;
 		placeholder?: string;
 		title?: string;
-		type?: 'text' | 'password' | 'email' | 'number' | 'date';
+		type?: 'text' | 'password' | 'email' | 'number' | 'date' | 'tel';
 		disabled?: boolean | null;
 		required?: boolean;
 		icon?: IconSource;

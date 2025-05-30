@@ -25,7 +25,8 @@ export class AppSendEmailError extends AppLaboratoryError {
 }
 
 export class AppDataNotSavedError extends AppLaboratoryError {
-	constructor(message?: string) {
-		super(message ?? 'Data not saved', { status: 500, code: 'DATA_NOT_SAVED' });
+	constructor(message?: string, options: { status?: number } = {}) {
+		const { status = 500 } = options;
+		super(message ?? 'Data not saved', { status: status, code: 'DATA_NOT_SAVED' });
 	}
 }
