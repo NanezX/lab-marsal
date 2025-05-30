@@ -12,7 +12,6 @@
 	import SelectInput from '$lib/components/SelectInput.svelte';
 	import type { PatientDiscriminator } from '$lib/server/utils/zod';
 
-	/////////////////////
 	let { data } = $props();
 
 	let { createExamForm } = data;
@@ -39,7 +38,6 @@
 	function toggleExamId(kind_: 'auto' | 'manual') {
 		form.update(($form) => {
 			if (kind_ == 'auto') {
-				//
 				$form.customId = {
 					kind: 'auto',
 					id: null
