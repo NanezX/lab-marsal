@@ -16,6 +16,12 @@ import { validate as validateUUID } from 'uuid';
 
 // TODO: Maybe make `tx` optional, relay on db if not passed the tx
 
+type TxType = PgTransaction<
+	PostgresJsQueryResultHKT,
+	typeof import('$lib/server/db/schema'),
+	ExtractTablesWithRelations<typeof import('$lib/server/db/schema')>
+>;
+
 /**
  * Get the classification ID or create it if not found.
  *
@@ -24,11 +30,7 @@ import { validate as validateUUID } from 'uuid';
 export async function getOrCreateClassification(
 	input: string | undefined,
 
-	tx: PgTransaction<
-		PostgresJsQueryResultHKT,
-		typeof import('$lib/server/db/schema'),
-		ExtractTablesWithRelations<typeof import('$lib/server/db/schema')>
-	>
+	tx: TxType
 ): Promise<string> {
 	if (!input) {
 		input = 'Sin clasificación';
@@ -65,6 +67,20 @@ export async function getOrCreateClassification(
 	}
 
 	return classificationId;
+}
+
+// TODO: Maybe make `tx` optional, relay on db if not passed the tx
+// TODO: Allow custom configuration for auto tag generation based on app settings
+export async function generateNextExamTag(tx: TxType) {
+	const latestExam = await tx.query.exam.findFirst({
+		where: (exam, { like }) => like(exam.customTag, 'EX-%'),
+		orderBy: (exam, { desc }) => desc(exam.customTag)
+	});
+
+	const lastNumber = latestExam ? parseInt(latestExam.customTag.split('-')[1], 10) : 0;
+
+	const nextNumber = String(lastNumber + 1).padStart(4, '0');
+	return `EX-${nextNumber}`;
 }
 
 /**
