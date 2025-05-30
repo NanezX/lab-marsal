@@ -196,21 +196,21 @@ const patientDiscriminatorSchema = z.discriminatedUnion('kind', [
 
 export type PatientDiscriminator = z.infer<typeof patientDiscriminatorSchema>;
 
-const customIdDiscriminatorSchema = z.discriminatedUnion('kind', [
+const customTagDiscriminatorSchema = z.discriminatedUnion('kind', [
 	z.object({
 		kind: z.literal('auto'),
-		id: z.null().optional()
+		tag: z.null().optional()
 	}),
 	z.object({
 		kind: z.literal('manual'),
-		id: z.string().min(1, 'Debe ingresar un identificador')
+		tag: z.string().min(1, 'Debe ingresar un identificador')
 	})
 ]);
 
 export const createExamSchema = z.object({
 	patient: patientDiscriminatorSchema.default({ kind: 'existing', id: '' }),
 	examTypeId: z.string({ message: 'Debe seleccionar un tipo de exámen' }).uuid(),
-	customId: customIdDiscriminatorSchema.default({ kind: 'auto', id: null }),
+	customTag: customTagDiscriminatorSchema.default({ kind: 'auto', tag: null }),
 	priority: z
 		.nativeEnum(ExamPriority, { errorMap: () => ({ message: 'Prioridad no definida' }) })
 		.default(ExamPriority.Normal)
