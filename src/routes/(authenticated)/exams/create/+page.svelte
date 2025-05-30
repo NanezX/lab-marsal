@@ -38,6 +38,25 @@
 		return patient.kind === 'new';
 	}
 
+	function toggleExamId(kind_: 'auto' | 'manual') {
+		form.update(($form) => {
+			if (kind_ == 'auto') {
+				//
+				$form.customId = {
+					kind: 'auto',
+					id: null
+				};
+			} else {
+				$form.customId = {
+					kind: 'manual',
+					id: ''
+				};
+			}
+
+			return $form;
+		});
+	}
+
 	function togglePatient(kind_: 'new' | 'existing') {
 		form.update(($form) => {
 			if (kind_ === 'existing') {
@@ -84,7 +103,7 @@
 						wrapperClass="w-1/2"
 						label="Identificador del examen"
 						placeholder="Identificador del examen"
-						bind:value={inputExamId}
+						bind:value={() => $form.customId.id ?? '', (v) => ($form.customId.id = v)}
 						name="customIdInput"
 						disabled={$form.customId.kind === 'auto'}
 						title={$form.customId.kind === 'auto'
@@ -97,8 +116,7 @@
 						title="Generar automáticamente el identificar"
 						wrapperClass="!m-0"
 						bind:value={
-							() => $form.customId.kind === 'auto',
-							(v) => ($form.customId.kind = v ? 'auto' : 'manual')
+							() => $form.customId.kind === 'auto', (v) => toggleExamId(v ? 'auto' : 'manual')
 						}
 						error={$errors.customId?.kind}
 					/>
@@ -144,10 +162,7 @@
 					text="Crear nuevo paciente"
 					wrapperClass="my-auto !text-base border border-transparent hover:border-primary-blue/75 rounded-lg px-1 py-0.5"
 					bind:value={
-						() => $form.patient.kind === 'new',
-						(v) => {
-							togglePatient(v ? 'new' : 'existing');
-						}
+						() => $form.patient.kind === 'new', (v) => togglePatient(v ? 'new' : 'existing')
 					}
 				/>
 			</div>
