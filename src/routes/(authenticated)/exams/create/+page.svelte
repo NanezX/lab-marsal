@@ -9,22 +9,9 @@
 	import Button from '$lib/components/Button.svelte';
 	import Link from '$lib/components/Link.svelte';
 	import Checkbox from '$lib/components/Checkbox.svelte';
-	/////////////
-	import Svelecte from 'svelecte';
 	import SelectInput from '$lib/components/SelectInput.svelte';
 	import type { PatientDiscriminator } from '$lib/server/utils/zod';
 
-	let selectedExamType = $state<any>(null);
-
-	const fetchExamTypes = async (input: string) => {
-		'/api/exam-types/search?q=[query]';
-		const response = await fetch(`/api/exam-types/search?q=${encodeURIComponent(input)}`);
-		const data = await response.json();
-		return data.map((item: any) => ({
-			value: item.id,
-			label: item.name
-		}));
-	};
 	/////////////////////
 	let { data } = $props();
 
@@ -37,13 +24,7 @@
 	});
 
 	let inputExamId = $state('');
-	let autoId = $state(false);
 
-	let examType = $state('');
-	const examTypes = ['Hematologia', 'Tipiaje sanguineo', 'Otros'];
-
-	let priority = $state('');
-	const priorities = ['Normal', 'Urgente'];
 	const priorityItems = Object.values(ExamPriority).map((priority_) => ({
 		value: priority_,
 		label: formatCapital(
