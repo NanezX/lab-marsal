@@ -277,23 +277,6 @@
 						/>
 					</div>
 				{/if}
-
-				<p>
-					createNewPacient: {$form.patient.kind}
-				</p>
-				<p>
-					err:
-					<span in:fade class="text-sm text-red-500">
-						{$errors?.patient?.id?.[0]}
-					</span>
-				</p>
-
-				<button
-					type="button"
-					onclick={() => {
-						console.log('$errors: ', $errors);
-					}}>xdd</button
-				>
 			</div>
 		</div>
 	</div>
