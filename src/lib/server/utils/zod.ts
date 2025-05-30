@@ -190,11 +190,6 @@ export const createExamSchema = z.object({
 	customId: customIdDiscriminatorSchema.default({ kind: 'auto', id: null }),
 	priority: z
 		.nativeEnum(ExamPriority, { errorMap: () => ({ message: 'Prioridad no definida' }) })
-		.default(ExamPriority.Normal),
-	// NO Need for status when creating exam, always active by default on DB
-	// status: z
-	// 	.nativeEnum(ExamStatus, { errorMap: () => ({ message: 'Estado del exámen no definido' }) })
-	// 	.default(ExamStatus.Active),
-	pricePaid: z.number().positive('El precio al pagar debe ser mayor a 0'),
-	observation: z.string().optional().default('')
+		.default(ExamPriority.Normal)
+	// NO Need for status when creating exam, always is ACTIVE by default on DB when missing
 });
