@@ -234,14 +234,14 @@ export const exam = pgTable('exam', {
 	customTag: text('custom_tag').notNull(),
 	priority: examPriorityEnum().notNull().default(ExamPriority.Normal),
 	status: examStatusEnum().notNull().default(ExamStatus.Active),
-	pricePaid: decimal('price_paid', { precision: 19, scale: 2 }),
-	observation: text(),
 	//
-	results: jsonb(),
-	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }),
-	paid: boolean().notNull(),
-	paymentMethod: text('payment_method'),
-	paymentRef: text('payment_ref')
+	results: jsonb(), // Added when uploading the results
+	observation: text(), // Optional observation by the lab
+	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }), // Set when the exam is deliveted
+	paid: boolean().notNull(), // When the exam is paid
+	pricePaid: decimal('price_paid', { precision: 19, scale: 2 }), // Amount paid (probably after marked paid)
+	paymentMethod: text('payment_method'), // payment method defined by administration
+	paymentRef: text('payment_ref') // Reference if apply
 });
 
 // Exam relations declarations
