@@ -1,10 +1,5 @@
 <script lang="ts">
 	import { zoom } from '$lib/components/actions/zoom';
-	import Button from '$lib/components/Button.svelte';
-	import Checkbox from '$lib/components/Checkbox.svelte';
-	import Input from '$lib/components/Input.svelte';
-	import BaseModal from '$lib/components/modal/BaseModal.svelte';
-	import Select from '$lib/components/Select.svelte';
 	import { formatCapital } from '$lib/shared/utils';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { fade } from 'svelte/transition';
@@ -15,7 +10,6 @@
 		Trash,
 		Edit,
 		FileSearch,
-		UserSearch,
 		FilePlus
 	} from '@steeze-ui/tabler-icons';
 	import SearchBar from '$lib/components/SearchBar.svelte';
@@ -109,25 +103,7 @@
 	];
 
 	// TODO: Maybe can exist an search component
-	let inputSearch = $state('');
 	let textSearch = $state(page.url.searchParams.get('textSearch') || '');
-
-	// TODO: Move modal to single component AddExamModal
-	let showModal = $state(false);
-
-	// TODO: USe SuperForms
-	let inputExamId = $state('');
-	let autoId = $state(true);
-
-	let priority = $state('');
-	const priorities = ['Normal', 'Urgente'];
-
-	let examType = $state('');
-	const examTypes = ['Hematologia', 'Tipiaje sanguineo', 'Otros'];
-
-	let createNewPacient = $state(false);
-	let pacientId = $state('23875912');
-	let pacientFullname = $state('Andres Bello');
 
 	function getExams() {
 		goto(`/exams?textSearch=${textSearch}`, {
@@ -137,77 +113,6 @@
 </script>
 
 <div in:fade class="flex w-full flex-col gap-y-8">
-	<BaseModal bind:showModal title="Añadir examen">
-		<div class="flex flex-col space-y-4 px-8 py-2">
-			<div>
-				<p class="mb-4 text-lg font-semibold">Examen</p>
-
-				<div class="mb-4 flex w-full justify-start">
-					<Input
-						wrapperClass="w-1/2"
-						placeholder="Identificador del examen"
-						bind:value={inputExamId}
-						name="inputExamId"
-					/>
-					<Checkbox
-						name="autoGenId"
-						text="Autogenerar ID"
-						wrapperClass="ml-2"
-						bind:value={autoId}
-					/>
-				</div>
-				<div class="flex gap-x-6">
-					<Select
-						bind:value={examType}
-						items={examTypes}
-						name="examType"
-						required
-						placeholder="Seleccionar el tipo de examen"
-					/>
-
-					<Select
-						bind:value={priority}
-						items={priorities}
-						name="priority"
-						required
-						placeholder="Seleccionar prioridad"
-					/>
-				</div>
-			</div>
-
-			<hr class="border-primary-gray/50 border" />
-			<div>
-				<div class="mb-4 inline-flex gap-x-4">
-					<p class="text-lg font-semibold">Paciente</p>
-					<Checkbox
-						name="createNewPacient"
-						text="Crear nuevo paciente"
-						wrapperClass="ml-2"
-						bind:value={createNewPacient}
-					/>
-				</div>
-				<div class="mb-4 flex items-center gap-x-2">
-					<Input
-						wrapperClass="w-1/2"
-						placeholder="Nombre del paciente"
-						bind:value={pacientId}
-						name="pacientId"
-						disabled
-					/>
-					<Icon src={UserSearch} size="24" />
-				</div>
-				<div>
-					<Input
-						wrapperClass="w-1/2"
-						placeholder="Cedula del paciente"
-						bind:value={pacientFullname}
-						name="pacientFullname"
-						disabled
-					/>
-				</div>
-			</div>
-		</div>
-	</BaseModal>
 	<p class="text-center text-3xl">Examenes</p>
 
 	<div class="flex w-full justify-evenly">
