@@ -1,6 +1,7 @@
 import { ExamPriority, PatientGender, UserRoles } from '$lib/shared/enums';
 import { minDocumentId, maxDocumentId } from '$lib/shared/utils';
 import { validate } from 'uuid';
+import { parsePhoneNumberFromString } from 'libphonenumber-js/min';
 import { z } from 'zod';
 
 function birthdateRefine(value_: string): boolean {
@@ -143,10 +144,29 @@ export const createPatientSchema = z.object({
 	email: z.string().email('Correo electrónico inválido').optional(),
 	phoneNumber: z
 		.string()
-		.min(7, { message: 'Número de teléfono demasiado corto' })
-		.max(15, { message: 'Número de teléfono demasiado largo' })
-		.regex(/^\+?[0-9\s\-()]+$/, { message: 'Número de teléfono inválido' })
-		.optional(),
+		.optional()
+		.refine(
+			(value) => {
+				if (!value) return true; // Optional = OK
+				const phone = parsePhoneNumberFromString(value, 'VE');
+				return phone?.isValid();
+			},
+			{
+				message: 'Número de teléfono inválido'
+			}
+		)
+		.transform((value) => {
+			if (!value) return undefined;
+			const phone = parsePhoneNumberFromString(value, 'VE');
+
+			// Fallback just in case because we already validate it
+			if (!phone) return value;
+
+			return phone.country === 'VE'
+				? phone.formatNational().replace(/\s/g, '-')
+				: phone.formatInternational();
+		}),
+
 	gender: z.nativeEnum(PatientGender, { errorMap: () => ({ message: 'Genero no válido' }) })
 });
 
