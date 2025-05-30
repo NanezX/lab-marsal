@@ -23,8 +23,6 @@
 		applyAction: true
 	});
 
-	let inputExamId = $state('');
-
 	const priorityItems = Object.values(ExamPriority).map((priority_) => ({
 		value: priority_,
 		label: formatCapital(
