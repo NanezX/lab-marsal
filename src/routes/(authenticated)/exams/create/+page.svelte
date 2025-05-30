@@ -38,14 +38,14 @@
 	function toggleExamId(kind_: 'auto' | 'manual') {
 		form.update(($form) => {
 			if (kind_ == 'auto') {
-				$form.customId = {
+				$form.customTag = {
 					kind: 'auto',
-					id: null
+					tag: null
 				};
 			} else {
-				$form.customId = {
+				$form.customTag = {
 					kind: 'manual',
-					id: ''
+					tag: ''
 				};
 			}
 
@@ -99,22 +99,22 @@
 						wrapperClass="w-1/2"
 						label="Identificador del examen"
 						placeholder="Identificador del examen"
-						bind:value={() => $form.customId.id ?? '', (v) => ($form.customId.id = v)}
-						name="customIdInput"
-						disabled={$form.customId.kind === 'auto'}
-						title={$form.customId.kind === 'auto'
+						bind:value={() => $form.customTag.tag ?? '', (v) => ($form.customTag.tag = v)}
+						name="customTagInput"
+						disabled={$form.customTag.kind === 'auto'}
+						title={$form.customTag.kind === 'auto'
 							? 'Generando identificador automáticamente'
 							: 'Ingrese un identificador'}
 					/>
 					<Checkbox
-						name="customIdType"
+						name="customTagType"
 						text="Autogenerar ID"
 						title="Generar automáticamente el identificar"
 						wrapperClass="!m-0"
 						bind:value={
-							() => $form.customId.kind === 'auto', (v) => toggleExamId(v ? 'auto' : 'manual')
+							() => $form.customTag.kind === 'auto', (v) => toggleExamId(v ? 'auto' : 'manual')
 						}
-						error={$errors.customId?.kind}
+						error={$errors.customTag?.kind}
 					/>
 				</div>
 
