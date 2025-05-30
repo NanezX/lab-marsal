@@ -171,6 +171,8 @@ const patientDiscriminatorSchema = z.discriminatedUnion('kind', [
 	})
 ]);
 
+export type PatientDiscriminator = z.infer<typeof patientDiscriminatorSchema>;
+
 const customIdDiscriminatorSchema = z.discriminatedUnion('kind', [
 	z.object({
 		kind: z.literal('auto'),
@@ -194,5 +196,5 @@ export const createExamSchema = z.object({
 	// 	.nativeEnum(ExamStatus, { errorMap: () => ({ message: 'Estado del exámen no definido' }) })
 	// 	.default(ExamStatus.Active),
 	pricePaid: z.number().positive('El precio al pagar debe ser mayor a 0'),
-	observation: z.string().optional()
+	observation: z.string().optional().default('')
 });
