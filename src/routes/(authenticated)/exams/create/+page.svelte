@@ -264,6 +264,7 @@
 									}
 								}
 								name="phoneNumber"
+								type="tel"
 								label="Teléfono (opcional)"
 								placeholder="Número de teléfono"
 								wrapperClass="w-1/2"
