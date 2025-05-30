@@ -172,7 +172,7 @@
 			</div>
 			<div class="space-y-4">
 				<!-- Paciente data-->
-				{#if $form.patient.kind === 'new'}
+				{#if isNewPatient($form.patient)}
 					<div class="space-y-4">
 						<div class="flex gap-x-8">
 							<Input
@@ -197,8 +197,17 @@
 						<div class="flex gap-x-8">
 							<Input
 								bind:value={
-									() => ($form.patient.data.documentId === 0 ? '' : $form.patient.data.documentId),
-									(v) => ($form.patient.data.documentId = v === '' ? 0 : v)
+									() => {
+										return isNewPatient($form.patient)
+											? $form.patient.data.documentId === 0
+												? ''
+												: $form.patient.data.documentId
+											: '';
+									},
+									(v) => {
+										if (isNewPatient($form.patient))
+											$form.patient.data.documentId = v === '' ? 0 : v;
+									}
 								}
 								name="documentId"
 								label="Cédula de Identidad"
@@ -241,7 +250,10 @@
 						<div class="mt-8 flex gap-x-8">
 							<Input
 								bind:value={
-									() => $form.patient.data.email ?? '', (v) => ($form.patient.data.email = v)
+									() => (isNewPatient($form.patient) ? ($form.patient.data.email ?? '') : ''),
+									(v) => {
+										if (isNewPatient($form.patient)) $form.patient.data.email = v;
+									}
 								}
 								type="email"
 								name="email"
@@ -254,8 +266,10 @@
 
 							<Input
 								bind:value={
-									() => $form.patient.data.phoneNumber ?? '',
-									(v) => ($form.patient.data.phoneNumber = v)
+									() => (isNewPatient($form.patient) ? ($form.patient.data.phoneNumber ?? '') : ''),
+									(v) => {
+										if (isNewPatient($form.patient)) $form.patient.data.phoneNumber = v;
+									}
 								}
 								name="phoneNumber"
 								label="Teléfono (opcional)"
