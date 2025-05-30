@@ -235,6 +235,8 @@ export const exam = pgTable('exam', {
 	priority: examPriorityEnum().notNull().default(ExamPriority.Normal),
 	status: examStatusEnum().notNull().default(ExamStatus.Active),
 	//
+	sample: text(),
+	//
 	results: jsonb(), // Added when uploading the results
 	observation: text(), // Optional observation by the lab
 	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }), // Set when the exam is deliveted
