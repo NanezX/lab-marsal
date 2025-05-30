@@ -163,7 +163,10 @@ export const deletePatientSchema = z.object({
 const patientDiscriminatorSchema = z.discriminatedUnion('kind', [
 	z.object({
 		kind: z.literal('existing'),
-		id: z.string().min(1, 'Debe seleccionar un paciente').uuid()
+		id: z
+			.string({ message: 'Debe seleccionar un paciente' })
+			.min(1, 'Debe seleccionar un paciente')
+			.uuid()
 	}),
 	z.object({
 		kind: z.literal('new'),
