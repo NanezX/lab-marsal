@@ -49,7 +49,7 @@
 	<div class="relative flex justify-center">
 		<BackButton href="/exams" size="40" />
 
-		<p class="mx-auto my-0 text-center text-3xl">{examType.name}</p>
+		<p class="mx-auto my-0 text-center text-3xl">Resumen del exámen</p>
 
 		<div>
 			<Link
