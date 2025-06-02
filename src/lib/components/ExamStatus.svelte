@@ -12,37 +12,40 @@
 	};
 
 	let { status, priority, minimal = true, class: className }: PropType = $props();
+
+	const statusLabel = {
+		[ExamStatus.Active]: 'En proceso',
+		[ExamStatus.Completed]: 'Completado',
+		[ExamStatus.Cancelled]: 'Cancelado'
+	}[status];
+
+	const statusIcon = {
+		[ExamStatus.Active]: priority === ExamPriority.High ? CircleChevronsUp : CircleMinus,
+		[ExamStatus.Completed]: CircleCheck,
+		[ExamStatus.Cancelled]: Cancel
+	}[status];
+
+	const statusColor =
+		status === ExamStatus.Active
+			? priority === ExamPriority.High
+				? 'text-red-500'
+				: priority === ExamPriority.Normal
+					? 'text-blue-500'
+					: 'text-yellow-400'
+			: status === ExamStatus.Completed
+				? 'text-green-500'
+				: 'text-red-600';
 </script>
 
 {#if minimal}
-	<p class={['flex items-center gap-x-1', className]}>
-		<span>
-			{status == ExamStatus.Active
-				? 'En proceso'
-				: status == ExamStatus.Completed
-					? 'Completado'
-					: 'Cancelado'}
-		</span>
-
-		<span>
-			{#if status == ExamStatus.Active}
-				<Icon
-					src={priority == ExamPriority.High ? CircleChevronsUp : CircleMinus}
-					size="22"
-					class={{
-						'text-yellow-300': priority == ExamPriority.Low,
-						'text-blue-300': priority == ExamPriority.Normal,
-						'text-red-400': priority == ExamPriority.High
-					}}
-				/>
-			{:else if status == ExamStatus.Cancelled}
-				<Icon src={Cancel} size="22" class="text-red-500" />
-			{:else}
-				<!-- else content here -->
-				<Icon src={CircleCheck} size="22" class="text-green-400" />
-			{/if}
-		</span>
+	<p class={['flex items-center gap-x-2', className]}>
+		<span>{statusLabel}</span>
+		<Icon src={statusIcon} size="22" class={statusColor} />
 	</p>
 {:else}
-	<!-- else content here -->
+	<!-- Could render full badge/description view here -->
+	<p class={['flex items-center gap-x-2 font-semibold px-2 py-1 rounded-md', className, statusColor]}>
+		<Icon src={statusIcon} size="20" />
+		<span>{statusLabel} ({priority})</span>
+	</p>
 {/if}
