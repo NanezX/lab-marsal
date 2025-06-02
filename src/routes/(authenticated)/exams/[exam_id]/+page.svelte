@@ -65,4 +65,15 @@
 			>
 		</div>
 	</div>
+
+	<div>
+		<div class="grid grid-cols-2 gap-1">
+			<div class="rounded-2xl border border-gray-200 px-1">
+				<p class="text-2xl">Datos del paciente</p>
+			</div>
+			<div class="rounded-2xl border border-gray-200 px-1">
+				<p class="text-2xl">Datos generales del exámen</p>
+			</div>
+		</div>
+	</div>
 </div>
