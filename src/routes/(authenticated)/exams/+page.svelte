@@ -159,5 +159,22 @@
 				</a>
 			{/each}
 		</div>
+
+		<!-- Pagination -->
+		<FilterControls
+			baseUrl="/exams"
+			totalItems={data.countTotal}
+			pageSize={12}
+			bind:queryParams={
+				() => {
+					return { search: textSearch, orderBy, orderDirection };
+				},
+				(v) => {
+					textSearch = v['search'];
+					orderBy = v['orderBy'];
+					orderDirection = v['orderDirection'];
+				}
+			}
+		/>
 	</div>
 </div>
