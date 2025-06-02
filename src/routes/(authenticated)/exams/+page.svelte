@@ -20,6 +20,7 @@
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { formatRelativeDate } from '$lib/client/index.js';
 	import ExamStatus from '$lib/components/ExamStatus.svelte';
+	import FilterControls from '$lib/components/FilterControls.svelte';
 
 	let { data } = $props();
 
@@ -60,7 +61,6 @@
 <div in:fade class="flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Exámenes</p>
 
-	<!-- <div class="flex w-full justify-evenly"> -->
 	<div class="flex w-full flex-col justify-evenly gap-x-2 xl:flex-row">
 		<SearchBar
 			id="searchExamType"
@@ -111,35 +111,53 @@
 			<Icon src={FilePlus} size="24" class="text-white" />
 		</Link>
 	</div>
+	<div class="flex flex-col gap-y-4">
+		<!-- Pagination -->
+		<FilterControls
+			baseUrl="/exams"
+			totalItems={data.countTotal}
+			pageSize={12}
+			bind:queryParams={
+				() => {
+					return { search: textSearch, orderBy, orderDirection };
+				},
+				(v) => {
+					textSearch = v['search'];
+					orderBy = v['orderBy'];
+					orderDirection = v['orderDirection'];
+				}
+			}
+		/>
 
-	<div class="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-3">
-		{#each data.examsData as exam}
-			<a
-				href="/exams/{exam.id}"
-				title="{exam.examTypeName} - {exam.patientName}"
-				class="group hover:border-primary-blue flex flex-col gap-y-2 rounded-sm border bg-white px-4 py-2 transition-all select-none hover:-translate-y-1 hover:border hover:shadow-2xl"
-			>
-				<div class="inline-flex w-full items-center justify-between">
-					<ExamStatus status={exam.status} priority={exam.priority} minimal={true} />
-					<Icon
-						src={FileSearch}
-						size="24"
-						class="group-hover:text-primary-blue self-end transition-all group-hover:scale-125"
+		<div class="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-3">
+			{#each data.examsData as exam}
+				<a
+					href="/exams/{exam.id}"
+					title="{exam.examTypeName} - {exam.patientName}"
+					class="group hover:border-primary-blue flex flex-col gap-y-2 rounded-sm border bg-white px-4 py-2 transition-all select-none hover:-translate-y-1 hover:border hover:shadow-2xl"
+				>
+					<div class="inline-flex w-full items-center justify-between">
+						<ExamStatus status={exam.status} priority={exam.priority} minimal={true} />
+						<Icon
+							src={FileSearch}
+							size="24"
+							class="group-hover:text-primary-blue self-end transition-all group-hover:scale-125"
+						/>
+					</div>
+					<div class="space-y-0.5">
+						<LabelValue label="Paciente" value={exam.patientName} />
+						<LabelValue label="Cédula" value={exam.patientDocumentId} />
+						<LabelValue label="Exámen" value={exam.examTypeName} />
+					</div>
+
+					<LabelValue
+						label="Último cambio"
+						value={formatRelativeDate(exam.updatedAt)}
+						class="mt-auto text-sm"
+						labelClass="font-semibold"
 					/>
-				</div>
-				<div class="space-y-0.5">
-					<LabelValue label="Paciente" value={exam.patientName} />
-					<LabelValue label="Cédula" value={exam.patientDocumentId} />
-					<LabelValue label="Exámen" value={exam.examTypeName} />
-				</div>
-
-				<LabelValue
-					label="Último cambio"
-					value={formatRelativeDate(exam.updatedAt)}
-					class="mt-auto text-sm"
-					labelClass="font-semibold"
-				/>
-			</a>
-		{/each}
+				</a>
+			{/each}
+		</div>
 	</div>
 </div>
