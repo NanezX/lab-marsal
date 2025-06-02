@@ -11,6 +11,10 @@ export const load = async ({ url }) => {
 	const order = url.searchParams.get('orderBy') || 'updatedAt'; // or 'patientName' or 'examTypeName'
 	const direction = url.searchParams.get('orderDirection') || 'desc'; // 'asc' or 'desc'
 
+	console.log('searchText: ', searchText);
+	console.log('order: ', order);
+	console.log('direction: ', direction);
+
 	if (limit > 25) limit = 25;
 
 	const { count: countTotal, data: examsData } = await db.transaction(async (tx) => {
@@ -58,6 +62,8 @@ export const load = async ({ url }) => {
 				direction === 'desc' ? desc(patient.firstName) : asc(patient.firstName),
 				direction === 'desc' ? desc(patient.lastName) : asc(patient.lastName)
 			];
+		} else if (order === 'documentId') {
+			orderExpr = direction === 'desc' ? desc(patient.documentId) : asc(patient.documentId);
 		} else if (order === 'examTypeName') {
 			orderExpr = direction === 'desc' ? desc(examType.name) : asc(examType.name);
 		} else {
@@ -73,7 +79,9 @@ export const load = async ({ url }) => {
 				paid: exam.paid,
 				updatedAt: exam.updatedAt,
 				pricePaid: exam.pricePaid,
-				patientName: sql<string>`${patient.firstName} || ' ' || ${patient.lastName}`.as('patientName'),
+				patientName: sql<string>`${patient.firstName} || ' ' || ${patient.lastName}`.as(
+					'patientName'
+				),
 				patientDocumentId: patient.documentId,
 				examTypeName: examType.name
 			})
@@ -96,7 +104,7 @@ export const load = async ({ url }) => {
 		countTotal: countTotal[0].count
 	};
 
-	console.log('data_end: ', data_end);
+	// console.log('data_end: ', data_end);
 
 	return data_end;
 };
