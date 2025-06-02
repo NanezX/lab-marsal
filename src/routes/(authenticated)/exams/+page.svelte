@@ -16,6 +16,38 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import Link from '$lib/components/Link.svelte';
+	///////////////////////////
+	let { data } = $props();
+
+	const orderByOptions = [
+		{ value: 'patientName', label: 'Nombre' },
+		{ value: 'documentId', label: 'Cédula' },
+		{ value: 'examTypeName', label: 'Tipo de exámen' },
+		{ value: 'updatedAt', label: 'Último cambio' }
+	];
+	const orderDirectionOptions = [
+		{ value: 'asc', label: 'Ascendente' },
+		{ value: 'desc', label: 'Descendente' }
+	];
+
+	const orderDirectionName = [
+		{ value: 'asc', label: 'A-Z' },
+		{ value: 'desc', label: 'Z-A' }
+	];
+
+	let textSearch = $state(page.url.searchParams.get('search') || '');
+	let orderBy = $state(page.url.searchParams.get('orderBy') || orderByOptions[0].value);
+	let orderDirection = $state(
+		page.url.searchParams.get('orderDirection') || orderDirectionOptions[0].value
+	);
+
+	function getExams() {
+		goto(`/clients?search=${textSearch}&orderBy=${orderBy}&orderDirection=${orderDirection}`, {
+			keepFocus: true
+		});
+	}
+
+	///////////////////////////
 
 	// TODO: Recheck the types laters coming from the DB
 	type Exam = {
@@ -101,15 +133,6 @@
 			pending: true
 		}
 	];
-
-	// TODO: Maybe can exist an search component
-	let textSearch = $state(page.url.searchParams.get('textSearch') || '');
-
-	function getExams() {
-		goto(`/exams?textSearch=${textSearch}`, {
-			keepFocus: true
-		});
-	}
 </script>
 
 <div in:fade class="flex w-full flex-col gap-y-8">

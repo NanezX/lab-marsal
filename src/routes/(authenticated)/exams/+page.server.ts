@@ -8,7 +8,7 @@ export const load = async ({ url }) => {
 	const skip = Number(url.searchParams.get('skip') || 0);
 
 	const searchText = url.searchParams.get('search')?.trim();
-	const order = url.searchParams.get('orderBy') || 'createdAt'; // or 'patientName' or 'examTypeName'
+	const order = url.searchParams.get('orderBy') || 'updatedAt'; // or 'patientName' or 'examTypeName'
 	const direction = url.searchParams.get('orderDirection') || 'desc'; // 'asc' or 'desc'
 
 	if (limit > 25) limit = 25;
@@ -61,7 +61,7 @@ export const load = async ({ url }) => {
 		} else if (order === 'examTypeName') {
 			orderExpr = direction === 'desc' ? desc(examType.name) : asc(examType.name);
 		} else {
-			orderExpr = direction === 'desc' ? desc(exam.createdAt) : asc(exam.createdAt);
+			orderExpr = direction === 'desc' ? desc(exam.updatedAt) : asc(exam.updatedAt);
 		}
 
 		const examsQuery = tx
@@ -71,7 +71,7 @@ export const load = async ({ url }) => {
 				priority: exam.priority,
 				status: exam.status,
 				paid: exam.paid,
-				createdAt: exam.createdAt,
+				updatedAt: exam.updatedAt,
 				pricePaid: exam.pricePaid,
 				patientName: sql`${patient.firstName} || ' ' || ${patient.lastName}`.as('patientName'),
 				patientDocumentId: patient.documentId,
