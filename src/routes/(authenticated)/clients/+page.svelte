@@ -80,7 +80,7 @@
 		<Link
 			href="/clients/create"
 			title="Nuevo paciente"
-			class="text- mt-5 flex items-center justify-center gap-x-1 transition-all hover:-translate-y-0.25 hover:shadow-lg"
+			class="mt-5 flex items-center justify-center gap-x-1 transition-all hover:-translate-y-0.25 hover:shadow-lg"
 		>
 			<span> Nuevo </span>
 			<Icon src={UserPlus} size="24" class=" text-white" />

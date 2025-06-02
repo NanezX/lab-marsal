@@ -65,7 +65,7 @@
 		<SearchBar
 			id="searchExamType"
 			bind:inputSearch={textSearch}
-			placeholder="Busca un examen por paciente o tipo de examen"
+			placeholder="Buscar por examen o paciente (nombre o CI)"
 			wrapperClass="w-full min-w-1/10 mt-5"
 			debounceTime={500}
 			debounceCallback={() => getExams()}
@@ -105,7 +105,7 @@
 		<Link
 			href="/exams/create"
 			title="Crear nuevo exámen"
-			class="flex items-center justify-center gap-x-1 text-lg transition-all hover:-translate-y-0.25 hover:shadow-lg"
+			class="mt-5 flex items-center justify-center gap-x-1 transition-all hover:-translate-y-0.25 hover:shadow-lg"
 		>
 			<span> Nuevo </span>
 			<Icon src={FilePlus} size="24" class="text-white" />
