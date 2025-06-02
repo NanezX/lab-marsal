@@ -216,3 +216,7 @@ export const createExamSchema = z.object({
 		.default(ExamPriority.Normal)
 	// NO Need for status when creating exam, always is ACTIVE by default on DB when missing
 });
+
+export const deleteExamSchema = z.object({
+	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido')
+});
