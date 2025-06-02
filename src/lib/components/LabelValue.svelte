@@ -8,6 +8,7 @@
 		class?: ClassValue;
 		title?: string;
 		labelClass?: ClassValue;
+		valueClass?: ClassValue;
 		icon?: IconSource;
 		iconClass?: ClassValue;
 	};
@@ -19,7 +20,8 @@
 		title,
 		labelClass,
 		icon,
-		iconClass = 'h-5 w-5'
+		iconClass = 'h-5 w-5',
+		valueClass
 	}: PropType = $props();
 </script>
 
@@ -28,5 +30,5 @@
 		<Icon src={icon} class={iconClass} />
 	{/if}
 	<span class={['font-bold', labelClass]}>{label}: </span>
-	<span>{value}</span>
+	<span class={valueClass}>{value}</span>
 </p>
