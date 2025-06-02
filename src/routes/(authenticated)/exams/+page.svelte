@@ -46,7 +46,7 @@
 	);
 
 	function getExams() {
-		goto(`/clients?search=${textSearch}&orderBy=${orderBy}&orderDirection=${orderDirection}`, {
+		goto(`/exams?search=${textSearch}&orderBy=${orderBy}&orderDirection=${orderDirection}`, {
 			keepFocus: true
 		});
 	}
