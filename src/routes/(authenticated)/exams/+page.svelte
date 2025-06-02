@@ -20,7 +20,7 @@
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { formatRelativeDate } from '$lib/client/index.js';
 	import ExamStatus from '$lib/components/ExamStatus.svelte';
-	///////////////////////////
+
 	let { data } = $props();
 
 	const orderByOptions = [
@@ -50,93 +50,6 @@
 			keepFocus: true
 		});
 	}
-
-	///////////////////////////
-
-	// // TODO: Recheck the types laters coming from the DB
-	// type Exam = {
-	// 	id: string;
-	// 	type: 'hematologia' | 'tipiaje sanguineo' | 'otros';
-	// 	clientName: string;
-	// 	clientLastName: string;
-	// 	numberId: number;
-	// 	createdAt: string;
-	// 	priority: 'urgente' | 'normal';
-	// 	pending: boolean;
-	// };
-
-	// const lastExams: any[] = [
-	// 	{
-	// 		id: '1',
-	// 		type: 'hematologia',
-	// 		clientName: 'Yacsuri',
-	// 		clientLastName: 'Rios',
-	// 		numberId: 26837222,
-	// 		createdAt: 'Hace 2 horas',
-	// 		priority: 'urgente',
-	// 		pending: false
-	// 	},
-	// 	{
-	// 		id: '2',
-	// 		type: 'hematologia',
-	// 		clientName: 'Victor',
-	// 		clientLastName: 'Hernandez',
-	// 		numberId: 27783554,
-	// 		createdAt: 'Hace 3 dias',
-	// 		priority: 'normal',
-	// 		pending: true
-	// 	},
-	// 	{
-	// 		id: '3',
-	// 		type: 'otros',
-	// 		clientName: 'Juan',
-	// 		clientLastName: 'Perez',
-	// 		numberId: 13983282,
-	// 		createdAt: 'Hace 5 dias',
-	// 		priority: 'normal',
-	// 		pending: false
-	// 	},
-	// 	{
-	// 		id: '4',
-	// 		type: 'hematologia',
-	// 		clientName: 'Juan',
-	// 		clientLastName: 'Perez',
-	// 		numberId: 13983282,
-	// 		createdAt: 'Hace 5 dias',
-	// 		priority: 'urgente',
-	// 		pending: true
-	// 	},
-	// 	{
-	// 		id: '5',
-	// 		type: 'otros',
-	// 		clientName: 'Juan',
-	// 		clientLastName: 'Perez',
-	// 		numberId: 13983282,
-	// 		createdAt: 'Hace 5 dias',
-	// 		priority: 'normal',
-	// 		pending: false
-	// 	},
-	// 	{
-	// 		id: '6',
-	// 		type: 'hematologia',
-	// 		clientName: 'Juan',
-	// 		clientLastName: 'Perez',
-	// 		numberId: 13983282,
-	// 		createdAt: 'Hace 5 dias',
-	// 		priority: 'urgente',
-	// 		pending: true
-	// 	},
-	// 	{
-	// 		id: '7',
-	// 		type: 'hematologia',
-	// 		clientName: 'Juan',
-	// 		clientLastName: 'Perez',
-	// 		numberId: 13983282,
-	// 		createdAt: 'Hace 5 dias',
-	// 		priority: 'urgente',
-	// 		pending: true
-	// 	}
-	// ];
 </script>
 
 <div in:fade class="flex w-full flex-col gap-y-8">
