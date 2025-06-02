@@ -73,13 +73,13 @@ export const load = async ({ url }) => {
 				paid: exam.paid,
 				updatedAt: exam.updatedAt,
 				pricePaid: exam.pricePaid,
-				patientName: sql`${patient.firstName} || ' ' || ${patient.lastName}`.as('patientName'),
+				patientName: sql<string>`${patient.firstName} || ' ' || ${patient.lastName}`.as('patientName'),
 				patientDocumentId: patient.documentId,
 				examTypeName: examType.name
 			})
 			.from(exam)
-			.leftJoin(patient, eq(patient.id, exam.patientId))
-			.leftJoin(examType, eq(examType.id, exam.examTypeId))
+			.innerJoin(patient, eq(patient.id, exam.patientId))
+			.innerJoin(examType, eq(examType.id, exam.examTypeId))
 			.where(where)
 			.orderBy(...(Array.isArray(orderExpr) ? orderExpr : [orderExpr]))
 			.limit(limit)
