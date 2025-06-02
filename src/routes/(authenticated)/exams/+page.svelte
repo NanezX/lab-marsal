@@ -24,8 +24,8 @@
 	let { data } = $props();
 
 	const orderByOptions = [
-		{ value: 'patientName', label: 'Nombre del paciente' },
-		{ value: 'documentId', label: 'Cédula del paciente' },
+		{ value: 'patientName', label: 'Paciente' },
+		{ value: 'documentId', label: 'CI del paciente' },
 		{ value: 'examTypeName', label: 'Tipo de exámen' },
 		{ value: 'updatedAt', label: 'Último cambio' }
 	];
@@ -40,8 +40,8 @@
 	];
 
 	const orderDirectionTime = [
-		{ value: 'asc', label: 'Recientes primero' },
-		{ value: 'desc', label: 'Antiguos primero' }
+		{ value: 'asc', label: 'Recientes' },
+		{ value: 'desc', label: 'Antiguos' }
 	];
 
 	let textSearch = $state(page.url.searchParams.get('search') || '');
@@ -66,12 +66,12 @@
 			id="searchExamType"
 			bind:inputSearch={textSearch}
 			placeholder="Busca un examen por paciente o tipo de examen"
-			wrapperClass="w-full mt-5"
+			wrapperClass="w-full min-w-1/10 mt-5"
 			debounceTime={500}
 			debounceCallback={() => getExams()}
 		/>
 
-		<div class="flex w-3/10 flex-col items-start justify-center gap-x-2">
+		<div class="flex w-fit flex-col items-start justify-center gap-x-2">
 			<p id="orderBy" class="w-fit text-sm font-semibold">Ordenar por:</p>
 			<Select
 				id="orderBy"
@@ -84,7 +84,7 @@
 				onchange={getExams}
 			/>
 		</div>
-		<div class="flex w-3/10 flex-col items-start justify-center gap-x-2">
+		<div class="flex w-fit flex-col items-start justify-center gap-x-2">
 			<p id="orderDirection" class="w-fit text-sm font-semibold">Dirección:</p>
 			<Select
 				id="orderDirection"
@@ -96,7 +96,7 @@
 						: orderDirectionName}
 				name="orderDirection"
 				required
-				placeholder="Dirección de orden"
+				placeholder="Dirección"
 				class="!w-fit"
 				onchange={getExams}
 			/>
@@ -112,7 +112,7 @@
 		</Link>
 	</div>
 
-	<div class="mt-4 grid grid-cols-3 gap-3">
+	<div class="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-3">
 		{#each data.examsData as exam}
 			<a
 				href="/exams/{exam.id}"
@@ -136,7 +136,7 @@
 				<LabelValue
 					label="Último cambio"
 					value={formatRelativeDate(exam.updatedAt)}
-					class="text-sm"
+					class="mt-auto text-sm"
 					labelClass="font-semibold"
 				/>
 			</a>
