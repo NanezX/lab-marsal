@@ -2,7 +2,7 @@
 	import Link from '$lib/components/Link.svelte';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { FileSearch, LibraryPlus } from '@steeze-ui/tabler-icons';
+	import { LibraryPlus, ReportSearch } from '@steeze-ui/tabler-icons';
 	import { fade } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 	import FilterControls from '$lib/components/FilterControls.svelte';
@@ -68,7 +68,7 @@
 					<div class="inline-flex w-full items-center justify-between">
 						<p class="text-lg font-bold">{examType.name}</p>
 						<Icon
-							src={FileSearch}
+							src={ReportSearch}
 							size="24"
 							class="group-hover:text-primary-blue transition-all group-hover:scale-125"
 						/>
