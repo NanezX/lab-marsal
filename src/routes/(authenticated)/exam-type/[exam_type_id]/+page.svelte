@@ -50,7 +50,7 @@
 		<div>
 			<Link
 				href="/exam-type/{examTypeData.id}/edit"
-				title="Crear nuevo exámen"
+				title="Editar tipo de exámen"
 				class="!bg-green-400 hover:!bg-green-500">Editar</Link
 			>
 
