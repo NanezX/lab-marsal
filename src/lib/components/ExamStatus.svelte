@@ -55,7 +55,7 @@
 	</p>
 {:else}
 	<p
-		class={['flex items-center gap-x-2 font-semibold px-2 py-1 rounded-md', className, statusColor]}
+		class={['flex items-center gap-x-2 rounded-md px-2 py-1 font-semibold', className, statusColor]}
 		title={`${statusLabel} (${priorityLabel})`}
 	>
 		<Icon src={statusIcon} size="20" />
