@@ -24,8 +24,8 @@
 	let { data } = $props();
 
 	const orderByOptions = [
-		{ value: 'patientName', label: 'Nombre' },
-		{ value: 'documentId', label: 'Cédula' },
+		{ value: 'patientName', label: 'Nombre del paciente' },
+		{ value: 'documentId', label: 'Cédula del paciente' },
 		{ value: 'examTypeName', label: 'Tipo de exámen' },
 		{ value: 'updatedAt', label: 'Último cambio' }
 	];
@@ -37,6 +37,11 @@
 	const orderDirectionName = [
 		{ value: 'asc', label: 'A-Z' },
 		{ value: 'desc', label: 'Z-A' }
+	];
+
+	const orderDirectionTime = [
+		{ value: 'asc', label: 'Recientes primero' },
+		{ value: 'desc', label: 'Antiguos primero' }
 	];
 
 	let textSearch = $state(page.url.searchParams.get('search') || '');
@@ -75,6 +80,23 @@
 				name="orderBy"
 				required
 				placeholder="Ordenar por"
+				class="!w-fit"
+				onchange={getExams}
+			/>
+		</div>
+		<div class="flex w-3/10 flex-col items-start justify-center gap-x-2">
+			<p id="orderDirection" class="w-fit text-sm font-semibold">Dirección:</p>
+			<Select
+				id="orderDirection"
+				bind:value={orderDirection}
+				items={orderBy == 'documentId'
+					? orderDirectionOptions
+					: orderBy === 'updatedAt'
+						? orderDirectionTime
+						: orderDirectionName}
+				name="orderDirection"
+				required
+				placeholder="Dirección de orden"
 				class="!w-fit"
 				onchange={getExams}
 			/>
