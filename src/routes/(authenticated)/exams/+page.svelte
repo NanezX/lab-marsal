@@ -1,17 +1,7 @@
 <script lang="ts">
-	import { zoom } from '$lib/components/actions/zoom';
-	import { formatCapital } from '$lib/shared/utils';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { fade } from 'svelte/transition';
-	import {
-		CircleCheck,
-		CircleChevronsUp,
-		CircleMinus,
-		Trash,
-		Edit,
-		FileSearch,
-		FilePlus
-	} from '@steeze-ui/tabler-icons';
+	import { FileSearch, FilePlus } from '@steeze-ui/tabler-icons';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
