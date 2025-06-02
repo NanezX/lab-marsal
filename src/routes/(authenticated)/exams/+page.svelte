@@ -112,7 +112,7 @@
 		</Link>
 	</div>
 
-	<div class="mt-4 grid grid-cols-2 gap-3">
+	<div class="mt-4 grid grid-cols-3 gap-3">
 		{#each data.examsData as exam}
 			<a
 				href="/exams/{exam.id}"
@@ -120,11 +120,7 @@
 				class="group hover:border-primary-blue flex flex-col gap-y-2 rounded-sm border bg-white px-4 py-2 transition-all select-none hover:-translate-y-1 hover:border hover:shadow-2xl"
 			>
 				<div class="inline-flex w-full items-center justify-between">
-					<!-- <p class="text-lg font-bold">{exam.examTypeName} - {exam.patientName}</p> -->
-					<div>
-						<!-- Estado ---- Prioridad -->
-						<ExamStatus status={exam.status} priority={exam.priority} minimal={true} />
-					</div>
+					<ExamStatus status={exam.status} priority={exam.priority} minimal={true} />
 					<Icon
 						src={FileSearch}
 						size="24"
@@ -134,7 +130,7 @@
 				<div class="space-y-0.5">
 					<LabelValue label="Paciente" value={exam.patientName} />
 					<LabelValue label="Cédula" value={exam.patientDocumentId} />
-					<LabelValue label="Tipo de exámen" value={exam.examTypeName} />
+					<LabelValue label="Exámen" value={exam.examTypeName} />
 				</div>
 
 				<LabelValue
