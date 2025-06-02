@@ -188,7 +188,7 @@
 					<!-- <p class="text-lg font-bold">{exam.examTypeName} - {exam.patientName}</p> -->
 					<div>
 						<!-- Estado ---- Prioridad -->
-						<ExamStatus status={exam.status} priority={exam.priority}  minimal={true}/>
+						<ExamStatus status={exam.status} priority={exam.priority} minimal={true} />
 					</div>
 					<Icon
 						src={FileSearch}
@@ -197,108 +197,18 @@
 					/>
 				</div>
 				<div class="space-y-0.5">
-					<!-- class="text-sm" valueClass="text-gray-800" -->
-					<LabelValue label="Tipo de exámen" value={exam.examTypeName} />
 					<LabelValue label="Paciente" value={exam.patientName} />
 					<LabelValue label="Cédula" value={exam.patientDocumentId} />
+					<LabelValue label="Tipo de exámen" value={exam.examTypeName} />
 				</div>
 
-				<div class="w-ful xl:inline-flex xl:justify-between">
-					<!-- <LabelValue
-						labelClass="font-semibold"
-						label="Cantidad"
-						value={examType.examCount}
-						class="text-sm"
-					/> -->
-
-					<LabelValue
-						label="Último cambio"
-						value={formatRelativeDate(exam.updatedAt)}
-						class="text-sm"
-						labelClass="font-semibold"
-					/>
-				</div>
+				<LabelValue
+					label="Último cambio"
+					value={formatRelativeDate(exam.updatedAt)}
+					class="text-sm"
+					labelClass="font-semibold"
+				/>
 			</a>
-
-			<!-- <div
-				class="hover:border-primary-blue rounded-sm border bg-white px-4 py-2 text-lg select-none hover:border hover:shadow-2xl"
-				use:zoom={{ scale: 1.06, zindexIn: '99999', zindexOut: 'auto' }}
-			>
-				<div class="mb-[-0.25rem] flex">
-					<p>
-						<span class="font-semibold">Estado: </span>
-						<span>{exam.pending ? 'En proceso' : 'Completado'}</span>
-					</p>
-					<p class="bg-secondary-gray/50 ml-auto w-fit rounded-full p-1"># {exam.id}</p>
-				</div>
-
-				<p class="inline-flex items-center gap-x-2">
-					<span class="font-semibold">Prioridad: </span>
-					{#if exam.pending}
-						<span>
-							<Icon
-								src={exam.priority == 'urgente' ? CircleChevronsUp : CircleMinus}
-								size="22"
-								class={{
-									'text-red-400': exam.priority == 'urgente'
-								}}
-							/>
-						</span>
-					{:else}
-						<Icon src={CircleCheck} size="22" class="text-green-400" />
-					{/if}
-				</p>
-
-				<p>
-					<span class="font-semibold"> Paciente: </span>
-					<span>
-						{exam.clientName}
-						{exam.clientLastName}
-					</span>
-				</p>
-				<p>
-					<span class="font-semibold"> Cedula: </span>
-					<span>
-						{exam.numberId ?? 'N/A'}
-					</span>
-				</p>
-				<p>
-					<span class="font-semibold">Tipo de examen: </span>
-					<span>{formatCapital(exam.type)}</span>
-				</p>
-
-				<div class="mt-4 flex justify-between">
-					<p class="text-end text-sm">Creada: {exam.createdAt}</p>
-					<div class="flex gap-x-2">
-						<button
-							use:zoom={{ scale: 1.25, time: 0.25 }}
-							title="Ver"
-							class="text-blue-400 hover:text-blue-600"
-							onclick={() => alert('ver')}
-						>
-							<Icon src={FileSearch} size="28" />
-						</button>
-						{#if exam.pending}
-							<button
-								use:zoom={{ scale: 1.25, time: 0.25 }}
-								title="Editar"
-								class="hover text-green-400"
-								onclick={() => alert('editar')}
-							>
-								<Icon src={Edit} size="28" />
-							</button>
-							<button
-								use:zoom={{ scale: 1.25, time: 0.25 }}
-								title="Eliminar"
-								class="text-red-500"
-								onclick={() => alert('eliminar')}
-							>
-								<Icon src={Trash} size="28" />
-							</button>
-						{/if}
-					</div>
-				</div>
-			</div> -->
 		{/each}
 	</div>
 </div>
