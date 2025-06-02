@@ -19,6 +19,12 @@
 		[ExamStatus.Cancelled]: 'Cancelado'
 	}[status];
 
+	const priorityLabel = {
+		[ExamPriority.High]: 'Alta prioridad',
+		[ExamPriority.Normal]: 'Prioridad normal',
+		[ExamPriority.Low]: 'Baja prioridad'
+	}[priority];
+
 	const statusIcon = {
 		[ExamStatus.Active]: priority === ExamPriority.High ? CircleChevronsUp : CircleMinus,
 		[ExamStatus.Completed]: CircleCheck,
@@ -31,7 +37,7 @@
 				? 'text-red-500'
 				: priority === ExamPriority.Normal
 					? 'text-blue-500'
-					: 'text-yellow-400'
+					: 'text-yellow-500'
 			: status === ExamStatus.Completed
 				? 'text-green-500'
 				: 'text-red-600';
@@ -40,12 +46,19 @@
 {#if minimal}
 	<p class={['flex items-center gap-x-2', className]}>
 		<span>{statusLabel}</span>
-		<Icon src={statusIcon} size="22" class={statusColor} />
+		<Icon
+			src={statusIcon}
+			size="22"
+			class={statusColor}
+			title={`${statusLabel} - ${priorityLabel}`}
+		/>
 	</p>
 {:else}
-	<!-- Could render full badge/description view here -->
-	<p class={['flex items-center gap-x-2 font-semibold px-2 py-1 rounded-md', className, statusColor]}>
+	<p
+		class={['flex items-center gap-x-2 font-semibold px-2 py-1 rounded-md', className, statusColor]}
+		title={`${statusLabel} (${priorityLabel})`}
+	>
 		<Icon src={statusIcon} size="20" />
-		<span>{statusLabel} ({priority})</span>
+		<span>{statusLabel} ({priorityLabel})</span>
 	</p>
 {/if}
