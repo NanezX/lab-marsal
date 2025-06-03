@@ -159,15 +159,11 @@
 
 						<LabelValue label="Muestra" value={examData.sample ?? 'No aplica'} icon={TestPipe2} />
 
-						{#if examData.status == ExamStatusEnum.Completed}
-							<LabelValue
-								label="Entregado"
-								value={examData.deliveredAt
-									? examData.deliveredAt.toLocaleString()
-									: 'No entregado'}
-								icon={TruckDelivery}
-							/>
-						{/if}
+						<LabelValue
+							label="Entregado"
+							value={examData.deliveredAt ? examData.deliveredAt.toLocaleString() : 'No entregado'}
+							icon={TruckDelivery}
+						/>
 
 						<LabelValue
 							label="Creado"
