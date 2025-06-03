@@ -14,7 +14,9 @@
 		User,
 		Cash,
 		ListTree,
-		Link as LinkIcon
+		Link as LinkIcon,
+		Label,
+		TestPipe2
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
@@ -77,6 +79,29 @@
 		<div class="grid grid-cols-2 gap-x-1 gap-y-5">
 			<div class="">
 				<p class="inline-flex items-center gap-x-1 text-2xl">
+					<span>Datos generales</span>
+					<Link
+						href="/exam-type/{examTypeData.id}"
+						linkClass="flex mt-1"
+						class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
+					>
+						<Icon src={LinkIcon} class="h-5 w-5" />
+					</Link>
+				</p>
+
+				<div class="space-y-0.5 px-1 py-2">
+					<LabelValue label="Precio base" value={`${examTypeData.basePrice} $`} icon={Cash} />
+
+					<LabelValue
+						label="Clasificación"
+						value={examTypeData.classification.name}
+						icon={ListTree}
+					/>
+				</div>
+			</div>
+
+			<div class="">
+				<p class="inline-flex items-center gap-x-1 text-2xl">
 					<span>Datos del paciente</span>
 					<Link
 						href="/clients/{patientData.id}"
@@ -105,29 +130,6 @@
 				</div>
 			</div>
 
-			<div class="">
-				<p class="inline-flex items-center gap-x-1 text-2xl">
-					<span>Datos generales</span>
-					<Link
-						href="/exam-type/{examTypeData.id}"
-						linkClass="flex mt-1"
-						class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
-					>
-						<Icon src={LinkIcon} class="h-5 w-5" />
-					</Link>
-				</p>
-
-				<div class="space-y-0.5 px-1 py-2">
-					<LabelValue label="Precio base" value={`${examTypeData.basePrice} $`} icon={Cash} />
-
-					<LabelValue
-						label="Clasificación"
-						value={examTypeData.classification.name}
-						icon={ListTree}
-					/>
-				</div>
-			</div>
-
 			<div class="col-span-2">
 				<p class="text-center text-2xl">Estado del exámen</p>
 
@@ -137,9 +139,9 @@
 					{/snippet}
 				</LabelValue>
 
-				<LabelValue label="Identificador" value={examData.customTag} icon={Cash} />
+				<LabelValue label="Identificador" value={examData.customTag} icon={Label} />
 
-				<LabelValue label="Muestra" value={examData.sample ?? 'N/A'} icon={Cash} />
+				<LabelValue label="Muestra" value={examData.sample ?? 'N/A'} icon={TestPipe2} />
 
 				<!-- TODO: Design a bit how to show the results. If not saved yet, show some emtpy card -->
 				<!-- TODO: Design a bit how to show the specific description. If not description write, show N/A with some background -->
