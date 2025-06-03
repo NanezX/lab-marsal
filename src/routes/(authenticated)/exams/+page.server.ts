@@ -14,7 +14,7 @@ export const load = async ({ url }) => {
 	if (limit > 25) limit = 25;
 
 	const { count: countTotal, data: examsData } = await db.transaction(async (tx) => {
-		const whereClauses = [];
+		const whereClauses = [eq(exam.deleted, false)];
 
 		if (searchText) {
 			const normalizedSearch = normalized(searchText).replace(/\s+/g, ' ').trim();
