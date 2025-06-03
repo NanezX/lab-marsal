@@ -170,7 +170,6 @@
 						{/if}
 
 						<LabelValue
-							class="mt-2 flex items-center gap-x-1"
 							label="Creado"
 							value={examData.createdAt.toLocaleString()}
 							icon={ClockPlus}
@@ -178,7 +177,6 @@
 
 						{#if examData.createdAt.getTime() !== examData.updatedAt.getTime()}
 							<LabelValue
-								class="mt-2 flex items-center gap-x-1"
 								label="Último cambio"
 								value={examData.updatedAt.toLocaleString()}
 								icon={ClockEdit}
