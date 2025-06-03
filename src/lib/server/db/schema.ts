@@ -231,20 +231,21 @@ export const exam = pgTable('exam', {
 	examTypeId: uuid('exam_type_id')
 		.notNull()
 		.references(() => examType.id),
+	// Exam details
 	customTag: text('custom_tag').notNull(),
 	priority: examPriorityEnum().notNull().default(ExamPriority.Normal),
 	status: examStatusEnum().notNull().default(ExamStatus.Active),
-	//
+	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }), // Set when the exam is deliveted
+	// Results details
 	sample: text(),
-	//
 	results: jsonb(), // Added when uploading the results
 	observation: text(), // Optional observation by the lab
-	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }), // Set when the exam is deliveted
+	// Payment details
 	paid: boolean().notNull(), // When the exam is paid
 	pricePaid: decimal('price_paid', { precision: 19, scale: 2 }), // Amount paid (probably after marked paid)
 	paymentMethod: text('payment_method'), // payment method defined by administration
 	paymentRef: text('payment_ref'), // Reference if apply
-	paidAt: timestamp('paid_at', { withTimezone: true, mode: 'date' }), // Set when the exam is deliveted
+	paidAt: timestamp('paid_at', { withTimezone: true, mode: 'date' }) // Set when the exam is deliveted
 });
 
 // Exam relations declarations
