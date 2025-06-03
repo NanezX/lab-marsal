@@ -6,26 +6,17 @@
 	import Button from '$lib/components/Button.svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
-	import { getAgeFromDate } from '$lib/client';
 	import { PatientGender } from '$lib/shared/enums';
 	import {
 		Id,
 		GenderMale,
 		GenderFemale,
-		Cake,
-		Man,
-		Woman,
-		Mail,
-		Phone,
-		ClockPlus,
-		ClockEdit,
 		User,
 		Cash,
 		ListTree,
 		Link as LinkIcon
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
-	import FilterControls from '$lib/components/FilterControls.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 
 	// TODO: Verify AND check what roles can remove/delete an exam (maybe just block the page to those user in the backend)
