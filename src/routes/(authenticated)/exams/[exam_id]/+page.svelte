@@ -21,10 +21,12 @@
 		ClockEdit,
 		User,
 		Cash,
-		ListTree
+		ListTree,
+		Link as LinkIcon
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import FilterControls from '$lib/components/FilterControls.svelte';
+	import { Icon } from '@steeze-ui/svelte-icon';
 
 	// TODO: Verify AND check what roles can remove/delete an exam (maybe just block the page to those user in the backend)
 
@@ -70,8 +72,16 @@
 	<div>
 		<div class="grid grid-cols-2 gap-1">
 			<div class="">
-				<!-- TODO: Add a go to nbutton on the little title -->
-				<p class="text-2xl">Datos del paciente</p>
+				<p class="inline-flex items-center gap-x-1 text-2xl">
+					<span>Datos del paciente</span>
+					<Link
+						href="/clients/{patientData.id}"
+						linkClass="flex mt-1"
+						class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
+					>
+						<Icon src={LinkIcon} class="h-5 w-5" />
+					</Link>
+				</p>
 
 				<div class="space-y-0.5 px-1 py-2">
 					<LabelValue
@@ -91,8 +101,16 @@
 				</div>
 			</div>
 			<div class="">
-				<!-- TODO: Add a go to nbutton on the little title -->
-				<p class="text-2xl">Datos generales del exámen</p>
+				<p class="inline-flex items-center gap-x-1 text-2xl">
+					<span>Datos del exámen</span>
+					<Link
+						href="/exam-type/{examTypeData.id}"
+						linkClass="flex mt-1"
+						class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
+					>
+						<Icon src={LinkIcon} class="h-5 w-5" />
+					</Link>
+				</p>
 
 				<div class="space-y-0.5 px-1 py-2">
 					<LabelValue label="Precio base" value={`${examTypeData.basePrice} $`} icon={Cash} />
