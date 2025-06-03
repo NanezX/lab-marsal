@@ -18,6 +18,7 @@
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
+	import ExamStatus from '$lib/components/ExamStatus.svelte';
 
 	// TODO: Verify AND check what roles can remove/delete an exam (maybe just block the page to those user in the backend)
 
@@ -116,6 +117,12 @@
 				</p>
 
 				<div class="space-y-0.5 px-1 py-2">
+					<LabelValue label="Estado">
+						{#snippet children()}
+							<ExamStatus status={examData.status} priority={examData.priority} minimal={true} />
+						{/snippet}
+					</LabelValue>
+
 					<LabelValue label="Precio base" value={`${examTypeData.basePrice} $`} icon={Cash} />
 
 					<LabelValue
