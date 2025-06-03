@@ -19,7 +19,9 @@
 		Phone,
 		ClockPlus,
 		ClockEdit,
-		User
+		User,
+		Cash,
+		ListTree
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import FilterControls from '$lib/components/FilterControls.svelte';
@@ -31,7 +33,7 @@
 	let { data }: PageProps = $props();
 
 	let {
-		examData: { patient: patientData, examType, ...examData },
+		examData: { patient: patientData, examType: examTypeData, ...examData },
 		deleteExamForm
 	} = data;
 
@@ -50,7 +52,7 @@
 	<div class="relative flex justify-center">
 		<BackButton href="/exams" size="40" />
 
-		<p class="mx-auto my-0 text-center text-3xl">Resumen del exámen</p>
+		<p class="mx-auto my-0 text-center text-3xl">{examTypeData.name}</p>
 
 		<div>
 			<Link
@@ -69,11 +71,11 @@
 
 	<div>
 		<div class="grid grid-cols-2 gap-1">
-			<div class="rounded-2xl border border-gray-200 px-1 px-2">
+			<div class="rounded-2xl border border-gray-200 px-1">
 				<p class="text-2xl">Datos del paciente</p>
 
 				<!-- TODO: Add a go to nbutton on the little title -->
-				<div class="space-y-0.5 p-2">
+				<div class="space-y-0.5 px-1 py-2">
 					<LabelValue
 						label="Nombre"
 						value="{patientData.firstName} {patientData.lastName}"
@@ -92,6 +94,15 @@
 			</div>
 			<div class="rounded-2xl border border-gray-200 px-1">
 				<p class="text-2xl">Datos generales del exámen</p>
+				<div class="space-y-0.5 px-1 py-2">
+					<LabelValue label="Precio base" value={`${examTypeData.basePrice} $`} icon={Cash} />
+
+					<LabelValue
+						label="Clasificación"
+						value={examTypeData.classification.name}
+						icon={ListTree}
+					/>
+				</div>
 			</div>
 		</div>
 	</div>
