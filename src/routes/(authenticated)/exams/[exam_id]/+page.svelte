@@ -230,8 +230,11 @@
 				</div>
 			</div>
 
-			<!-- TODO: Design a bit how to show the results. If not saved yet, show some emtpy card -->
 			<!-- TODO: Design a bit how to show the specific description. If not description write, show N/A with some background -->
+			<p>Descripción</p>
+
+			<!-- TODO: Design a bit how to show the results. If not saved yet, show some emtpy card -->
+			<p>RESULTADOS</p>
 		</div>
 	</div>
 </div>
