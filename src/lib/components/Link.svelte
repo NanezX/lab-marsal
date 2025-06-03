@@ -8,12 +8,13 @@
 		href: string;
 		title?: string;
 		class?: ClassValue;
+		linkClass?: ClassValue;
 	};
 
-	let { children, href, title, class: className }: PropType = $props();
+	let { children, href, title, class: className, linkClass }: PropType = $props();
 </script>
 
-<a {title} {href}>
+<a {title} {href} class={linkClass}>
 	<Button
 		class={[
 			'bg-primary-blue hover:bg-primary-blue/75 cursor-pointer rounded-3xl px-4 py-2 text-white',
