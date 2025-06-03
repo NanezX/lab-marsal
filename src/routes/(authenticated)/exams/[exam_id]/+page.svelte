@@ -21,7 +21,9 @@
 		Wallet,
 		CodeDots,
 		DeviceMobileCog,
-		Moneybag
+		Moneybag,
+		ClockPlus,
+		ClockEdit
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
@@ -167,8 +169,21 @@
 							/>
 						{/if}
 
-						<!-- TODO: Design a bit how to show the results. If not saved yet, show some emtpy card -->
-						<!-- TODO: Design a bit how to show the specific description. If not description write, show N/A with some background -->
+						<LabelValue
+							class="mt-2 flex items-center gap-x-1"
+							label="Creado"
+							value={examData.createdAt.toLocaleString()}
+							icon={ClockPlus}
+						/>
+
+						{#if examData.createdAt.getTime() !== examData.updatedAt.getTime()}
+							<LabelValue
+								class="mt-2 flex items-center gap-x-1"
+								label="Último cambio"
+								value={examData.updatedAt.toLocaleString()}
+								icon={ClockEdit}
+							/>
+						{/if}
 					</div>
 
 					<div
@@ -214,6 +229,9 @@
 					</div>
 				</div>
 			</div>
+
+			<!-- TODO: Design a bit how to show the results. If not saved yet, show some emtpy card -->
+			<!-- TODO: Design a bit how to show the specific description. If not description write, show N/A with some background -->
 		</div>
 	</div>
 </div>
