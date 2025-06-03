@@ -252,10 +252,34 @@
 				</div>
 			</div>
 
-			<!-- TODO: Design a bit how to show the specific description. If not description write, show N/A with some background -->
-			<p>Descripción</p>
-
 			<!-- TODO: Design a bit how to show the results. If not saved yet, show some emtpy card -->
+			<!-- TODO: Design a bit how to show the specific observation. If not observation write, show N/A with some background
+			 The description will be inside the results table -->
+
+			<div
+				class="col-span-2 flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
+			>
+				<p
+					class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
+				>
+					<span> Resultados </span>
+
+					<Link
+						href="/exams/{examData.id}/edit/details"
+						linkClass="flex mt-1"
+						class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
+					>
+						<Icon
+							src={Edit}
+							size="24"
+							title="Editar detalles del exámen"
+							theme="filled"
+							class="text-green-500"
+						/>
+					</Link>
+				</p>
+			</div>
+
 			<p>RESULTADOS</p>
 		</div>
 	</div>
