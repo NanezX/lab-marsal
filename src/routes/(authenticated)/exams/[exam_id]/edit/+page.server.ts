@@ -23,5 +23,5 @@ export const load: PageServerLoad = async ({ parent }) => {
 	// // Create the form for deleting (if desired)
 	// const editPatientForm = await superValidate(cleaned, zod(editPatientSchema));
 
-	return {  };
+	return {};
 };
