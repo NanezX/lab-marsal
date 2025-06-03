@@ -180,6 +180,53 @@ export async function findPatientById<E extends (keyof InferSelectModel<typeof p
 	return results.at(0) as Omit<InferSelectModel<typeof patientTable>, E[number]> | undefined;
 }
 
+export async function findExamById(id: string) {
+	return await db.query.exam.findFirst({
+		where: (examTable, { and, eq }) => and(eq(examTable.id, id), eq(examTable.deleted, false)),
+		columns: {
+			deleted: false,
+			patientId: false,
+			examTypeId: false
+		},
+		with: {
+			patient: {
+				columns: {
+					id: true,
+					firstName: true,
+					lastName: true,
+					documentId: true,
+					gender: true
+				}
+			},
+			examType: {
+				columns: {
+					id: true,
+					name: true,
+					basePrice: true,
+					categories: true
+				},
+				with: {
+					parameters: {
+						where: (parameter, { eq }) => eq(parameter.deleted, false),
+						orderBy: (parameters, { asc }) => [asc(parameters.position)],
+						columns: {
+							deleted: false,
+							createdAt: false,
+							updatedAt: false,
+							examTypeId: false
+						}
+					},
+					classification: {
+						columns: {
+							name: true
+						}
+					}
+				}
+			}
+		}
+	});
+}
+
 export async function getAllExamTypeClassifications() {
 	return await db.query.examTypeClassification.findMany({
 		columns: {

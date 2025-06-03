@@ -10,8 +10,6 @@ import { isUniqueConstraintViolation } from '$lib/server/utils/helpers';
 import { failFormResponse } from '$lib/server/utils/failFormResponse';
 import { redirect } from 'sveltekit-flash-message/server';
 
-// TODO: Support edit. Like firstName, lastName, documentId, birthdate, gender, email phoneNumber
-
 export const load: PageServerLoad = async ({ parent }) => {
 	// Get the data from the layout
 	const data = await parent();
