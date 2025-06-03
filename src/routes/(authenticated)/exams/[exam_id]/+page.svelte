@@ -16,11 +16,14 @@
 		ListTree,
 		Link as LinkIcon,
 		Label,
-		TestPipe2
+		TestPipe2,
+		TruckDelivery,
+		Wallet
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import ExamStatus from '$lib/components/ExamStatus.svelte';
+	import { ExamStatus as ExamStatusEnum } from '$lib/shared/enums';
 
 	// TODO: Verify AND check what roles can remove/delete an exam (maybe just block the page to those user in the backend)
 
@@ -133,18 +136,80 @@
 			<div class="col-span-2">
 				<p class="text-center text-2xl">Estado del exámen</p>
 
-				<LabelValue label="Estado">
-					{#snippet children()}
-						<ExamStatus status={examData.status} priority={examData.priority} minimal={true} />
-					{/snippet}
-				</LabelValue>
+				<div class="grid grid-cols-2 gap-2">
+					<div
+						class="flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
+					>
+						<p class="mx-auto w-1/2 border-b border-b-gray-300 text-center text-xl font-semibold">
+							Detalles
+						</p>
 
-				<LabelValue label="Identificador" value={examData.customTag} icon={Label} />
+						<LabelValue label="Estado">
+							{#snippet children()}
+								<ExamStatus status={examData.status} priority={examData.priority} minimal={true} />
+							{/snippet}
+						</LabelValue>
 
-				<LabelValue label="Muestra" value={examData.sample ?? 'N/A'} icon={TestPipe2} />
+						<LabelValue label="Identificador" value={examData.customTag} icon={Label} />
 
-				<!-- TODO: Design a bit how to show the results. If not saved yet, show some emtpy card -->
-				<!-- TODO: Design a bit how to show the specific description. If not description write, show N/A with some background -->
+						<LabelValue label="Muestra" value={examData.sample ?? 'No aplica'} icon={TestPipe2} />
+
+						{#if examData.status == ExamStatusEnum.Completed}
+							<LabelValue
+								label="Entregado"
+								value={examData.deliveredAt
+									? examData.deliveredAt.toLocaleString()
+									: 'No entregado'}
+								icon={TruckDelivery}
+							/>
+						{/if}
+
+						<!-- TODO: Design a bit how to show the results. If not saved yet, show some emtpy card -->
+						<!-- TODO: Design a bit how to show the specific description. If not description write, show N/A with some background -->
+					</div>
+
+					<div
+						class="flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
+					>
+						<p class="mx-auto w-1/2 border-b border-b-gray-300 text-center text-xl font-semibold">
+							Pago
+						</p>
+
+						<LabelValue
+							label="Estado"
+							value={examData.paid ? 'Pago confirmado' : 'No pagado'}
+							title={examData.paid ? 'Pago del exámen confirmado' : 'El exámen no ha sido pagado'}
+							icon={Wallet}
+						/>
+
+						<LabelValue
+							label="Monto pagado"
+							value={examData.paid && examData.pricePaid ? examData.pricePaid : 'N/A'}
+							title={examData.paid && examData.pricePaid
+								? 'Monto final cancelado por el exámen'
+								: 'El exámen no ha sido pagado'}
+							icon={Wallet}
+						/>
+
+						<LabelValue
+							label="Método de pago"
+							value={examData.paid && examData.paymentMethod ? examData.paymentMethod : 'N/A'}
+							title={examData.paid && examData.paymentMethod
+								? 'Método de pago'
+								: 'El exámen no ha sido pagado'}
+							icon={Wallet}
+						/>
+
+						{#if examData.paid && examData.paymentRef}
+							<LabelValue
+								label="Ref. del pago"
+								value={examData.paymentRef}
+								title={'Referencia del pago por el exámen'}
+								icon={Wallet}
+							/>
+						{/if}
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
