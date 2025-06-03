@@ -74,7 +74,7 @@
 	</div>
 
 	<div>
-		<div class="grid grid-cols-2 gap-1">
+		<div class="grid grid-cols-2 gap-x-1 gap-y-5">
 			<div class="">
 				<p class="inline-flex items-center gap-x-1 text-2xl">
 					<span>Datos del paciente</span>
@@ -104,9 +104,10 @@
 					/>
 				</div>
 			</div>
+
 			<div class="">
 				<p class="inline-flex items-center gap-x-1 text-2xl">
-					<span>Datos del exámen</span>
+					<span>Datos generales</span>
 					<Link
 						href="/exam-type/{examTypeData.id}"
 						linkClass="flex mt-1"
@@ -131,6 +132,10 @@
 						icon={ListTree}
 					/>
 				</div>
+			</div>
+
+			<div class="col-span-2">
+				<p class="text-2xl">Detalles del exámen</p>
 			</div>
 		</div>
 	</div>
