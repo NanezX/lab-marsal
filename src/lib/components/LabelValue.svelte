@@ -30,16 +30,18 @@
 	}: Props = $props();
 </script>
 
-<p {title} class={className}>
-	{#if icon}
-		<Icon src={icon} class={iconClass} />
-	{/if}
-	<span class={['font-bold', labelClass]}>{label}:</span>
-	<span class={valueClass}>
-		{#if children}
-			{@render children()}
-		{:else}
-			{value}
+<svelte:element this={children ? "div" : "p"} class={className}>
+	<!-- <p {title} class={className}> -->
+		{#if icon}
+			<Icon src={icon} class={iconClass} />
 		{/if}
-	</span>
-</p>
+		<span class={['font-bold', labelClass]}>{label}:</span>
+		<span class={valueClass}>
+			{#if children}
+				{@render children()}
+			{:else}
+				{value}
+			{/if}
+		</span>
+	<!-- </p> -->
+</svelte:element>

@@ -151,7 +151,7 @@
 
 						<LabelValue label="Estado">
 							{#snippet children()}
-								<ExamStatus status={examData.status} priority={examData.priority} minimal={true} />
+								<ExamStatus status={examData.status} priority={examData.priority} minimal />
 							{/snippet}
 						</LabelValue>
 
