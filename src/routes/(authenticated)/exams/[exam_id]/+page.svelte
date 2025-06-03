@@ -118,12 +118,6 @@
 				</p>
 
 				<div class="space-y-0.5 px-1 py-2">
-					<LabelValue label="Estado">
-						{#snippet children()}
-							<ExamStatus status={examData.status} priority={examData.priority} minimal={true} />
-						{/snippet}
-					</LabelValue>
-
 					<LabelValue label="Precio base" value={`${examTypeData.basePrice} $`} icon={Cash} />
 
 					<LabelValue
@@ -135,7 +129,20 @@
 			</div>
 
 			<div class="col-span-2">
-				<p class="text-2xl">Detalles del exámen</p>
+				<p class="text-center text-2xl">Estado del exámen</p>
+
+				<LabelValue label="Estado">
+					{#snippet children()}
+						<ExamStatus status={examData.status} priority={examData.priority} minimal={true} />
+					{/snippet}
+				</LabelValue>
+
+				<LabelValue label="Identificador" value={examData.customTag} icon={Cash} />
+
+				<LabelValue label="Muestra" value={examData.sample ?? 'N/A'} icon={Cash} />
+
+				<!-- TODO: Design a bit how to show the results. If not saved yet, show some emtpy card -->
+				<!-- TODO: Design a bit how to show the specific description. If not description write, show N/A with some background -->
 			</div>
 		</div>
 	</div>
