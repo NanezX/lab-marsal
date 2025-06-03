@@ -27,8 +27,6 @@
 	import FilterControls from '$lib/components/FilterControls.svelte';
 
 	// TODO: Verify AND check what roles can remove/delete an exam (maybe just block the page to those user in the backend)
-	// TODO: Add exams created (and NOT deleted) for the users
-	// TODO: Add fallback when no data found (no exams)
 
 	let { data }: PageProps = $props();
 
