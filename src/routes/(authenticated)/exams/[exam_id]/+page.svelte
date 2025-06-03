@@ -46,6 +46,18 @@
 	let showConfirmDeleteModal = $state(false);
 </script>
 
+<ConfirmModal
+	bind:showModal={showConfirmDeleteModal}
+	title="Eliminar exámen"
+	text="¿Estás seguro de eliminar este exámen?"
+	saveButtonText="Eliminar"
+	cancelButtonText="Cancelar"
+	onSave={() => {
+		submitDelete();
+		return true;
+	}}
+/>
+
 <div in:fade class="mb-4 flex w-full flex-col gap-y-8">
 	<form use:enhance method="POST" hidden></form>
 
