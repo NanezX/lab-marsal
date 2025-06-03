@@ -18,7 +18,10 @@
 		Label,
 		TestPipe2,
 		TruckDelivery,
-		Wallet
+		Wallet,
+		CodeDots,
+		DeviceMobileCog,
+		Moneybag
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
@@ -133,7 +136,7 @@
 				</div>
 			</div>
 
-			<div class="col-span-2">
+			<div class="col-span-2 space-y-4">
 				<p class="text-center text-2xl">Estado del exámen</p>
 
 				<div class="grid grid-cols-2 gap-2">
@@ -188,7 +191,7 @@
 							title={examData.paid && examData.pricePaid
 								? 'Monto final cancelado por el exámen'
 								: 'El exámen no ha sido pagado'}
-							icon={Wallet}
+							icon={Moneybag}
 						/>
 
 						<LabelValue
@@ -197,7 +200,7 @@
 							title={examData.paid && examData.paymentMethod
 								? 'Método de pago'
 								: 'El exámen no ha sido pagado'}
-							icon={Wallet}
+							icon={DeviceMobileCog}
 						/>
 
 						{#if examData.paid && examData.paymentRef}
@@ -205,7 +208,7 @@
 								label="Ref. del pago"
 								value={examData.paymentRef}
 								title={'Referencia del pago por el exámen'}
-								icon={Wallet}
+								icon={CodeDots}
 							/>
 						{/if}
 					</div>
