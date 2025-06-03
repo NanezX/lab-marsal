@@ -18,7 +18,8 @@
 		Mail,
 		Phone,
 		ClockPlus,
-		ClockEdit
+		ClockEdit,
+		User
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import FilterControls from '$lib/components/FilterControls.svelte';
@@ -30,7 +31,7 @@
 	let { data }: PageProps = $props();
 
 	let {
-		examData: { patient, examType, ...examData },
+		examData: { patient: patientData, examType, ...examData },
 		deleteExamForm
 	} = data;
 
@@ -68,8 +69,26 @@
 
 	<div>
 		<div class="grid grid-cols-2 gap-1">
-			<div class="rounded-2xl border border-gray-200 px-1">
+			<div class="rounded-2xl border border-gray-200 px-1 px-2">
 				<p class="text-2xl">Datos del paciente</p>
+
+				<!-- TODO: Add a go to nbutton on the little title -->
+				<div class="space-y-0.5 p-2">
+					<LabelValue
+						label="Nombre"
+						value="{patientData.firstName} {patientData.lastName}"
+						icon={User}
+						labelClass="mr-1"
+					/>
+					<LabelValue label="Cédula" value={patientData.documentId} icon={Id} labelClass="mr-1" />
+
+					<LabelValue
+						label="Género"
+						value={patientData.gender == PatientGender.Male ? 'Hombre' : 'Mujer'}
+						icon={patientData.gender == PatientGender.Male ? GenderMale : GenderFemale}
+						labelClass="mr-1"
+					/>
+				</div>
 			</div>
 			<div class="rounded-2xl border border-gray-200 px-1">
 				<p class="text-2xl">Datos generales del exámen</p>
