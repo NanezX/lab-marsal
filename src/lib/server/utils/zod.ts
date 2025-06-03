@@ -1,4 +1,4 @@
-import { ExamPriority, PatientGender, UserRoles } from '$lib/shared/enums';
+import { ExamPriority, ExamStatus, PatientGender, UserRoles } from '$lib/shared/enums';
 import { minDocumentId, maxDocumentId } from '$lib/shared/utils';
 import { validate } from 'uuid';
 import { parsePhoneNumberFromString } from 'libphonenumber-js/min';
@@ -219,4 +219,24 @@ export const createExamSchema = z.object({
 
 export const deleteExamSchema = z.object({
 	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido')
+});
+
+export const editExamScheam = z.object({
+	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
+	customTag: z.string().min(1, 'Debe ingresar un identificador'),
+	priority: z
+		.nativeEnum(ExamPriority, { errorMap: () => ({ message: 'Prioridad no definida' }) })
+		.default(ExamPriority.Normal),
+	status: z
+		.nativeEnum(ExamStatus, { errorMap: () => ({ message: 'Estado no definido' }) })
+		.default(ExamStatus.Active),
+	sample: z.string().min(1, 'Debe ingresar un identificador').nullable().optional(),
+	results: z.record(z.any()),
+	observation: z.string().optional().nullable(),
+	payment: z.object({
+		paid: z.boolean(),
+		pricePaid: z.number(),
+		paymentMethod: z.string(),
+		paymentRef: z.string()
+	})
 });
