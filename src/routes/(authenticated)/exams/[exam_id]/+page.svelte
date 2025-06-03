@@ -23,7 +23,9 @@
 		DeviceMobileCog,
 		Moneybag,
 		ClockPlus,
-		ClockEdit
+		ClockEdit,
+		Edit,
+		Progress
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
@@ -105,6 +107,16 @@
 						value={examTypeData.classification.name}
 						icon={ListTree}
 					/>
+
+					<LabelValue label="Creado" value={examData.createdAt.toLocaleString()} icon={ClockPlus} />
+
+					{#if examData.createdAt.getTime() !== examData.updatedAt.getTime()}
+						<LabelValue
+							label="Último cambio"
+							value={examData.updatedAt.toLocaleString()}
+							icon={ClockEdit}
+						/>
+					{/if}
 				</div>
 			</div>
 
@@ -145,11 +157,27 @@
 					<div
 						class="flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
 					>
-						<p class="mx-auto w-1/2 border-b border-b-gray-300 text-center text-xl font-semibold">
-							Detalles
+						<p
+							class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
+						>
+							<span> Detalles </span>
+
+							<Link
+								href="/exams/{examData.id}/edit/details"
+								linkClass="flex mt-1"
+								class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
+							>
+								<Icon
+									src={Edit}
+									size="24"
+									title="Editar detalles del exámen"
+									theme="filled"
+									class="text-green-500"
+								/>
+							</Link>
 						</p>
 
-						<LabelValue label="Estado">
+						<LabelValue label="Estado" icon={Progress}>
 							{#snippet children()}
 								<ExamStatus status={examData.status} priority={examData.priority} minimal />
 							{/snippet}
@@ -157,34 +185,34 @@
 
 						<LabelValue label="Identificador" value={examData.customTag} icon={Label} />
 
-						<LabelValue label="Muestra" value={examData.sample ?? 'No aplica'} icon={TestPipe2} />
-
 						<LabelValue
 							label="Entregado"
 							value={examData.deliveredAt ? examData.deliveredAt.toLocaleString() : 'No entregado'}
 							icon={TruckDelivery}
 						/>
-
-						<LabelValue
-							label="Creado"
-							value={examData.createdAt.toLocaleString()}
-							icon={ClockPlus}
-						/>
-
-						{#if examData.createdAt.getTime() !== examData.updatedAt.getTime()}
-							<LabelValue
-								label="Último cambio"
-								value={examData.updatedAt.toLocaleString()}
-								icon={ClockEdit}
-							/>
-						{/if}
 					</div>
 
 					<div
 						class="flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
 					>
-						<p class="mx-auto w-1/2 border-b border-b-gray-300 text-center text-xl font-semibold">
-							Pago
+						<p
+							class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
+						>
+							<span> Pago </span>
+
+							<Link
+								href="/exams/{examData.id}/edit/payment"
+								linkClass="flex mt-1"
+								class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
+							>
+								<Icon
+									src={Edit}
+									size="24"
+									title="Editar detalles del pago"
+									theme="filled"
+									class="text-green-500"
+								/>
+							</Link>
 						</p>
 
 						<LabelValue

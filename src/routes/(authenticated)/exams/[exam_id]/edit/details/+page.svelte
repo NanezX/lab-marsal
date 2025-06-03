@@ -1,0 +1,1 @@
+<p>Edit details</p>
