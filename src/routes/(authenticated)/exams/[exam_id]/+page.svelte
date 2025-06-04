@@ -258,7 +258,7 @@
 					<span> Resultados </span>
 
 					<Link
-						href="/exams/{examData.id}/edit/details"
+						href="/exams/{examData.id}/edit/results"
 						linkClass="flex mt-1"
 						class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
 					>
