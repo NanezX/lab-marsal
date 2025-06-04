@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ExamStatus, ExamPriority } from '$lib/shared/enums';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { Cancel, CircleCheck, CircleChevronsUp, CircleMinus } from '@steeze-ui/tabler-icons';
+	import { Cancel, CircleCheck, CircleChevronsUp, CircleMinus, CubeSend } from '@steeze-ui/tabler-icons';
 	import type { ClassValue } from 'svelte/elements';
 
 	type PropType = {
@@ -14,9 +14,10 @@
 	let { status, priority, minimal = true, class: className }: PropType = $props();
 
 	const statusLabel = {
-		[ExamStatus.Active]: 'En proceso',
-		[ExamStatus.Completed]: 'Completado',
-		[ExamStatus.Cancelled]: 'Cancelado'
+		[ExamStatus.Cancelled]: 'Cancelado',
+		[ExamStatus.Pending]: 'En proceso',
+		[ExamStatus.Ready]: 'Listo para entrega',
+		[ExamStatus.Completed]: 'Completado'
 	}[status];
 
 	const priorityLabel = {
@@ -26,13 +27,14 @@
 	}[priority];
 
 	const statusIcon = {
-		[ExamStatus.Active]: priority === ExamPriority.High ? CircleChevronsUp : CircleMinus,
+		[ExamStatus.Cancelled]: Cancel,
+		[ExamStatus.Pending]: priority === ExamPriority.High ? CircleChevronsUp : CircleMinus,
+		[ExamStatus.Ready]: CubeSend,
 		[ExamStatus.Completed]: CircleCheck,
-		[ExamStatus.Cancelled]: Cancel
 	}[status];
 
 	const statusColor =
-		status === ExamStatus.Active
+		status === ExamStatus.Pending
 			? priority === ExamPriority.High
 				? 'text-red-500'
 				: priority === ExamPriority.Normal

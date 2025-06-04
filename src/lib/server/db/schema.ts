@@ -36,7 +36,8 @@ export const examPriorityEnum = pgEnum('exam_priority', [
 // PostgreSQL Enum for Exam status
 export const examStatusEnum = pgEnum('exam_status', [
 	ExamStatus.Cancelled,
-	ExamStatus.Active,
+	ExamStatus.Pending,
+	ExamStatus.Ready,
 	ExamStatus.Completed
 ]);
 
@@ -263,7 +264,7 @@ export const exam = pgTable('exam', {
 	// Exam details
 	customTag: text('custom_tag').notNull(),
 	priority: examPriorityEnum().notNull().default(ExamPriority.Normal),
-	status: examStatusEnum().notNull().default(ExamStatus.Active),
+	status: examStatusEnum().notNull().default(ExamStatus.Pending),
 	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }), // Set when the exam is deliveted
 	// Results details
 	sample: text(),
