@@ -40,7 +40,7 @@
 		onResult(event) {
 			// If forms result type is a redirect or success, we assume that the changes were saved
 			if (event.result.type === 'redirect' || event.result.type === 'success') {
-				// hasChanges = false;
+				hasChanges = false;
 			}
 		}
 	});
