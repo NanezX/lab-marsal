@@ -1,4 +1,10 @@
-import { ExamPriority, ExamStatus, PatientGender, UserRoles } from '$lib/shared/enums';
+import {
+	ExamPriority,
+	ExamStatus,
+	PatientGender,
+	PaymentMethod,
+	UserRoles
+} from '$lib/shared/enums';
 import { minDocumentId, maxDocumentId } from '$lib/shared/utils';
 import { validate } from 'uuid';
 import { parsePhoneNumberFromString } from 'libphonenumber-js/min';
@@ -233,7 +239,16 @@ export const editExamDetailsSchema = z.object({
 });
 
 export const editExamPaymentSchema = z.object({
-	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido')
+	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
+	/**
+	 * When `paid` is set to `true`, the field `paidAt` should be assigned
+	 */
+	paid: z.boolean().default(false),
+	pricePaid: z.number().nonnegative().optional(),
+	paymentMethod: z
+		.nativeEnum(PaymentMethod, { errorMap: () => ({ message: 'Método de pago no válido' }) })
+		.optional(),
+	paymentRef: z.string().optional()
 });
 
 // export const editExamScheam = z.object({
