@@ -5,6 +5,7 @@
 		Cancel,
 		CircleCheck,
 		CircleChevronsUp,
+		CircleChevronUp,
 		CircleMinus,
 		CubeSend
 	} from '@steeze-ui/tabler-icons';
@@ -34,7 +35,12 @@
 
 	const statusIcon = {
 		[ExamStatus.Cancelled]: Cancel,
-		[ExamStatus.Pending]: priority === ExamPriority.High ? CircleChevronsUp : CircleMinus,
+		[ExamStatus.Pending]:
+			priority === ExamPriority.High
+				? CircleChevronsUp
+				: priority === ExamPriority.Normal
+					? CircleChevronUp
+					: CircleMinus,
 		[ExamStatus.Ready]: CubeSend,
 		[ExamStatus.Completed]: CircleCheck
 	}[status];
