@@ -275,7 +275,8 @@ export const exam = pgTable('exam', {
 	// Payment details
 	paid: boolean().notNull(), // When the exam is paid
 	pricePaid: decimal('price_paid', { precision: 19, scale: 2 }), // Amount paid (probably after marked paid)
-	paymentMethod: text('payment_method'), // payment method defined by administration
+	// paymentMethod: text('payment_method'), // payment method defined by administration
+	paymentMethod: examStatusEnum(), // payment method defined by administration
 	paymentRef: text('payment_ref'), // Reference if apply
 	paidAt: timestamp('paid_at', { withTimezone: true, mode: 'date' }) // Set when the exam is paid
 });
