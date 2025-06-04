@@ -71,12 +71,6 @@
 		<p class="mx-auto my-0 text-center text-3xl">{examTypeData.name}</p>
 
 		<div>
-			<Link
-				href="/exams/{examData.id}/edit"
-				title="Crear nuevo exámen"
-				class="!bg-green-400 hover:!bg-green-500">Editar</Link
-			>
-
 			<Button
 				type="button"
 				onclick={() => (showConfirmDeleteModal = !showConfirmDeleteModal)}
