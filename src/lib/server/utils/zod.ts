@@ -251,10 +251,19 @@ export const editExamPaymentSchema = z.object({
 	paymentRef: z.string().optional()
 });
 
-export const editExamResulSchema = z.object({
+// Helper: Zod schema for individual result entry
+const examResultInputSchema = z.object({
+	/**
+	 * A snapshopt it will be needed after assign it each value result for first time for preserve the data
+	 */
+	parameterId: z.string().uuid({ message: 'ID del parámetro no es válido' }),
+	value: z.union([z.string().min(1, 'Debe ingresar un valor'), z.number().or(z.coerce.number())])
+});
+
+// Main results edit schema
+export const editExamResultsSchema = z.object({
 	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
 	sample: z.string().min(1, 'Debe ingresar una muestra').nullable().optional(),
 	observation: z.string().optional().nullable(),
-	// TODO: Think about how to match the results with the new `exam_result` table here
-	results: z.record(z.any()).default({})
+	results: z.array(examResultInputSchema).min(1, 'Debe ingresar al menos un resultado')
 });
