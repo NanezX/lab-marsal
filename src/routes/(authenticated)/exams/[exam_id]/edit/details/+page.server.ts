@@ -1,7 +1,7 @@
 import { superValidate, fail as _failForms } from 'sveltekit-superforms';
 import { editExamDetailsSchema } from '$lib/server/utils/zod';
 import { zod } from 'sveltekit-superforms/adapters';
-// import { cleanEditPatientData, normalized } from '$lib/shared/utils';
+import { cleanEditExamDetails, normalized as _normalized } from '$lib/shared/utils';
 import type { Actions as _, PageServerLoad } from './$types';
 // import { findPatientById } from '$lib/server/utils/dbQueries';
 // import { db } from '$lib/server/db';
@@ -17,14 +17,8 @@ export const load: PageServerLoad = async ({ parent }) => {
 	// Get the examData
 	const { examData } = data;
 
-	// const cleaned = cleanEditPatientData(patientData);
 	// Clean/format the data for the schema
-	const cleanedData = {
-		examId: examData.id,
-		customTag: examData.customTag,
-		priority: examData.priority,
-		status: examData.status
-	};
+	const cleanedData = cleanEditExamDetails(examData);
 
 	// Create the form for editing
 	const editExamDetailsForm = await superValidate(cleanedData, zod(editExamDetailsSchema));

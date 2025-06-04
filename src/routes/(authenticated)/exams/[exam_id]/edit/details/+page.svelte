@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import Input from '$lib/components/Input.svelte';
-	import { cleanEditPatientData, formatCapital } from '$lib/shared/utils.js';
+	import { cleanEditExamDetails, cleanEditPatientData, formatCapital } from '$lib/shared/utils.js';
 	import Select from '$lib/components/Select.svelte';
 	import { PatientGender } from '$lib/shared/enums.js';
 	import Button from '$lib/components/Button.svelte';
@@ -37,10 +37,8 @@
 
 	let { data } = $props();
 
-	let {
-		editExamDetailsForm,
-		examData: { patient: patientData, examType: examTypeData, ...examData }
-	} = data;
+	let { editExamDetailsForm, examData } = data;
+	let { patient: patientData, examType: examTypeData } = examData;
 
 	const {
 		form,
@@ -60,10 +58,9 @@
 		}
 	});
 
-	// const original = cleanEditPatientData(patientData);
+	const original = cleanEditExamDetails(examData);
 
-	// let hasChanges = $derived(!isEqual($form, original));
-	let hasChanges = $state(false);
+	let hasChanges = $derived(!isEqual($form, original));
 	let showConfirmModal = $state(false);
 	let showDiscardModal = $state(false);
 </script>
