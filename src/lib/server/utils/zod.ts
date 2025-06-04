@@ -251,21 +251,10 @@ export const editExamPaymentSchema = z.object({
 	paymentRef: z.string().optional()
 });
 
-// export const editExamScheam = z.object({
-// 	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
-// 	customTag: z.string().min(1, 'Debe ingresar un identificador'),
-// 	priority: z
-// 		.nativeEnum(ExamPriority, { errorMap: () => ({ message: 'Prioridad no definida' }) })
-// 		.default(ExamPriority.Normal),
-// 	status: z
-// 		.nativeEnum(ExamStatus, { errorMap: () => ({ message: 'Estado no definido' }) })
-// 		.default(ExamStatus.Pending),
-// 	sample: z.string().min(1, 'Debe ingresar un identificador').nullable().optional(),
-// 	observation: z.string().optional().nullable(),
-// 	payment: z.object({
-// 		paid: z.boolean(),
-// 		pricePaid: z.number(),
-// 		paymentMethod: z.string(),
-// 		paymentRef: z.string()
-// 	})
-// });
+export const editExamResulSchema = z.object({
+	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
+	sample: z.string().min(1, 'Debe ingresar una muestra').nullable().optional(),
+	observation: z.string().optional().nullable(),
+	// TODO: Think about how to match the results with the new `exam_result` table here
+	results: z.record(z.any()).default({})
+});
