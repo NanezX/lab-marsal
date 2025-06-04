@@ -82,6 +82,7 @@
 				<p class="inline-flex items-center gap-x-1 text-2xl">Datos generales</p>
 
 				<div class="space-y-0.5 px-1 py-2">
+					<LabelValue label="Exámen" value={examTypeData.name} icon={Cash} />
 					<LabelValue label="Precio base" value={`${examTypeData.basePrice} $`} icon={Cash} />
 
 					<LabelValue
@@ -120,6 +121,23 @@
 						icon={patientData.gender == PatientGender.Male ? GenderMale : GenderFemale}
 						labelClass="mr-1"
 					/>
+				</div>
+			</div>
+
+			<div class="col-span-2">
+				<p class="text-center text-2xl">Detalles</p>
+
+				<hr class="border-primary-gray/50 my-1" />
+
+				<div class="mx-auto w-fit space-x-10">
+					<Button
+						disabled={!hasChanges}
+						onclick={() => (showConfirmModal = true)}
+						title="Guardar cambios"
+						class="w-fit !bg-green-500 hover:!bg-green-400 disabled:!bg-gray-200"
+					>
+						Guardar cambios
+					</Button>
 				</div>
 			</div>
 		</div>
