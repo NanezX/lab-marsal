@@ -126,7 +126,9 @@
 
 			<div class="col-span-2">
 				<p class="text-center text-2xl">Detalles</p>
+			</div>
 
+			<div class="col-span-2">
 				<hr class="border-primary-gray/50 my-1" />
 
 				<div class="mx-auto w-fit space-x-10">
