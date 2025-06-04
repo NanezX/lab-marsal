@@ -17,11 +17,17 @@ export const load: PageServerLoad = async ({ parent }) => {
 	// Get the examData
 	const { examData } = data;
 
-	// Clean/format the data for the schema
 	// const cleaned = cleanEditPatientData(patientData);
+	// Clean/format the data for the schema
+	const cleanedData = {
+		examId: examData.id,
+		customTag: examData.customTag,
+		priority: examData.priority,
+		status: examData.status
+	};
 
-	// Create the form for deleting (if desired)
-	const editExamDetailsForm = await superValidate(examData, zod(editExamDetailsSchema));
+	// Create the form for editing
+	const editExamDetailsForm = await superValidate(cleanedData, zod(editExamDetailsSchema));
 
 	return { editExamDetailsForm };
 };
