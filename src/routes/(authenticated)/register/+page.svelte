@@ -10,6 +10,7 @@
 	import { UserRoles } from '$lib/shared/enums.js';
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import { formatCapital, maxDocumentId, minDocumentId } from '$lib/shared/utils.js';
+	import { userRolesItems } from '$lib/client/enumItems.js';
 
 	let { data } = $props();
 
@@ -132,10 +133,7 @@
 			<!-- User roles - Select -->
 			<Select
 				bind:value={$form.role}
-				items={Object.values(UserRoles).map((role_) => ({
-					value: role_,
-					label: formatCapital(role_)
-				}))}
+				items={userRolesItems}
 				forcePlaceholder
 				name="role"
 				required

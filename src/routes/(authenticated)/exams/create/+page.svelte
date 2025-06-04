@@ -5,12 +5,13 @@
 	import Input from '$lib/components/Input.svelte';
 	import { formatCapital } from '$lib/shared/utils.js';
 	import Select from '$lib/components/Select.svelte';
-	import { ExamPriority, PatientGender } from '$lib/shared/enums.js';
+	import { PatientGender } from '$lib/shared/enums.js';
 	import Button from '$lib/components/Button.svelte';
 	import Link from '$lib/components/Link.svelte';
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import SelectInput from '$lib/components/SelectInput.svelte';
 	import type { PatientDiscriminator } from '$lib/server/utils/zod';
+	import { patientGenderItems, priorityItems } from '$lib/client/enumItems.js';
 
 	let { data } = $props();
 
@@ -21,13 +22,6 @@
 		delayMs: 0,
 		applyAction: true
 	});
-
-	const priorityItems = Object.values(ExamPriority).map((priority_) => ({
-		value: priority_,
-		label: formatCapital(
-			priority_ === ExamPriority.Low ? 'Baja' : priority_ === ExamPriority.High ? 'Alta' : 'Normal'
-		)
-	}));
 
 	function isNewPatient(
 		patient: PatientDiscriminator
@@ -216,10 +210,7 @@
 									bind:value={$form.patient.data.gender}
 									name="gender"
 									id="select-gender"
-									items={Object.values(PatientGender).map((role_) => ({
-										value: role_,
-										label: formatCapital(role_ === PatientGender.Female ? 'Mujer' : 'Hombre')
-									}))}
+									items={patientGenderItems}
 									forcePlaceholder
 									required
 									placeholder="Selecciona género"

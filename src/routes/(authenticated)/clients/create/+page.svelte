@@ -8,6 +8,7 @@
 	import { PatientGender } from '$lib/shared/enums.js';
 	import Button from '$lib/components/Button.svelte';
 	import Link from '$lib/components/Link.svelte';
+	import { patientGenderItems } from '$lib/client/enumItems.js';
 
 	let { data } = $props();
 
@@ -71,10 +72,7 @@
 							bind:value={$form.gender}
 							name="gender"
 							id="select-gender"
-							items={Object.values(PatientGender).map((role_) => ({
-								value: role_,
-								label: formatCapital(role_ === PatientGender.Female ? 'Mujer' : 'Hombre')
-							}))}
+							items={patientGenderItems}
 							forcePlaceholder
 							required
 							placeholder="Selecciona género"

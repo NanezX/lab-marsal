@@ -145,3 +145,5 @@ export function getAgeFromDate(birthdate: Date): string {
 
 	return age < 1 ? 'Menor de 1 año' : `${age} años`;
 }
+
+export * from './enumItems';
