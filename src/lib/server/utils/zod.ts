@@ -221,7 +221,7 @@ export const deleteExamSchema = z.object({
 	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido')
 });
 
-export const editExamScheam = z.object({
+export const editExamDetailsSchema = z.object({
 	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
 	customTag: z.string().min(1, 'Debe ingresar un identificador'),
 	priority: z
@@ -229,14 +229,28 @@ export const editExamScheam = z.object({
 		.default(ExamPriority.Normal),
 	status: z
 		.nativeEnum(ExamStatus, { errorMap: () => ({ message: 'Estado no definido' }) })
-		.default(ExamStatus.Active),
-	sample: z.string().min(1, 'Debe ingresar un identificador').nullable().optional(),
-	results: z.record(z.any()),
-	observation: z.string().optional().nullable(),
-	payment: z.object({
-		paid: z.boolean(),
-		pricePaid: z.number(),
-		paymentMethod: z.string(),
-		paymentRef: z.string()
-	})
+		.default(ExamStatus.Pending)
 });
+
+export const editExamPaymentSchema = z.object({
+	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido')
+});
+
+// export const editExamScheam = z.object({
+// 	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
+// 	customTag: z.string().min(1, 'Debe ingresar un identificador'),
+// 	priority: z
+// 		.nativeEnum(ExamPriority, { errorMap: () => ({ message: 'Prioridad no definida' }) })
+// 		.default(ExamPriority.Normal),
+// 	status: z
+// 		.nativeEnum(ExamStatus, { errorMap: () => ({ message: 'Estado no definido' }) })
+// 		.default(ExamStatus.Pending),
+// 	sample: z.string().min(1, 'Debe ingresar un identificador').nullable().optional(),
+// 	observation: z.string().optional().nullable(),
+// 	payment: z.object({
+// 		paid: z.boolean(),
+// 		pricePaid: z.number(),
+// 		paymentMethod: z.string(),
+// 		paymentRef: z.string()
+// 	})
+// });
