@@ -10,6 +10,8 @@ import { isUniqueConstraintViolation } from '$lib/server/utils/helpers';
 import { failFormResponse } from '$lib/server/utils/failFormResponse';
 import { redirect } from 'sveltekit-flash-message/server';
 
+// TODO: Verify what roles can update an patient (on the action) - (maybe just block the page to those user in the backend)
+
 export const load: PageServerLoad = async ({ parent }) => {
 	// Get the data from the layout
 	const data = await parent();
