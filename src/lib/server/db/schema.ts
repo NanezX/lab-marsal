@@ -222,6 +222,35 @@ export const examTypeRelations = relations(examType, ({ one, many }) => ({
 	})
 }));
 
+export const examResult = pgTable('exam_result', {
+	...baseTable,
+	examId: uuid('exam_id')
+		.notNull()
+		.references(() => exam.id, { onDelete: 'cascade' }),
+	parameterId: uuid('parameter_id').references(() => parameter.id),
+	value: text().notNull(),
+	// Snapshot to preserve parameter info at the time of result entry
+	parameterSnapshot: jsonb('parameter_snapshot').notNull().$type<{
+		name: string;
+		unit?: string;
+		type?: string;
+		category?: string;
+		hasReferences: boolean;
+		referenceValues: string[];
+	}>()
+});
+
+export const examResultRelations = relations(examResult, ({ one }) => ({
+	exam: one(exam, {
+		fields: [examResult.examId],
+		references: [exam.id]
+	}),
+	parameter: one(parameter, {
+		fields: [examResult.parameterId],
+		references: [parameter.id]
+	})
+}));
+
 // Exam table
 export const exam = pgTable('exam', {
 	...baseTable,
@@ -238,18 +267,20 @@ export const exam = pgTable('exam', {
 	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }), // Set when the exam is deliveted
 	// Results details
 	sample: text(),
-	results: jsonb(), // Added when uploading the results
 	observation: text(), // Optional observation by the lab
+	// results: jsonb(), // (Other table) - Added when uploading the results
+	//////////////////////
+	//////////////////////
 	// Payment details
 	paid: boolean().notNull(), // When the exam is paid
 	pricePaid: decimal('price_paid', { precision: 19, scale: 2 }), // Amount paid (probably after marked paid)
 	paymentMethod: text('payment_method'), // payment method defined by administration
 	paymentRef: text('payment_ref'), // Reference if apply
-	paidAt: timestamp('paid_at', { withTimezone: true, mode: 'date' }) // Set when the exam is deliveted
+	paidAt: timestamp('paid_at', { withTimezone: true, mode: 'date' }) // Set when the exam is paid
 });
 
 // Exam relations declarations
-export const examRelations = relations(exam, ({ one }) => ({
+export const examRelations = relations(exam, ({ one, many }) => ({
 	patient: one(patient, {
 		fields: [exam.patientId],
 		references: [patient.id]
@@ -257,5 +288,6 @@ export const examRelations = relations(exam, ({ one }) => ({
 	examType: one(examType, {
 		fields: [exam.examTypeId],
 		references: [examType.id]
-	})
+	}),
+	results: many(examResult)
 }));
