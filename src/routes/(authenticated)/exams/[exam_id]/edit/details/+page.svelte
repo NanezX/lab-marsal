@@ -33,6 +33,7 @@
 		Progress
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
+	import { examStatusItems, priorityItems } from '$lib/client/enumItems.js';
 
 	let { data } = $props();
 
@@ -125,11 +126,51 @@
 			</div>
 
 			<div class="col-span-2">
-				<p class="text-center text-2xl">Detalles</p>
+				<p class="mb-4 text-center text-2xl">Actualizar detalles</p>
+
+				<div class="space-y-4">
+					<Input
+						bind:value={$form.customTag}
+						name="customTag"
+						label="Identificador del examen"
+						placeholder="Identificador del examen"
+						title="Identificador del examen"
+						wrapperClass="w-3/5"
+						error={$errors.customTag}
+					/>
+
+					<div class="flex gap-x-8">
+						<div class="flex w-1/3 flex-col items-start gap-y-1">
+							<label class="ml-2 font-semibold" for="select-priority"> Prioridad del exámen</label>
+
+							<Select
+								bind:value={$form.priority}
+								items={priorityItems}
+								name="priority"
+								id="select-priority"
+								required
+								placeholder="Seleccionar prioridad"
+							/>
+						</div>
+
+						<div class="flex w-1/3 flex-col items-start gap-y-1">
+							<label class="ml-2 font-semibold" for="select-priority"> Estado del exámen </label>
+
+							<Select
+								bind:value={$form.status}
+								items={examStatusItems}
+								name="priority"
+								id="select-priority"
+								required
+								placeholder="Seleccionar prioridad"
+							/>
+						</div>
+					</div>
+				</div>
 			</div>
 
 			<div class="col-span-2">
-				<hr class="border-primary-gray/50 my-1" />
+				<hr class="border-primary-gray/50 my-1 mb-4" />
 
 				<div class="mx-auto w-fit space-x-10">
 					<Button
