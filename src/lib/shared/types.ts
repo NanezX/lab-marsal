@@ -14,5 +14,4 @@ export type Patient<E extends PatientKey[] = []> = NonNullable<
 	Awaited<ReturnType<typeof findPatientById<E>>>
 >;
 
-
 export type FindExamData = NonNullable<Awaited<ReturnType<typeof findExamById>>>;
