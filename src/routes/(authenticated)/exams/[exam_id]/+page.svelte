@@ -30,7 +30,6 @@
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import ExamStatus from '$lib/components/ExamStatus.svelte';
-	import { ExamStatus as ExamStatusEnum } from '$lib/shared/enums';
 
 	// TODO: Verify AND check what roles can remove/delete an exam (maybe just block the page to those user in the backend)
 
