@@ -41,3 +41,14 @@ export const patientGenderItems = Object.values(PatientGender).map((role_) => ({
 	value: role_,
 	label: formatCapital(role_ === PatientGender.Female ? 'Mujer' : 'Hombre')
 }));
+
+/**
+ * Items for exam paid
+ */
+export const examPaidItems = [
+	{
+		value: false,
+		label: 'No pagado'
+	},
+	{ value: true, label: 'Pagado' }
+];
