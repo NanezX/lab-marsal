@@ -133,7 +133,7 @@
 
 				<div class="space-y-4">
 					<div class="flex gap-x-8">
-						<div class="flex w-1/3 flex-col items-start gap-y-1">
+						<div class="flex w-2/5 flex-col items-start gap-y-1">
 							<label class="ml-2 font-semibold" for="select-priority"> Estado de pago</label>
 
 							<Select
@@ -146,7 +146,7 @@
 							/>
 						</div>
 
-						<div class="flex w-1/3 flex-col items-start gap-y-1">
+						<div class="flex w-2/5 flex-col items-start gap-y-1">
 							<label class="ml-2 font-semibold" for="select-priority"> Método de pago </label>
 
 							<Select
@@ -160,48 +160,32 @@
 						</div>
 					</div>
 
-					<Input
-						bind:value={
-							() => ($form.pricePaid === 0 || $form.pricePaid === undefined ? '' : $form.pricePaid),
-							(v) => ($form.pricePaid = v === '' ? undefined : v)
-						}
-						name="pricePaid"
-						label="Precio pagado"
-						placeholder="Precio pagado"
-						title="Precio pagado"
-						wrapperClass="w-3/5"
-						error={$errors.pricePaid}
-					/>
-
-					<!-- aaa -->
-
-					<!-- <div class="flex gap-x-8">
-						<div class="flex w-1/3 flex-col items-start gap-y-1">
-							<label class="ml-2 font-semibold" for="select-priority"> Prioridad del exámen</label>
-
-							<Select
-								bind:value={$form.priority}
-								items={priorityItems}
-								name="priority"
-								id="select-priority"
-								required
-								placeholder="Seleccionar prioridad"
-							/>
-						</div>
-
-						<div class="flex w-1/3 flex-col items-start gap-y-1">
-							<label class="ml-2 font-semibold" for="select-priority"> Estado del exámen </label>
-
-							<Select
-								bind:value={$form.status}
-								items={examStatusItems}
-								name="priority"
-								id="select-priority"
-								required
-								placeholder="Seleccionar prioridad"
-							/>
-						</div>
-					</div> -->
+					<div class="flex gap-x-8">
+						<Input
+							bind:value={
+								() =>
+									$form.pricePaid === 0 || $form.pricePaid === undefined ? '' : $form.pricePaid,
+								(v) => ($form.pricePaid = v === '' ? undefined : v)
+							}
+							name="pricePaid"
+							label="Precio pagado"
+							placeholder="Precio pagado"
+							title="Precio pagado"
+							wrapperClass="w-2/5"
+							error={$errors.pricePaid}
+						/>
+						<Input
+							bind:value={
+								() => $form.paymentRef ?? '', (v) => ($form.paymentRef = v === '' ? undefined : v)
+							}
+							name="paymentRef"
+							label="Referencia (opcional)"
+							placeholder="Referencia de pago"
+							title="Referencia de pago"
+							wrapperClass="w-2/5"
+							error={$errors.pricePaid}
+						/>
+					</div>
 				</div>
 			</div>
 
