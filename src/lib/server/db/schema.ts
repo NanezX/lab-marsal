@@ -1,4 +1,4 @@
-import { UserRoles, ExamPriority, ExamStatus, PatientGender } from '../../shared/enums';
+import { UserRoles, ExamPriority, ExamStatus, PatientGender, PaymentMethod } from '../../shared/enums';
 import {
 	pgEnum,
 	pgTable,
@@ -39,6 +39,15 @@ export const examStatusEnum = pgEnum('exam_status', [
 	ExamStatus.Pending,
 	ExamStatus.Ready,
 	ExamStatus.Completed
+]);
+
+// PostgreSQL Enum for Exam Payment Method
+export const examPaymentMethodEnum = pgEnum('payment_menthod', [
+	PaymentMethod.PuntoDeVenta,
+	PaymentMethod.PagoMovil,
+	PaymentMethod.EfectivoBolivares,
+	PaymentMethod.EfectivoDolares,
+	PaymentMethod.Otro
 ]);
 
 // PostgreSQL Enum for Patient gender
@@ -272,7 +281,7 @@ export const exam = pgTable('exam', {
 	paid: boolean().notNull(), // When the exam is paid
 	pricePaid: decimal('price_paid', { precision: 19, scale: 2 }), // Amount paid (probably after marked paid)
 	// paymentMethod: text('payment_method'), // payment method defined by administration
-	paymentMethod: examStatusEnum(), // payment method defined by administration
+	paymentMethod: examPaymentMethodEnum(), // payment method defined by administration
 	paymentRef: text('payment_ref'), // Reference if apply
 	paidAt: timestamp('paid_at', { withTimezone: true, mode: 'date' }), // Set when the exam is paid
 
