@@ -53,15 +53,19 @@ export const examPaidItems = [
 	{ value: true, label: 'Pagado' }
 ];
 
-const paymentMethodLabels: Record<PaymentMethod, string> = {
+const paymentMethodLabels: Record<PaymentMethod | 'unselected', string> = {
 	[PaymentMethod.PuntoDeVenta]: 'Punto de Venta',
 	[PaymentMethod.PagoMovil]: 'Pago Móvil',
 	[PaymentMethod.EfectivoBolivares]: 'Efectivo (Bs)',
 	[PaymentMethod.EfectivoDolares]: 'Efectivo ($)',
-	[PaymentMethod.Otro]: 'Otro método'
+	[PaymentMethod.Otro]: 'Otro método',
+	unselected: 'No seleccionado'
 };
 
-export const examPaymentMethodItems = Object.values(PaymentMethod).map((method) => ({
-	value: method,
-	label: paymentMethodLabels[method]
-}));
+export const examPaymentMethodItems = [
+	{ value: undefined, label: paymentMethodLabels.unselected },
+	...Object.values(PaymentMethod).map((method) => ({
+		value: method,
+		label: paymentMethodLabels[method]
+	}))
+];
