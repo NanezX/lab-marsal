@@ -101,10 +101,23 @@ export function cleanEditExamDetails(data: FindExamData) {
 export function cleanEditExamPayment(data: FindExamData) {
 	return {
 		examId: data.id,
-		customTag: data.customTag,
-		priority: data.priority,
-		status: data.status
+		paid: data.paid,
+		paymentMethod: data.paymentMethod ?? undefined,
+		pricePaid: toNumberOrUndefined(data.pricePaid),
+		paymentRef: data.paymentRef ?? undefined
 	};
+}
+
+// Convert string | null to number | undefined
+export function toNumberOrUndefined(value: string | null): number | undefined {
+	if (value === null) return undefined;
+	const num = Number(value);
+	return isNaN(num) ? undefined : num;
+}
+
+// Convert number | undefined to string | null (for database/storage)
+export function toStringOrNull(value: number | undefined): string | null {
+	return value?.toString() ?? null;
 }
 
 /**
