@@ -98,6 +98,15 @@ export function cleanEditExamDetails(data: FindExamData) {
 	};
 }
 
+export function cleanEditExamPayment(data: FindExamData) {
+	return {
+		examId: data.id,
+		customTag: data.customTag,
+		priority: data.priority,
+		status: data.status
+	};
+}
+
 /**
  * Normalizes a string by removing diacritical marks (accents) and converting it to lowercase.
  *
