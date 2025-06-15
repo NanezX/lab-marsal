@@ -22,8 +22,6 @@ export const load: PageServerLoad = async ({ parent }) => {
 	// Clean/format the data for the schema
 	const cleanedData = cleanEditExamPayment(examData);
 
-	console.log('cleanedData: ', cleanedData);
-
 	// Create the form for editing
 	const editExamPaymentForm = await superValidate(cleanedData, zod(editExamPaymentSchema));
 

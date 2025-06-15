@@ -238,21 +238,39 @@ export const editExamDetailsSchema = z.object({
 		.default(ExamStatus.Pending)
 });
 
-export const editExamPaymentSchema = z.object({
-	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
-	/**
-	 * When `paid` is set to `true`, the field `paidAt` should be assigned
-	 */
-	paid: z.boolean().default(false),
-	paymentMethod: z
-		.nativeEnum(PaymentMethod, { errorMap: () => ({ message: 'Método de pago no válido' }) })
-		.optional(),
-	pricePaid: z
-		.number({ message: 'Debe ser un número válido' })
-		.nonnegative('Debe ser un número positivo')
-		.optional(),
-	paymentRef: z.string().optional()
-});
+export const editExamPaymentSchema = z
+	.object({
+		examId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
+		paid: z.boolean().default(false),
+		paymentMethod: z
+			.nativeEnum(PaymentMethod, { errorMap: () => ({ message: 'Método de pago no válido' }) })
+			.optional(),
+		pricePaid: z
+			.number({ message: 'Debe ser un número válido' })
+			.nonnegative('Debe ser un número positivo')
+			.optional(),
+		paymentRef: z.string().min(1, 'Debe ingresar una referencia válida').optional()
+	})
+	.refine((data) => !data.paid || data.paymentMethod !== undefined, {
+		message: 'Obligatorio cuando el pago está realizado',
+		path: ['paymentMethod']
+	})
+	.refine((data) => !data.paid || data.pricePaid !== undefined, {
+		message: 'Obligatorio cuando el pago está realizado',
+		path: ['pricePaid']
+	})
+	.transform((data) => {
+		// Clear payment fields when marking as unpaid
+		if (data.paid === false) {
+			return {
+				...data,
+				paymentMethod: undefined,
+				pricePaid: undefined,
+				paymentRef: undefined
+			};
+		}
+		return data;
+	});
 
 // Helper: Zod schema for individual result entry
 const examResultInputSchema = z.object({
