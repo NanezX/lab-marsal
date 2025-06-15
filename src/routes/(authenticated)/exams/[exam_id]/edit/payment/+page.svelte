@@ -21,7 +21,12 @@
 		ClockEdit
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
-	import { examPaidItems, examStatusItems, priorityItems } from '$lib/client/enumItems.js';
+	import {
+		examPaidItems,
+		examPaymentMethodItems,
+		examStatusItems,
+		priorityItems
+	} from '$lib/client/enumItems.js';
 	import { ConsoleLogWriter } from 'drizzle-orm';
 
 	let { data } = $props();
@@ -134,28 +139,25 @@
 							<Select
 								bind:value={$form.paid}
 								items={examPaidItems}
-								name="priority"
-								id="select-priority"
+								name="paid"
+								id="select-paid"
 								required
-								placeholder="Seleccionar prioridad"
+								placeholder="Marcar estado de pago"
 							/>
 						</div>
-
-						<!--
 
 						<div class="flex w-1/3 flex-col items-start gap-y-1">
-							<label class="ml-2 font-semibold" for="select-priority"> Estado del exámen </label>
+							<label class="ml-2 font-semibold" for="select-priority"> Método de pago </label>
 
 							<Select
-								bind:value={$form.status}
-								items={examStatusItems}
-								name="priority"
-								id="select-priority"
+								bind:value={$form.paymentMethod}
+								items={examPaymentMethodItems}
+								name="paymentMethod"
+								id="select-paymentMethod"
 								required
-								placeholder="Seleccionar prioridad"
+								placeholder="Seleccionar método de pago"
 							/>
 						</div>
-                        -->
 					</div>
 
 					<Input
