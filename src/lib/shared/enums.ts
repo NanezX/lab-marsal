@@ -22,7 +22,8 @@ export enum ExamPriority {
  */
 export enum ExamStatus {
 	Cancelled = 'cancelled',
-	Active = 'active',
+	Pending = 'pending',
+	Ready = 'ready', // This if for ready to be deliver
 	Completed = 'completed'
 }
 
@@ -32,4 +33,12 @@ export enum ExamStatus {
 export enum PatientGender {
 	Male = 'male',
 	Female = 'female'
+}
+
+export enum PaymentMethod {
+	PuntoDeVenta = 'punto_de_venta',
+	PagoMovil = 'pago_movil',
+	EfectivoBolivares = 'efectivo_bs',
+	EfectivoDolares = 'efectivo_dolares',
+	Otro = 'otro'
 }

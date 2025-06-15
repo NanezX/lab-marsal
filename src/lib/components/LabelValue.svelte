@@ -30,7 +30,8 @@
 	}: Props = $props();
 </script>
 
-<p {title} class={className}>
+<svelte:element this={children ? 'div' : 'p'} {title} class={className}>
+	<!-- <p {title} class={className}> -->
 	{#if icon}
 		<Icon src={icon} class={iconClass} />
 	{/if}
@@ -42,4 +43,5 @@
 			{value}
 		{/if}
 	</span>
-</p>
+	<!-- </p> -->
+</svelte:element>

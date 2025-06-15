@@ -127,7 +127,7 @@
 					class="group hover:border-primary-blue flex flex-col gap-y-2 rounded-sm border bg-white px-4 py-2 transition-all select-none hover:-translate-y-1 hover:border hover:shadow-2xl"
 				>
 					<div class="inline-flex w-full items-center justify-between">
-						<ExamStatus status={exam.status} priority={exam.priority} minimal={true} />
+						<ExamStatus status={exam.status} priority={exam.priority} minimal />
 						<Icon
 							src={FileSearch}
 							size="24"

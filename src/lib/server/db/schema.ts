@@ -1,4 +1,10 @@
-import { UserRoles, ExamPriority, ExamStatus, PatientGender } from '../../shared/enums';
+import {
+	UserRoles,
+	ExamPriority,
+	ExamStatus,
+	PatientGender,
+	PaymentMethod
+} from '../../shared/enums';
 import {
 	pgEnum,
 	pgTable,
@@ -36,8 +42,18 @@ export const examPriorityEnum = pgEnum('exam_priority', [
 // PostgreSQL Enum for Exam status
 export const examStatusEnum = pgEnum('exam_status', [
 	ExamStatus.Cancelled,
-	ExamStatus.Active,
+	ExamStatus.Pending,
+	ExamStatus.Ready,
 	ExamStatus.Completed
+]);
+
+// PostgreSQL Enum for Exam Payment Method
+export const examPaymentMethodEnum = pgEnum('payment_menthod', [
+	PaymentMethod.PuntoDeVenta,
+	PaymentMethod.PagoMovil,
+	PaymentMethod.EfectivoBolivares,
+	PaymentMethod.EfectivoDolares,
+	PaymentMethod.Otro
 ]);
 
 // PostgreSQL Enum for Patient gender
@@ -222,6 +238,35 @@ export const examTypeRelations = relations(examType, ({ one, many }) => ({
 	})
 }));
 
+export const examResult = pgTable('exam_result', {
+	...baseTable,
+	examId: uuid('exam_id')
+		.notNull()
+		.references(() => exam.id, { onDelete: 'cascade' }),
+	parameterId: uuid('parameter_id').references(() => parameter.id),
+	value: text().notNull(),
+	// Snapshot to preserve parameter info at the time of result entry
+	parameterSnapshot: jsonb('parameter_snapshot').notNull().$type<{
+		name: string;
+		unit?: string;
+		type?: string;
+		category?: string;
+		hasReferences: boolean;
+		referenceValues: string[];
+	}>()
+});
+
+export const examResultRelations = relations(examResult, ({ one }) => ({
+	exam: one(exam, {
+		fields: [examResult.examId],
+		references: [exam.id]
+	}),
+	parameter: one(parameter, {
+		fields: [examResult.parameterId],
+		references: [parameter.id]
+	})
+}));
+
 // Exam table
 export const exam = pgTable('exam', {
 	...baseTable,
@@ -231,23 +276,31 @@ export const exam = pgTable('exam', {
 	examTypeId: uuid('exam_type_id')
 		.notNull()
 		.references(() => examType.id),
+
+	// Exam details
 	customTag: text('custom_tag').notNull(),
 	priority: examPriorityEnum().notNull().default(ExamPriority.Normal),
-	status: examStatusEnum().notNull().default(ExamStatus.Active),
-	//
-	sample: text(),
-	//
-	results: jsonb(), // Added when uploading the results
-	observation: text(), // Optional observation by the lab
+	status: examStatusEnum().notNull().default(ExamStatus.Pending),
 	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }), // Set when the exam is deliveted
+
+	// Payment details
 	paid: boolean().notNull(), // When the exam is paid
 	pricePaid: decimal('price_paid', { precision: 19, scale: 2 }), // Amount paid (probably after marked paid)
-	paymentMethod: text('payment_method'), // payment method defined by administration
-	paymentRef: text('payment_ref') // Reference if apply
+	// paymentMethod: text('payment_method'), // payment method defined by administration
+	paymentMethod: examPaymentMethodEnum(), // payment method defined by administration
+	paymentRef: text('payment_ref'), // Reference if apply
+	paidAt: timestamp('paid_at', { withTimezone: true, mode: 'date' }), // Set when the exam is paid
+
+	//////////////////////
+	//////////////////////
+	// Results details
+	sample: text(),
+	observation: text() // Optional observation by the lab
+	// results: jsonb(), // (Other table) - Added when uploading the results
 });
 
 // Exam relations declarations
-export const examRelations = relations(exam, ({ one }) => ({
+export const examRelations = relations(exam, ({ one, many }) => ({
 	patient: one(patient, {
 		fields: [exam.patientId],
 		references: [patient.id]
@@ -255,5 +308,6 @@ export const examRelations = relations(exam, ({ one }) => ({
 	examType: one(examType, {
 		fields: [exam.examTypeId],
 		references: [examType.id]
-	})
+	}),
+	results: many(examResult)
 }));

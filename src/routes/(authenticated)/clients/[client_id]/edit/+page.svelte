@@ -3,13 +3,13 @@
 	import { fade } from 'svelte/transition';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import Input from '$lib/components/Input.svelte';
-	import { cleanEditPatientData, formatCapital } from '$lib/shared/utils.js';
+	import { cleanEditPatientData } from '$lib/shared/utils.js';
 	import Select from '$lib/components/Select.svelte';
-	import { PatientGender } from '$lib/shared/enums.js';
 	import Button from '$lib/components/Button.svelte';
 	import CloseNavigationGuard from '$lib/components/modal/CloseNavigationGuard.svelte';
 	import { isEqual } from 'lodash-es';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
+	import { patientGenderItems } from '$lib/client/enumItems.js';
 
 	let { data } = $props();
 
@@ -108,10 +108,7 @@
 							bind:value={$form.gender}
 							name="gender"
 							id="select-gender"
-							items={Object.values(PatientGender).map((role_) => ({
-								value: role_,
-								label: formatCapital(role_ === PatientGender.Female ? 'Mujer' : 'Hombre')
-							}))}
+							items={patientGenderItems}
 							required
 							placeholder="Selecciona género"
 							class="w-1/3"

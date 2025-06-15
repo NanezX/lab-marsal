@@ -1,6 +1,6 @@
 import type { Dictionary } from 'lodash';
 import { chain, sortBy } from 'lodash-es';
-import type { ExamTypeWithParameters, Patient } from './types';
+import type { ExamTypeWithParameters, FindExamData, Patient } from './types';
 
 export function isObject(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -87,6 +87,37 @@ export function cleanEditPatientData(
 		phoneNumber: data.phoneNumber ?? undefined,
 		gender: data.gender
 	};
+}
+
+export function cleanEditExamDetails(data: FindExamData) {
+	return {
+		examId: data.id,
+		customTag: data.customTag,
+		priority: data.priority,
+		status: data.status
+	};
+}
+
+export function cleanEditExamPayment(data: FindExamData) {
+	return {
+		examId: data.id,
+		paid: data.paid,
+		paymentMethod: data.paymentMethod ?? undefined,
+		pricePaid: toNumberOrUndefined(data.pricePaid),
+		paymentRef: data.paymentRef ?? undefined
+	};
+}
+
+// Convert string | null to number | undefined
+export function toNumberOrUndefined(value: string | null): number | undefined {
+	if (value === null) return undefined;
+	const num = Number(value);
+	return isNaN(num) ? undefined : num;
+}
+
+// Convert number | undefined to string | null (for database/storage)
+export function toStringOrNull(value: number | undefined): string | null {
+	return value?.toString() ?? null;
 }
 
 /**
