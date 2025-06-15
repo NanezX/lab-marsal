@@ -1,4 +1,4 @@
-import { ExamPriority, PatientGender, UserRoles, ExamStatus } from '../shared/enums';
+import { ExamPriority, PatientGender, UserRoles, ExamStatus, PaymentMethod } from '../shared/enums';
 import { formatCapital } from '../shared/utils';
 
 /**
@@ -52,3 +52,16 @@ export const examPaidItems = [
 	},
 	{ value: true, label: 'Pagado' }
 ];
+
+const paymentMethodLabels: Record<PaymentMethod, string> = {
+	[PaymentMethod.PuntoDeVenta]: 'Punto de Venta',
+	[PaymentMethod.PagoMovil]: 'Pago Móvil',
+	[PaymentMethod.EfectivoBolivares]: 'Efectivo (Bs)',
+	[PaymentMethod.EfectivoDolares]: 'Efectivo ($)',
+	[PaymentMethod.Otro]: 'Otro método'
+};
+
+export const examPaymentMethodItems = Object.values(PaymentMethod).map((method) => ({
+	value: method,
+	label: paymentMethodLabels[method]
+}));
