@@ -150,15 +150,23 @@
 								required
 								placeholder="Seleccionar método de pago"
 							/>
+
+							{#if $errors.paymentMethod}
+								<span class="text-sm text-red-500">
+									{$errors.paymentMethod}
+								</span>
+							{/if}
 						</div>
 					</div>
+
+					<button type="button" onclick={() => console.log('$form: ', $form)}>aveeeeeeer</button>
 
 					<div class="flex gap-x-8">
 						<Input
 							bind:value={
 								() =>
 									$form.pricePaid === 0 || $form.pricePaid === undefined ? '' : $form.pricePaid,
-								(v) => ($form.pricePaid = v === '' ? undefined : v)
+								(v) => ($form.pricePaid = v === '' ? undefined : Number(v))
 							}
 							name="pricePaid"
 							label="Precio pagado"
@@ -176,7 +184,7 @@
 							placeholder="Referencia de pago"
 							title="Referencia de pago"
 							wrapperClass="w-2/5"
-							error={$errors.pricePaid}
+							error={$errors.paymentRef}
 						/>
 					</div>
 				</div>
