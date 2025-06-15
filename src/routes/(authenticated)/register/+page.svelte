@@ -7,9 +7,8 @@
 	import { superForm } from 'sveltekit-superforms';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import Select from '$lib/components/Select.svelte';
-	import { UserRoles } from '$lib/shared/enums.js';
 	import Checkbox from '$lib/components/Checkbox.svelte';
-	import { formatCapital, maxDocumentId, minDocumentId } from '$lib/shared/utils.js';
+	import {  maxDocumentId, minDocumentId } from '$lib/shared/utils.js';
 	import { userRolesItems } from '$lib/client/enumItems.js';
 
 	let { data } = $props();

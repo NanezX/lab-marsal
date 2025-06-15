@@ -16,7 +16,6 @@
 		ListTree,
 		Link as LinkIcon,
 		Label,
-		TestPipe2,
 		TruckDelivery,
 		Wallet,
 		CodeDots,

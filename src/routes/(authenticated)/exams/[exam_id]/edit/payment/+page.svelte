@@ -24,10 +24,7 @@
 	import {
 		examPaidItems,
 		examPaymentMethodItems,
-		examStatusItems,
-		priorityItems
 	} from '$lib/client/enumItems.js';
-	import { ConsoleLogWriter } from 'drizzle-orm';
 
 	let { data } = $props();
 
@@ -37,7 +34,6 @@
 	const {
 		form,
 		errors,
-		constraints,
 		enhance,
 		submit: submitChanges
 	} = superForm(editExamPaymentForm, {
