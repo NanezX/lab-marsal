@@ -1,4 +1,10 @@
-import { UserRoles, ExamPriority, ExamStatus, PatientGender, PaymentMethod } from '../../shared/enums';
+import {
+	UserRoles,
+	ExamPriority,
+	ExamStatus,
+	PatientGender,
+	PaymentMethod
+} from '../../shared/enums';
 import {
 	pgEnum,
 	pgTable,
