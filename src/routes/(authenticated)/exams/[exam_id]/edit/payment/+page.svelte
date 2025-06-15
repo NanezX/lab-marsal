@@ -50,6 +50,20 @@
 	let hasChanges = $derived(!isEqual($form, original));
 	let showConfirmModal = $state(false);
 	let showDiscardModal = $state(false);
+
+	// // Reactive effect to handle payment state changes
+	// $effect(() => {
+	// 	if (!$form.paid) {
+	// 		form.update(($form) => {
+	// 			// Clear payment fields when marking as unpaid
+	// 			$form.paymentMethod = undefined;
+	// 			$form.pricePaid = undefined;
+	// 			$form.paymentRef = '';
+
+	// 			return $form;
+	// 		});
+	// 	}
+	// });
 </script>
 
 <CloseNavigationGuard validator={() => hasChanges} bind:needConfirm={showDiscardModal} />
@@ -165,8 +179,12 @@
 						<Input
 							bind:value={
 								() =>
-									$form.pricePaid === 0 || $form.pricePaid === undefined ? '' : $form.pricePaid,
-								(v) => ($form.pricePaid = v === '' ? undefined : Number(v))
+									$form.pricePaid === 0 || $form.pricePaid === undefined
+										? ''
+										: $form.pricePaid.toString(),
+								(v: string) => {
+									$form.pricePaid = v === '' ? undefined : Number(v.replace(/[^0-9]/g, ''));
+								}
 							}
 							name="pricePaid"
 							label="Precio pagado"
