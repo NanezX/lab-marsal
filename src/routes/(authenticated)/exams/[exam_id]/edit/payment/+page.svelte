@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import Input from '$lib/components/Input.svelte';
-	import { cleanEditExamDetails } from '$lib/shared/utils.js';
+	import { cleanEditExamPayment } from '$lib/shared/utils.js';
 	import Select from '$lib/components/Select.svelte';
 	import { PatientGender } from '$lib/shared/enums.js';
 	import Button from '$lib/components/Button.svelte';
@@ -21,7 +21,7 @@
 		ClockEdit
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
-	import { examStatusItems, priorityItems } from '$lib/client/enumItems.js';
+	import { examPaidItems, examStatusItems, priorityItems } from '$lib/client/enumItems.js';
 	import { ConsoleLogWriter } from 'drizzle-orm';
 
 	let { data } = $props();
@@ -47,7 +47,7 @@
 		}
 	});
 
-	const original = cleanEditExamDetails(examData);
+	const original = cleanEditExamPayment(examData);
 
 	let hasChanges = $derived(!isEqual($form, original));
 	let showConfirmModal = $state(false);
@@ -72,7 +72,7 @@
 	<div class="relative flex justify-center">
 		<BackButton href="/exams/{examData.id}" size="40" />
 
-		<p class="mx-auto text-center text-3xl">Editar detalles de pago del exámen</p>
+		<p class="mx-auto text-center text-3xl">Editar detalles de pago</p>
 	</div>
 
 	<div>
@@ -124,13 +124,40 @@
 			</div>
 
 			<div class="col-span-2">
-				<p class="mb-4 text-center text-2xl">Actualizar detalles</p>
+				<p class="mb-4 text-center text-2xl">Detalles de pago</p>
 
 				<div class="space-y-4">
-					<!-- bind:value={
-							() => ($form.pricePaid === 0 || $form.pricePaid === undefined ? '' : $form.pricePaid),
-							(v) => ($form.pricePaid == undefined ? undefined : v)
-						} -->
+					<div class="flex gap-x-8">
+						<div class="flex w-1/3 flex-col items-start gap-y-1">
+							<label class="ml-2 font-semibold" for="select-priority"> Estado de pago</label>
+
+							<Select
+								bind:value={$form.paid}
+								items={examPaidItems}
+								name="priority"
+								id="select-priority"
+								required
+								placeholder="Seleccionar prioridad"
+							/>
+						</div>
+
+						<!--
+
+						<div class="flex w-1/3 flex-col items-start gap-y-1">
+							<label class="ml-2 font-semibold" for="select-priority"> Estado del exámen </label>
+
+							<Select
+								bind:value={$form.status}
+								items={examStatusItems}
+								name="priority"
+								id="select-priority"
+								required
+								placeholder="Seleccionar prioridad"
+							/>
+						</div>
+                        -->
+					</div>
+
 					<Input
 						bind:value={
 							() => ($form.pricePaid === 0 || $form.pricePaid === undefined ? '' : $form.pricePaid),
@@ -144,14 +171,7 @@
 						error={$errors.pricePaid}
 					/>
 
-					<p>{$form.pricePaid}</p>
-
-					<button
-						type="button"
-						onclick={() => {
-							console.log('$form: ', $form);
-						}}>paver</button
-					>
+					<!-- aaa -->
 
 					<!-- <div class="flex gap-x-8">
 						<div class="flex w-1/3 flex-col items-start gap-y-1">
