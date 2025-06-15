@@ -244,12 +244,12 @@ export const editExamPaymentSchema = z.object({
 	 * When `paid` is set to `true`, the field `paidAt` should be assigned
 	 */
 	paid: z.boolean().default(false),
+	paymentMethod: z
+		.nativeEnum(PaymentMethod, { errorMap: () => ({ message: 'Método de pago no válido' }) })
+		.optional(),
 	pricePaid: z
 		.number({ message: 'Debe ser un número válido' })
 		.nonnegative('Debe ser un número positivo')
-		.optional(),
-	paymentMethod: z
-		.nativeEnum(PaymentMethod, { errorMap: () => ({ message: 'Método de pago no válido' }) })
 		.optional(),
 	paymentRef: z.string().optional()
 });
