@@ -50,20 +50,6 @@
 	let hasChanges = $derived(!isEqual($form, original));
 	let showConfirmModal = $state(false);
 	let showDiscardModal = $state(false);
-
-	// // Reactive effect to handle payment state changes
-	// $effect(() => {
-	// 	if (!$form.paid) {
-	// 		form.update(($form) => {
-	// 			// Clear payment fields when marking as unpaid
-	// 			$form.paymentMethod = undefined;
-	// 			$form.pricePaid = undefined;
-	// 			$form.paymentRef = '';
-
-	// 			return $form;
-	// 		});
-	// 	}
-	// });
 </script>
 
 <CloseNavigationGuard validator={() => hasChanges} bind:needConfirm={showDiscardModal} />
@@ -144,7 +130,17 @@
 							<label class="ml-2 font-semibold" for="select-priority"> Estado de pago</label>
 
 							<Select
-								bind:value={$form.paid}
+								bind:value={
+									() => $form.paid,
+									(v) => {
+										$form.paid = v;
+										if (!v) {
+											$form.paymentMethod = undefined;
+											$form.pricePaid = undefined;
+											$form.paymentRef = '';
+										}
+									}
+								}
 								items={examPaidItems}
 								name="paid"
 								id="select-paid"
@@ -163,6 +159,7 @@
 								id="select-paymentMethod"
 								required
 								placeholder="Seleccionar método de pago"
+								disabled={!$form.paid}
 							/>
 
 							{#if $errors.paymentMethod}
@@ -172,8 +169,6 @@
 							{/if}
 						</div>
 					</div>
-
-					<button type="button" onclick={() => console.log('$form: ', $form)}>aveeeeeeer</button>
 
 					<div class="flex gap-x-8">
 						<Input
@@ -192,6 +187,7 @@
 							title="Precio pagado"
 							wrapperClass="w-2/5"
 							error={$errors.pricePaid}
+							disabled={!$form.paid}
 						/>
 						<Input
 							bind:value={
@@ -203,6 +199,7 @@
 							title="Referencia de pago"
 							wrapperClass="w-2/5"
 							error={$errors.paymentRef}
+							disabled={!$form.paid}
 						/>
 					</div>
 				</div>
