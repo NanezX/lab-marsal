@@ -8,7 +8,7 @@
 	import Spinner from '$lib/components/Spinner.svelte';
 	import Select from '$lib/components/Select.svelte';
 	import Checkbox from '$lib/components/Checkbox.svelte';
-	import {  maxDocumentId, minDocumentId } from '$lib/shared/utils.js';
+	import { maxDocumentId, minDocumentId } from '$lib/shared/utils.js';
 	import { userRolesItems } from '$lib/client/enumItems.js';
 
 	let { data } = $props();

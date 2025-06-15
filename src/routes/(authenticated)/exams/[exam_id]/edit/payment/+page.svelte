@@ -21,10 +21,7 @@
 		ClockEdit
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
-	import {
-		examPaidItems,
-		examPaymentMethodItems,
-	} from '$lib/client/enumItems.js';
+	import { examPaidItems, examPaymentMethodItems } from '$lib/client/enumItems.js';
 
 	let { data } = $props();
 
