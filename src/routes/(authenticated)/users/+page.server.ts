@@ -3,8 +3,12 @@ import { user as userTable } from '$lib/server/db/schema';
 import { UserDeleteSchema } from '$lib/server/utils/zod';
 import { normalized } from '$lib/shared/utils.js';
 import { and, or, ilike, eq, count, asc, desc, sql, type SQL } from 'drizzle-orm';
-import { superValidate } from 'sveltekit-superforms';
+import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
+import { failFormResponse } from '$lib/server/utils/failFormResponse';
+import { updateUserById } from '$lib/server/utils/dbUpdates.js';
+import { redirect } from 'sveltekit-flash-message/server';
+import type { Actions } from './$types.js';
 
 export const load = async ({ url }) => {
 	let limit = Number(url.searchParams.get('limit') || 12);
@@ -111,4 +115,52 @@ export const load = async ({ url }) => {
 		usersData,
 		countTotal: countTotal[0].count
 	};
+};
+
+export const actions: Actions = {
+	delete: async (event) => {
+		const request = event.request;
+		const form = await superValidate(request, zod(UserDeleteSchema));
+
+		if (!form.valid) {
+			console.error(JSON.stringify(form.errors, null, 2));
+			// Again, return { form } and things will just work.
+			return failForms(400, { form });
+		}
+
+		const { id: userId } = form.data;
+
+		// Check if there is an user with this ID
+		const foundUser = await db.query.user.findFirst({
+			where: (userTable, { eq }) => eq(userTable.id, userId),
+			columns: {
+				id: true
+			}
+		});
+
+		if (foundUser === undefined) {
+			return failFormResponse(form, 'Usuario no encontrado', event.cookies, 409);
+		}
+
+		// updateUserById;
+		try {
+			// Soft deleting the exam
+			await updateUserById(userId, { deleted: true });
+		} catch (e) {
+			const errMsg = 'No se eliminó el usuario';
+
+			if (e instanceof Error) {
+				// Print the error type
+				console.error('Unknown error');
+			}
+
+			// Print the error
+			console.error(e);
+
+			return failFormResponse(form, errMsg, event.cookies, 500);
+		}
+
+		// Redirect outside of the try/catch block to the exams page with a success message
+		redirect('/users', { type: 'success', message: 'Eliminado correctamente' }, event.cookies);
+	}
 };
