@@ -16,19 +16,20 @@
 		ListTree,
 		Link as LinkIcon,
 		Label,
-		TestPipe2,
 		TruckDelivery,
 		Wallet,
 		CodeDots,
 		DeviceMobileCog,
 		Moneybag,
 		ClockPlus,
-		ClockEdit
+		ClockEdit,
+		Edit,
+		Progress
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import ExamStatus from '$lib/components/ExamStatus.svelte';
-	import { ExamStatus as ExamStatusEnum } from '$lib/shared/enums';
+	import { paymentMethodLabels } from '$lib/client';
 
 	// TODO: Verify AND check what roles can remove/delete an exam (maybe just block the page to those user in the backend)
 
@@ -69,12 +70,6 @@
 		<p class="mx-auto my-0 text-center text-3xl">{examTypeData.name}</p>
 
 		<div>
-			<Link
-				href="/exams/{examData.id}/edit"
-				title="Crear nuevo exámen"
-				class="!bg-green-400 hover:!bg-green-500">Editar</Link
-			>
-
 			<Button
 				type="button"
 				onclick={() => (showConfirmDeleteModal = !showConfirmDeleteModal)}
@@ -105,6 +100,16 @@
 						value={examTypeData.classification.name}
 						icon={ListTree}
 					/>
+
+					<LabelValue label="Creado" value={examData.createdAt.toLocaleString()} icon={ClockPlus} />
+
+					{#if examData.createdAt.getTime() !== examData.updatedAt.getTime()}
+						<LabelValue
+							label="Último cambio"
+							value={examData.updatedAt.toLocaleString()}
+							icon={ClockEdit}
+						/>
+					{/if}
 				</div>
 			</div>
 
@@ -145,50 +150,62 @@
 					<div
 						class="flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
 					>
-						<p class="mx-auto w-1/2 border-b border-b-gray-300 text-center text-xl font-semibold">
-							Detalles
+						<p
+							class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
+						>
+							<span> Detalles </span>
+
+							<Link
+								href="/exams/{examData.id}/edit/details"
+								linkClass="flex mt-1"
+								class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
+							>
+								<Icon
+									src={Edit}
+									size="24"
+									title="Editar detalles del exámen"
+									theme="filled"
+									class="text-green-500"
+								/>
+							</Link>
 						</p>
 
-						<LabelValue label="Estado">
+						<LabelValue label="Estado" icon={Progress}>
 							{#snippet children()}
-								<ExamStatus status={examData.status} priority={examData.priority} minimal={true} />
+								<ExamStatus status={examData.status} priority={examData.priority} minimal />
 							{/snippet}
 						</LabelValue>
 
 						<LabelValue label="Identificador" value={examData.customTag} icon={Label} />
 
-						<LabelValue label="Muestra" value={examData.sample ?? 'No aplica'} icon={TestPipe2} />
-
-						{#if examData.status == ExamStatusEnum.Completed}
-							<LabelValue
-								label="Entregado"
-								value={examData.deliveredAt
-									? examData.deliveredAt.toLocaleString()
-									: 'No entregado'}
-								icon={TruckDelivery}
-							/>
-						{/if}
-
 						<LabelValue
-							label="Creado"
-							value={examData.createdAt.toLocaleString()}
-							icon={ClockPlus}
+							label="Entregado"
+							value={examData.deliveredAt ? examData.deliveredAt.toLocaleString() : 'No entregado'}
+							icon={TruckDelivery}
 						/>
-
-						{#if examData.createdAt.getTime() !== examData.updatedAt.getTime()}
-							<LabelValue
-								label="Último cambio"
-								value={examData.updatedAt.toLocaleString()}
-								icon={ClockEdit}
-							/>
-						{/if}
 					</div>
 
 					<div
 						class="flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
 					>
-						<p class="mx-auto w-1/2 border-b border-b-gray-300 text-center text-xl font-semibold">
-							Pago
+						<p
+							class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
+						>
+							<span> Pago </span>
+
+							<Link
+								href="/exams/{examData.id}/edit/payment"
+								linkClass="flex mt-1"
+								class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
+							>
+								<Icon
+									src={Edit}
+									size="24"
+									title="Editar detalles del pago"
+									theme="filled"
+									class="text-green-500"
+								/>
+							</Link>
 						</p>
 
 						<LabelValue
@@ -198,6 +215,18 @@
 							icon={Wallet}
 						/>
 
+						<!-- value={examData.paid && examData.paymentMethod ? examData.paymentMethod : 'N/A'} -->
+						<LabelValue
+							label="Método de pago"
+							value={examData.paid && examData.paymentMethod
+								? paymentMethodLabels[examData.paymentMethod]
+								: 'N/A'}
+							title={examData.paid && examData.paymentMethod
+								? 'Método de pago'
+								: 'El exámen no ha sido pagado'}
+							icon={DeviceMobileCog}
+						/>
+
 						<LabelValue
 							label="Monto pagado"
 							value={examData.paid && examData.pricePaid ? examData.pricePaid : 'N/A'}
@@ -205,15 +234,6 @@
 								? 'Monto final cancelado por el exámen'
 								: 'El exámen no ha sido pagado'}
 							icon={Moneybag}
-						/>
-
-						<LabelValue
-							label="Método de pago"
-							value={examData.paid && examData.paymentMethod ? examData.paymentMethod : 'N/A'}
-							title={examData.paid && examData.paymentMethod
-								? 'Método de pago'
-								: 'El exámen no ha sido pagado'}
-							icon={DeviceMobileCog}
 						/>
 
 						{#if examData.paid && examData.paymentRef}
@@ -228,11 +248,35 @@
 				</div>
 			</div>
 
-			<!-- TODO: Design a bit how to show the specific description. If not description write, show N/A with some background -->
-			<p>Descripción</p>
-
 			<!-- TODO: Design a bit how to show the results. If not saved yet, show some emtpy card -->
-			<p>RESULTADOS</p>
+			<!-- TODO: Design a bit how to show the specific observation. If not observation write, show N/A with some background
+			 The description will be inside the results table -->
+
+			<div
+				class="col-span-2 flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
+			>
+				<p
+					class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
+				>
+					<span> Resultados </span>
+
+					<Link
+						href="/exams/{examData.id}/edit/results"
+						linkClass="flex mt-1"
+						class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
+					>
+						<Icon
+							src={Edit}
+							size="24"
+							title="Editar detalles del exámen"
+							theme="filled"
+							class="text-green-500"
+						/>
+					</Link>
+				</p>
+			</div>
+
+			<p>MOSTRAR: RESULTADOS</p>
 		</div>
 	</div>
 </div>

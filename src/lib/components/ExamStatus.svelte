@@ -1,7 +1,14 @@
 <script lang="ts">
 	import { ExamStatus, ExamPriority } from '$lib/shared/enums';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { Cancel, CircleCheck, CircleChevronsUp, CircleMinus } from '@steeze-ui/tabler-icons';
+	import {
+		Cancel,
+		CircleCheck,
+		CircleChevronsUp,
+		CircleChevronUp,
+		CircleMinus,
+		CubeSend
+	} from '@steeze-ui/tabler-icons';
 	import type { ClassValue } from 'svelte/elements';
 
 	type PropType = {
@@ -14,9 +21,10 @@
 	let { status, priority, minimal = true, class: className }: PropType = $props();
 
 	const statusLabel = {
-		[ExamStatus.Active]: 'En proceso',
-		[ExamStatus.Completed]: 'Completado',
-		[ExamStatus.Cancelled]: 'Cancelado'
+		[ExamStatus.Cancelled]: 'Cancelado',
+		[ExamStatus.Pending]: 'En proceso',
+		[ExamStatus.Ready]: 'Listo para entrega',
+		[ExamStatus.Completed]: 'Completado'
 	}[status];
 
 	const priorityLabel = {
@@ -26,21 +34,37 @@
 	}[priority];
 
 	const statusIcon = {
-		[ExamStatus.Active]: priority === ExamPriority.High ? CircleChevronsUp : CircleMinus,
-		[ExamStatus.Completed]: CircleCheck,
-		[ExamStatus.Cancelled]: Cancel
+		[ExamStatus.Cancelled]: Cancel,
+		[ExamStatus.Pending]:
+			priority === ExamPriority.High
+				? CircleChevronsUp
+				: priority === ExamPriority.Normal
+					? CircleChevronUp
+					: CircleMinus,
+		[ExamStatus.Ready]: CubeSend,
+		[ExamStatus.Completed]: CircleCheck
 	}[status];
 
-	const statusColor =
-		status === ExamStatus.Active
-			? priority === ExamPriority.High
-				? 'text-red-500'
-				: priority === ExamPriority.Normal
-					? 'text-blue-500'
-					: 'text-yellow-500'
-			: status === ExamStatus.Completed
-				? 'text-green-500'
-				: 'text-red-600';
+	const statusColorMap: Record<ExamStatus, (priority?: ExamPriority) => string> = {
+		[ExamStatus.Pending]: (priority) => {
+			switch (priority) {
+				case ExamPriority.High:
+					return 'text-red-500';
+				case ExamPriority.Normal:
+					return 'text-blue-500';
+				case ExamPriority.Low:
+					return 'text-yellow-500';
+				default:
+					return 'text-blue-500';
+			}
+		},
+		[ExamStatus.Completed]: () => 'text-green-500',
+		[ExamStatus.Ready]: () => 'text-emerald-500',
+		[ExamStatus.Cancelled]: () => 'text-red-600'
+	};
+
+	// Usage
+	const statusColor = statusColorMap[status](priority);
 </script>
 
 {#if minimal}
