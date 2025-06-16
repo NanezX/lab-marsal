@@ -25,9 +25,9 @@
 
 	const {
 		enhance,
-		submit: submitDelete,
+		submit: submitForm,
 		form
-	} = superForm(data.deleteUserForm, {
+	} = superForm(data.userStatusForm, {
 		dataType: 'json',
 		delayMs: 0,
 		applyAction: true
@@ -54,12 +54,12 @@
 <ConfirmModal
 	bind:showModal={showConfirmDeleteModal}
 	title="Eliminar usuario"
-	text="¿Estás seguro de eliminar este usuario?"
+	text="¿Estás seguro de eliminar este usuario? Perdera todo el acceso al sistema"
 	saveButtonText="Eliminar"
 	cancelButtonText="Cancelar"
 	onClose={() => ($form.id = '')}
 	onSave={() => {
-		submitDelete();
+		submitForm();
 		$form.id = '';
 		return true;
 	}}
@@ -174,10 +174,10 @@
 										<DropdownItem
 											title="Activar usuario"
 											class="flex cursor-pointer items-center gap-x-0.5"
-											type="submit"
 											onclick={() => {
-												// $form.id = user.id;
-												// showConfirmDeleteModal = true;
+												$form.id = user.id;
+												submitForm();
+												$form.id = '';
 											}}
 										>
 											<span>
