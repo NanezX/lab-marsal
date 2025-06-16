@@ -75,7 +75,7 @@
 			placeholder="Buscar por nombre o cédula"
 			wrapperClass="w-full min-w-1/10 mt-5"
 			debounceTime={500}
-			debounceCallback={() => {}}
+			debounceCallback={() => getUsers()}
 		/>
 
 		<div class="flex w-fit flex-col items-start justify-center gap-x-2">
@@ -202,6 +202,12 @@
 										</DropdownItem>
 									{/if}
 								</Dropdown>
+							</td>
+						</tr>
+					{:else}
+						<tr>
+							<td colspan="6" class="py-4 text-center text-lg font-semibold text-gray-500">
+								No se encontraron resultados
 							</td>
 						</tr>
 					{/each}
