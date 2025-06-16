@@ -161,7 +161,51 @@ export const actions: Actions = {
 			return failFormResponse(form, errMsg, event.cookies, 500);
 		}
 
-		// Redirect outside of the try/catch block to the exams page with a success message
+		// Redirect outside of the try/catch block to the users page with a success message
 		redirect('/users', { type: 'success', message: 'Eliminado correctamente' }, event.cookies);
+	},
+	activate: async (event) => {
+		const request = event.request;
+		const form = await superValidate(request, zod(UserDeleteSchema));
+
+		if (!form.valid) {
+			console.error(JSON.stringify(form.errors, null, 2));
+			// Again, return { form } and things will just work.
+			return failForms(400, { form });
+		}
+
+		const { id: userId } = form.data;
+
+		// Check if there is an user with this ID
+		const foundUser = await db.query.user.findFirst({
+			where: (userTable, { eq }) => eq(userTable.id, userId),
+			columns: {
+				id: true
+			}
+		});
+
+		if (foundUser === undefined) {
+			return failFormResponse(form, 'Usuario no encontrado', event.cookies, 409);
+		}
+
+		try {
+			// Soft activating the exam
+			await updateUserById(userId, { deleted: false });
+		} catch (e) {
+			const errMsg = 'No se activo el usuario';
+
+			if (e instanceof Error) {
+				// Print the error type
+				console.error('Unknown error');
+			}
+
+			// Print the error
+			console.error(e);
+
+			return failFormResponse(form, errMsg, event.cookies, 500);
+		}
+
+		// Redirect outside of the try/catch block to the users page with a success message
+		redirect('/users', { type: 'success', message: 'Activado correctamente' }, event.cookies);
 	}
 };
