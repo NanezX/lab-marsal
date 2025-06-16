@@ -28,30 +28,35 @@ export const load = async ({ url }) => {
 			whereClauses.push(eq(userTable.deleted, false));
 		}
 
-		// Unified search logic
+		// Unified search logic (name, document ID, or email)
 		if (searchText) {
 			const normalizedSearch = normalized(searchText).replace(/\s+/g, ' ').trim();
 
+			const searchConditions: SQL<unknown>[] = [];
+
 			if (/^\d+$/.test(normalizedSearch)) {
 				// Search by document ID
-				whereClauses.push(
+				searchConditions.push(
 					ilike(sql`CAST(${userTable.documentId} AS TEXT)`, `${normalizedSearch}%`)
 				);
 			} else {
-				// Match full name in both directions
-				whereClauses.push(
-					or(
-						ilike(
-							sql`(${userTable.firstNameNormalized} || ' ' || ${userTable.lastNameNormalized})`,
-							`%${normalizedSearch}%`
-						),
-						ilike(
-							sql`(${userTable.lastNameNormalized} || ' ' || ${userTable.firstNameNormalized})`,
-							`%${normalizedSearch}%`
-						)
-					) as SQL<unknown> // Type assertion to avoid type errors (weird inference issue)
+				// Match full name (both directions)
+				searchConditions.push(
+					ilike(
+						sql`(${userTable.firstNameNormalized} || ' ' || ${userTable.lastNameNormalized})`,
+						`%${normalizedSearch}%`
+					),
+					ilike(
+						sql`(${userTable.lastNameNormalized} || ' ' || ${userTable.firstNameNormalized})`,
+						`%${normalizedSearch}%`
+					)
 				);
 			}
+
+			// Always add email match regardless of numeric
+			searchConditions.push(ilike(userTable.email, `%${normalizedSearch}%`));
+
+			whereClauses.push(or(...searchConditions));
 		}
 
 		const where = and(...whereClauses);
