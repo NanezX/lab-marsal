@@ -52,7 +52,7 @@ export const UserRegisterSchema = UserLoginSchema.extend({
 	path: ['repeatPassword']
 });
 
-export const UserDeleteSchema = z.object({
+export const UserStatusSchema = z.object({
 	id: z.string().refine(uuidRefine, 'ID del usuario no válido')
 });
 
