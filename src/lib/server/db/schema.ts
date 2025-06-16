@@ -22,8 +22,6 @@ import {
 import { relations, type SQL, sql } from 'drizzle-orm';
 import { generateRandomUUID } from './uuid';
 
-// TODO: Check on https://orm.drizzle.team/docs/column-types/pg#jsonb for type inference for jsonb columns on database
-
 // PostgreSQL Enum for User roles
 export const userRoleEnum = pgEnum('user_role', [
 	UserRoles.Admin,
