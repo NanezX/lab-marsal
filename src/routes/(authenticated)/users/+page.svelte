@@ -15,9 +15,22 @@
 		UserPlus
 	} from '@steeze-ui/tabler-icons';
 	import { fade } from 'svelte/transition';
+	import { superForm } from 'sveltekit-superforms';
 	import { Button as DropdownButton, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import { removeStyleButton } from '$lib/client/customClasses.js';
+	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
+
 	let { data } = $props();
+
+	const {
+		enhance,
+		submit: submitDelete,
+		form
+	} = superForm(data.deleteUserForm, {
+		dataType: 'json',
+		delayMs: 0,
+		applyAction: true
+	});
 
 	const orderByOptions = [
 		{ value: 'fullName', label: 'Nombre' },
@@ -33,7 +46,23 @@
 			keepFocus: true
 		});
 	}
+
+	let showConfirmDeleteModal = $state(false);
 </script>
+
+<ConfirmModal
+	bind:showModal={showConfirmDeleteModal}
+	title="Eliminar usuario"
+	text="¿Estás seguro de eliminar este usuario?"
+	saveButtonText="Eliminar"
+	cancelButtonText="Cancelar"
+	onClose={() => ($form.id = '')}
+	onSave={() => {
+		submitDelete();
+		$form.id = '';
+		return true;
+	}}
+/>
 
 <div in:fade class="flex w-full flex-col gap-y-8">
 	<p class="text-center text-3xl">Gestión de usuarios</p>
@@ -112,41 +141,45 @@
 							<td class="py-2 text-green-600">Activo</td>
 
 							<td class="flex h-full items-stretch justify-center py-2">
-								<form action="">
-									<DropdownButton
-										class={`${removeStyleButton} !flex h-full w-full items-center justify-center `}
-									>
-										<Icon
-											src={DotsCircleHorizontal}
-											title="Opciones"
-											size="18"
-											class="hover:text-primary-blue mx-auto cursor-pointer text-black"
-										/>
-									</DropdownButton>
+								<input type="hidden" name="id" value={user.id} />
+								<DropdownButton
+									class={`${removeStyleButton} !flex h-full w-full items-center justify-center `}
+								>
+									<Icon
+										src={DotsCircleHorizontal}
+										title="Opciones"
+										size="18"
+										class="hover:text-primary-blue mx-auto cursor-pointer text-black"
+									/>
+								</DropdownButton>
 
-									<Dropdown simple>
-										<DropdownItem
-											title="Editar usuario"
-											class="flex cursor-pointer items-center gap-x-0.5"
-											onclick={() => alert(`Editar "${user.firstName} ${user.lastName}"`)}
-										>
-											<span>
-												<Icon src={Pencil} size="18" class="text-green-500" />
-											</span>
-											<span>Editar</span>
-										</DropdownItem>
-										<DropdownItem
-											title="Eliminar usuario"
-											class="flex cursor-pointer items-center gap-x-0.5"
-											onclick={() => alert('Eliminar')}
-										>
-											<span>
-												<Icon src={Trash} size="18" class="text-red-500" />
-											</span>
-											<span>Eliminar</span>
-										</DropdownItem>
-									</Dropdown>
-								</form>
+								<Dropdown simple>
+									<DropdownItem
+										title="Editar usuario"
+										class="flex cursor-pointer items-center gap-x-0.5"
+										onclick={() => alert(`Editar "${user.firstName} ${user.lastName}"`)}
+									>
+										<span>
+											<Icon src={Pencil} size="18" class="text-green-500" />
+										</span>
+										<span>Editar</span>
+									</DropdownItem>
+
+									<form use:enhance method="POST" action="?/delete" hidden></form>
+									<DropdownItem
+										title="Eliminar usuario"
+										class="flex cursor-pointer items-center gap-x-0.5"
+										onclick={() => {
+											$form.id = user.id;
+											showConfirmDeleteModal = true;
+										}}
+									>
+										<span>
+											<Icon src={Trash} size="18" class="text-red-500" />
+										</span>
+										<span>Eliminar</span>
+									</DropdownItem>
+								</Dropdown>
 							</td>
 						</tr>
 					{/each}
