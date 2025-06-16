@@ -19,7 +19,8 @@ export const load = async ({ url }) => {
 	const order = url.searchParams.get('orderBy') || 'fullName'; // 'documentId' or 'fullName' or 'email'
 	const direction = url.searchParams.get('orderDirection') || 'asc'; // 'asc' or 'desc'
 
-	const deletedFilter = url.searchParams.get('deleted'); // 'deleted', 'all', or null
+	// TODO: When the UI have the filtering for this option, the default should be null
+	const deletedFilter = url.searchParams.get('deleted') || 'all'; // 'deleted', 'all', or null
 	// deletedFilter: undefined (default) -> only non-deleted
 	// deletedFilter: 'deleted' -> only deleted
 	// deletedFilter: 'all' -> no filter
@@ -85,7 +86,7 @@ export const load = async ({ url }) => {
 			orderExpr = direction === 'desc' ? desc(userTable.email) : asc(userTable.email);
 		}
 
-		const patientQuery = tx
+		const usersQuery = tx
 			.select({
 				id: userTable.id,
 				firstName: userTable.firstName,
@@ -103,7 +104,7 @@ export const load = async ({ url }) => {
 
 		return {
 			count: await countTotalQuery,
-			data: await patientQuery
+			data: await usersQuery
 		};
 	});
 
