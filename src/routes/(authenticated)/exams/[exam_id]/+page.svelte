@@ -29,6 +29,7 @@
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import ExamStatus from '$lib/components/ExamStatus.svelte';
+	import { paymentMethodLabels } from '$lib/client';
 
 	// TODO: Verify AND check what roles can remove/delete an exam (maybe just block the page to those user in the backend)
 
@@ -214,6 +215,16 @@
 							icon={Wallet}
 						/>
 
+						<!-- value={examData.paid && examData.paymentMethod ? examData.paymentMethod : 'N/A'} -->
+						<LabelValue
+							label="Método de pago"
+							value={examData.paid && examData.paymentMethod ? paymentMethodLabels[examData.paymentMethod] : 'N/A'}
+							title={examData.paid && examData.paymentMethod
+								? 'Método de pago'
+								: 'El exámen no ha sido pagado'}
+							icon={DeviceMobileCog}
+						/>
+
 						<LabelValue
 							label="Monto pagado"
 							value={examData.paid && examData.pricePaid ? examData.pricePaid : 'N/A'}
@@ -221,15 +232,6 @@
 								? 'Monto final cancelado por el exámen'
 								: 'El exámen no ha sido pagado'}
 							icon={Moneybag}
-						/>
-
-						<LabelValue
-							label="Método de pago"
-							value={examData.paid && examData.paymentMethod ? examData.paymentMethod : 'N/A'}
-							title={examData.paid && examData.paymentMethod
-								? 'Método de pago'
-								: 'El exámen no ha sido pagado'}
-							icon={DeviceMobileCog}
 						/>
 
 						{#if examData.paid && examData.paymentRef}

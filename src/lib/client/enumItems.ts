@@ -53,7 +53,7 @@ export const examPaidItems = [
 	{ value: true, label: 'Pagado' }
 ];
 
-const paymentMethodLabels: Record<PaymentMethod | 'unselected', string> = {
+export const paymentMethodLabels: Record<PaymentMethod | 'unselected', string> = {
 	[PaymentMethod.PuntoDeVenta]: 'Punto de Venta',
 	[PaymentMethod.PagoMovil]: 'Pago Móvil',
 	[PaymentMethod.EfectivoBolivares]: 'Efectivo (Bs)',
