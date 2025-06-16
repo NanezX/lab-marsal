@@ -6,9 +6,17 @@
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import Select from '$lib/components/Select.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { Dots, DotsCircleHorizontal, UserPlus } from '@steeze-ui/tabler-icons';
+	import {
+		Dots,
+		DotsCircleHorizontal,
+		Edit,
+		Pencil,
+		Trash,
+		UserPlus
+	} from '@steeze-ui/tabler-icons';
 	import { fade } from 'svelte/transition';
-
+	import { Button as DropdownButton, Dropdown, DropdownItem } from 'flowbite-svelte';
+	import { removeStyleButton } from '$lib/client/customClasses.js';
 	let { data } = $props();
 
 	const orderByOptions = [
@@ -103,13 +111,40 @@
 							<td class="py-2 break-all">{user.email}</td>
 							<td class="py-2 capitalize">{user.role}</td>
 							<td class="py-2 text-green-600">Activo</td>
-							<td class="py-2-600">
-								<Icon
-									src={DotsCircleHorizontal}
-									title="Opciones"
-									size="18"
-									class="hover:text-primary-blue mx-auto cursor-pointer"
-								/>
+
+							<td class="flex h-full items-stretch justify-center py-2">
+								<DropdownButton
+									class={`${removeStyleButton} !flex h-full w-full items-center justify-center `}
+								>
+									<Icon
+										src={DotsCircleHorizontal}
+										title="Opciones"
+										size="18"
+										class="hover:text-primary-blue mx-auto cursor-pointer text-black"
+									/>
+								</DropdownButton>
+
+								<Dropdown simple>
+									<DropdownItem
+										title="Editar usuario"
+										class="flex cursor-pointer items-center gap-x-0.5"
+										onclick={() => alert(`Editar "${user.firstName} ${user.lastName}"`)}
+									>
+										<span>
+											<Icon src={Pencil} size="18" class="text-green-500" />
+										</span>
+										<span>Editar</span>
+									</DropdownItem>
+									<DropdownItem
+										title="Eliminar usuario"
+										class="flex cursor-pointer items-center gap-x-0.5"
+									>
+										<span>
+											<Icon src={Trash} size="18" class="text-red-500" />
+										</span>
+										<span>Eliminar</span>
+									</DropdownItem>
+								</Dropdown>
 							</td>
 						</tr>
 					{/each}
