@@ -60,6 +60,12 @@
 		>
 			{page + 1}
 		</a>
+	{:else}
+		<p
+			class="cursor-default hover:!text-gray-600 hover:!no-underline pointer-events-none opacity-50"
+		>
+			1
+		</p>
 	{/each}
 
 	<!-- Forward -->

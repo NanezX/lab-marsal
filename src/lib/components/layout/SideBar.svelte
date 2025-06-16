@@ -44,7 +44,7 @@
 		{
 			href: '/users',
 			icon: UserEdit,
-			text: 'Gestion de usuarios'
+			text: 'Gestión de usuarios'
 		},
 		{
 			href: '/config',
