@@ -11,6 +11,7 @@
 		DotsCircleHorizontal,
 		Edit,
 		Pencil,
+		PlayerPlay,
 		Trash,
 		UserPlus
 	} from '@steeze-ui/tabler-icons';
@@ -163,25 +164,43 @@
 										onclick={() => alert(`Editar "${user.firstName} ${user.lastName}"`)}
 									>
 										<span>
-											<Icon src={Pencil} size="18" class="text-green-500" />
+											<Icon src={Pencil} size="18" class="text-blue-500" />
 										</span>
 										<span>Editar</span>
 									</DropdownItem>
 
-									<form use:enhance method="POST" action="?/delete" hidden></form>
-									<DropdownItem
-										title="Eliminar usuario"
-										class="flex cursor-pointer items-center gap-x-0.5"
-										onclick={() => {
-											$form.id = user.id;
-											showConfirmDeleteModal = true;
-										}}
-									>
-										<span>
-											<Icon src={Trash} size="18" class="text-red-500" />
-										</span>
-										<span>Desactivar</span>
-									</DropdownItem>
+									{#if user.deleted}
+										<form use:enhance method="POST" action="?/activate" hidden></form>
+										<DropdownItem
+											title="Activar usuario"
+											class="flex cursor-pointer items-center gap-x-0.5"
+											type="submit"
+											onclick={() => {
+												// $form.id = user.id;
+												// showConfirmDeleteModal = true;
+											}}
+										>
+											<span>
+												<Icon src={PlayerPlay} size="18" class="text-green-500" />
+											</span>
+											<span>Activar</span>
+										</DropdownItem>
+									{:else}
+										<form use:enhance method="POST" action="?/delete" hidden></form>
+										<DropdownItem
+											title="Eliminar usuario"
+											class="flex cursor-pointer items-center gap-x-0.5"
+											onclick={() => {
+												$form.id = user.id;
+												showConfirmDeleteModal = true;
+											}}
+										>
+											<span>
+												<Icon src={Trash} size="18" class="text-red-500" />
+											</span>
+											<span>Desactivar</span>
+										</DropdownItem>
+									{/if}
 								</Dropdown>
 							</td>
 						</tr>
