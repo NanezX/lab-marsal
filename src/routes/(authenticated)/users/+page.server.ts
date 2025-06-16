@@ -135,16 +135,31 @@ export const actions: Actions = {
 		const foundUser = await db.query.user.findFirst({
 			where: (userTable, { eq }) => eq(userTable.id, userId),
 			columns: {
-				id: true
+				id: true,
+				role: true,
+				deleted: true
 			}
 		});
 
-		if (foundUser === undefined) {
+		if (foundUser === undefined || foundUser.deleted) {
 			return failFormResponse(form, 'Usuario no encontrado', event.cookies, 409);
 		}
 
-		// TODO:
-		// Check that will be remaining one admin user. We cannot leave the app without an admin user
+		// Check if this is the last active user with their role
+		const isLast = await db.query.user.findFirst({
+			where: (u, { eq, and, ne }) =>
+				and(eq(u.role, foundUser.role), eq(u.deleted, false), ne(u.id, userId)),
+			columns: { id: true }
+		});
+
+		if (!isLast) {
+			return failFormResponse(
+				form,
+				`Debe permanecer al menos un usuario con el rol "${foundUser.role}" activo.`,
+				event.cookies,
+				400
+			);
+		}
 
 		try {
 			// Soft deleting the exam
