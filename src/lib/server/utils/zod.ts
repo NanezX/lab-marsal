@@ -56,6 +56,16 @@ export const UserStatusSchema = z.object({
 	id: z.string().refine(uuidRefine, 'ID del usuario no válido')
 });
 
+export const UserEditSchema = z.object({
+	// userId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
+	role: z.nativeEnum(UserRoles, { errorMap: () => ({ message: 'Rol no valido' }) }),
+	email: z.string().min(1, 'Correo electrónico obligatorio').email('Correo electrónico inválido'),
+	documentId: z
+		.number()
+		.min(minDocumentId, 'Solo números positivos pueden ser cédula')
+		.max(maxDocumentId, 'Número muy grande para ser una cédula')
+});
+
 export const PasswordRecoverySchema = z.object({
 	email: z.string().min(1, 'Correo electrónico obligatorio').email('Correo electrónico inválido')
 });
