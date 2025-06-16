@@ -143,7 +143,9 @@ export const actions: Actions = {
 			return failFormResponse(form, 'Usuario no encontrado', event.cookies, 409);
 		}
 
-		// updateUserById;
+		// TODO:
+		// Check that will be remaining one admin user. We cannot leave the app without an admin user
+
 		try {
 			// Soft deleting the exam
 			await updateUserById(userId, { deleted: true });
