@@ -52,6 +52,10 @@ export const UserRegisterSchema = UserLoginSchema.extend({
 	path: ['repeatPassword']
 });
 
+export const UserDeleteSchema = z.object({
+	id: z.string().refine(uuidRefine, 'ID del usuario no válido')
+});
+
 export const PasswordRecoverySchema = z.object({
 	email: z.string().min(1, 'Correo electrónico obligatorio').email('Correo electrónico inválido')
 });

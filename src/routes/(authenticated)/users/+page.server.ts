@@ -1,7 +1,10 @@
 import { db } from '$lib/server/db';
 import { user as userTable } from '$lib/server/db/schema';
+import { UserDeleteSchema } from '$lib/server/utils/zod';
 import { normalized } from '$lib/shared/utils.js';
 import { and, or, ilike, eq, count, asc, desc, sql, type SQL } from 'drizzle-orm';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 
 export const load = async ({ url }) => {
 	let limit = Number(url.searchParams.get('limit') || 12);
@@ -100,7 +103,11 @@ export const load = async ({ url }) => {
 		};
 	});
 
+	// Create the form
+	const deleteUserForm = await superValidate(zod(UserDeleteSchema));
+
 	return {
+		deleteUserForm,
 		usersData,
 		countTotal: countTotal[0].count
 	};
