@@ -94,7 +94,7 @@ export const load = async ({ url }) => {
 				documentId: userTable.documentId,
 				email: userTable.email,
 				role: userTable.role,
-				createdAt: userTable.createdAt
+				deleted: userTable.deleted
 			})
 			.from(userTable)
 			.where(where)
