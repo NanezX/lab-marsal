@@ -218,7 +218,9 @@
 						<!-- value={examData.paid && examData.paymentMethod ? examData.paymentMethod : 'N/A'} -->
 						<LabelValue
 							label="Método de pago"
-							value={examData.paid && examData.paymentMethod ? paymentMethodLabels[examData.paymentMethod] : 'N/A'}
+							value={examData.paid && examData.paymentMethod
+								? paymentMethodLabels[examData.paymentMethod]
+								: 'N/A'}
 							title={examData.paid && examData.paymentMethod
 								? 'Método de pago'
 								: 'El exámen no ha sido pagado'}
@@ -274,7 +276,7 @@
 				</p>
 			</div>
 
-			<p>RESULTADOS</p>
+			<p>MOSTRAR: RESULTADOS</p>
 		</div>
 	</div>
 </div>
