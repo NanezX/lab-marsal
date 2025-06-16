@@ -6,7 +6,7 @@
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import Select from '$lib/components/Select.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import { UserPlus } from '@steeze-ui/tabler-icons';
+	import { Dots, DotsCircleHorizontal, UserPlus } from '@steeze-ui/tabler-icons';
 	import { fade } from 'svelte/transition';
 
 	let { data } = $props();
@@ -81,10 +81,40 @@
 			}
 		/>
 
-		<div class="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-3">
-			<!--  -->
-			<p class="text-center">CONTENT</p>
-			<!--  -->
+		<!-- <div class="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-3"> -->
+		<div class="mt-4 overflow-x-auto">
+			<table class="w-full table-fixed border-collapse text-sm">
+				<thead>
+					<tr class="text-left font-semibold underline">
+						<th class="w-[25%] py-2">Nombre</th>
+						<th class="w-[16%] py-2">Cédula</th>
+						<th class="w-[35%] py-2">Correo</th>
+						<th class="w-[14%] py-2">Rol</th>
+						<th class="w-[8%] py-2">Estado</th>
+						<th class="w-[12%] py-2"></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					{#each data.usersData as user}
+						<tr class="border-b transition hover:bg-slate-100">
+							<td class="font-medim py-2 break-all">{user.firstName} {user.lastName}</td>
+							<td class="py-2">{user.documentId}</td>
+							<td class="py-2 break-all">{user.email}</td>
+							<td class="py-2 capitalize">{user.role}</td>
+							<td class="py-2 text-green-600">Activo</td>
+							<td class="py-2-600">
+								<Icon
+									src={DotsCircleHorizontal}
+									title="Opciones"
+									size="18"
+									class="hover:text-primary-blue mx-auto cursor-pointer"
+								/>
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
 		</div>
 
 		<!-- Pagination -->
