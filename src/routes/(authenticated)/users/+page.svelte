@@ -7,9 +7,7 @@
 	import Select from '$lib/components/Select.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import {
-		Dots,
 		DotsCircleHorizontal,
-		Edit,
 		Pencil,
 		PlayerPlay,
 		Trash,
