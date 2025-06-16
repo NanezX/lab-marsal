@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { user as userTable } from '$lib/server/db/schema';
-import { UserDeleteSchema } from '$lib/server/utils/zod';
+import { UserStatusSchema } from '$lib/server/utils/zod';
 import { normalized } from '$lib/shared/utils.js';
 import { and, or, ilike, eq, count, asc, desc, sql, type SQL } from 'drizzle-orm';
 import { superValidate, fail as failForms } from 'sveltekit-superforms';
@@ -109,10 +109,10 @@ export const load = async ({ url }) => {
 	});
 
 	// Create the form
-	const deleteUserForm = await superValidate(zod(UserDeleteSchema));
+	const userStatusForm = await superValidate(zod(UserStatusSchema));
 
 	return {
-		deleteUserForm,
+		userStatusForm,
 		usersData,
 		countTotal: countTotal[0].count
 	};
@@ -121,7 +121,7 @@ export const load = async ({ url }) => {
 export const actions: Actions = {
 	delete: async (event) => {
 		const request = event.request;
-		const form = await superValidate(request, zod(UserDeleteSchema));
+		const form = await superValidate(request, zod(UserStatusSchema));
 
 		if (!form.valid) {
 			console.error(JSON.stringify(form.errors, null, 2));
@@ -166,7 +166,7 @@ export const actions: Actions = {
 	},
 	activate: async (event) => {
 		const request = event.request;
-		const form = await superValidate(request, zod(UserDeleteSchema));
+		const form = await superValidate(request, zod(UserStatusSchema));
 
 		if (!form.valid) {
 			console.error(JSON.stringify(form.errors, null, 2));
