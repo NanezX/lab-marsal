@@ -47,18 +47,25 @@
 	}
 
 	let showConfirmDeleteModal = $state(false);
+	let removeOwnUser = $state(false);
 </script>
 
 <ConfirmModal
 	bind:showModal={showConfirmDeleteModal}
-	title="Eliminar usuario"
-	text="¿Estás seguro de eliminar este usuario? Perdera todo el acceso al sistema"
+	title={removeOwnUser ? 'Tu usuario será eliminado' : 'Eliminar usuario'}
+	text={removeOwnUser
+		? 'Estas intentando eliminar tu propio usuario. Tu sesión se cerrará y perderás todo el acceso al sistema'
+		: '¿Estás seguro de eliminar este usuario? Perdera todo el acceso al sistema'}
 	saveButtonText="Eliminar"
 	cancelButtonText="Cancelar"
-	onClose={() => ($form.id = '')}
+	onClose={() => {
+		$form.id = '';
+		removeOwnUser = false;
+	}}
 	onSave={() => {
 		submitForm();
 		$form.id = '';
+		removeOwnUser = false;
 		return true;
 	}}
 />
@@ -189,6 +196,11 @@
 											title="Eliminar usuario"
 											class="flex cursor-pointer items-center gap-x-0.5"
 											onclick={() => {
+												// This means that the current logged User-Admin is trying to delete it himself
+												if (user.email.toLowerCase() == data.user.email.toLowerCase()) {
+													removeOwnUser = true;
+												}
+
 												$form.id = user.id;
 												showConfirmDeleteModal = true;
 											}}
