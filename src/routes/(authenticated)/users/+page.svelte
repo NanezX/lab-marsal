@@ -33,7 +33,7 @@
 
 	const orderByOptions = [
 		{ value: 'fullName', label: 'Nombre' },
-		{ value: 'documentId', label: 'CI del usuario' },
+		{ value: 'documentId', label: 'Cédula' },
 		{ value: 'email', label: 'Correo (@)' }
 	];
 
