@@ -91,13 +91,9 @@ export function cleanEditPatientData(
 }
 
 export function cleanEditUserData(data: {
-	id: string;
 	email: string;
-	firstName: string;
-	lastName: string;
 	role: UserRoles;
 	documentId: number;
-	deleted: boolean;
 	[key: string]: string | number | boolean;
 }) {
 	return {
