@@ -5,7 +5,7 @@ export enum UserRoles {
 	Secretaria = 'secretaria',
 	Auxiliar = 'auxiliar',
 	Bioanalista = 'bioanalista',
-	Admin = 'administrador'
+	Admin = 'admin'
 }
 
 /**
