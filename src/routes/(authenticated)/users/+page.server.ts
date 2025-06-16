@@ -1,7 +1,7 @@
 import { db } from '$lib/server/db';
 import { user as userTable } from '$lib/server/db/schema';
 import { UserStatusSchema } from '$lib/server/utils/zod';
-import { normalized } from '$lib/shared/utils.js';
+import { normalized, roleMinimums } from '$lib/shared/utils.js';
 import { and, or, ilike, eq, count, asc, desc, sql, type SQL } from 'drizzle-orm';
 import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
@@ -125,7 +125,6 @@ export const actions: Actions = {
 
 		if (!form.valid) {
 			console.error(JSON.stringify(form.errors, null, 2));
-			// Again, return { form } and things will just work.
 			return failForms(400, { form });
 		}
 
@@ -133,7 +132,7 @@ export const actions: Actions = {
 
 		// Check if there is an user with this ID
 		const foundUser = await db.query.user.findFirst({
-			where: (userTable, { eq }) => eq(userTable.id, userId),
+			where: (u, { eq }) => eq(u.id, userId),
 			columns: {
 				id: true,
 				role: true,
@@ -141,41 +140,35 @@ export const actions: Actions = {
 			}
 		});
 
-		if (foundUser === undefined || foundUser.deleted) {
+		if (!foundUser || foundUser.deleted) {
 			return failFormResponse(form, 'Usuario no encontrado', event.cookies, 409);
 		}
 
-		// Check if this is the last active user with their role
-		const isLast = await db.query.user.findFirst({
-			where: (u, { eq, and, ne }) =>
-				and(eq(u.role, foundUser.role), eq(u.deleted, false), ne(u.id, userId)),
-			columns: { id: true }
-		});
+		// ⛔ Check if this role has a minimum defined
+		const minRequired = roleMinimums[foundUser.role];
 
-		if (!isLast) {
-			return failFormResponse(
-				form,
-				`Debe permanecer al menos un usuario con el rol "${foundUser.role}" activo.`,
-				event.cookies,
-				400
-			);
+		if (minRequired !== undefined) {
+			const countActiveOthers = await db.query.user.findMany({
+				where: (u, { and, eq, ne }) =>
+					and(eq(u.role, foundUser.role), eq(u.deleted, false), ne(u.id, userId)),
+				columns: { id: true }
+			});
+
+			if (countActiveOthers.length < minRequired) {
+				return failFormResponse(
+					form,
+					`Debe permanecer al menos ${minRequired} usuario(s) con el rol "${foundUser.role}"`,
+					event.cookies,
+					400
+				);
+			}
 		}
 
 		try {
-			// Soft deleting the exam
 			await updateUserById(userId, { deleted: true });
 		} catch (e) {
-			const errMsg = 'No se eliminó el usuario';
-
-			if (e instanceof Error) {
-				// Print the error type
-				console.error('Unknown error');
-			}
-
-			// Print the error
 			console.error(e);
-
-			return failFormResponse(form, errMsg, event.cookies, 500);
+			return failFormResponse(form, 'No se eliminó el usuario', event.cookies, 500);
 		}
 
 		// Redirect outside of the try/catch block to the users page with a success message
