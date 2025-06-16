@@ -9,7 +9,7 @@ export const load = async ({ url }) => {
 	if (limit > 25) limit = 25;
 
 	const searchText = url.searchParams.get('search')?.trim();
-	const order = url.searchParams.get('orderBy') || 'name'; // 'documentId' or 'name' or 'email'
+	const order = url.searchParams.get('orderBy') || 'fullName'; // 'documentId' or 'fullName' or 'email'
 	const direction = url.searchParams.get('orderDirection') || 'asc'; // 'asc' or 'desc'
 
 	const deletedFilter = url.searchParams.get('deleted'); // 'deleted', 'all', or null
@@ -61,7 +61,7 @@ export const load = async ({ url }) => {
 
 		// Determine order
 		let orderExpr;
-		if (order === 'name') {
+		if (order === 'fullName') {
 			orderExpr = [
 				direction === 'desc' ? desc(userTable.firstName) : asc(userTable.firstName),
 				direction === 'desc' ? desc(userTable.lastName) : asc(userTable.lastName)
