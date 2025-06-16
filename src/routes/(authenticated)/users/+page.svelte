@@ -159,7 +159,7 @@
 									<DropdownItem
 										title="Editar usuario"
 										class="flex w-full cursor-pointer items-center gap-x-0.5"
-										onclick={() => alert(`Editar "${user.firstName} ${user.lastName}"`)}
+										href="/users/{user.id}/edit"
 									>
 										<span>
 											<Icon src={Pencil} size="18" class="text-blue-500" />
