@@ -42,7 +42,7 @@
 	let orderBy = $state(page.url.searchParams.get('orderBy') || orderByOptions[0].value);
 
 	function getUsers() {
-		goto(`/users?search=${textSearch}&orderBy=${orderBy}`, {
+		goto(`/users?search=${textSearch}&orderBy=${orderBy}&deleted=all`, {
 			keepFocus: true
 		});
 	}
@@ -194,7 +194,7 @@
 			pageSize={12}
 			bind:queryParams={
 				() => {
-					return { search: textSearch, orderBy };
+					return { search: textSearch, orderBy, deleted: 'all' };
 				},
 				(v) => {
 					textSearch = v['search'];
