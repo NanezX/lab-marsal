@@ -158,7 +158,7 @@
 								<Dropdown simple>
 									<DropdownItem
 										title="Editar usuario"
-										class="flex cursor-pointer items-center gap-x-0.5"
+										class="flex w-full cursor-pointer items-center gap-x-0.5"
 										onclick={() => alert(`Editar "${user.firstName} ${user.lastName}"`)}
 									>
 										<span>
