@@ -55,7 +55,10 @@
 	}}
 />
 
-<div in:fade class="mb-4 flex w-full flex-col gap-y-8">
-	<form use:enhance method="POST" hidden></form>
-	<!--  -->
-</div>
+<form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
+	<div class="relative flex justify-center">
+		<BackButton href="/users" size="40" />
+
+		<p class="mx-auto text-center text-3xl">Editar paciente</p>
+	</div>
+</form>
