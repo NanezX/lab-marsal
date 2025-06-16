@@ -89,7 +89,6 @@
 			}
 		/>
 
-		<!-- <div class="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-3"> -->
 		<div class="mt-4 overflow-x-auto">
 			<table class="w-full table-fixed border-collapse text-sm">
 				<thead>
@@ -113,38 +112,41 @@
 							<td class="py-2 text-green-600">Activo</td>
 
 							<td class="flex h-full items-stretch justify-center py-2">
-								<DropdownButton
-									class={`${removeStyleButton} !flex h-full w-full items-center justify-center `}
-								>
-									<Icon
-										src={DotsCircleHorizontal}
-										title="Opciones"
-										size="18"
-										class="hover:text-primary-blue mx-auto cursor-pointer text-black"
-									/>
-								</DropdownButton>
+								<form action="">
+									<DropdownButton
+										class={`${removeStyleButton} !flex h-full w-full items-center justify-center `}
+									>
+										<Icon
+											src={DotsCircleHorizontal}
+											title="Opciones"
+											size="18"
+											class="hover:text-primary-blue mx-auto cursor-pointer text-black"
+										/>
+									</DropdownButton>
 
-								<Dropdown simple>
-									<DropdownItem
-										title="Editar usuario"
-										class="flex cursor-pointer items-center gap-x-0.5"
-										onclick={() => alert(`Editar "${user.firstName} ${user.lastName}"`)}
-									>
-										<span>
-											<Icon src={Pencil} size="18" class="text-green-500" />
-										</span>
-										<span>Editar</span>
-									</DropdownItem>
-									<DropdownItem
-										title="Eliminar usuario"
-										class="flex cursor-pointer items-center gap-x-0.5"
-									>
-										<span>
-											<Icon src={Trash} size="18" class="text-red-500" />
-										</span>
-										<span>Eliminar</span>
-									</DropdownItem>
-								</Dropdown>
+									<Dropdown simple>
+										<DropdownItem
+											title="Editar usuario"
+											class="flex cursor-pointer items-center gap-x-0.5"
+											onclick={() => alert(`Editar "${user.firstName} ${user.lastName}"`)}
+										>
+											<span>
+												<Icon src={Pencil} size="18" class="text-green-500" />
+											</span>
+											<span>Editar</span>
+										</DropdownItem>
+										<DropdownItem
+											title="Eliminar usuario"
+											class="flex cursor-pointer items-center gap-x-0.5"
+											onclick={() => alert('Eliminar')}
+										>
+											<span>
+												<Icon src={Trash} size="18" class="text-red-500" />
+											</span>
+											<span>Eliminar</span>
+										</DropdownItem>
+									</Dropdown>
+								</form>
 							</td>
 						</tr>
 					{/each}
