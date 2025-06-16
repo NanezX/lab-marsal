@@ -138,7 +138,10 @@
 							<td class="py-2">{user.documentId}</td>
 							<td class="py-2 break-all">{user.email}</td>
 							<td class="py-2 capitalize">{user.role}</td>
-							<td class="py-2 text-green-600">Activo</td>
+							<td
+								class={['py-2', { 'text-green-600': !user.deleted, 'text-red-500': user.deleted }]}
+								>{user.deleted ? 'Inactivo' : 'Activo'}</td
+							>
 
 							<td class="flex h-full items-stretch justify-center py-2">
 								<input type="hidden" name="id" value={user.id} />
@@ -177,7 +180,7 @@
 										<span>
 											<Icon src={Trash} size="18" class="text-red-500" />
 										</span>
-										<span>Eliminar</span>
+										<span>Desactivar</span>
 									</DropdownItem>
 								</Dropdown>
 							</td>
