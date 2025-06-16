@@ -6,17 +6,27 @@ import { and, or, ilike, eq, count, asc, desc, sql, type SQL } from 'drizzle-orm
 export const load = async ({ url }) => {
 	let limit = Number(url.searchParams.get('limit') || 12);
 	const skip = Number(url.searchParams.get('skip') || 0);
+	if (limit > 25) limit = 25;
 
 	const searchText = url.searchParams.get('search')?.trim();
 	const order = url.searchParams.get('orderBy') || 'name'; // 'documentId' or 'name' or 'email'
 	const direction = url.searchParams.get('orderDirection') || 'asc'; // 'asc' or 'desc'
 
-	if (limit > 25) limit = 25;
+	const deletedFilter = url.searchParams.get('deleted'); // 'deleted', 'all', or null
+	// deletedFilter: undefined (default) -> only non-deleted
+	// deletedFilter: 'deleted' -> only deleted
+	// deletedFilter: 'all' -> no filter
 
 	const { count: countTotal, data: usersData } = await db.transaction(async (tx) => {
 		// Common filters
-		// TODO: Add filtering to allow show active or inactive accounts (or both). This only show active ones
-		const whereClauses = [eq(userTable.deleted, false)];
+		const whereClauses = [];
+
+		// Handle deleted filter
+		if (deletedFilter === 'deleted') {
+			whereClauses.push(eq(userTable.deleted, true));
+		} else if (deletedFilter !== 'all') {
+			whereClauses.push(eq(userTable.deleted, false));
+		}
 
 		// Unified search logic
 		if (searchText) {
@@ -56,8 +66,11 @@ export const load = async ({ url }) => {
 				direction === 'desc' ? desc(userTable.firstName) : asc(userTable.firstName),
 				direction === 'desc' ? desc(userTable.lastName) : asc(userTable.lastName)
 			];
-		} else {
+		} else if (order === 'documentId') {
 			orderExpr = direction === 'desc' ? desc(userTable.documentId) : asc(userTable.documentId);
+		} else {
+			// email
+			orderExpr = direction === 'desc' ? desc(userTable.email) : asc(userTable.email);
 		}
 
 		const patientQuery = tx
