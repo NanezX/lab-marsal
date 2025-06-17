@@ -95,7 +95,7 @@
 					icon={patientData.gender == PatientGender.Male ? Man : Woman}
 				/>
 
-				<LabelValue label="Correo electrónico" value={patientData.email ?? 'N/A'} icon={Mail} />
+				<LabelValue label="Correo" value={patientData.email ?? 'N/A'} icon={Mail} />
 
 				<LabelValue
 					label="Fecha de nacimiento"
