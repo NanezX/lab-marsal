@@ -10,8 +10,9 @@
 	import { isEqual } from 'lodash-es';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
 	import type { PageProps } from './$types';
-	import { At, Id } from '@steeze-ui/tabler-icons';
+	import { At, Id, User } from '@steeze-ui/tabler-icons';
 	import { userRolesItems } from '$lib/client';
+	import LabelValue from '$lib/components/LabelValue.svelte';
 
 	let { data }: PageProps = $props();
 
@@ -70,6 +71,10 @@
 
 			<div class="space-y-4">
 				<div class="flex gap-x-8">
+					<LabelValue label="Nombre" value="{userData.firstName} {userData.lastName}" icon={User} />
+				</div>
+
+				<div class="flex gap-x-8">
 					<!-- Document ID -->
 					<Input
 						bind:value={$form.documentId}
@@ -103,7 +108,6 @@
 					/>
 
 					<!-- User roles - Select -->
-
 					<div class="flex flex-col items-start gap-y-1">
 						<label class="ml-2 font-semibold" for="select-gender"> Rol </label>
 
@@ -120,8 +124,6 @@
 						{#if $errors.role}<span class="text-sm text-red-500">{$errors.role}</span>{/if}
 					</div>
 				</div>
-
-				<!-- Another dic -->
 			</div>
 		</div>
 	</div>
