@@ -12,6 +12,7 @@
 	import { goto } from '$app/navigation';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import SelectInput from '$lib/components/SelectInput.svelte';
+	import autoAnimate from '@formkit/auto-animate';
 
 	type ExamParemeterInput = {
 		position: number;
@@ -234,61 +235,63 @@
 				<Icon src={CopyPlus} size="26" theme="filled" />
 			</Button>
 
-			{#each $form.categories as category, categoryIndex (categoryIndex)}
-				<div class="space-y-4 rounded-lg border border-gray-200 p-1">
-					<div class="inline-flex w-full items-center justify-center gap-x-4">
-						<div class="inline-flex gap-x-1">
-							{#if categoriesStatus[categoryIndex]}
-								<Input
-									wrapperClass="w-2/3"
-									bind:value={categoriesStatus[categoryIndex]}
-									name="any"
-								/>
+			<div use:autoAnimate class="space-y-5">
+				{#each $form.categories as category, categoryIndex (categoryIndex)}
+					<div class="space-y-4 rounded-lg border border-gray-200 p-1">
+						<div class="inline-flex w-full items-center justify-center gap-x-4">
+							<div class="inline-flex gap-x-1">
+								{#if categoriesStatus[categoryIndex]}
+									<Input
+										wrapperClass="w-2/3"
+										bind:value={categoriesStatus[categoryIndex]}
+										name="any"
+									/>
 
-								<Button
-									class="mr-2 !bg-inherit !p-0"
-									title="Guardar"
-									onclick={() => saveEditCategory(categoryIndex)}
-								>
-									<Icon src={Check} size="20" theme="filled" class="text-green-500" />
-								</Button>
+									<Button
+										class="mr-2 !bg-inherit !p-0"
+										title="Guardar"
+										onclick={() => saveEditCategory(categoryIndex)}
+									>
+										<Icon src={Check} size="20" theme="filled" class="text-green-500" />
+									</Button>
 
-								<Button
-									class="mr-2 !bg-inherit !p-0"
-									title="Cancelar"
-									onclick={() => finishEditCategory(categoryIndex)}
-								>
-									<Icon src={Cancel} size="20" theme="filled" class="text-red-500" />
-								</Button>
-							{:else}
-								<p class="text-lg font-bold">
-									{category}
-								</p>
+									<Button
+										class="mr-2 !bg-inherit !p-0"
+										title="Cancelar"
+										onclick={() => finishEditCategory(categoryIndex)}
+									>
+										<Icon src={Cancel} size="20" theme="filled" class="text-red-500" />
+									</Button>
+								{:else}
+									<p class="text-lg font-bold">
+										{category}
+									</p>
 
-								<Button
-									class="mr-2 !bg-inherit !p-0"
-									title="Editar nombre de la categoria"
-									onclick={() => editCategory(categoryIndex)}
-								>
-									<Icon src={PencilMinus} size="20" theme="filled" class="text-green-500" />
-								</Button>
-							{/if}
+									<Button
+										class="mr-2 !bg-inherit !p-0"
+										title="Editar nombre de la categoria"
+										onclick={() => editCategory(categoryIndex)}
+									>
+										<Icon src={PencilMinus} size="20" theme="filled" class="text-green-500" />
+									</Button>
+								{/if}
+							</div>
+
+							<Button
+								onclick={() => removeCategory(category, categoryIndex)}
+								class="!p0 !bg-red-500 !px-2 text-sm"
+								title="Eliminar esta categoria"
+							>
+								<p>Eliminar</p>
+							</Button>
 						</div>
 
-						<Button
-							onclick={() => removeCategory(category, categoryIndex)}
-							class="!p0 !bg-red-500 !px-2 text-sm"
-							title="Eliminar esta categoria"
-						>
-							<p>Eliminar</p>
-						</Button>
+						<ParametersCompo {form} {errors} {category} {addParameter} />
 					</div>
-
-					<ParametersCompo {form} {errors} {category} {addParameter} />
-				</div>
-			{:else}
-				<ParametersCompo {form} {errors} />
-			{/each}
+				{:else}
+					<ParametersCompo {form} {errors} />
+				{/each}
+			</div>
 		</div>
 	</div>
 
