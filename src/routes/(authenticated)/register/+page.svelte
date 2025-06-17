@@ -10,6 +10,7 @@
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import { maxDocumentId, minDocumentId } from '$lib/shared/utils.js';
 	import { userRolesItems } from '$lib/client/enumItems.js';
+	import BackButton from '$lib/components/buttons/BackButton.svelte';
 
 	let { data } = $props();
 
@@ -56,8 +57,11 @@
 <div
 	class="flex w-3/5 flex-col justify-center space-y-8 rounded-r-xl border border-gray-200 bg-white"
 >
-	<h3 class="text-primary-blue text-center text-2xl">Registrar nuevo usuario</h3>
+	<div class="relative flex justify-center">
+		<BackButton href="/users" size="40" />
 
+		<h3 class="text-primary-blue mx-auto text-2xl">Registrar nuevo usuario</h3>
+	</div>
 	<form class="flex flex-col gap-y-8" method="POST" action="?/register" use:enhance>
 		<div class="grid grid-cols-6 gap-x-2 gap-y-6">
 			<!-- First name -->
