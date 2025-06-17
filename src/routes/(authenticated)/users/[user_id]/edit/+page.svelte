@@ -3,13 +3,15 @@
 	import { fade } from 'svelte/transition';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import Input from '$lib/components/Input.svelte';
-	import { cleanEditUserData } from '$lib/shared/utils.js';
+	import { cleanEditUserData, maxDocumentId, minDocumentId } from '$lib/shared/utils.js';
 	import Select from '$lib/components/Select.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import CloseNavigationGuard from '$lib/components/modal/CloseNavigationGuard.svelte';
 	import { isEqual } from 'lodash-es';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
 	import type { PageProps } from './$types';
+	import { At, Id } from '@steeze-ui/tabler-icons';
+	import { userRolesItems } from '$lib/client';
 
 	let { data }: PageProps = $props();
 
@@ -60,5 +62,67 @@
 		<BackButton href="/users" size="40" />
 
 		<p class="mx-auto text-center text-3xl">Editar usuario</p>
+	</div>
+
+	<div>
+		<div class="space-y-5">
+			<p class="text-2xl">Datos</p>
+
+			<div class="space-y-4">
+				<div class="flex gap-x-8">
+					<!-- Document ID -->
+					<Input
+						bind:value={$form.documentId}
+						label="Cédula"
+						name="documentId"
+						type="number"
+						required
+						icon={Id}
+						placeholder="Cédula"
+						autoComplete={false}
+						min={minDocumentId}
+						max={maxDocumentId}
+						wrapperClass="col-span-3"
+						error={$errors.email}
+						{...$constraints.documentId}
+					/>
+
+					<!-- Email -->
+					<Input
+						bind:value={$form.email}
+						label="Correo"
+						name="email"
+						type="email"
+						required
+						icon={At}
+						placeholder="Correo electrónico"
+						autoComplete={false}
+						wrapperClass="col-span-4"
+						error={$errors.email}
+						{...$constraints.email}
+					/>
+
+					<!-- User roles - Select -->
+
+					<div class="flex flex-col items-start gap-y-1">
+						<label class="ml-2 font-semibold" for="select-gender"> Rol </label>
+
+						<Select
+							bind:value={$form.role}
+							items={userRolesItems}
+							name="role"
+							id="select-role"
+							required
+							placeholder="Selecciona un rol"
+							class="w-1/3"
+							{...$constraints.role}
+						/>
+						{#if $errors.role}<span class="text-sm text-red-500">{$errors.role}</span>{/if}
+					</div>
+				</div>
+
+				<!-- Another dic -->
+			</div>
+		</div>
 	</div>
 </form>
