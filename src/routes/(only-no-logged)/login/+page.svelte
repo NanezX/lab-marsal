@@ -41,10 +41,8 @@
 	</div>
 
 	<div class="space-y-10">
-		<p class="mx-auto w-5/6 text-justify">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-			labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-			laboris nisi ut aliquip ex ea commodo consequat.
+		<p class="mx-auto w-5/6 text-justify text-shadow-[0_35px_35px_rgb(0_0_0_/_0.25)]">
+			Tu determinación es más fuerte que cualquier examen de bioanálisis.
 		</p>
 
 		<img src={tree} alt="Hermoso arbol al iniciar sesion" width="250" class="mx-auto" />

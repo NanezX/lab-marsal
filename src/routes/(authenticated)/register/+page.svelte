@@ -45,9 +45,7 @@
 
 	<div class="space-y-10">
 		<p class="mx-auto w-5/6 text-justify">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-			labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-			laboris nisi ut aliquip ex ea commodo consequat.
+			Cree en ti mismo, estás más cerca de lo que piensas de lograr tus metas en bioanálisis.
 		</p>
 
 		<img src={addUser} alt="Añadir usuario imagen" width="180" class="mx-auto" />
