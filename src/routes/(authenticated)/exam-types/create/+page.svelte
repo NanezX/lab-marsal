@@ -13,8 +13,10 @@
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import SelectInput from '$lib/components/SelectInput.svelte';
 	import autoAnimate from '@formkit/auto-animate';
+	import { v4 as uuidv4 } from 'uuid';
 
 	type ExamParemeterInput = {
+		id?: string;
 		position: number;
 		name: string;
 		type: 'text';
@@ -49,7 +51,8 @@
 			category: undefined,
 			unit: '',
 			hasReferences: false,
-			referenceValues: []
+			referenceValues: [],
+			id: uuidv4()
 		};
 
 		// Fallback if there are categories items and no category passed to the function

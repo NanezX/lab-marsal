@@ -16,9 +16,11 @@
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
 	import CloseNavigationGuard from '$lib/components/modal/CloseNavigationGuard.svelte';
 	import SelectInput from '$lib/components/SelectInput.svelte';
+	import { v4 as uuidv4 } from 'uuid';
+
 
 	type ExamParemeterInput = {
-		id?: UUID;
+		id?: string;
 		position: number;
 		name: string;
 		type: 'text';
@@ -66,7 +68,7 @@
 
 		// Base parameter
 		const initParameter: ExamParemeterInput = {
-			id: undefined,
+			id:  uuidv4(),
 			position: newPosition,
 			name: '',
 			type: 'text',
