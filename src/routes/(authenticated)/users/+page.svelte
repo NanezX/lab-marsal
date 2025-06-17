@@ -163,17 +163,6 @@
 								</DropdownButton>
 
 								<Dropdown simple>
-									<DropdownItem
-										title="Editar usuario"
-										class="flex w-full cursor-pointer items-center gap-x-0.5"
-										href="/users/{user.id}/edit"
-									>
-										<span>
-											<Icon src={Pencil} size="18" class="text-blue-500" />
-										</span>
-										<span>Editar</span>
-									</DropdownItem>
-
 									{#if user.deleted}
 										<form use:enhance method="POST" action="?/activate" hidden></form>
 										<DropdownItem
@@ -191,6 +180,17 @@
 											<span>Activar</span>
 										</DropdownItem>
 									{:else}
+										<DropdownItem
+											title="Editar usuario"
+											class="flex w-full cursor-pointer items-center gap-x-0.5"
+											href="/users/{user.id}/edit"
+										>
+											<span>
+												<Icon src={Pencil} size="18" class="text-blue-500" />
+											</span>
+											<span>Editar</span>
+										</DropdownItem>
+
 										<form use:enhance method="POST" action="?/delete" hidden></form>
 										<DropdownItem
 											title="Eliminar usuario"
