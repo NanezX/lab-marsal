@@ -12,6 +12,7 @@
 	import { userRolesItems } from '$lib/client/enumItems.js';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import { fade } from 'svelte/transition';
+	import { Blockquote } from 'flowbite-svelte';
 
 	let { data } = $props();
 
@@ -47,9 +48,9 @@
 	</div>
 
 	<div class="space-y-10">
-		<p class="mx-auto w-5/6 text-justify">
+		<Blockquote size="lg" class="text-justify">
 			Cree en ti mismo, estás más cerca de lo que piensas de lograr tus metas en bioanálisis.
-		</p>
+		</Blockquote>
 
 		<img src={addUser} alt="Añadir usuario imagen" width="180" class="mx-auto" />
 	</div>

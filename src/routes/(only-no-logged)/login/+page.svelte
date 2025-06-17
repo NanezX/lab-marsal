@@ -8,6 +8,7 @@
 	import { superForm } from 'sveltekit-superforms';
 	import Spinner from '$lib/components/Spinner.svelte';
 	import { fade } from 'svelte/transition';
+	import { Blockquote } from 'flowbite-svelte';
 
 	let { data } = $props();
 
@@ -41,9 +42,9 @@
 	</div>
 
 	<div class="space-y-10">
-		<p class="mx-auto w-5/6 text-justify text-shadow-[0_35px_35px_rgb(0_0_0_/_0.25)]">
+		<Blockquote size="lg" class="text-justify">
 			Tu determinación es más fuerte que cualquier examen de bioanálisis.
-		</p>
+		</Blockquote>
 
 		<img src={tree} alt="Hermoso arbol al iniciar sesion" width="250" class="mx-auto" />
 	</div>

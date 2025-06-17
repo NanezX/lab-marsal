@@ -8,6 +8,7 @@
 	import Spinner from '$lib/components/Spinner.svelte';
 	import { fade } from 'svelte/transition';
 	import Checkbox from '$lib/components/Checkbox.svelte';
+	import { Blockquote } from 'flowbite-svelte';
 
 	let { data } = $props();
 
@@ -47,11 +48,9 @@
 	</div>
 
 	<div class="space-y-10">
-		<p class="mx-auto w-5/6 text-justify">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-			labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-			laboris nisi ut aliquip ex ea commodo consequat.
-		</p>
+		<Blockquote size="lg" class="text-justify">
+			La precisión en el bioanálisis es la clave para la salud. Tu dedicación marca la diferencia.
+		</Blockquote>
 
 		<img
 			src={VerifyRecoveryIcon}
