@@ -11,6 +11,7 @@
 		CircleMinus,
 		CircleCheck
 	} from '@steeze-ui/tabler-icons';
+	import { Img } from 'flowbite-svelte';
 
 	let { data } = $props();
 
@@ -108,12 +109,10 @@
 <div in:fade class="flex w-full flex-col">
 	<div class="flex items-center justify-evenly gap-x-20">
 		<p class="text-3xl">Bienvenido {data.user.firstName}</p>
-		<img
-			alt="El logo de MarsalLab"
+		<Img
 			src={icon}
-			width="220"
-			height="220"
-			class="rounded-2xl border-2 border-gray-200 p-2"
+			class="max-w-[220px] rounded-2xl border-2 border-gray-200 p-2"
+			alt="El logo de MarsalLab"
 		/>
 	</div>
 
