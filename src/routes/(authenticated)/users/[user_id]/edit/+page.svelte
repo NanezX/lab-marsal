@@ -59,6 +59,6 @@
 	<div class="relative flex justify-center">
 		<BackButton href="/users" size="40" />
 
-		<p class="mx-auto text-center text-3xl">Editar paciente</p>
+		<p class="mx-auto text-center text-3xl">Editar usuario</p>
 	</div>
 </form>
