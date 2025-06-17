@@ -6,7 +6,7 @@ import {
 	UserRoles
 } from '$lib/shared/enums';
 import { minDocumentId, maxDocumentId } from '$lib/shared/utils';
-import { validate } from 'uuid';
+import { v4 as uuidv4, validate } from 'uuid';
 import { parsePhoneNumberFromString } from 'libphonenumber-js/min';
 import { z } from 'zod';
 
@@ -91,6 +91,7 @@ export const VerifyRecoverySchema = z
 export const examTypeParameterSchema = z.object({
 	// Positon of the parameter in the form
 	// Parameter data
+	id: z.string().optional(),
 	position: z.number().min(0),
 	name: z.string().min(1, 'El parámetro debe tener un nombre'),
 	type: z.literal('text'),
@@ -113,6 +114,7 @@ export const examTypeSchema = z
 			.min(1)
 			.default([
 				{
+					id: uuidv4(),
 					position: 0,
 					name: '',
 					type: 'text', // | "number";
