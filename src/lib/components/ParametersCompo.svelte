@@ -114,7 +114,6 @@
 </script>
 
 <div
-	class="space-y-4"
 	use:dndzone={{
 		items: $form.parameters as Array<(typeof $form.parameters)[0] & { id: string }>,
 		flipDurationMs: 200
@@ -127,7 +126,14 @@
      - If no `category` prop is passed, all the parameters will be render
      - If a `category` prop is passed, only the parameters with the same category will be rendered
     -->
-		<div animate:flip={{ duration: flipDurationMs }} class="flex items-center gap-x-2">
+		<div
+			animate:flip={{ duration: flipDurationMs }}
+			class={[
+				'flex items-center gap-x-2',
+				'not-first:mt-4',
+				{ '!mt-0': !(category === undefined || (category && parameter_.category === category)) }
+			]}
+		>
 			{#if category === undefined || (category && parameter_.category === category)}
 				<!-- Drag handle area -->
 				<div role="button" tabindex="0" class="cursor-grab rounded-xl p-1 hover:bg-gray-100">
