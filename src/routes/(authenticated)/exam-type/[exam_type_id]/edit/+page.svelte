@@ -12,12 +12,10 @@
 	import { tick } from 'svelte';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import { isEqual } from 'lodash-es';
-	import type { UUID } from 'crypto';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
 	import CloseNavigationGuard from '$lib/components/modal/CloseNavigationGuard.svelte';
 	import SelectInput from '$lib/components/SelectInput.svelte';
 	import { v4 as uuidv4 } from 'uuid';
-
 
 	type ExamParemeterInput = {
 		id?: string;
@@ -68,7 +66,7 @@
 
 		// Base parameter
 		const initParameter: ExamParemeterInput = {
-			id:  uuidv4(),
+			id: uuidv4(),
 			position: newPosition,
 			name: '',
 			type: 'text',

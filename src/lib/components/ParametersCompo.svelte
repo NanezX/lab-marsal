@@ -1,22 +1,17 @@
 <script lang="ts">
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
+	import type { SuperFormData, SuperFormErrors } from 'sveltekit-superforms/client';
+	import type { ExamTypeSchema } from '$lib/server/utils/zod';
 	import Input from '$lib/components/Input.svelte';
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import AddButton from '$lib/components/buttons/AddButton.svelte';
+	import { flip } from 'svelte/animate';
+	import { onMount } from 'svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { CircleMinus, TextPlus, X } from '@steeze-ui/tabler-icons';
-	import AddButton from '$lib/components/buttons/AddButton.svelte';
-	import type { SuperFormData, SuperFormErrors } from 'sveltekit-superforms/client';
 	import { deleteAndReindex } from '$lib/shared/utils';
-	import type { ExamTypeSchema } from '$lib/server/utils/zod';
-	import autoAnimate from '@formkit/auto-animate';
-	import {
-		dndzone,
-		SHADOW_ITEM_MARKER_PROPERTY_NAME,
-		SHADOW_PLACEHOLDER_ITEM_ID,
-		TRIGGERS,
-		type DndEvent
-	} from 'svelte-dnd-action';
+	import { dndzone, type DndEvent } from 'svelte-dnd-action';
 	import { v4 as uuidv4 } from 'uuid';
 
 	// Prop type
@@ -36,6 +31,7 @@
 			  }
 		);
 
+	const flipDurationMs = 300;
 	let { form, errors, category, addParameter, removeParameterCallback }: PropType = $props();
 
 	function removeParameter(paramIndex_: number) {
@@ -88,11 +84,6 @@
 			});
 		}
 	}
-
-	import { flip } from 'svelte/animate';
-	import { clone } from 'lodash-es';
-	import { onMount } from 'svelte';
-	const flipDurationMs = 300;
 
 	function handleDndConsider(
 		e: CustomEvent<DndEvent<(typeof $form.parameters)[0] & { id: string }>>
@@ -245,14 +236,6 @@
 		</div>
 	{/each}
 </div>
-
-<!-- TODO: DEBUG -->
-{#each $form.parameters as item}
-	<div class="flex gap-x-2">
-		<p class="underline">{item.name}:</p>
-		<p>{item.position}</p>
-	</div>
-{/each}
 
 {#if category && addParameter !== undefined}
 	<div class="text-center">

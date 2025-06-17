@@ -10,7 +10,6 @@
 	import { deleteAndReindex } from '$lib/shared/utils';
 	import type { ExamTypeSchema } from '$lib/server/utils/zod';
 	import autoAnimate from '@formkit/auto-animate';
-	import { dndzone } from 'svelte-dnd-action';
 
 	// Prop type
 	type PropType = {
