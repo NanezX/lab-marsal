@@ -10,6 +10,8 @@
 	import { deleteAndReindex } from '$lib/shared/utils';
 	import type { ExamTypeSchema } from '$lib/server/utils/zod';
 	import autoAnimate from '@formkit/auto-animate';
+	import { dndzone, type DndEvent } from 'svelte-dnd-action';
+	import { v4 as uuidv4 } from 'uuid';
 
 	// Prop type
 	type PropType = {
@@ -145,145 +147,77 @@
 			});
 		}
 	}
+
+	import { flip } from 'svelte/animate';
+	import { clone } from 'lodash-es';
+	const flipDurationMs = 300;
+
+	let items = $state(
+		$form.parameters.map((p) => {
+			return clone({ id: uuidv4(), ...p });
+		})
+	);
+
+	function handleDndConsider(e: CustomEvent<DndEvent<(typeof items)[0]>>) {
+		items = e.detail.items;
+	}
+
+	function handleDndFinalize(e: CustomEvent<DndEvent<(typeof items)[0]>>) {
+		const itemIndex = items.findIndex((item_) => item_.id === e.detail.info.id);
+
+		form.update(($form) => {
+			const paramIndex = $form.parameters.findIndex(
+				(param_) => param_.position === items[itemIndex].position
+			);
+
+			// Reorganize parameter items
+			[$form.parameters[itemIndex], $form.parameters[paramIndex]] = [
+				$form.parameters[paramIndex],
+				$form.parameters[itemIndex]
+			];
+
+			const aux = $form.parameters[itemIndex].position;
+			$form.parameters[itemIndex].position = $form.parameters[paramIndex].position;
+			$form.parameters[paramIndex].position = aux;
+
+			// Reorganize error items
+			if ($errors.parameters) {
+				[$errors.parameters[itemIndex], $errors.parameters[paramIndex]] = [
+					$errors.parameters[paramIndex],
+					$errors.parameters[itemIndex]
+				];
+			}
+
+			return $form;
+		});
+
+		items = e.detail.items;
+	}
 </script>
 
 <!-- To control when the drag ends outside of th drag container -->
-<svelte:window ondragover={windowOnDragOver} />
+<!-- <svelte:window ondragover={windowOnDragOver} /> -->
 
-<div use:autoAnimate class="space-y-4">
-	{#each $form.parameters as _, index (index)}
+<!-- use:autoAnimate -->
+<section
+	class="space-y-4"
+	use:dndzone={{ items, flipDurationMs }}
+	onconsider={handleDndConsider}
+	onfinalize={handleDndFinalize}
+>
+	{#each items as parameter_ (parameter_.id)}
 		<!-- Handle rendering:
      - If no `category` prop is passed, all the parameters will be render
      - If a `category` prop is passed, only the parameters with the same category will be rendered
     -->
-		{#if category === undefined || (category && $form.parameters[index].category === category)}
-			<div
-				role="definition"
-				class="drag-container flex items-center gap-x-2"
-				bind:this={container}
-				data-param-index={index}
-				id={index.toString()}
-			>
-				<!-- Drag handle area -->
-				<div
-					role="button"
-					tabindex="0"
-					aria-label="Drag handle for parameter {$form.parameters[index].position}"
-					class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
-					draggable="true"
-					ondragstart={() => onDragStart(index)}
-					ondragend={() => onDragEnd()}
-				>
-					<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M4 6h16M4 12h16M4 18h16"
-						/>
-					</svg>
-				</div>
-
-				<!-- Content area -->
-				<div
-					class="w-full rounded-xl bg-gray-100 px-2 py-4"
-					role="listitem"
-					aria-label="List of exam parameters"
-					ondragover={() => onDragOver(index)}
-				>
-					<div class="grid grid-cols-2 items-start gap-4">
-						<Input
-							bind:value={$form.parameters[index].name}
-							name={`parameter-${index}-name${category ? `-${category}` : ''}`}
-							label="Nombre del parámetro"
-							placeholder="Nombre del parámetro"
-							autoComplete={false}
-							error={$errors?.parameters?.[index]?.name}
-						/>
-
-						<Input
-							bind:value={
-								() => $form.parameters[index].unit ?? '',
-								(v) => ($form.parameters[index].unit = v === '' ? undefined : v)
-							}
-							name="unit"
-							label="Unidad del parámetro"
-							placeholder="Unidad del parámetro"
-							autoComplete={false}
-							error={$errors?.parameters?.[index]?.unit as string | string[] | undefined}
-						/>
-
-						<Checkbox
-							bind:value={
-								() => $form.parameters[index].hasReferences,
-								(v) => {
-									if (v) {
-										$form.parameters[index].referenceValues = [''];
-									} else {
-										$form.parameters[index].referenceValues = [];
-
-										if ($errors?.parameters?.[index]?.referenceValues) {
-											$errors.parameters[index].referenceValues = undefined;
-										}
-									}
-									$form.parameters[index].hasReferences = v;
-								}
-							}
-							text="Añadir valores de referencia"
-							wrapperClass="!ml-0 !text-base"
-						/>
-					</div>
-
-					{#if $form.parameters[index].hasReferences}
-						<div class="mt-2 flex flex-col gap-y-1">
-							<p class="ml-2 font-semibold">Valores de referencia</p>
-							{#each $form.parameters[index].referenceValues as _, j_index (j_index)}
-								<div class="flex gap-x-2">
-									<Input
-										wrapperClass="w-7/8"
-										bind:value={$form.parameters[index].referenceValues[j_index]}
-										name={`parameter-${index}-name-CATEGORY}`}
-										placeholder="Valor de referencia"
-										autoComplete={false}
-										error={$errors?.parameters?.[index]?.referenceValues?.[j_index]}
-									/>
-
-									<Button
-										class="!bg-inherit !p-0"
-										title="Eliminar valor de referencia"
-										onclick={() => {
-											removeRefValue(index, j_index);
-										}}
-									>
-										<Icon src={X} size="22" class="text-red-400 hover:text-red-600" />
-									</Button>
-								</div>
-							{/each}
-
-							<Button
-								onclick={() => addRefValue(index)}
-								title="Añadir nuevo valor de referencia"
-								class="not-hover:text-primary-blue hover:text-dark-blue mx-auto mt-1 flex gap-x-1 !bg-inherit !p-0"
-							>
-								<p class="hover:underline">Añadir</p>
-								<Icon src={TextPlus} size="24" class="" />
-							</Button>
-						</div>
-					{/if}
-				</div>
-
-				<Button
-					onclick={() => {
-						removeParameter(index);
-					}}
-					class="!bg-inherit !p-0"
-				>
-					<Icon src={CircleMinus} size="32" theme="filled" class="text-red-500" />
-				</Button>
-			</div>
-		{/if}
+		<!-- <div animate:flip class="flex items-center gap-x-2"> -->
+		<div animate:flip={{ duration: flipDurationMs }}>
+			<!-- {#if category === undefined || (category && $form.parameters[index].category === category)} -->
+			<p>{parameter_.name}</p>
+			<!-- {/if} -->
+		</div>
 	{/each}
-</div>
+</section>
 
 {#if category && addParameter !== undefined}
 	<div class="text-center">
@@ -295,3 +229,19 @@
 		/>
 	</div>
 {/if}
+
+<style>
+	section {
+		width: 50%;
+		padding: 0.3em;
+		border: 1px solid black;
+		overflow: scroll;
+		height: 120px;
+	}
+	div {
+		width: 50%;
+		padding: 0.2em;
+		border: 1px solid blue;
+		margin: 0.15em 0;
+	}
+</style>
