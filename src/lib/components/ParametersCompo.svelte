@@ -13,6 +13,7 @@
 	import { deleteAndReindex } from '$lib/shared/utils';
 	import { dndzone, type DndEvent } from 'svelte-dnd-action';
 	import { v4 as uuidv4 } from 'uuid';
+	import autoAnimate from '@formkit/auto-animate';
 
 	// Prop type
 	type PropType = {
@@ -113,7 +114,9 @@
 	});
 </script>
 
+<!-- FIXME: THere is a bug when the categories are applied and we want to drag it -->
 <div
+	use:autoAnimate
 	use:dndzone={{
 		items: $form.parameters as Array<(typeof $form.parameters)[0] & { id: string }>,
 		flipDurationMs: 200
