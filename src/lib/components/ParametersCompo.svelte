@@ -199,25 +199,134 @@
 <!-- <svelte:window ondragover={windowOnDragOver} /> -->
 
 <!-- use:autoAnimate -->
-<section
+<div
 	class="space-y-4"
 	use:dndzone={{ items, flipDurationMs }}
 	onconsider={handleDndConsider}
 	onfinalize={handleDndFinalize}
 >
-	{#each items as parameter_ (parameter_.id)}
+	{#each items as parameter_, index_ (parameter_.id)}
 		<!-- Handle rendering:
      - If no `category` prop is passed, all the parameters will be render
      - If a `category` prop is passed, only the parameters with the same category will be rendered
     -->
-		<!-- <div animate:flip class="flex items-center gap-x-2"> -->
-		<div animate:flip={{ duration: flipDurationMs }}>
-			<!-- {#if category === undefined || (category && $form.parameters[index].category === category)} -->
-			<p>{parameter_.name}</p>
-			<!-- {/if} -->
+		<div animate:flip={{ duration: flipDurationMs }} class="flex items-center gap-x-2">
+			{#if category === undefined || (category && parameter_.category === category)}
+				<!-- Drag handle area -->
+				<div role="button" tabindex="0" class="cursor-grab rounded-xl p-1 hover:bg-gray-100">
+					<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M4 6h16M4 12h16M4 18h16"
+						/>
+					</svg>
+				</div>
+
+				<!-- Content area -->
+				<div class="w-full rounded-xl bg-gray-100 px-2 py-4" aria-label="List of exam parameters">
+					<div class="grid grid-cols-2 items-start gap-4">
+						<Input
+							bind:value={$form.parameters[index_].name}
+							name={`parameter-${index_}-name${category ? `-${category}` : ''}`}
+							label="Nombre del parámetro"
+							placeholder="Nombre del parámetro"
+							autoComplete={false}
+							error={$errors?.parameters?.[index_]?.name}
+						/>
+
+						<Input
+							bind:value={
+								() => $form.parameters[index_].unit ?? '',
+								(v) => ($form.parameters[index_].unit = v === '' ? undefined : v)
+							}
+							name="unit"
+							label="Unidad del parámetro"
+							placeholder="Unidad del parámetro"
+							autoComplete={false}
+							error={$errors?.parameters?.[index_]?.unit as string | string[] | undefined}
+						/>
+
+						<Checkbox
+							bind:value={
+								() => $form.parameters[index_].hasReferences,
+								(v) => {
+									if (v) {
+										$form.parameters[index_].referenceValues = [''];
+									} else {
+										$form.parameters[index_].referenceValues = [];
+
+										if ($errors?.parameters?.[index_]?.referenceValues) {
+											$errors.parameters[index_].referenceValues = undefined;
+										}
+									}
+									$form.parameters[index_].hasReferences = v;
+								}
+							}
+							text="Añadir valores de referencia"
+							wrapperClass="!ml-0 !text-base"
+						/>
+					</div>
+
+					{#if $form.parameters[index_].hasReferences}
+						<div class="mt-2 flex flex-col gap-y-1">
+							<p class="ml-2 font-semibold">Valores de referencia</p>
+							{#each $form.parameters[index_].referenceValues as _, j_index (j_index)}
+								<div class="flex gap-x-2">
+									<Input
+										wrapperClass="w-7/8"
+										bind:value={$form.parameters[index_].referenceValues[j_index]}
+										name={`parameter-${index_}-name-CATEGORY}`}
+										placeholder="Valor de referencia"
+										autoComplete={false}
+										error={$errors?.parameters?.[index_]?.referenceValues?.[j_index]}
+									/>
+
+									<Button
+										class="!bg-inherit !p-0"
+										title="Eliminar valor de referencia"
+										onclick={() => {
+											removeRefValue(index_, j_index);
+										}}
+									>
+										<Icon src={X} size="22" class="text-red-400 hover:text-red-600" />
+									</Button>
+								</div>
+							{/each}
+
+							<Button
+								onclick={() => addRefValue(index_)}
+								title="Añadir nuevo valor de referencia"
+								class="not-hover:text-primary-blue hover:text-dark-blue mx-auto mt-1 flex gap-x-1 !bg-inherit !p-0"
+							>
+								<p class="hover:underline">Añadir</p>
+								<Icon src={TextPlus} size="24" class="" />
+							</Button>
+						</div>
+					{/if}
+				</div>
+
+				<Button
+					onclick={() => {
+						removeParameter(index_);
+					}}
+					class="!bg-inherit !p-0"
+				>
+					<Icon src={CircleMinus} size="32" theme="filled" class="text-red-500" />
+				</Button>
+			{/if}
 		</div>
 	{/each}
-</section>
+</div>
+
+<!-- TODO: DEBUG -->
+{#each $form.parameters as item}
+	<div class="flex gap-x-2">
+		<p class="underline">{item.name}:</p>
+		<p>{item.position}</p>
+	</div>
+{/each}
 
 {#if category && addParameter !== undefined}
 	<div class="text-center">
@@ -229,19 +338,3 @@
 		/>
 	</div>
 {/if}
-
-<style>
-	section {
-		width: 50%;
-		padding: 0.3em;
-		border: 1px solid black;
-		overflow: scroll;
-		height: 120px;
-	}
-	div {
-		width: 50%;
-		padding: 0.2em;
-		border: 1px solid blue;
-		margin: 0.15em 0;
-	}
-</style>
