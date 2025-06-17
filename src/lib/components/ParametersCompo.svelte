@@ -1,14 +1,18 @@
 <script lang="ts">
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
+	import type { SuperFormData, SuperFormErrors } from 'sveltekit-superforms/client';
+	import type { ExamTypeSchema } from '$lib/server/utils/zod';
 	import Input from '$lib/components/Input.svelte';
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import AddButton from '$lib/components/buttons/AddButton.svelte';
+	import { flip } from 'svelte/animate';
+	import { onMount } from 'svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { CircleMinus, TextPlus, X } from '@steeze-ui/tabler-icons';
-	import AddButton from '$lib/components/buttons/AddButton.svelte';
-	import type { SuperFormData, SuperFormErrors } from 'sveltekit-superforms/client';
 	import { deleteAndReindex } from '$lib/shared/utils';
-	import type { ExamTypeSchema } from '$lib/server/utils/zod';
+	import { dndzone, type DndEvent } from 'svelte-dnd-action';
+	import { v4 as uuidv4 } from 'uuid';
 	import autoAnimate from '@formkit/auto-animate';
 
 	// Prop type
@@ -28,72 +32,8 @@
 			  }
 		);
 
+	const flipDurationMs = 300;
 	let { form, errors, category, addParameter, removeParameterCallback }: PropType = $props();
-
-	/// DRAGEABLES  STATES
-	let draggingItemIndex: number | null = $state(null);
-	let hoveredItemIndex: number | null = $state(null);
-	let container: HTMLDivElement | null = $state(null);
-	let isOutside: boolean = $state(false);
-
-	function onDragStart(index: number) {
-		draggingItemIndex = index;
-	}
-
-	function onDragOver(index: number) {
-		hoveredItemIndex = index;
-	}
-
-	function onDragEnd() {
-		form.update(($form) => {
-			if (
-				draggingItemIndex != null &&
-				hoveredItemIndex != null &&
-				draggingItemIndex != hoveredItemIndex &&
-				!isOutside
-			) {
-				// Reorganize parameter items
-				[$form.parameters[draggingItemIndex], $form.parameters[hoveredItemIndex]] = [
-					$form.parameters[hoveredItemIndex],
-					$form.parameters[draggingItemIndex]
-				];
-
-				const aux = $form.parameters[draggingItemIndex].position;
-				$form.parameters[draggingItemIndex].position = $form.parameters[hoveredItemIndex].position;
-				$form.parameters[hoveredItemIndex].position = aux;
-
-				// Reorganize error items
-				if ($errors.parameters) {
-					[$errors.parameters[draggingItemIndex], $errors.parameters[hoveredItemIndex]] = [
-						$errors.parameters[hoveredItemIndex],
-						$errors.parameters[draggingItemIndex]
-					];
-				}
-
-				// Balance
-				draggingItemIndex = hoveredItemIndex;
-			}
-
-			hoveredItemIndex = null;
-
-			return $form;
-		});
-	}
-
-	function windowOnDragOver(e: DragEvent & { currentTarget: EventTarget & Window }) {
-		// Get the target element under the mouse
-		const target = e.target;
-		// const target = e.target as HTMLElement;
-
-		if (target) {
-			// If the target is NOT inside the container, set isOutside to true
-			if (!(target as HTMLElement).closest('.drag-container')) {
-				isOutside = true;
-				return;
-			}
-		}
-		isOutside = false;
-	}
 
 	function removeParameter(paramIndex_: number) {
 		// Check if the parameter exists and if it has more than one element
@@ -145,35 +85,61 @@
 			});
 		}
 	}
+
+	function handleDndConsider(
+		e: CustomEvent<DndEvent<(typeof $form.parameters)[0] & { id: string }>>
+	) {
+		form.update(($form) => {
+			$form.parameters = e.detail.items.map((item_, i_) => ({ ...item_, position: i_ }));
+			return $form;
+		});
+	}
+
+	function handleDndFinalize(e: CustomEvent<DndEvent<(typeof $form.parameters)[0]>>) {
+		form.update(($form) => {
+			$form.parameters = e.detail.items.map((item_, i_) => ({ ...item_, position: i_ }));
+			return $form;
+		});
+	}
+
+	// Add a stable id to each param exactly once
+	onMount(() => {
+		form.update(($form) => {
+			$form.parameters = $form.parameters.map((p) => ({
+				id: p.id ?? uuidv4(),
+				...p
+			}));
+			return $form;
+		});
+	});
 </script>
 
-<!-- To control when the drag ends outside of th drag container -->
-<svelte:window ondragover={windowOnDragOver} />
-
-<div use:autoAnimate class="space-y-4">
-	{#each $form.parameters as _, index (index)}
+<!-- FIXME: THere is a bug when the categories are applied and we want to drag it -->
+<div
+	use:autoAnimate
+	use:dndzone={{
+		items: $form.parameters as Array<(typeof $form.parameters)[0] & { id: string }>,
+		flipDurationMs: 200
+	}}
+	onconsider={handleDndConsider}
+	onfinalize={handleDndFinalize}
+>
+	{#each $form.parameters as Array<(typeof $form.parameters)[0] & { id: string }> as parameter_, index_ (parameter_.id)}
 		<!-- Handle rendering:
      - If no `category` prop is passed, all the parameters will be render
      - If a `category` prop is passed, only the parameters with the same category will be rendered
     -->
-		{#if category === undefined || (category && $form.parameters[index].category === category)}
-			<div
-				role="definition"
-				class="drag-container flex items-center gap-x-2"
-				bind:this={container}
-				data-param-index={index}
-				id={index.toString()}
-			>
+		<div
+			animate:flip={{ duration: flipDurationMs }}
+			class={[
+				'flex items-center gap-x-2',
+				'not-first:mt-4',
+				{ '!mt-0': !(category === undefined || (category && parameter_.category === category)) }
+			]}
+		>
+			{#if category === undefined || (category && parameter_.category === category)}
 				<!-- Drag handle area -->
-				<div
-					role="button"
-					tabindex="0"
-					aria-label="Drag handle for parameter {$form.parameters[index].position}"
-					class="cursor-grab rounded-xl p-1 hover:bg-gray-100"
-					draggable="true"
-					ondragstart={() => onDragStart(index)}
-					ondragend={() => onDragEnd()}
-				>
+				<div role="button" tabindex="0" class="cursor-grab rounded-xl p-1 hover:bg-gray-100">
 					<svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
 							stroke-linecap="round"
@@ -185,48 +151,43 @@
 				</div>
 
 				<!-- Content area -->
-				<div
-					class="w-full rounded-xl bg-gray-100 px-2 py-4"
-					role="listitem"
-					aria-label="List of exam parameters"
-					ondragover={() => onDragOver(index)}
-				>
+				<div class="w-full rounded-xl bg-gray-100 px-2 py-4" aria-label="List of exam parameters">
 					<div class="grid grid-cols-2 items-start gap-4">
 						<Input
-							bind:value={$form.parameters[index].name}
-							name={`parameter-${index}-name${category ? `-${category}` : ''}`}
+							bind:value={$form.parameters[index_].name}
+							name={`parameter-${index_}-name${category ? `-${category}` : ''}`}
 							label="Nombre del parámetro"
 							placeholder="Nombre del parámetro"
 							autoComplete={false}
-							error={$errors?.parameters?.[index]?.name}
+							error={$errors?.parameters?.[index_]?.name}
 						/>
 
 						<Input
 							bind:value={
-								() => $form.parameters[index].unit ?? '',
-								(v) => ($form.parameters[index].unit = v === '' ? undefined : v)
+								() => $form.parameters[index_].unit ?? '',
+								(v) => ($form.parameters[index_].unit = v === '' ? undefined : v)
 							}
 							name="unit"
 							label="Unidad del parámetro"
 							placeholder="Unidad del parámetro"
 							autoComplete={false}
-							error={$errors?.parameters?.[index]?.unit as string | string[] | undefined}
+							error={$errors?.parameters?.[index_]?.unit as string | string[] | undefined}
 						/>
 
 						<Checkbox
 							bind:value={
-								() => $form.parameters[index].hasReferences,
+								() => $form.parameters[index_].hasReferences,
 								(v) => {
 									if (v) {
-										$form.parameters[index].referenceValues = [''];
+										$form.parameters[index_].referenceValues = [''];
 									} else {
-										$form.parameters[index].referenceValues = [];
+										$form.parameters[index_].referenceValues = [];
 
-										if ($errors?.parameters?.[index]?.referenceValues) {
-											$errors.parameters[index].referenceValues = undefined;
+										if ($errors?.parameters?.[index_]?.referenceValues) {
+											$errors.parameters[index_].referenceValues = undefined;
 										}
 									}
-									$form.parameters[index].hasReferences = v;
+									$form.parameters[index_].hasReferences = v;
 								}
 							}
 							text="Añadir valores de referencia"
@@ -234,25 +195,25 @@
 						/>
 					</div>
 
-					{#if $form.parameters[index].hasReferences}
+					{#if $form.parameters[index_].hasReferences}
 						<div class="mt-2 flex flex-col gap-y-1">
 							<p class="ml-2 font-semibold">Valores de referencia</p>
-							{#each $form.parameters[index].referenceValues as _, j_index (j_index)}
+							{#each $form.parameters[index_].referenceValues as _, j_index (j_index)}
 								<div class="flex gap-x-2">
 									<Input
 										wrapperClass="w-7/8"
-										bind:value={$form.parameters[index].referenceValues[j_index]}
-										name={`parameter-${index}-name-CATEGORY}`}
+										bind:value={$form.parameters[index_].referenceValues[j_index]}
+										name={`parameter-${index_}-name-CATEGORY}`}
 										placeholder="Valor de referencia"
 										autoComplete={false}
-										error={$errors?.parameters?.[index]?.referenceValues?.[j_index]}
+										error={$errors?.parameters?.[index_]?.referenceValues?.[j_index]}
 									/>
 
 									<Button
 										class="!bg-inherit !p-0"
 										title="Eliminar valor de referencia"
 										onclick={() => {
-											removeRefValue(index, j_index);
+											removeRefValue(index_, j_index);
 										}}
 									>
 										<Icon src={X} size="22" class="text-red-400 hover:text-red-600" />
@@ -261,7 +222,7 @@
 							{/each}
 
 							<Button
-								onclick={() => addRefValue(index)}
+								onclick={() => addRefValue(index_)}
 								title="Añadir nuevo valor de referencia"
 								class="not-hover:text-primary-blue hover:text-dark-blue mx-auto mt-1 flex gap-x-1 !bg-inherit !p-0"
 							>
@@ -274,14 +235,14 @@
 
 				<Button
 					onclick={() => {
-						removeParameter(index);
+						removeParameter(index_);
 					}}
 					class="!bg-inherit !p-0"
 				>
 					<Icon src={CircleMinus} size="32" theme="filled" class="text-red-500" />
 				</Button>
-			</div>
-		{/if}
+			{/if}
+		</div>
 	{/each}
 </div>
 
