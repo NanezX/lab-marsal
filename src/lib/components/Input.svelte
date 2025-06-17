@@ -59,7 +59,10 @@
 		enteredClass
 	];
 
-	const iconClass = ['text-primary-blue absolute ml-4 h-5 w-5'];
+	// const iconClass = ['text-primary-blue absolute ml-4 h-5 w-5'];
+	const iconClass = [
+		'text-primary-blue absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 pointer-events-none'
+	];
 
 	if (label && !id) {
 		id = uuidv4();
@@ -76,28 +79,31 @@
 	{#if label}
 		<label class="ml-2 font-semibold" for={id}>{label}</label>
 	{/if}
-	<input
-		{id}
-		{onfocus}
-		bind:value
-		{name}
-		{type}
-		{placeholder}
-		{disabled}
-		{title}
-		class={[inputClass, { '!pl-4': icon == undefined }]}
-		{required}
-		{min}
-		{max}
-		{maxlength}
-		{step}
-		{oninput}
-		autocomplete={!autoComplete ? 'new-password' : undefined}
-	/>
 
-	{#if icon}
-		<Icon src={icon} class={[iconClass, { 'text-gray-400!': disabled }]} {title} />
-	{/if}
+	<div class="relative w-full">
+		<input
+			{id}
+			{onfocus}
+			bind:value
+			{name}
+			{type}
+			{placeholder}
+			{disabled}
+			{title}
+			class={[inputClass, { '!pl-4': icon == undefined }]}
+			{required}
+			{min}
+			{max}
+			{maxlength}
+			{step}
+			{oninput}
+			autocomplete={!autoComplete ? 'new-password' : undefined}
+		/>
+
+		{#if icon}
+			<Icon src={icon} class={[iconClass, { 'text-gray-400!': disabled }]} {title} />
+		{/if}
+	</div>
 
 	{#if error !== undefined && error.length > 0}
 		<span in:fade class="text-sm text-red-500">{error}</span>
