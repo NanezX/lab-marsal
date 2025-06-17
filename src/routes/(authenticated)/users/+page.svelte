@@ -13,7 +13,7 @@
 		Trash,
 		UserPlus
 	} from '@steeze-ui/tabler-icons';
-	import { fade } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 	import { superForm } from 'sveltekit-superforms';
 	import { Button as DropdownButton, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import { removeStyleButton } from '$lib/client/customClasses.js';
@@ -162,7 +162,7 @@
 									/>
 								</DropdownButton>
 
-								<Dropdown simple>
+								<Dropdown simple transition={slide}>
 									{#if user.deleted}
 										<form use:enhance method="POST" action="?/activate" hidden></form>
 										<DropdownItem
