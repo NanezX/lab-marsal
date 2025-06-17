@@ -94,24 +94,18 @@
 	import { onMount } from 'svelte';
 	const flipDurationMs = 300;
 
-	// let items = $state(
-	// 	$form.parameters.map((p) => {
-	// 		return clone({ id: uuidv4(), ...p });
-	// 	})
-	// );
-
 	function handleDndConsider(
 		e: CustomEvent<DndEvent<(typeof $form.parameters)[0] & { id: string }>>
 	) {
 		form.update(($form) => {
-			$form.parameters = e.detail.items;
+			$form.parameters = e.detail.items.map((item_, i_) => ({ ...item_, position: i_ }));
 			return $form;
 		});
 	}
 
 	function handleDndFinalize(e: CustomEvent<DndEvent<(typeof $form.parameters)[0]>>) {
 		form.update(($form) => {
-			$form.parameters = e.detail.items;
+			$form.parameters = e.detail.items.map((item_, i_) => ({ ...item_, position: i_ }));
 			return $form;
 		});
 	}
@@ -120,7 +114,9 @@
 	onMount(() => {
 		form.update(($form) => {
 			$form.parameters = $form.parameters.map((p) => ({
-				id: uuidv4(),
+				// FIXME: Find a way to avoid this
+				// @ts-expect-error We cannot modify the zod form type here only for this
+				id: p.id ?? uuidv4(),
 				...p
 			}));
 			return $form;
