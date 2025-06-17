@@ -114,8 +114,6 @@
 	onMount(() => {
 		form.update(($form) => {
 			$form.parameters = $form.parameters.map((p) => ({
-				// FIXME: Find a way to avoid this
-				// @ts-expect-error We cannot modify the zod form type here only for this
 				id: p.id ?? uuidv4(),
 				...p
 			}));
