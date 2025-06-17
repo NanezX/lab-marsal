@@ -51,7 +51,6 @@ export const load: PageServerLoad = async ({ params }) => {
 export const actions: Actions = {
 	default: async (event) => {
 		console.log('event.params: ', event.params);
-
 		const request = event.request;
 		const form = await superValidate(request, zod(UserEditSchema));
 
