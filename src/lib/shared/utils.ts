@@ -1,6 +1,7 @@
 import type { Dictionary } from 'lodash';
 import { chain, sortBy } from 'lodash-es';
 import type { ExamTypeWithParameters, FindExamData, Patient } from './types';
+import { UserRoles } from './enums';
 
 export function isObject(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -89,6 +90,19 @@ export function cleanEditPatientData(
 	};
 }
 
+export function cleanEditUserData(data: {
+	email: string;
+	role: UserRoles;
+	documentId: number;
+	[key: string]: string | number | boolean;
+}) {
+	return {
+		email: data.email,
+		role: data.role,
+		documentId: data.documentId
+	};
+}
+
 export function cleanEditExamDetails(data: FindExamData) {
 	return {
 		examId: data.id,
@@ -135,3 +149,8 @@ export const normalized = (s: string) =>
 		.normalize('NFD')
 		.replace(/[\u0300-\u036f]/g, '')
 		.toLowerCase();
+
+export const roleMinimums: Partial<Record<UserRoles, number>> = {
+	[UserRoles.Admin]: 1
+	// [UserRoles.Secretaria]: 2, // add more roles in the future
+};

@@ -13,7 +13,7 @@
 		Trash,
 		UserPlus
 	} from '@steeze-ui/tabler-icons';
-	import { fade } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 	import { superForm } from 'sveltekit-superforms';
 	import { Button as DropdownButton, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import { removeStyleButton } from '$lib/client/customClasses.js';
@@ -47,18 +47,25 @@
 	}
 
 	let showConfirmDeleteModal = $state(false);
+	let removeOwnUser = $state(false);
 </script>
 
 <ConfirmModal
 	bind:showModal={showConfirmDeleteModal}
-	title="Eliminar usuario"
-	text="¿Estás seguro de eliminar este usuario? Perdera todo el acceso al sistema"
+	title={removeOwnUser ? 'Tu usuario será eliminado' : 'Eliminar usuario'}
+	text={removeOwnUser
+		? 'Estas intentando eliminar tu propio usuario. Tu sesión se cerrará y perderás todo el acceso al sistema'
+		: '¿Estás seguro de eliminar este usuario? Perdera todo el acceso al sistema'}
 	saveButtonText="Eliminar"
 	cancelButtonText="Cancelar"
-	onClose={() => ($form.id = '')}
+	onClose={() => {
+		$form.id = '';
+		removeOwnUser = false;
+	}}
 	onSave={() => {
 		submitForm();
 		$form.id = '';
+		removeOwnUser = false;
 		return true;
 	}}
 />
@@ -155,18 +162,7 @@
 									/>
 								</DropdownButton>
 
-								<Dropdown simple>
-									<DropdownItem
-										title="Editar usuario"
-										class="flex w-full cursor-pointer items-center gap-x-0.5"
-										onclick={() => alert(`Editar "${user.firstName} ${user.lastName}"`)}
-									>
-										<span>
-											<Icon src={Pencil} size="18" class="text-blue-500" />
-										</span>
-										<span>Editar</span>
-									</DropdownItem>
-
+								<Dropdown simple transition={slide}>
 									{#if user.deleted}
 										<form use:enhance method="POST" action="?/activate" hidden></form>
 										<DropdownItem
@@ -184,11 +180,27 @@
 											<span>Activar</span>
 										</DropdownItem>
 									{:else}
+										<DropdownItem
+											title="Editar usuario"
+											class="flex w-full cursor-pointer items-center gap-x-0.5"
+											href="/users/{user.id}/edit"
+										>
+											<span>
+												<Icon src={Pencil} size="18" class="text-blue-500" />
+											</span>
+											<span>Editar</span>
+										</DropdownItem>
+
 										<form use:enhance method="POST" action="?/delete" hidden></form>
 										<DropdownItem
 											title="Eliminar usuario"
 											class="flex cursor-pointer items-center gap-x-0.5"
 											onclick={() => {
+												// This means that the current logged User-Admin is trying to delete it himself
+												if (user.email.toLowerCase() == data.user.email.toLowerCase()) {
+													removeOwnUser = true;
+												}
+
 												$form.id = user.id;
 												showConfirmDeleteModal = true;
 											}}
