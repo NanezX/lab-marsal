@@ -53,4 +53,8 @@ body {
 	input[type='search']::-webkit-search-cancel-button {
 		display: none;
 	}
+
+	input.sv-input--text:focus {
+		--tw-ring-color: transparent;
+	}
 }
