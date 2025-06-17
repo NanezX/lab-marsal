@@ -10,7 +10,13 @@
 	import { deleteAndReindex } from '$lib/shared/utils';
 	import type { ExamTypeSchema } from '$lib/server/utils/zod';
 	import autoAnimate from '@formkit/auto-animate';
-	import { dndzone, type DndEvent } from 'svelte-dnd-action';
+	import {
+		dndzone,
+		SHADOW_ITEM_MARKER_PROPERTY_NAME,
+		SHADOW_PLACEHOLDER_ITEM_ID,
+		TRIGGERS,
+		type DndEvent
+	} from 'svelte-dnd-action';
 	import { v4 as uuidv4 } from 'uuid';
 
 	// Prop type
@@ -31,71 +37,6 @@
 		);
 
 	let { form, errors, category, addParameter, removeParameterCallback }: PropType = $props();
-
-	/// DRAGEABLES  STATES
-	let draggingItemIndex: number | null = $state(null);
-	let hoveredItemIndex: number | null = $state(null);
-	let container: HTMLDivElement | null = $state(null);
-	let isOutside: boolean = $state(false);
-
-	function onDragStart(index: number) {
-		draggingItemIndex = index;
-	}
-
-	function onDragOver(index: number) {
-		hoveredItemIndex = index;
-	}
-
-	function onDragEnd() {
-		form.update(($form) => {
-			if (
-				draggingItemIndex != null &&
-				hoveredItemIndex != null &&
-				draggingItemIndex != hoveredItemIndex &&
-				!isOutside
-			) {
-				// Reorganize parameter items
-				[$form.parameters[draggingItemIndex], $form.parameters[hoveredItemIndex]] = [
-					$form.parameters[hoveredItemIndex],
-					$form.parameters[draggingItemIndex]
-				];
-
-				const aux = $form.parameters[draggingItemIndex].position;
-				$form.parameters[draggingItemIndex].position = $form.parameters[hoveredItemIndex].position;
-				$form.parameters[hoveredItemIndex].position = aux;
-
-				// Reorganize error items
-				if ($errors.parameters) {
-					[$errors.parameters[draggingItemIndex], $errors.parameters[hoveredItemIndex]] = [
-						$errors.parameters[hoveredItemIndex],
-						$errors.parameters[draggingItemIndex]
-					];
-				}
-
-				// Balance
-				draggingItemIndex = hoveredItemIndex;
-			}
-
-			hoveredItemIndex = null;
-
-			return $form;
-		});
-	}
-
-	function windowOnDragOver(e: DragEvent & { currentTarget: EventTarget & Window }) {
-		// Get the target element under the mouse
-		const target = e.target;
-		// const target = e.target as HTMLElement;
-
-		if (target) {
-			// If the target is NOT inside the container, set isOutside to true
-			if (!(target as HTMLElement).closest('.drag-container')) {
-				isOutside = true;
-				return;
-			}
-		}
-		isOutside = false;
-	}
 
 	function removeParameter(paramIndex_: number) {
 		// Check if the parameter exists and if it has more than one element
@@ -150,62 +91,53 @@
 
 	import { flip } from 'svelte/animate';
 	import { clone } from 'lodash-es';
+	import { onMount } from 'svelte';
 	const flipDurationMs = 300;
 
-	let items = $state(
-		$form.parameters.map((p) => {
-			return clone({ id: uuidv4(), ...p });
-		})
-	);
+	// let items = $state(
+	// 	$form.parameters.map((p) => {
+	// 		return clone({ id: uuidv4(), ...p });
+	// 	})
+	// );
 
-	function handleDndConsider(e: CustomEvent<DndEvent<(typeof items)[0]>>) {
-		items = e.detail.items;
-	}
-
-	function handleDndFinalize(e: CustomEvent<DndEvent<(typeof items)[0]>>) {
-		const itemIndex = items.findIndex((item_) => item_.id === e.detail.info.id);
-
+	function handleDndConsider(
+		e: CustomEvent<DndEvent<(typeof $form.parameters)[0] & { id: string }>>
+	) {
 		form.update(($form) => {
-			const paramIndex = $form.parameters.findIndex(
-				(param_) => param_.position === items[itemIndex].position
-			);
-
-			// Reorganize parameter items
-			[$form.parameters[itemIndex], $form.parameters[paramIndex]] = [
-				$form.parameters[paramIndex],
-				$form.parameters[itemIndex]
-			];
-
-			const aux = $form.parameters[itemIndex].position;
-			$form.parameters[itemIndex].position = $form.parameters[paramIndex].position;
-			$form.parameters[paramIndex].position = aux;
-
-			// Reorganize error items
-			if ($errors.parameters) {
-				[$errors.parameters[itemIndex], $errors.parameters[paramIndex]] = [
-					$errors.parameters[paramIndex],
-					$errors.parameters[itemIndex]
-				];
-			}
-
+			$form.parameters = e.detail.items;
 			return $form;
 		});
-
-		items = e.detail.items;
 	}
+
+	function handleDndFinalize(e: CustomEvent<DndEvent<(typeof $form.parameters)[0]>>) {
+		form.update(($form) => {
+			$form.parameters = e.detail.items;
+			return $form;
+		});
+	}
+
+	// Add a stable id to each param exactly once
+	onMount(() => {
+		form.update(($form) => {
+			$form.parameters = $form.parameters.map((p) => ({
+				id: uuidv4(),
+				...p
+			}));
+			return $form;
+		});
+	});
 </script>
 
-<!-- To control when the drag ends outside of th drag container -->
-<!-- <svelte:window ondragover={windowOnDragOver} /> -->
-
-<!-- use:autoAnimate -->
 <div
 	class="space-y-4"
-	use:dndzone={{ items, flipDurationMs }}
+	use:dndzone={{
+		items: $form.parameters as Array<(typeof $form.parameters)[0] & { id: string }>,
+		flipDurationMs: 200
+	}}
 	onconsider={handleDndConsider}
 	onfinalize={handleDndFinalize}
 >
-	{#each items as parameter_, index_ (parameter_.id)}
+	{#each $form.parameters as Array<(typeof $form.parameters)[0] & { id: string }> as parameter_, index_ (parameter_.id)}
 		<!-- Handle rendering:
      - If no `category` prop is passed, all the parameters will be render
      - If a `category` prop is passed, only the parameters with the same category will be rendered
