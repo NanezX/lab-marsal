@@ -11,6 +11,7 @@
 	import { maxDocumentId, minDocumentId } from '$lib/shared/utils.js';
 	import { userRolesItems } from '$lib/client/enumItems.js';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
+	import { fade } from 'svelte/transition';
 
 	let { data } = $props();
 
@@ -36,6 +37,7 @@
 
 <!-- Izquierda Saludo -->
 <div
+	in:fade
 	class="rounded-l-lm from-secondary-blue to-primary-blue w-2/5 space-y-10 rounded-l-xl bg-linear-to-br text-white"
 >
 	<div class="flex items-center justify-around">
@@ -55,6 +57,7 @@
 
 <!-- Derecha register new process -->
 <div
+	in:fade
 	class="flex w-3/5 flex-col justify-center space-y-8 rounded-r-xl border border-gray-200 bg-white"
 >
 	<div class="relative flex justify-center">
