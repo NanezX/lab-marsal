@@ -1,17 +1,6 @@
 <script lang="ts">
-	import { slide } from 'svelte/transition';
 	import icon from '$lib/assets/icon.png';
-	import { ChevronDown, UserCircle, Logout } from '@steeze-ui/tabler-icons';
-	import { Icon } from '@steeze-ui/svelte-icon';
-	import { clickedOutside } from '../actions/clickedOutside';
-	import Button from '../Button.svelte';
 	import UserDropdown from '../dropdown/UserDropdown.svelte';
-	import type { UserRoles } from '$lib/shared/enums';
-	import { getUserContext } from '$lib/client/context';
-
-	const { email, firstName, lastName } = getUserContext();
-
-	let isOpen = $state(false);
 </script>
 
 <!-- Navigation bar -->
