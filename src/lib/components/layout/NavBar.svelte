@@ -7,17 +7,16 @@
 	import Button from '../Button.svelte';
 	import UserDropdown from '../dropdown/UserDropdown.svelte';
 	import type { UserRoles } from '$lib/shared/enums';
+	import { getUserContext } from '$lib/client/context';
 
 	// Prop type
 	type PropType = {
 		fullName: string;
-		email: string;
-		firstName: string;
-		lastName: string;
-		role: UserRoles;
 	};
 
-	let { fullName, email = 'No email', firstName, lastName, role }: PropType = $props();
+	let { fullName }: PropType = $props();
+
+	const { email, role, firstName, lastName } = getUserContext();
 
 	let isOpen = $state(false);
 </script>
@@ -32,7 +31,7 @@
 			</div>
 		</a>
 
-		<UserDropdown {email} {firstName} {lastName} {role}/>
+		<UserDropdown />
 
 		<!-- Dropdown container -->
 		<div
