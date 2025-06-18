@@ -8,18 +8,22 @@
 		DropdownGroup,
 		DropdownDivider
 	} from 'flowbite-svelte';
-	import autoAnimate from '@formkit/auto-animate';
 	import { slide } from 'svelte/transition';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { ChevronDown } from '@steeze-ui/tabler-icons';
+	import IconRol from '../IconRol.svelte';
+	import type { UserRoles } from '$lib/shared/enums';
 
 	// Prop type
 	type PropType = {
+		email: string;
 		firstName: string;
 		lastName: string;
+		role: UserRoles;
 	};
 
-	let { firstName, lastName }: PropType = $props();
+	let { email, firstName, lastName, role }: PropType = $props();
+
 	let isOpen = $state(false);
 </script>
 
@@ -52,11 +56,19 @@
 		transitionParams={{ duration: 500 }}
 		class="border-primary-blue border"
 	>
-		<DropdownHeader>
-			<span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
-			<span class="block truncate text-sm font-medium">name@flowbite.com</span>
+		<DropdownHeader class="cursor-default space-y-1">
+			<span class="block text-sm text-gray-900 dark:text-white">{firstName} {lastName}</span>
+			<span class="inline-flex gap-x-1 truncate text-sm font-medium capitalize">
+				<span>
+					{role}
+				</span>
+				<span>
+					<IconRol {role} />
+				</span>
+			</span>
+			<span class="block truncate text-sm font-medium">{email}</span>
 		</DropdownHeader>
-		<DropdownDivider />
+		<DropdownDivider class="bg-primary-gray/50" />
 
 		<DropdownGroup>
 			<DropdownItem>Dashboard</DropdownItem>
