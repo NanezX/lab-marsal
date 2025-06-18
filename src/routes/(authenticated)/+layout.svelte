@@ -4,8 +4,11 @@
 	import NavBar from '$lib/components/layout/NavBar.svelte';
 	import SideBar from '$lib/components/layout/SideBar.svelte';
 	import { page } from '$app/state';
+	import { setUserContext } from '$lib/client/context.js';
 
 	let { children, data } = $props();
+
+	setUserContext(data.user);
 </script>
 
 <div class="h-full w-full">

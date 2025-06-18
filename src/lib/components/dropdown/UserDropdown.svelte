@@ -12,17 +12,9 @@
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { ChevronDown } from '@steeze-ui/tabler-icons';
 	import IconRol from '../IconRol.svelte';
-	import type { UserRoles } from '$lib/shared/enums';
+	import { getUserContext } from '$lib/client/context';
 
-	// Prop type
-	type PropType = {
-		email: string;
-		firstName: string;
-		lastName: string;
-		role: UserRoles;
-	};
-
-	let { email, firstName, lastName, role }: PropType = $props();
+	const { email, role, firstName, lastName } = getUserContext();
 
 	let isOpen = $state(false);
 </script>
