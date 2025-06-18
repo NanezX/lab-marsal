@@ -100,7 +100,7 @@
 				<Link
 					href="/account/change-password"
 					title="Cambia tu contraseña"
-					class="inline-flex items-center gap-x-1 !bg-green-400 hover:!bg-green-500"
+					class="!bg-primary-blue hover:!bg-primary-blue/75 inline-flex items-center gap-x-1"
 				>
 					<span>
 						<Icon src={LockPassword} size="22" />
