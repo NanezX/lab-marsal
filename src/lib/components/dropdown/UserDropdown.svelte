@@ -49,7 +49,6 @@
 		class="border-primary-blue border"
 	>
 		<DropdownHeader class="cursor-default space-y-1">
-			<span class="block text-sm text-gray-900 dark:text-white">{firstName} {lastName}</span>
 			<span class="inline-flex gap-x-1 truncate text-sm font-medium capitalize">
 				<span>
 					{role}
