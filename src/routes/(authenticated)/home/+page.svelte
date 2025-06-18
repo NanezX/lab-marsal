@@ -1,113 +1,14 @@
 <script lang="ts">
-	import { zoom } from '$lib/components/actions/zoom.js';
-	import { formatCapital } from '$lib/shared/utils.js';
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { fade } from 'svelte/transition';
 	import icon from '$lib/assets/logo.webp';
-	import {
-		UserShare,
-		FileSearch,
-		CircleChevronsUp,
-		CircleMinus,
-		CircleCheck,
-		UserSearch
-	} from '@steeze-ui/tabler-icons';
+	import { FileSearch, UserSearch } from '@steeze-ui/tabler-icons';
 	import { Img } from 'flowbite-svelte';
 	import ExamStatus from '$lib/components/ExamStatus.svelte';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { formatRelativeDate } from '$lib/client/index.js';
 
 	let { data } = $props();
-
-	// TODO: Recheck the types laters coming from the DB
-	type Exam = {
-		id: string;
-		type: 'hematologia' | 'tipiaje sanguineo' | 'otros';
-		clientName: string;
-		clientLastName: string;
-		createdAt: string;
-		priority: 'urgente' | 'normal';
-		pending: boolean;
-	};
-	type Client = {
-		id: string;
-		name: string;
-		lastName: string;
-		updatedAt: string;
-		pendingExams: number;
-	};
-
-	// TODO: Last exams views (max 4 exams). This should come already by latest view
-	const lastExams: Exam[] = [
-		{
-			id: '1',
-			type: 'hematologia',
-			clientName: 'Yacsuri',
-			clientLastName: 'Rios',
-			createdAt: 'Hace 2 horas',
-			priority: 'urgente',
-			pending: false
-		},
-		{
-			id: '2',
-			type: 'hematologia',
-			clientName: 'Victor',
-			clientLastName: 'Hernandez',
-			createdAt: 'Hace 3 dias',
-			priority: 'normal',
-			pending: true
-		},
-		{
-			id: '3',
-			type: 'otros',
-			clientName: 'Juan',
-			clientLastName: 'Perez',
-			createdAt: 'Hace 5 dias',
-			priority: 'normal',
-			pending: false
-		},
-		{
-			id: '4',
-			type: 'hematologia',
-			clientName: 'Juan',
-			clientLastName: 'Perez',
-			createdAt: 'Hace 5 dias',
-			priority: 'urgente',
-			pending: true
-		}
-	];
-
-	// TODO: Last client views (max 4 clients). This should come already by latest view
-	const lastClients: Client[] = [
-		{
-			id: '1',
-			name: 'Victor',
-			lastName: 'Hernandez',
-			updatedAt: 'Hace 2 horas',
-			pendingExams: 1
-		},
-		{
-			id: '2',
-			name: 'Yacsuri',
-			lastName: 'Rios',
-			updatedAt: 'Ayer',
-			pendingExams: 0
-		},
-		{
-			id: '3',
-			name: 'Juan',
-			lastName: 'Perez',
-			updatedAt: 'Hace 4 dias',
-			pendingExams: 2
-		},
-		{
-			id: '4',
-			name: 'Daniela',
-			lastName: 'Sanchez',
-			updatedAt: 'Hace 1 semana',
-			pendingExams: 0
-		}
-	];
 </script>
 
 <div in:fade class="flex w-full flex-col">
