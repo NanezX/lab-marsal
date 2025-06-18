@@ -10,6 +10,8 @@
 	} from 'flowbite-svelte';
 	import autoAnimate from '@formkit/auto-animate';
 	import { slide } from 'svelte/transition';
+	import { Icon } from '@steeze-ui/svelte-icon';
+	import { ChevronDown } from '@steeze-ui/tabler-icons';
 
 	// Prop type
 	type PropType = {
@@ -31,6 +33,15 @@
 		<Avatar id="user-drop" size="sm">{firstName[0] + lastName[0]}</Avatar>
 
 		<p class="text-white">{firstName} {lastName}</p>
+
+		<span
+			class={[
+				'mt-[2px] mr-2 text-white transition-transform duration-200',
+				{ 'rotate-180': isOpen }
+			]}
+		>
+			<Icon src={ChevronDown} size="18" />
+		</span>
 	</Button>
 
 	<Dropdown
@@ -39,6 +50,7 @@
 		simple
 		transition={slide}
 		transitionParams={{ duration: 500 }}
+		class="border-primary-blue border"
 	>
 		<DropdownHeader>
 			<span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
