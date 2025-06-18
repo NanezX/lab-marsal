@@ -5,7 +5,8 @@
 		DropdownItem,
 		Avatar,
 		DropdownHeader,
-		DropdownGroup
+		DropdownGroup,
+		DropdownDivider
 	} from 'flowbite-svelte';
 	import autoAnimate from '@formkit/auto-animate';
 	import { slide } from 'svelte/transition';
@@ -17,6 +18,7 @@
 	};
 
 	let { firstName, lastName }: PropType = $props();
+	let isOpen = $state(false);
 </script>
 
 <div class="relative inline-flex items-center">
@@ -32,6 +34,7 @@
 	</Button>
 
 	<Dropdown
+		bind:isOpen
 		triggeredBy="#avatar_with_name"
 		simple
 		transition={slide}
@@ -41,6 +44,8 @@
 			<span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
 			<span class="block truncate text-sm font-medium">name@flowbite.com</span>
 		</DropdownHeader>
+		<DropdownDivider />
+
 		<DropdownGroup>
 			<DropdownItem>Dashboard</DropdownItem>
 			<DropdownItem>Settings</DropdownItem>
