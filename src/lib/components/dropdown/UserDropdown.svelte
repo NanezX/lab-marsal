@@ -60,13 +60,21 @@
 			</span>
 			<span class="block truncate text-sm font-medium">{email}</span>
 		</DropdownHeader>
+
 		<DropdownDivider class="bg-primary-gray/50" />
 
 		<DropdownGroup>
-			<DropdownItem>Dashboard</DropdownItem>
-			<DropdownItem>Settings</DropdownItem>
-			<DropdownItem>Earnings</DropdownItem>
+			<DropdownItem href="/account">Mi perfil</DropdownItem>
+
+			<form id="logout-form" method="POST" action="/logout" class="hidden"></form>
+			<DropdownItem
+				onclick={() => {}}
+				form="logout-form"
+				type="submit"
+				class="w-full cursor-pointer text-start"
+			>
+				Cerrar sesión
+			</DropdownItem>
 		</DropdownGroup>
-		<DropdownHeader>Sign out</DropdownHeader>
 	</Dropdown>
 </div>

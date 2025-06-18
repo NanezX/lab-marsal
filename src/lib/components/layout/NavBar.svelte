@@ -9,7 +9,7 @@
 	import type { UserRoles } from '$lib/shared/enums';
 	import { getUserContext } from '$lib/client/context';
 
-	const { email, role, firstName, lastName } = getUserContext();
+	const { email, firstName, lastName } = getUserContext();
 
 	let isOpen = $state(false);
 </script>
