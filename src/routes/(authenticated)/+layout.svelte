@@ -14,6 +14,7 @@
 		email={data.user.email}
 		firstName={data.user.firstName}
 		lastName={data.user.lastName}
+		role={data.user.role}
 	/>
 	<div class="mx-auto mt-10 flex justify-evenly px-40">
 		<div class="space-y-10">

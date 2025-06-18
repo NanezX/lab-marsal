@@ -6,6 +6,7 @@
 	import { clickedOutside } from '../actions/clickedOutside';
 	import Button from '../Button.svelte';
 	import UserDropdown from '../dropdown/UserDropdown.svelte';
+	import type { UserRoles } from '$lib/shared/enums';
 
 	// Prop type
 	type PropType = {
@@ -13,9 +14,10 @@
 		email: string;
 		firstName: string;
 		lastName: string;
+		role: UserRoles;
 	};
 
-	let { fullName, email = 'No email', firstName, lastName }: PropType = $props();
+	let { fullName, email = 'No email', firstName, lastName, role }: PropType = $props();
 
 	let isOpen = $state(false);
 </script>
@@ -30,7 +32,7 @@
 			</div>
 		</a>
 
-		<UserDropdown {firstName} {lastName} />
+		<UserDropdown {email} {firstName} {lastName} {role}/>
 
 		<!-- Dropdown container -->
 		<div
