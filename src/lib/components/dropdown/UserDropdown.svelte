@@ -24,7 +24,7 @@
 		pill
 		color="light"
 		id="avatar_with_name"
-		class="bg-primary-blue hover:bg-primary-blue/75 !h-fit cursor-pointer gap-x-2 rounded-lg border-0 !px-1 !py-1.5"
+		class="bg-primary-blue hover:bg-primary-blue/75 !h-fit cursor-pointer gap-x-2 rounded-2xl border-0 !px-1 !py-1.5"
 	>
 		<Avatar id="user-drop" size="sm">{firstName[0] + lastName[0]}</Avatar>
 
