@@ -9,13 +9,6 @@
 	import type { UserRoles } from '$lib/shared/enums';
 	import { getUserContext } from '$lib/client/context';
 
-	// Prop type
-	type PropType = {
-		fullName: string;
-	};
-
-	let { fullName }: PropType = $props();
-
 	const { email, role, firstName, lastName } = getUserContext();
 
 	let isOpen = $state(false);
@@ -44,7 +37,7 @@
 				class="flex items-center gap-x-2 rounded-lg px-4 py-2"
 			>
 				<span>
-					{fullName}
+					{`${firstName} ${lastName}`}
 				</span>
 				<span class={['mt-[2px] transition-transform duration-200', { 'rotate-180': isOpen }]}>
 					<Icon src={ChevronDown} size="18" />

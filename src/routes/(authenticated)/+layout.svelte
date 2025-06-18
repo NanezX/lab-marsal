@@ -12,7 +12,7 @@
 </script>
 
 <div class="h-full w-full">
-	<NavBar fullName={`${data.user.firstName} ${data.user.lastName}`} />
+	<NavBar />
 	<div class="mx-auto mt-10 flex justify-evenly px-40">
 		<div class="space-y-10">
 			<SideBar />
