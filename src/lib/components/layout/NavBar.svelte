@@ -5,14 +5,17 @@
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import { clickedOutside } from '../actions/clickedOutside';
 	import Button from '../Button.svelte';
+	import UserDropdown from '../dropdown/UserDropdown.svelte';
 
 	// Prop type
 	type PropType = {
 		fullName: string;
 		email: string;
+		firstName: string;
+		lastName: string;
 	};
 
-	let { fullName, email = 'No email' }: PropType = $props();
+	let { fullName, email = 'No email', firstName, lastName }: PropType = $props();
 
 	let isOpen = $state(false);
 </script>
@@ -26,6 +29,8 @@
 				<p class="text-xl font-bold">LabMarsal</p>
 			</div>
 		</a>
+
+		<UserDropdown {firstName} {lastName} />
 
 		<!-- Dropdown container -->
 		<div
