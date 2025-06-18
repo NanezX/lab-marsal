@@ -52,7 +52,6 @@ export const actions: Actions = {
 					// Use an already created patient ID
 					patientId = patient.id;
 				} else {
-					// TODO: From here is duplicate code from /client/create default action. It should be refactored
 					// Create/insert the patient data
 					const { firstName, lastName, documentId, birthdate, gender, email, phoneNumber } =
 						patient.data;
@@ -103,7 +102,7 @@ export const actions: Actions = {
 
 				// 3. TAG - CUSTOM TAG
 
-				// TODO: Allow custom configuration for auto tag generation based on app settings
+				// Maybe for future: Allow custom configuration for auto tag generation based on app settings
 				const tag = customTag.kind == 'manual' ? customTag.tag : await generateNextExamTag(tx);
 
 				// INSERT EXAM DATA

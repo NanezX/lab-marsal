@@ -14,8 +14,6 @@ import type { PgTable, PgTransaction } from 'drizzle-orm/pg-core';
 import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js';
 import { validate as validateUUID } from 'uuid';
 
-// TODO: Maybe make `tx` optional, relay on db if not passed the tx
-
 type TxType = PgTransaction<
 	PostgresJsQueryResultHKT,
 	typeof import('$lib/server/db/schema'),
@@ -69,8 +67,6 @@ export async function getOrCreateClassification(
 	return classificationId;
 }
 
-// TODO: Maybe make `tx` optional, relay on db if not passed the tx
-// TODO: Allow custom configuration for auto tag generation based on app settings
 export async function generateNextExamTag(tx: TxType) {
 	const latestExam = await tx.query.exam.findFirst({
 		where: (exam, { like }) => like(exam.customTag, 'EX-%'),
