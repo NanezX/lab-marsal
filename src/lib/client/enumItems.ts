@@ -1,3 +1,4 @@
+import { Folder, Microscope, Seeding, Shield, type IconSource } from '@steeze-ui/tabler-icons';
 import { ExamPriority, PatientGender, UserRoles, ExamStatus, PaymentMethod } from '../shared/enums';
 import { formatCapital } from '../shared/utils';
 
@@ -69,3 +70,10 @@ export const examPaymentMethodItems = [
 		label: paymentMethodLabels[method]
 	}))
 ];
+
+export const IconRoles: Record<string, IconSource> = {
+	[UserRoles.Admin]: Shield,
+	[UserRoles.Auxiliar]: Seeding,
+	[UserRoles.Bioanalista]: Microscope,
+	[UserRoles.Secretaria]: Folder
+};

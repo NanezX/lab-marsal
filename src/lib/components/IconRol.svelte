@@ -1,11 +1,7 @@
 <script lang="ts">
+	import { IconRoles } from '$lib/client';
 	import { UserRoles } from '$lib/shared/enums';
-	import {
-		ShieldOutline,
-		MicroscopeOutline,
-		SeedlingOutline,
-		FolderOutline
-	} from 'flowbite-svelte-icons';
+	import { Icon } from '@steeze-ui/svelte-icon';
 	import type { ClassValue } from 'svelte/elements';
 
 	// Prop type
@@ -15,15 +11,6 @@
 	};
 
 	let { role, class: className = 'text-primary-blue h-5 w-5' }: PropType = $props();
-
-	const IconRoles: Record<string, typeof ShieldOutline> = {
-		[UserRoles.Admin]: ShieldOutline,
-		[UserRoles.Auxiliar]: SeedlingOutline,
-		[UserRoles.Bioanalista]: MicroscopeOutline,
-		[UserRoles.Secretaria]: FolderOutline
-	};
-
-	const C = IconRoles[role];
 </script>
 
-<C class={className} />
+<Icon src={IconRoles[role]} class={className} title={role} />

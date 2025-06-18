@@ -1,21 +1,16 @@
 <script lang="ts">
-	import { getAgeFromDate } from '$lib/client';
+	import { getAgeFromDate, IconRoles } from '$lib/client';
 	import { getUserContext } from '$lib/client/context';
 	import Button from '$lib/components/Button.svelte';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import Link from '$lib/components/Link.svelte';
-	import { UserRoles } from '$lib/shared/enums';
-	import { Icon, type IconSource } from '@steeze-ui/svelte-icon';
+	import { Icon } from '@steeze-ui/svelte-icon';
 	import {
 		At,
 		ClockEdit,
 		ClockPlus,
 		User,
-		Shield,
-		Seeding,
-		Microscope,
-		Folder,
 		Id,
 		Packages,
 		Cake,
@@ -24,14 +19,6 @@
 		LockPassword
 	} from '@steeze-ui/tabler-icons';
 	import { fade } from 'svelte/transition';
-
-	// const IconRoles: Record<string, typeof ShieldOutline> = {
-	const IconRoles: Record<string, IconSource> = {
-		[UserRoles.Admin]: Shield,
-		[UserRoles.Auxiliar]: Seeding,
-		[UserRoles.Bioanalista]: Microscope,
-		[UserRoles.Secretaria]: Folder
-	};
 
 	const dataUser = getUserContext();
 </script>
