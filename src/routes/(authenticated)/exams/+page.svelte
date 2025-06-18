@@ -147,6 +147,12 @@
 						labelClass="font-semibold"
 					/>
 				</a>
+			{:else}
+				<div class="col-span-2 xl:col-span-3">
+					<p class="text-center text-lg font-semibold text-gray-500">
+						No se encontraron resultados
+					</p>
+				</div>
 			{/each}
 		</div>
 
