@@ -1,11 +1,5 @@
 import { db } from '$lib/server/db';
-import {
-	exam,
-	examType,
-	patient,
-	patient as patientTable,
-	exam as examTable
-} from '$lib/server/db/schema';
+import { exam, examType, patient } from '$lib/server/db/schema';
 import { eq, desc, count, sql } from 'drizzle-orm';
 
 export const load = async () => {
@@ -23,6 +17,7 @@ export const load = async () => {
 			examTypeName: examType.name
 		})
 		.from(exam)
+		.where(eq(exam.deleted, false))
 		.innerJoin(patient, eq(patient.id, exam.patientId))
 		.innerJoin(examType, eq(examType.id, exam.examTypeId))
 		.orderBy(desc(exam.updatedAt))
@@ -30,19 +25,26 @@ export const load = async () => {
 
 	const lastPatientsUpdated = await db
 		.select({
-			id: patientTable.id,
-			firstName: patientTable.firstName,
-			lastName: patientTable.lastName,
-			documentId: patientTable.documentId,
-			createdAt: patientTable.createdAt,
-			updateAt: patientTable.updatedAt,
-			examCount: count(examTable.id).as('exam_count')
+			id: patient.id,
+			firstName: patient.firstName,
+			lastName: patient.lastName,
+			documentId: patient.documentId,
+			createdAt: patient.createdAt,
+			updatedAt: patient.updatedAt,
+			lastExamUpdate: sql`MAX(${exam.updatedAt})`.as('last_exam_update'),
+			effectiveUpdatedAt: sql`GREATEST(${patient.updatedAt}, MAX(${exam.updatedAt}))`.as(
+				'effective_updated_at'
+			),
+			examCount: count(exam.id).as('exam_count')
 		})
-		.from(patientTable)
-		.leftJoin(examTable, eq(examTable.patientId, patientTable.id))
-		.groupBy(patientTable.id)
-		.orderBy(desc(patient.updatedAt))
+		.from(patient)
+		.where(eq(patient.deleted, false))
+		.leftJoin(exam, eq(exam.patientId, patient.id))
+		.groupBy(patient.id)
+		.orderBy(sql`effective_updated_at DESC`)
 		.limit(4);
 
-	return { lastExamsUpdated, lastPatientsUpdated };
+	const a = { lastExamsUpdated, lastPatientsUpdated };
+	console.log('a: ', a);
+	return a;
 };
