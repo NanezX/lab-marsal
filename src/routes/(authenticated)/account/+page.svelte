@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { getAgeFromDate } from '$lib/client';
 	import { getUserContext } from '$lib/client/context';
+	import Button from '$lib/components/Button.svelte';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import LabelValue from '$lib/components/LabelValue.svelte';
+	import Link from '$lib/components/Link.svelte';
 	import { UserRoles } from '$lib/shared/enums';
-	import type { IconSource } from '@steeze-ui/svelte-icon';
+	import { Icon, type IconSource } from '@steeze-ui/svelte-icon';
 	import {
 		At,
 		ClockEdit,
@@ -16,7 +18,11 @@
 		Folder,
 		Id,
 		Packages,
-		Cake
+		Cake,
+		Pencil,
+		Trash,
+		PasswordUser,
+		LockPassword
 	} from '@steeze-ui/tabler-icons';
 	import { fade } from 'svelte/transition';
 
@@ -40,7 +46,15 @@
 
 	<div>
 		<div class="space-y-5">
-			<p class="text-2xl">Datos personales</p>
+			<p class="inline-flex items-center gap-x-2 text-2xl">
+				<span> Datos personales </span>
+
+				<span>
+					<a href="/account/edit" title="Editar cuenta">
+						<Icon src={Pencil} size="24" class="text-green-500 hover:text-green-600" />
+					</a>
+				</span>
+			</p>
 
 			<div class="grid grid-cols-2 gap-x-4 gap-y-3">
 				<LabelValue
@@ -76,6 +90,35 @@
 						icon={ClockEdit}
 					/>
 				{/if}
+			</div>
+
+			<hr class="border-primary-gray/50 my-4" />
+
+			<p class="inline-flex items-center gap-x-2 text-2xl">Seguridad</p>
+
+			<div class="flex items-center gap-x-2">
+				<Link
+					href="/account/change-password"
+					title="Cambia tu contraseña"
+					class="inline-flex items-center gap-x-1 !bg-green-400 hover:!bg-green-500"
+				>
+					<span>
+						<Icon src={LockPassword} size="22" />
+					</span>
+					<span>Cambiar contraseña</span>
+				</Link>
+
+				<!-- TODO: Implement with a confirm modal -->
+				<Button
+					onclick={() => alert('Eliminar cuenta - Funcionalidad no implementada')}
+					title="Eliminar tu cuenta"
+					class="inline-flex items-center gap-x-1 !bg-red-400 hover:!bg-red-500"
+				>
+					<span>
+						<Icon src={Trash} size="22" />
+					</span>
+					<span>Desactivar cuenta</span>
+				</Button>
 			</div>
 		</div>
 	</div>
