@@ -4,12 +4,15 @@
 	import NavBar from '$lib/components/layout/NavBar.svelte';
 	import SideBar from '$lib/components/layout/SideBar.svelte';
 	import { page } from '$app/state';
+	import { setUserContext } from '$lib/client/context.js';
 
 	let { children, data } = $props();
+
+	setUserContext(data.user);
 </script>
 
 <div class="h-full w-full">
-	<NavBar fullName={`${data.user.firstName} ${data.user.lastName}`} email={data.user.email} />
+	<NavBar />
 	<div class="mx-auto mt-10 flex justify-evenly px-40">
 		<div class="space-y-10">
 			<SideBar />
