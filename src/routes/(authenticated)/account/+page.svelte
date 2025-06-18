@@ -21,7 +21,6 @@
 		Cake,
 		Pencil,
 		Trash,
-		PasswordUser,
 		LockPassword
 	} from '@steeze-ui/tabler-icons';
 	import { fade } from 'svelte/transition';
