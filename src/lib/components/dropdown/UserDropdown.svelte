@@ -45,7 +45,7 @@
 		triggeredBy="#avatar_with_name"
 		simple
 		transition={slide}
-		transitionParams={{ duration: 500 }}
+		transitionParams={{ duration: 300 }}
 		class="border-primary-blue border"
 	>
 		<DropdownHeader class="cursor-default space-y-1">
