@@ -9,7 +9,8 @@
 		FileSearch,
 		CircleChevronsUp,
 		CircleMinus,
-		CircleCheck
+		CircleCheck,
+		UserSearch
 	} from '@steeze-ui/tabler-icons';
 	import { Img } from 'flowbite-svelte';
 	import ExamStatus from '$lib/components/ExamStatus.svelte';
@@ -120,7 +121,7 @@
 	</div>
 
 	<div class="space-y-4">
-		<div class="space-y-2 pt-2">
+		<div class="space-y-4 pt-2">
 			<p class="text-center text-xl font-bold">Ultimos examenes actualizados</p>
 
 			<div class="mt-4 grid grid-cols-2 gap-3">
@@ -159,82 +160,37 @@
 					</div>
 				{/each}
 			</div>
-
-			<div class="grid grid-cols-2 gap-2">
-				{#each lastExams as exam}
-					<a
-						use:zoom
-						href="/exams/{exam.id}"
-						class="group flex flex-col gap-y-2 rounded-sm border-2 border-gray-200 bg-gray-100/50 px-4 py-2 text-sm"
-					>
-						<div class="flex justify-between">
-							<p>
-								<span class="font-semibold">Tipo: </span>
-								<span>{formatCapital(exam.type)}</span>
-							</p>
-							<p class="inline-flex gap-x-2">
-								{#if exam.pending}
-									<span class="font-semibold">Prioridad: </span>
-									<span>
-										<Icon
-											src={exam.priority == 'urgente' ? CircleChevronsUp : CircleMinus}
-											size="22"
-											class={{
-												'text-red-400': exam.priority == 'urgente'
-											}}
-										/>
-									</span>
-								{:else}
-									<Icon src={CircleCheck} size="22" class="text-green-400" />
-								{/if}
-							</p>
-						</div>
-						<div class="flex justify-between">
-							<p>
-								<span class="font-semibold"> Cliente: </span>
-								<span>
-									{exam.clientName.at(0)}.
-									{exam.clientLastName}
-								</span>
-							</p>
-							<p><span class="font-semibold">Tipo:</span> {formatCapital(exam.type)}</p>
-						</div>
-
-						<div class="flex justify-between">
-							<p><span class="font-semibold">Creacion:</span> {exam.createdAt}</p>
-							<Icon src={FileSearch} size="20" class="group-hover:text-primary-blue" />
-						</div>
-					</a>
-				{/each}
-			</div>
 		</div>
 
-		<div class="space-y-2 pt-2">
-			<p class="text-center text-xl font-bold">Ultimos clientes vistos</p>
+		<div class="space-y-4 pt-2">
+			<p class="text-center text-xl font-bold">Ultimos clientes actualizados</p>
 
-			<div class="grid grid-cols-2 gap-2">
-				{#each lastClients as client}
+			<div class="grid grid-cols-2 gap-3">
+				{#each data.lastPatientsUpdated as patient}
 					<a
-						use:zoom
-						href="/clients/{client.id}"
-						class="group flex flex-col gap-y-2 rounded-sm border-2 border-gray-200 bg-gray-100/50 px-4 py-2 text-sm"
+						title="{patient.firstName} {patient.lastName}"
+						href="/clients/{patient.id}"
+						class="group hover:border-primary-blue flex flex-col gap-y-2 rounded-sm border bg-white px-4 py-2 transition-all select-none hover:-translate-y-1 hover:border hover:shadow-2xl"
 					>
-						<div class="flex justify-between">
-							<p>
-								<span class="font-semibold"> Nombre: </span>
-								<span>
-									{client.name.at(0)}.
-									{client.lastName}
-								</span>
-							</p>
-							<p><span class="font-semibold">Pendientes:</span> {client.pendingExams}</p>
+						<div class="inline-flex w-full items-center justify-between">
+							<p class="font-bold">{patient.firstName} {patient.lastName}</p>
+							<Icon
+								src={UserSearch}
+								size="24"
+								class="group-hover:text-primary-blue transition-all group-hover:scale-125"
+							/>
 						</div>
 
-						<div class="flex justify-between">
-							<p><span class="font-semibold">Ultima modificacion:</span> {client.updatedAt}</p>
-							<Icon src={UserShare} size="20" class="group-hover:text-primary-blue" />
-						</div>
+						<LabelValue label="CI" value={patient.documentId} />
+
+						<LabelValue label="Cantidad" value={patient.examCount} class="text-sm" />
 					</a>
+				{:else}
+					<div class="col-span-2">
+						<p class="text-center text-lg font-semibold text-gray-500">
+							No se encontraron resultados
+						</p>
+					</div>
 				{/each}
 			</div>
 		</div>
