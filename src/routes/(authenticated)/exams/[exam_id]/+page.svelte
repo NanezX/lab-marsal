@@ -24,7 +24,11 @@
 		ClockPlus,
 		ClockEdit,
 		Edit,
-		Progress
+		Progress,
+		FileDownload,
+		Download,
+		Eye,
+		Send2
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
@@ -275,9 +279,36 @@
 					</Link>
 				</p>
 
-				<div class="inline-flex justify-center gap-x-8">
-					<Button>Descargar</Button>
-					<Button>Visualizar</Button>
+				<div
+					class="direct-children:w-1/4 direct-children:justify-center inline-flex justify-center gap-x-8"
+				>
+					<Button
+						class="inline-flex items-center gap-x-1"
+						disabled={!patientData.email}
+						title={patientData.email
+							? 'Enviar resultados por correo electrónico'
+							: 'El paciente no tiene correo electrónico asociado'}
+					>
+						<span>Enviar</span>
+
+						<span>
+							<Icon src={Send2} size="24" />
+						</span>
+					</Button>
+					<Button class="inline-flex items-center gap-x-1">
+						<span>Descargar</span>
+
+						<span>
+							<Icon src={Download} size="24" />
+						</span>
+					</Button>
+
+					<Button class="inline-flex items-center gap-x-1">
+						<span>Visualizar</span>
+						<span>
+							<Icon src={Eye} size="24" />
+						</span>
+					</Button>
 				</div>
 			</div>
 		</div>
