@@ -43,7 +43,7 @@
 
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
 	<div class="relative flex justify-center">
-		<BackButton href="/clients" size="40" />
+		<BackButton href="/account" size="40" />
 
 		<p class="mx-auto text-center text-3xl">Cambiar contraseña</p>
 	</div>
