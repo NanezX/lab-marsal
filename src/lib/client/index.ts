@@ -146,4 +146,11 @@ export function getAgeFromDate(birthdate: Date): string {
 	return age < 1 ? 'Menor de 1 año' : `${age} años`;
 }
 
+export function formatDateDMY(date: Date): string {
+	const day = date.getUTCDate();
+	const month = date.getUTCMonth() + 1; // months are 0-based
+	const year = date.getUTCFullYear();
+	return `${day}/${month}/${year}`;
+}
+
 export * from './enumItems';
