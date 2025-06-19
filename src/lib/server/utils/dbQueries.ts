@@ -191,7 +191,8 @@ export async function findExamById(id: string) {
 					firstName: true,
 					lastName: true,
 					documentId: true,
-					gender: true
+					gender: true,
+					email: true
 				}
 			},
 			examType: {
