@@ -290,9 +290,17 @@
 						</span>
 					</Button>
 
+					<Button class="!bg-dark-blue hover:!bg-dark-blue/75 inline-flex items-center gap-x-1">
+						<span>Descargar</span>
+
+						<span>
+							<Icon src={Download} size="24" />
+						</span>
+					</Button>
+
 					<!-- TODO: Implementar logica para enviar los reusltados al correo del usuario si tiene uno asociado -->
 					<Button
-						class="inline-flex items-center gap-x-1"
+						class="!bg-primary-green hover:!bg-primary-green/75 inline-flex items-center gap-x-1"
 						disabled={!patientData.email}
 						title={patientData.email
 							? 'Enviar resultados por correo electrónico'
@@ -304,13 +312,6 @@
 
 						<span>
 							<Icon src={Send2} size="24" />
-						</span>
-					</Button>
-					<Button class="inline-flex items-center gap-x-1">
-						<span>Descargar</span>
-
-						<span>
-							<Icon src={Download} size="24" />
 						</span>
 					</Button>
 				</div>
