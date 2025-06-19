@@ -1,5 +1,5 @@
 import { superValidate, fail as failForms } from 'sveltekit-superforms';
-import { UserEditSchema } from '$lib/server/utils/zod';
+import { UserManagementEditSchema } from '$lib/server/utils/zod';
 import { zod } from 'sveltekit-superforms/adapters';
 import { cleanEditUserData } from '$lib/shared/utils';
 import { validate } from 'uuid';
@@ -41,7 +41,7 @@ export const load: PageServerLoad = async ({ params }) => {
 	const cleaned = cleanEditUserData(foundUser);
 
 	// Create the form for deleting (if desired)
-	const editUserForm = await superValidate(cleaned, zod(UserEditSchema));
+	const editUserForm = await superValidate(cleaned, zod(UserManagementEditSchema));
 
 	const { deleted: _deleted, ...userData } = foundUser;
 
@@ -51,7 +51,7 @@ export const load: PageServerLoad = async ({ params }) => {
 export const actions: Actions = {
 	default: async (event) => {
 		const request = event.request;
-		const form = await superValidate(request, zod(UserEditSchema));
+		const form = await superValidate(request, zod(UserManagementEditSchema));
 
 		if (!form.valid) {
 			console.error(JSON.stringify(form.errors, null, 2));

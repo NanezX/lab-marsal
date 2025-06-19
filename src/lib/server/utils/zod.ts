@@ -56,7 +56,7 @@ export const UserStatusSchema = z.object({
 	id: z.string().refine(uuidRefine, 'ID del usuario no válido')
 });
 
-export const UserEditSchema = z.object({
+export const UserManagementEditSchema = z.object({
 	// userId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
 	role: z.nativeEnum(UserRoles, { errorMap: () => ({ message: 'Rol no valido' }) }),
 	email: z.string().min(1, 'Correo electrónico obligatorio').email('Correo electrónico inválido'),
