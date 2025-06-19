@@ -64,16 +64,18 @@
 						{...$constraints.oldPassword}
 					/>
 
-					<Checkbox
-						name="showoldPassword"
-						bind:value={showoldPassword}
-						text="Mostrar"
-						wrapperClass=""
-					/>
+					<div class="flex">
+						<Checkbox
+							name="showoldPassword"
+							bind:value={showoldPassword}
+							text="Mostrar"
+							wrapperClass=""
+						/>
 
-					{#if $errors.oldPassword !== undefined && $errors.oldPassword.length > 0}
-						<span in:fade class="text-sm text-red-500">{$errors.oldPassword}</span>
-					{/if}
+						{#if $errors.oldPassword !== undefined && $errors.oldPassword.length > 0}
+							<span in:fade class="text-sm text-red-500">{$errors.oldPassword}</span>
+						{/if}
+					</div>
 				</div>
 
 				<hr class="border-primary-gray/50 my-4" />
@@ -92,16 +94,18 @@
 							{...$constraints.newPassword}
 						/>
 
-						<Checkbox
-							name="showNewPassword"
-							bind:value={showNewPassword}
-							text="Mostrar"
-							wrapperClass=""
-						/>
+						<div class="flex">
+							<Checkbox
+								name="showNewPassword"
+								bind:value={showNewPassword}
+								text="Mostrar"
+								wrapperClass=""
+							/>
 
-						{#if $errors.newPassword !== undefined && $errors.newPassword.length > 0}
-							<span in:fade class="text-sm text-red-500">{$errors.newPassword}</span>
-						{/if}
+							{#if $errors.newPassword !== undefined && $errors.newPassword.length > 0}
+								<span in:fade class="text-sm text-red-500">{$errors.newPassword}</span>
+							{/if}
+						</div>
 					</div>
 					<div class="flex w-2/5 flex-col gap-y-2">
 						<Input
@@ -116,16 +120,18 @@
 							{...$constraints.repeatNewPassword}
 						/>
 
-						<Checkbox
-							name="showRepeatedPassword"
-							bind:value={showRepeatedPassword}
-							text="Mostrar"
-							wrapperClass=""
-						/>
+						<div class="flex">
+							{#if $errors.repeatNewPassword !== undefined && $errors.repeatNewPassword.length > 0}
+								<span in:fade class="text-sm text-red-500">{$errors.repeatNewPassword}</span>
+							{/if}
 
-						{#if $errors.repeatNewPassword !== undefined && $errors.repeatNewPassword.length > 0}
-							<span in:fade class="text-sm text-red-500">{$errors.repeatNewPassword}</span>
-						{/if}
+							<Checkbox
+								name="showRepeatedPassword"
+								bind:value={showRepeatedPassword}
+								text="Mostrar"
+								wrapperClass=""
+							/>
+						</div>
 					</div>
 				</div>
 
@@ -141,8 +147,9 @@
 					<!-- type="submit" -->
 					<Button
 						title="Cambiar contraseña"
-						class="w-fit !bg-green-500 hover:!bg-green-400"
+						class="w-fit !bg-green-500 hover:!bg-green-400 disabled:!bg-gray-200 "
 						onclick={() => (showConfirmModal = true)}
+						disabled={!$form.oldPassword || !$form.newPassword}
 					>
 						Guardar
 					</Button>
