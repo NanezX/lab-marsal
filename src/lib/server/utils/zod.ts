@@ -66,6 +66,21 @@ export const UserManagementEditSchema = z.object({
 		.max(maxDocumentId, 'Número muy grande para ser una cédula')
 });
 
+export const UserProfileEditSchema = z.object({
+	firstName: z.string().min(1, 'Nombre es obligatario'),
+	lastName: z.string().min(1, 'Apellido es obligatario'),
+	email: z.string().min(1, 'Correo electrónico obligatorio').email('Correo electrónico inválido'),
+	documentId: z
+		.number()
+		.min(minDocumentId, 'Solo números positivos pueden ser cédula')
+		.max(maxDocumentId, 'Número muy grande para ser una cédula'),
+	birthdate: z
+		.string()
+		.min(1, 'Debe ingresar una fecha')
+		.date('No es una fecha valida')
+		.refine(birthdateRefine, 'Debe tener mínimo 18 años')
+});
+
 export const PasswordRecoverySchema = z.object({
 	email: z.string().min(1, 'Correo electrónico obligatorio').email('Correo electrónico inválido')
 });
