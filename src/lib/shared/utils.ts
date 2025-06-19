@@ -133,6 +133,18 @@ export function cleanEditExamPayment(data: FindExamData) {
 	};
 }
 
+export function cleanEditExamResults(data: FindExamData) {
+	return {
+		examId: data.id,
+		sample: data.sample,
+		observation: data.observation,
+		results: data.results.map((result_) => ({
+			parameterId: result_.parameterId,
+			value: result_.value
+		}))
+	};
+}
+
 // Convert string | null to number | undefined
 export function toNumberOrUndefined(value: string | null): number | undefined {
 	if (value === null) return undefined;
