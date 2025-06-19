@@ -279,6 +279,7 @@
 					</Link>
 				</p>
 
+				<!-- TODO: If the exam is not marked as COMPLETED, these button should be disabled because there is nothing to send/show/download yet -->
 				<div
 					class="direct-children:w-1/4 direct-children:justify-center inline-flex justify-center gap-x-8"
 				>
