@@ -100,7 +100,7 @@ export const actions: Actions = {
 
 		// Redirect outside of the try/catch block to the account page with a success message
 		redirect(
-			'/users',
+			'/account',
 			{ type: 'success', message: 'Perfil actualizado correctamente' },
 			event.cookies
 		);
