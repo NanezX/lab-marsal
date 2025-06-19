@@ -17,9 +17,9 @@ export const load: PageServerLoad = async ({ parent }) => {
 	const cleanedData = cleanEditExamResults(examData);
 
 	// Create the form for editing
-	const editExamDetailsForm = await superValidate(cleanedData, zod(editExamResultsSchema));
+	const editExamResults = await superValidate(cleanedData, zod(editExamResultsSchema));
 
-	return { editExamDetailsForm };
+	return { editExamResults };
 };
 
 export const actions: Actions = {
