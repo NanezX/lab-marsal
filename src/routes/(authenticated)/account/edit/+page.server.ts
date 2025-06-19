@@ -98,6 +98,14 @@ export const actions: Actions = {
 			return failFormResponse(form, 'No se actualizó el perfil', event.cookies, 500);
 		}
 
+		event.locals.user = {
+			...event.locals.user,
+			...dataToUpdate,
+			firstName,
+			lastName,
+			birthdate: new Date(birthdate)
+		};
+
 		// Redirect outside of the try/catch block to the account page with a success message
 		redirect(
 			'/account',
