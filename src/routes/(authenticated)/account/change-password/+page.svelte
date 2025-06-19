@@ -65,16 +65,16 @@
 					/>
 
 					<div class="flex">
+						{#if $errors.oldPassword !== undefined && $errors.oldPassword.length > 0}
+							<span in:fade class="text-sm text-red-500">{$errors.oldPassword}</span>
+						{/if}
+
 						<Checkbox
 							name="showoldPassword"
 							bind:value={showoldPassword}
 							text="Mostrar"
 							wrapperClass=""
 						/>
-
-						{#if $errors.oldPassword !== undefined && $errors.oldPassword.length > 0}
-							<span in:fade class="text-sm text-red-500">{$errors.oldPassword}</span>
-						{/if}
 					</div>
 				</div>
 
@@ -95,16 +95,16 @@
 						/>
 
 						<div class="flex">
+							{#if $errors.newPassword !== undefined && $errors.newPassword.length > 0}
+								<span in:fade class="text-sm text-red-500">{$errors.newPassword}</span>
+							{/if}
+
 							<Checkbox
 								name="showNewPassword"
 								bind:value={showNewPassword}
 								text="Mostrar"
 								wrapperClass=""
 							/>
-
-							{#if $errors.newPassword !== undefined && $errors.newPassword.length > 0}
-								<span in:fade class="text-sm text-red-500">{$errors.newPassword}</span>
-							{/if}
 						</div>
 					</div>
 					<div class="flex w-2/5 flex-col gap-y-2">

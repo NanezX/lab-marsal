@@ -8,7 +8,7 @@ import { failFormResponse } from '$lib/server/utils/failFormResponse';
 import { verify, hash } from '@node-rs/argon2';
 import { hashingOptions } from '$lib/server/auth';
 import { updateUserById } from '$lib/server/utils/dbUpdates';
-import { redirect } from 'sveltekit-flash-message/server';
+import { redirect, setFlash } from 'sveltekit-flash-message/server';
 
 export const load = async () => {
 	const changePasswordForm = await superValidate(zod(ChangePasswordSchema));
@@ -29,6 +29,10 @@ export const actions: Actions = {
 
 		if (!form.valid) {
 			console.error(JSON.stringify(form.errors, null, 2));
+
+			// Set a flash message to show generic error message
+			setFlash({ type: 'error', message: 'Verifica los datos ingresados' }, event.cookies);
+
 			// Again, return { form } and things will just work.
 			return failForms(400, { form });
 		}
@@ -45,11 +49,7 @@ export const actions: Actions = {
 		}
 
 		// Verify password entered
-		const validPassword = await verify(
-			currentUserData.passwordHash,
-			oldPassword,
-			hashingOptions
-		);
+		const validPassword = await verify(currentUserData.passwordHash, oldPassword, hashingOptions);
 		if (!validPassword) {
 			return failFormResponse(form, 'Contraseña actual inválida', event.cookies, 401);
 		}
