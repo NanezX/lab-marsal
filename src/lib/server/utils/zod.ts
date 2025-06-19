@@ -56,7 +56,7 @@ export const UserStatusSchema = z.object({
 	id: z.string().refine(uuidRefine, 'ID del usuario no válido')
 });
 
-export const UserEditSchema = z.object({
+export const UserManagementEditSchema = z.object({
 	// userId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
 	role: z.nativeEnum(UserRoles, { errorMap: () => ({ message: 'Rol no valido' }) }),
 	email: z.string().min(1, 'Correo electrónico obligatorio').email('Correo electrónico inválido'),
@@ -66,9 +66,39 @@ export const UserEditSchema = z.object({
 		.max(maxDocumentId, 'Número muy grande para ser una cédula')
 });
 
+export const UserProfileEditSchema = z.object({
+	firstName: z.string().min(1, 'Nombre es obligatario'),
+	lastName: z.string().min(1, 'Apellido es obligatario'),
+	email: z.string().min(1, 'Correo electrónico obligatorio').email('Correo electrónico inválido'),
+	documentId: z
+		.number()
+		.min(minDocumentId, 'Solo números positivos pueden ser cédula')
+		.max(maxDocumentId, 'Número muy grande para ser una cédula'),
+	birthdate: z
+		.string()
+		.min(1, 'Debe ingresar una fecha')
+		.date('No es una fecha valida')
+		.refine(birthdateRefine, 'Debe tener mínimo 18 años')
+});
+
 export const PasswordRecoverySchema = z.object({
 	email: z.string().min(1, 'Correo electrónico obligatorio').email('Correo electrónico inválido')
 });
+
+// The backend should vlidate the current password, if fails, it should return an error
+export const ChangePasswordSchema = z
+	.object({
+		oldPassword: z.string().min(1, 'Debe ingresar su contraseña actual'),
+		newPassword: z
+			.string()
+			.min(8, 'La contraseña debe tener al menos 8 caracteres')
+			.max(20, 'La contraseña debe tener máximo 20 caracteres'),
+		repeatNewPassword: z.string().min(1, 'Debe repetir la contraseña')
+	})
+	.refine((obj) => obj.newPassword === obj.repeatNewPassword, {
+		message: 'Las contraseñas no coinciden',
+		path: ['repeatNewPassword']
+	});
 
 export const VerifyRecoverySchema = z
 	.object({

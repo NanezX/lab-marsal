@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { getAgeFromDate, IconRoles } from '$lib/client';
-	import { getUserContext } from '$lib/client/context';
+	import { formatDateDMY, getAgeFromDate, IconRoles } from '$lib/client';
 	import Button from '$lib/components/Button.svelte';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import LabelValue from '$lib/components/LabelValue.svelte';
@@ -20,7 +19,7 @@
 	} from '@steeze-ui/tabler-icons';
 	import { fade } from 'svelte/transition';
 
-	const dataUser = getUserContext();
+	let { data } = $props();
 </script>
 
 <div in:fade class="mb-4 flex w-full flex-col gap-y-8">
@@ -46,33 +45,30 @@
 				<LabelValue
 					icon={User}
 					label="Nombre"
-					value={`${dataUser.firstName} ${dataUser.lastName}`}
+					value={`${data.user.firstName} ${data.user.lastName}`}
 				/>
 
-				<LabelValue icon={At} label="Correo" value={dataUser.email} />
+				<LabelValue icon={At} label="Correo" value={data.user.email} />
 
 				<LabelValue
-					icon={IconRoles[dataUser.role]}
+					icon={IconRoles[data.user.role]}
 					label="Rol"
-					value={dataUser.role}
+					value={data.user.role}
 					class="flex items-center gap-x-1 capitalize"
 				/>
 
-				<LabelValue icon={Id} label="Cédula" value={dataUser.documentId} />
+				<LabelValue icon={Id} label="Cédula" value={data.user.documentId} />
 
-				<LabelValue
-					label="Cumpleaños"
-					value={dataUser.birthdate.toLocaleDateString()}
-					icon={Cake}
-				/>
-				<LabelValue label="Edad" value={getAgeFromDate(dataUser.birthdate)} icon={Packages} />
+				<LabelValue label="Cumpleaños" value={formatDateDMY(data.user.birthdate)} icon={Cake} />
 
-				<LabelValue label="Creado" value={dataUser.createdAt.toLocaleString()} icon={ClockPlus} />
+				<LabelValue label="Edad" value={getAgeFromDate(data.user.birthdate)} icon={Packages} />
 
-				{#if dataUser.createdAt.getTime() !== dataUser.updatedAt.getTime()}
+				<LabelValue label="Creado" value={data.user.createdAt.toLocaleString()} icon={ClockPlus} />
+
+				{#if data.user.createdAt.getTime() !== data.user.updatedAt.getTime()}
 					<LabelValue
 						label="Último cambio"
-						value={dataUser.updatedAt.toLocaleString()}
+						value={data.user.updatedAt.toLocaleString()}
 						icon={ClockEdit}
 					/>
 				{/if}

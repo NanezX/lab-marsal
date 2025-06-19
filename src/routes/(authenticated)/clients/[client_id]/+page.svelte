@@ -6,7 +6,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
-	import { getAgeFromDate } from '$lib/client';
+	import { formatDateDMY, getAgeFromDate } from '$lib/client';
 	import { PatientGender } from '$lib/shared/enums';
 	import {
 		Id,
@@ -99,7 +99,7 @@
 
 				<LabelValue
 					label="Fecha de nacimiento"
-					value={patientData.birthdate.toLocaleDateString()}
+					value={formatDateDMY(patientData.birthdate)}
 					icon={Cake}
 				/>
 				<LabelValue label="Teléfono" value={patientData.phoneNumber ?? 'N/A'} icon={Phone} />

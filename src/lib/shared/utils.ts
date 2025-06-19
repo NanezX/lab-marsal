@@ -2,6 +2,7 @@ import type { Dictionary } from 'lodash';
 import { chain, sortBy } from 'lodash-es';
 import type { ExamTypeWithParameters, FindExamData, Patient } from './types';
 import { UserRoles } from './enums';
+import type { SessionValidationResult } from '$lib/server/auth';
 
 export function isObject(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -87,6 +88,16 @@ export function cleanEditPatientData(
 		email: data.email ?? undefined,
 		phoneNumber: data.phoneNumber ?? undefined,
 		gender: data.gender
+	};
+}
+
+export function cleanEditUserProfileData(data: NonNullable<SessionValidationResult['user']>) {
+	return {
+		firstName: data.firstName,
+		lastName: data.lastName,
+		email: data.email,
+		documentId: data.documentId,
+		birthdate: data.birthdate.toISOString().split('T')[0] // This is to only to format date from '1998-11-17T00:00:00.000Z' to '1998-11-17'
 	};
 }
 
