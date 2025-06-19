@@ -1,4 +1,5 @@
 import { editExamResultsSchema } from '$lib/server/utils/zod';
+import { cleanEditExamResults } from '$lib/shared/utils';
 import type { Actions, PageServerLoad } from './$types';
 import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
@@ -7,12 +8,16 @@ import { zod } from 'sveltekit-superforms/adapters';
 
 export const load: PageServerLoad = async ({ parent }) => {
 	// Get the data from the layout
-	const _data = await parent();
+	const data = await parent();
 
-	// CLEAN THE DATA
+	// Get the examData
+	const { examData } = data;
+
+	// Clean/format the data for the schema
+	const cleanedData = cleanEditExamResults(examData);
 
 	// Create the form for editing
-	const editExamDetailsForm = await superValidate(zod(editExamResultsSchema));
+	const editExamDetailsForm = await superValidate(cleanedData, zod(editExamResultsSchema));
 
 	return { editExamDetailsForm };
 };
