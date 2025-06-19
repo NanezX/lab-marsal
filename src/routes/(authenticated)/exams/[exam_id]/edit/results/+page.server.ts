@@ -1,8 +1,10 @@
+import { findExamById } from '$lib/server/utils/dbQueries';
 import { editExamResultsSchema } from '$lib/server/utils/zod';
 import { cleanEditExamResults } from '$lib/shared/utils';
-import type { Actions, PageServerLoad } from './$types';
 import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
+import { failFormResponse } from '$lib/server/utils/failFormResponse';
+import type { Actions, PageServerLoad } from './$types';
 
 // TODO: Verify what roles can update an exam (on the action) - (maybe just block the page to those user in the backend)
 
@@ -33,6 +35,12 @@ export const actions: Actions = {
 			return failForms(400, { form });
 		}
 
-		// CONTINUE HERE
+		const { examId, sample, observation, results } = form.data;
+
+		// Check if exam exists
+		const examExist = await findExamById(examId);
+		if (examExist === undefined) {
+			return failFormResponse(form, 'ID del exámen no encontrado', event.cookies, 409);
+		}
 	}
 };
