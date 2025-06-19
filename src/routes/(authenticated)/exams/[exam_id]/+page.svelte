@@ -253,10 +253,10 @@
 			 The description will be inside the results table -->
 
 			<div
-				class="col-span-2 flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
+				class="col-span-2 flex flex-col gap-y-4 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
 			>
 				<p
-					class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
+					class="mx-auto mb-2 flex w-1/4 min-w-fit items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
 				>
 					<span> Resultados </span>
 
@@ -274,9 +274,12 @@
 						/>
 					</Link>
 				</p>
-			</div>
 
-			<p>MOSTRAR: RESULTADOS</p>
+				<div class="inline-flex justify-center gap-x-8">
+					<Button>Descargar</Button>
+					<Button>Visualizar</Button>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
