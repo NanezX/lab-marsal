@@ -5,9 +5,12 @@
 	import Checkbox from '$lib/components/Checkbox.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
+	import { cleanEditUserProfileData } from '$lib/shared/utils.js';
 	import { LockOpen2, Lock } from '@steeze-ui/tabler-icons';
 	import { fade } from 'svelte/transition';
 	import { superForm } from 'sveltekit-superforms';
+	import { isEqual } from 'lodash-es';
+	import CloseNavigationGuard from '$lib/components/modal/CloseNavigationGuard.svelte';
 
 	let { data } = $props();
 
@@ -23,8 +26,14 @@
 		applyAction: true
 	});
 
+	const original = cleanEditUserProfileData(data.user);
+
+	let hasChanges = $derived(!isEqual($form, original));
 	let showConfirmModal = $state(false);
+	let showDiscardModal = $state(false);
 </script>
+
+<CloseNavigationGuard validator={() => hasChanges} bind:needConfirm={showDiscardModal} />
 
 <ConfirmModal
 	bind:showModal={showConfirmModal}
@@ -109,6 +118,19 @@
 						error={$errors.email}
 					/>
 				</div>
+			</div>
+
+			<hr class="border-primary-gray/50 my-1" />
+
+			<div class="mx-auto w-fit space-x-10">
+				<Button
+					disabled={!hasChanges}
+					onclick={() => (showConfirmModal = true)}
+					title="Guardar cambios"
+					class="w-fit !bg-green-500 hover:!bg-green-400 disabled:!bg-gray-200"
+				>
+					Guardar cambios
+				</Button>
 			</div>
 		</div>
 	</div>
