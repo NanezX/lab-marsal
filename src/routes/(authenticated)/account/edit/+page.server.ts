@@ -10,9 +10,9 @@ import { redirect } from 'sveltekit-flash-message/server';
 import { db } from '$lib/server/db';
 
 export const load = async () => {
-	const changePasswordForm = await superValidate(zod(UserProfileEditSchema));
+	const editProfileForm = await superValidate(zod(UserProfileEditSchema));
 
-	return { changePasswordForm };
+	return { editProfileForm };
 };
 
 export const actions: Actions = {
