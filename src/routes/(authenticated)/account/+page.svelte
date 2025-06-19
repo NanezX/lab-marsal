@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getAgeFromDate, IconRoles } from '$lib/client';
+	import { formatDateDMY, getAgeFromDate, IconRoles } from '$lib/client';
 	import { getUserContext } from '$lib/client/context';
 	import Button from '$lib/components/Button.svelte';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
@@ -60,11 +60,8 @@
 
 				<LabelValue icon={Id} label="Cédula" value={dataUser.documentId} />
 
-				<LabelValue
-					label="Cumpleaños"
-					value={dataUser.birthdate.toLocaleDateString()}
-					icon={Cake}
-				/>
+				<LabelValue label="Cumpleaños" value={formatDateDMY(dataUser.birthdate)} icon={Cake} />
+
 				<LabelValue label="Edad" value={getAgeFromDate(dataUser.birthdate)} icon={Packages} />
 
 				<LabelValue label="Creado" value={dataUser.createdAt.toLocaleString()} icon={ClockPlus} />
