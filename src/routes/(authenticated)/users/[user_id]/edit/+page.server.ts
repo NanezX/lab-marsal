@@ -133,7 +133,6 @@ export const actions: Actions = {
 		}
 
 		try {
-			// await updateUserById(userId, { email, role, documentId });
 			await updateUserById(userId, dataToUpdate);
 		} catch (e) {
 			console.error(e);
