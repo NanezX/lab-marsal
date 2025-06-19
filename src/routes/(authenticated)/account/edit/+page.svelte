@@ -23,7 +23,13 @@
 	} = superForm(data.editProfileForm, {
 		dataType: 'json',
 		delayMs: 0,
-		applyAction: true
+		applyAction: true,
+		onResult(event) {
+			// If forms result type is a redirect or success, we assume that the changes were saved
+			if (event.result.type === 'redirect' || event.result.type === 'success') {
+				hasChanges = false;
+			}
+		}
 	});
 
 	const original = cleanEditUserProfileData(data.user);
@@ -54,84 +60,82 @@
 		<p class="mx-auto text-center text-3xl">Editar perfil</p>
 	</div>
 
-	<div>
-		<div class="space-y-5">
-			<p class="text-2xl">Datos personales</p>
+	<div class="space-y-5">
+		<p class="text-2xl">Datos personales</p>
 
-			<div class="space-y-4">
-				<div class="flex gap-x-8">
-					<Input
-						bind:value={$form.firstName}
-						name="firstName"
-						label="Nombre"
-						placeholder="Nombre del paciente"
-						wrapperClass="w-1/2"
-						error={$errors.firstName}
-					/>
+		<div class="space-y-4">
+			<div class="flex gap-x-8">
+				<Input
+					bind:value={$form.firstName}
+					name="firstName"
+					label="Nombre"
+					placeholder="Nombre del paciente"
+					wrapperClass="w-1/2"
+					error={$errors.firstName}
+				/>
 
-					<Input
-						bind:value={$form.lastName}
-						name="lastName"
-						label="Apellido"
-						placeholder="Apellido del paciente"
-						wrapperClass="w-1/2"
-						error={$errors.lastName}
-					/>
-				</div>
-
-				<div class="flex gap-x-8">
-					<Input
-						bind:value={
-							() => ($form.documentId === 0 ? '' : $form.documentId),
-							(v) => ($form.documentId = v === '' ? 0 : v)
-						}
-						name="documentId"
-						label="Cédula de Identidad"
-						placeholder="Cédula"
-						wrapperClass="w-1/3"
-						type="number"
-						autoComplete={false}
-						error={$errors.documentId}
-					/>
-
-					<Input
-						bind:value={$form.birthdate}
-						name="birthdate"
-						label="Cumpleaños"
-						type="date"
-						required
-						placeholder="Cumpleaños"
-						wrapperClass="w-1/3"
-						{...$constraints.birthdate}
-					/>
-				</div>
-
-				<div class="mt-8 flex gap-x-8">
-					<Input
-						bind:value={() => $form.email ?? '', (v) => ($form.email = v)}
-						type="email"
-						name="email"
-						label="Correo electrónico (opcional)"
-						placeholder="Correo electrónico"
-						autoComplete={false}
-						wrapperClass="w-1/2"
-						error={$errors.email}
-					/>
-				</div>
+				<Input
+					bind:value={$form.lastName}
+					name="lastName"
+					label="Apellido"
+					placeholder="Apellido del paciente"
+					wrapperClass="w-1/2"
+					error={$errors.lastName}
+				/>
 			</div>
 
-			<hr class="border-primary-gray/50 my-1" />
+			<div class="flex gap-x-8">
+				<Input
+					bind:value={
+						() => ($form.documentId === 0 ? '' : $form.documentId),
+						(v) => ($form.documentId = v === '' ? 0 : v)
+					}
+					name="documentId"
+					label="Cédula de Identidad"
+					placeholder="Cédula"
+					wrapperClass="w-1/3"
+					type="number"
+					autoComplete={false}
+					error={$errors.documentId}
+				/>
 
-			<div class="mx-auto w-fit space-x-10">
-				<Button
-					disabled={!hasChanges}
-					onclick={() => (showConfirmModal = true)}
-					title="Guardar cambios"
-					class="w-fit !bg-green-500 hover:!bg-green-400 disabled:!bg-gray-200"
-				>
-					Guardar cambios
-				</Button>
+				<Input
+					bind:value={$form.birthdate}
+					name="birthdate"
+					label="Cumpleaños"
+					type="date"
+					required
+					placeholder="Cumpleaños"
+					wrapperClass="w-1/3"
+					{...$constraints.birthdate}
+				/>
 			</div>
+
+			<div class="mt-8 flex gap-x-8">
+				<Input
+					bind:value={() => $form.email ?? '', (v) => ($form.email = v)}
+					type="email"
+					name="email"
+					label="Correo electrónico (opcional)"
+					placeholder="Correo electrónico"
+					autoComplete={false}
+					wrapperClass="w-1/2"
+					error={$errors.email}
+				/>
+			</div>
+		</div>
+
+		<hr class="border-primary-gray/50" />
+
+		<div class="mx-auto w-fit space-x-10">
+			<Button
+				disabled={!hasChanges}
+				onclick={() => (showConfirmModal = true)}
+				title="Guardar cambios"
+				class="w-fit !bg-green-500 hover:!bg-green-400 disabled:!bg-gray-200"
+			>
+				Guardar cambios
+			</Button>
 		</div>
 	</div>
 </form>
