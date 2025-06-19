@@ -282,12 +282,15 @@
 				<div
 					class="direct-children:w-1/4 direct-children:justify-center inline-flex justify-center gap-x-8"
 				>
+					<!-- TODO: Implementar logica para enviar los reusltados al correo del usuario si tiene uno asociado -->
 					<Button
 						class="inline-flex items-center gap-x-1"
 						disabled={!patientData.email}
 						title={patientData.email
 							? 'Enviar resultados por correo electrónico'
 							: 'El paciente no tiene correo electrónico asociado'}
+						onclick={() =>
+							alert('Enviar resultados al correo del paciente - Funcionalidad no implementada')}
 					>
 						<span>Enviar</span>
 
