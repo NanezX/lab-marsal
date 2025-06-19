@@ -8,9 +8,15 @@ import { failFormResponse } from '$lib/server/utils/failFormResponse';
 import { updateUserById } from '$lib/server/utils/dbUpdates';
 import { redirect } from 'sveltekit-flash-message/server';
 import { db } from '$lib/server/db';
+import { cleanEditUserProfileData } from '$lib/shared/utils';
 
-export const load = async () => {
-	const editProfileForm = await superValidate(zod(UserProfileEditSchema));
+export const load = async ({ locals }) => {
+	// This seems only to work for type safety, because we have the hook.server.ts already validating the session
+	if (!locals.user) redirect(302, '/login');
+
+	const clearedData = cleanEditUserProfileData(locals.user);
+
+	const editProfileForm = await superValidate(clearedData, zod(UserProfileEditSchema));
 
 	return { editProfileForm };
 };
