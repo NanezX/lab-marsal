@@ -42,8 +42,8 @@ export const actions: Actions = {
 		const { examId, customTag, status, priority } = form.data;
 
 		// Check if already exists
-		const patientSaved = await findExamById(examId);
-		if (patientSaved === undefined) {
+		const examExist = await findExamById(examId);
+		if (examExist === undefined) {
 			return failFormResponse(form, 'ID del exámen no encontrado', event.cookies, 409);
 		}
 
