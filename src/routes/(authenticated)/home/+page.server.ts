@@ -44,7 +44,5 @@ export const load = async () => {
 		.orderBy(sql`effective_updated_at DESC`)
 		.limit(4);
 
-	const a = { lastExamsUpdated, lastPatientsUpdated };
-	console.log('a: ', a);
-	return a;
+	return { lastExamsUpdated, lastPatientsUpdated };
 };

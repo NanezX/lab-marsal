@@ -40,13 +40,6 @@
 				//
 				await debounceCallback(inputSearch);
 				searching = false;
-				console.log('after callback');
-
-				if (searching) {
-					console.log('searching...');
-				}
-
-				//
 			}, debounceTime);
 		}
 	}
