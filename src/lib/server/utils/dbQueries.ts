@@ -219,6 +219,14 @@ export async function findExamById(id: string) {
 						}
 					}
 				}
+			},
+			results: {
+				// Exclude deleted results
+				where: (result, { and, eq }) => and(eq(result.examId, id), eq(result.deleted, false)),
+				columns: {
+					parameterId: true,
+					value: true
+				}
 			}
 		}
 	});
