@@ -241,7 +241,9 @@ export const examResult = pgTable('exam_result', {
 	examId: uuid('exam_id')
 		.notNull()
 		.references(() => exam.id, { onDelete: 'cascade' }),
-	parameterId: uuid('parameter_id').references(() => parameter.id),
+	parameterId: uuid('parameter_id')
+		.notNull()
+		.references(() => parameter.id),
 	value: text().notNull(),
 	// Snapshot to preserve parameter info at the time of result entry
 	parameterSnapshot: jsonb('parameter_snapshot').notNull().$type<{
