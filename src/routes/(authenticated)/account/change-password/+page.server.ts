@@ -35,7 +35,7 @@ export const actions: Actions = {
 
 		// No need for getting the user from the database, as we already have it in event.locals.user
 		// Also, no need to use `repeatNewPassword` since zod will ensure that `newPassword` and `repeatNewPassword` match
-		const { currentPassword, newPassword } = form.data;
+		const { oldPassword, newPassword } = form.data;
 
 		// We check that the current user exists and is not deleted. Generally this should not happen,
 		// but it's a good practice to ensure the user is valid
@@ -47,7 +47,7 @@ export const actions: Actions = {
 		// Verify password entered
 		const validPassword = await verify(
 			currentUserData.passwordHash,
-			currentPassword,
+			oldPassword,
 			hashingOptions
 		);
 		if (!validPassword) {

@@ -73,7 +73,7 @@ export const PasswordRecoverySchema = z.object({
 // The backend should vlidate the current password, if fails, it should return an error
 export const ChangePasswordSchema = z
 	.object({
-		currentPassword: z.string().min(1, 'Debe ingresar su contraseña actual'),
+		oldPassword: z.string().min(1, 'Debe ingresar su contraseña actual'),
 		newPassword: z
 			.string()
 			.min(8, 'La contraseña debe tener al menos 8 caracteres')
@@ -82,7 +82,7 @@ export const ChangePasswordSchema = z
 	})
 	.refine((obj) => obj.newPassword === obj.repeatNewPassword, {
 		message: 'Las contraseñas no coinciden',
-		path: ['repeatPassword']
+		path: ['repeatNewPassword']
 	});
 
 export const VerifyRecoverySchema = z
