@@ -282,6 +282,13 @@
 				<div
 					class="direct-children:w-1/4 direct-children:justify-center inline-flex justify-center gap-x-8"
 				>
+					<Button class="inline-flex items-center gap-x-1">
+						<span>Visualizar</span>
+						<span>
+							<Icon src={Eye} size="24" />
+						</span>
+					</Button>
+
 					<!-- TODO: Implementar logica para enviar los reusltados al correo del usuario si tiene uno asociado -->
 					<Button
 						class="inline-flex items-center gap-x-1"
@@ -303,13 +310,6 @@
 
 						<span>
 							<Icon src={Download} size="24" />
-						</span>
-					</Button>
-
-					<Button class="inline-flex items-center gap-x-1">
-						<span>Visualizar</span>
-						<span>
-							<Icon src={Eye} size="24" />
 						</span>
 					</Button>
 				</div>
