@@ -27,19 +27,14 @@
 		debounceCallback
 	}: PropType = $props();
 
-	let searching = $state(false);
 	let timeout: number;
 
 	function handle_search() {
 		if (debounceCallback !== undefined) {
-			searching = true;
-
 			if (timeout !== undefined) clearTimeout(timeout);
 
 			timeout = window.setTimeout(async () => {
-				//
 				await debounceCallback(inputSearch);
-				searching = false;
 			}, debounceTime);
 		}
 	}
