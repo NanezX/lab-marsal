@@ -226,7 +226,8 @@ export async function findExamById(id: string) {
 				columns: {
 					id: true,
 					parameterId: true,
-					value: true
+					value: true,
+					parameterSnapshot: true
 				}
 			}
 		}
