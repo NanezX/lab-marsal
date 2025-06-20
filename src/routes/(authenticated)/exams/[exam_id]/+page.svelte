@@ -252,10 +252,6 @@
 				</div>
 			</div>
 
-			<!-- TODO: Design a bit how to show the results. If not saved yet, show some emtpy card -->
-			<!-- TODO: Design a bit how to show the specific observation. If not observation write, show N/A with some background
-			 The description will be inside the results table -->
-
 			<div
 				class="col-span-2 flex flex-col gap-y-4 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
 			>
@@ -283,12 +279,16 @@
 				<div
 					class="direct-children:w-1/4 direct-children:justify-center inline-flex justify-center gap-x-8"
 				>
-					<Button class="inline-flex items-center gap-x-1">
+					<Link
+						href="/exams/{examData.id}/view"
+						class="inline-flex w-full justify-center gap-x-1"
+						linkClass="inline-flex"
+					>
 						<span>Visualizar</span>
 						<span>
 							<Icon src={Eye} size="24" />
 						</span>
-					</Button>
+					</Link>
 
 					<Button class="!bg-dark-blue hover:!bg-dark-blue/75 inline-flex items-center gap-x-1">
 						<span>Descargar</span>
