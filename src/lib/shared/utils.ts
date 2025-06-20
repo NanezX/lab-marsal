@@ -153,16 +153,20 @@ export function cleanEditExamResults(data: FindExamData) {
 		value: result_.value
 	}));
 
-	data.examType.parameters.forEach((parameter) => {
-		// If the parameter is not in the results, we add it with an empty value
-		if (!results.some((result) => result.parameterId === parameter.id)) {
-			results.push({
-				id: '', // This will be considred as false on the if statement
-				parameterId: parameter.id,
-				value: ''
-			});
-		}
-	});
+	// If no results were saved befoe, we could consider any changes on the exam type parameters.
+	// If resulst are present previusly, we skip the exam type parameters since anyone could add them or edit them after the exam completed
+	if (results.length === 0) {
+		data.examType.parameters.forEach((parameter) => {
+			// If the parameter is not in the results, we add it with an empty value
+			if (!results.some((result) => result.parameterId === parameter.id)) {
+				results.push({
+					id: '', // This will be considred as false on the if statement
+					parameterId: parameter.id,
+					value: ''
+				});
+			}
+		});
+	}
 
 	return {
 		examId: data.id,
