@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer';
 
 export async function POST({ request }) {
-	const { html } = await request.json();
+	const { html }: { html: string } = await request.json();
 
 	const baseUrl = new URL(request.url).origin;
 	const cssUrl = `${baseUrl}/pdf.css`;
@@ -14,6 +14,8 @@ export async function POST({ request }) {
 
 	const page = await browser.newPage();
 
+	const newHtml = html.replace(`src="/favicon.png"`, `src="${baseUrl}/favicon.png"`);
+
 	// Inject HTML and CSS
 	await page.setContent(
 		`
@@ -23,7 +25,7 @@ export async function POST({ request }) {
         <meta charset="UTF-8">
         <link rel="stylesheet" href="${cssUrl}" />
       </head>
-      <body>${html}</body>
+      <body>${newHtml}</body>
     </html>
   `,
 		{ waitUntil: 'networkidle0' }
@@ -37,7 +39,7 @@ export async function POST({ request }) {
 		format: 'A4',
 		printBackground: true,
 		margin: { top: '20px', right: '20px', bottom: '20px', left: '20px' },
-		preferCSSPageSize: true // Added for better page size handling
+		preferCSSPageSize: false // Added for better page size handling
 	});
 
 	await browser.close();
