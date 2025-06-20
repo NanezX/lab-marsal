@@ -51,6 +51,20 @@
 	let showDiscardModal = $state(false);
 </script>
 
+<CloseNavigationGuard validator={() => hasChanges} bind:needConfirm={showDiscardModal} />
+
+<ConfirmModal
+	bind:showModal={showConfirmModal}
+	title="Confirmar cambios"
+	secondaryText="Revise los cambios realizados antes de confirmar"
+	saveButtonText="Guardar cambios"
+	cancelButtonText="Cancelar"
+	onSave={() => {
+		submitChanges();
+		return true;
+	}}
+/>
+
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
 	<div class="relative flex justify-center">
 		<BackButton href="/exams/{examData.id}" size="40" />
