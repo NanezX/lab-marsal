@@ -19,7 +19,7 @@
 	const examHasReferences = results.some((r_) => r_.parameterSnapshot.hasReferences);
 </script>
 
-<div class="mx-auto w-full space-y-4 !px-8 !py-4">
+<div class="mx-auto w-full space-y-4 !px-8 !pt-8 !pb-16">
 	<!-- Membrete -->
 	<div class="space-y-6">
 		<div class="ml-4 inline-flex items-end gap-x-3">
@@ -68,7 +68,7 @@
 		<p class="text-center font-['Cambria'] text-xl uppercase">{examType.classification.name}</p>
 	{/if}
 
-	<hr class="border-primary-gray/50 mb-2" />
+	<hr class="mb-6 border-black/50" />
 
 	<p class="text-center font-['Cambria'] text-xl uppercase underline">{examType.name}</p>
 
@@ -79,9 +79,14 @@
 		</p>
 	{/if}
 
-	<table class="w-full">
+	<table
+		class={[
+			"mt-4 font-['Cambria'] text-lg",
+			{ 'w-full': examHasReferences, 'mx-auto w-1/2': !examHasReferences }
+		]}
+	>
 		<thead>
-			<tr>
+			<tr class="direct-children:pb-2 direct-children:uppercase direct-children:font-[500]">
 				<th scope="col"> Análisis </th>
 				<th scope="col"> Resultado </th>
 
@@ -93,7 +98,7 @@
 		<tbody>
 			{#each results as result_}
 				{@const parameter_ = result_.parameterSnapshot}
-				<tr>
+				<tr class="direct-children:font-[500]">
 					<th scope="row">
 						{parameter_.name}
 						{#if parameter_.unit}
