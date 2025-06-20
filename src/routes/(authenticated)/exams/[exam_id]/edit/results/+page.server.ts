@@ -23,7 +23,9 @@ export const load: PageServerLoad = async ({ parent }) => {
 	const cleanedData = cleanEditExamResults(examData);
 
 	// Create the form for editing
-	const editExamResultsForm = await superValidate(cleanedData, zod(editExamResultsSchema));
+	const editExamResultsForm = await superValidate(cleanedData, zod(editExamResultsSchema), {
+		errors: false
+	});
 
 	return { editExamResultsForm };
 };
@@ -50,15 +52,19 @@ export const actions: Actions = {
 		try {
 			// We execute everything on in a single transaction
 			db.transaction(async (tx) => {
-				//
+				// Update the exam with the new sample and observation
 				await tx.update(examTable).set({ sample, observation }).where(eq(examTable.id, examId));
 
+				// Iterate over the results and update or insert them
 				for (const result of results) {
-					if (result.id) {
+					if ('id' in result) {
 						// If the result has an ID, we update the value
-						await tx.update(examResultTable).set({
-							value: result.value.trim()
-						});
+						await tx
+							.update(examResultTable)
+							.set({
+								value: result.value.trim()
+							})
+							.where(eq(examResultTable.id, result.id));
 					} else {
 						const parameterData = await tx.query.parameter.findFirst({
 							where: (parameterTable, { eq }) => eq(parameterTable.id, result.parameterId)
