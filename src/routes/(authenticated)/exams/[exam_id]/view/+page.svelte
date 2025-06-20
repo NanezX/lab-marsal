@@ -9,11 +9,14 @@
 		examData: { results, sample, examType, patient, ...examData }
 	} = data;
 
+	// TODO: Get this from the Configuration
 	const orgFullName = 'Laboratorio Clínico Marsal C.A';
 	const orgRif = 'J-30197029-2';
 	const orgAddress = 'Urbanizacion Los Guaritos III, Calle N° 7 Maturín, Monagas';
 	const orgPhones = '0424-9188205';
 	const orgEmail = 'roccajess@gmail.com';
+
+	const examHasReferences = results.some((r_) => r_.parameterSnapshot.hasReferences);
 </script>
 
 <div class="mx-auto w-full space-y-4 !px-8 !py-4">
@@ -75,4 +78,6 @@
 			<span class="capitalize">{sample}</span>
 		</p>
 	{/if}
+
+	
 </div>
