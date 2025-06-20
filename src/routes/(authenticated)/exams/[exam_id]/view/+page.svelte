@@ -7,7 +7,7 @@
 	let { data }: PageProps = $props();
 
 	let {
-		examData: { results, sample, examType, patient, ...examData }
+		examData: { results, sample, examType, patient }
 	} = data;
 
 	// TODO: Get this from the Configuration
