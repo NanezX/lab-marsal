@@ -34,7 +34,7 @@
 				</span>
 			</p>
 		</div>
-		<div class="flex justify-between">
+		<div class="ml-6 flex justify-between">
 			<div class="w-1/2 space-y-3 font-['Cambria'] text-xs font-semibold">
 				<p class="uppercase">{orgAddress}</p>
 
