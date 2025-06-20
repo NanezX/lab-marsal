@@ -26,6 +26,7 @@
 	let { data } = $props();
 
 	let { editExamResultsForm, examData } = data;
+	let { patient: patientData, examType: examTypeData } = examData;
 
 	const {
 		form,
@@ -70,5 +71,44 @@
 		<BackButton href="/exams/{examData.id}" size="40" />
 
 		<p class="mx-auto text-center text-3xl">Editar resultados</p>
+	</div>
+
+	<div>
+		<div class="grid grid-cols-2 gap-x-1 gap-y-5">
+			<div>
+				<p class="inline-flex items-center gap-x-1 text-2xl">Datos generales</p>
+
+				<div class="space-y-0.5 px-1 py-2">
+					<LabelValue label="Exámen" value={examTypeData.name} icon={Cash} />
+
+					<LabelValue
+						label="Clasificación"
+						value={examTypeData.classification.name}
+						icon={ListTree}
+					/>
+				</div>
+			</div>
+
+			<div>
+				<p class="inline-flex items-center gap-x-1 text-2xl">Datos del paciente</p>
+
+				<div class="space-y-0.5 px-1 py-2">
+					<LabelValue
+						label="Nombre"
+						value="{patientData.firstName} {patientData.lastName}"
+						icon={User}
+						labelClass="mr-1"
+					/>
+					<LabelValue label="Cédula" value={patientData.documentId} icon={Id} labelClass="mr-1" />
+
+					<LabelValue
+						label="Género"
+						value={patientData.gender == PatientGender.Male ? 'Hombre' : 'Mujer'}
+						icon={patientData.gender == PatientGender.Male ? GenderMale : GenderFemale}
+						labelClass="mr-1"
+					/>
+				</div>
+			</div>
+		</div>
 	</div>
 </form>
