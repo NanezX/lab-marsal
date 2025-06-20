@@ -86,7 +86,7 @@
 		]}
 	>
 		<thead>
-			<tr class="direct-children:pb-2 direct-children:uppercase direct-children:font-[500]">
+			<tr class="direct-children:pb-2 direct-children:uppercase direct-children:font-[600]">
 				<th scope="col"> Análisis </th>
 				<th scope="col"> Resultado </th>
 
