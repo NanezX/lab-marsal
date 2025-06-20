@@ -139,6 +139,7 @@ export function cleanEditExamResults(data: FindExamData) {
 		sample: data.sample,
 		observation: data.observation,
 		results: data.results.map((result_) => ({
+			id: result_.id,
 			parameterId: result_.parameterId,
 			value: result_.value
 		}))
