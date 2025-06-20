@@ -137,8 +137,77 @@
 					<hr class="border-primary-gray/50 my-1 mb-4" />
 
 					{#each examTypeData.categories as category, i}
-						<!-- TODO: Built the same but with categories -->
-						<div></div>
+						<div class="space-y-2">
+							<p class="text-lg font-semibold underline">{category}</p>
+
+							<div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
+								{#each $form.results as result, index (result.parameterId)}
+									<!-- Values from the data to simplify access on html -->
+									{@const parameterSnapshotIndex = examData.results.findIndex(
+										(r) => r.parameterId === result.parameterId
+									)}
+									{@const parameterIndex = examData.examType.parameters.findIndex(
+										(p) => p.id === result.parameterId
+									)}
+
+									{@const typeResult = parameterSnapshotIndex !== -1 ? 'SAVED' : 'NEW'}
+
+									{@const parameterData =
+										typeResult === 'NEW'
+											? examData.examType.parameters[parameterIndex]
+											: examData.results[parameterSnapshotIndex].parameterSnapshot}
+
+									{#if parameterData.category === category}
+										<!-- Actual HTML -->
+										<div class="flex gap-x-1 order:[{parameterData.position}]">
+											<Input
+												bind:value={result.value}
+												name="sample"
+												placeholder="Valor del resultado"
+												label={parameterData.name +
+													(parameterData.unit ? ` (${parameterData.unit})` : '')}
+												wrapperClass="w-full"
+												error={$errors.results?.[index]?.value}
+											/>
+
+											<div class="relative">
+												<div class="w-[24px]"></div>
+												{#if parameterData.hasReferences}
+													<Icon
+														id="help-reference-values-{result.parameterId}"
+														src={HelpCircle}
+														size="24"
+														class="text-primary-blue hover:text-primary-blue/75 absolute top-1/2 cursor-pointer"
+													/>
+													<!-- class="w-72 bg-white text-sm font-light text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400" -->
+													<Popover
+														title="Valores de referencia"
+														triggeredBy="#help-reference-values-{result.parameterId}"
+														trigger="click"
+														class="border-primary-blue border"
+														placement={'top-start'}
+														transition={fade}
+														transitionParams={{ duration: 150 }}
+													>
+														<div class="flex flex-col gap-2">
+															{#each parameterData.referenceValues as refValues}
+																<p class="border-b-primary-blue not-last:border-b not-last:pb-2">
+																	{refValues}
+																</p>
+															{/each}
+														</div>
+													</Popover>
+												{/if}
+											</div>
+										</div>
+									{/if}
+								{/each}
+							</div>
+						</div>
+
+						{#if examTypeData.categories.length !== i + 1}
+							<hr class="border-primary-gray/50 my-1 mb-4" />
+						{/if}
 					{:else}
 						<div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
 							{#each $form.results as result, index (result.parameterId)}
