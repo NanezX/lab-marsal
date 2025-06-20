@@ -247,10 +247,11 @@ export const examResult = pgTable('exam_result', {
 	value: text().notNull(),
 	// Snapshot to preserve parameter info at the time of result entry
 	parameterSnapshot: jsonb('parameter_snapshot').notNull().$type<{
+		position: number;
 		name: string;
-		unit?: string;
-		type?: string;
+		type: string;
 		category?: string;
+		unit?: string;
 		hasReferences: boolean;
 		referenceValues: string[];
 	}>()
