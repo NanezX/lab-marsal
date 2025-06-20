@@ -70,7 +70,7 @@
 	<p class="text-center font-['Cambria'] text-xl uppercase underline">{examType.name}</p>
 
 	{#if sample}
-		<p class="text-center font-['Cambria'] text-xl uppercase">
+		<p class="-mt-1 text-center font-['Cambria'] text-xl uppercase">
 			<span class="underline">Muestra: </span>
 			<span class="capitalize">{sample}</span>
 		</p>
