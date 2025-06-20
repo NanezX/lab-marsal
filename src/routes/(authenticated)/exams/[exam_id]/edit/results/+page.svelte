@@ -22,6 +22,7 @@
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { examStatusItems, priorityItems } from '$lib/client/enumItems.js';
+	import Textarea from '$lib/components/Textarea.svelte';
 
 	let { data } = $props();
 
@@ -112,6 +113,28 @@
 
 			<div class="col-span-2">
 				<p class="mb-4 text-center text-2xl">Actualizar</p>
+
+				<div class="space-y-4">
+					<Input
+						bind:value={() => $form.sample ?? '', (v) => ($form.sample = v)}
+						name="sample"
+						label="Nombre del exámen"
+						placeholder="Nombre del exámen"
+						wrapperClass="w-1/2"
+						error={$errors.sample}
+					/>
+
+					<div class="flex flex-col gap-y-1">
+						<label for="description-textarea" class="ml-2 font-semibold">
+							Observación (opcional)
+						</label>
+						<Textarea
+							bind:value={() => $form.observation ?? '', (v) => ($form.observation = v)}
+							name="observation"
+							placeholder="Observación del exámen"
+						/>
+					</div>
+				</div>
 			</div>
 
 			<div class="col-span-2">
