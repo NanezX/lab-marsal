@@ -79,5 +79,40 @@
 		</p>
 	{/if}
 
-	
+	<table class="w-full">
+		<thead>
+			<tr>
+				<th scope="col"> Análisis </th>
+				<th scope="col"> Resultado </th>
+
+				{#if examHasReferences}
+					<th scope="col"> Valores de Referencia </th>
+				{/if}
+			</tr>
+		</thead>
+		<tbody>
+			{#each results as result_}
+				{@const parameter_ = result_.parameterSnapshot}
+				<tr>
+					<th scope="row">
+						{parameter_.name}
+						{#if parameter_.unit}
+							({parameter_.unit})
+						{/if}
+					</th>
+
+					<th scope="row">
+						{result_.value}
+					</th>
+
+					{#if examHasReferences}
+						<!-- TODO: Play with multiple reference value. SHow correctly -->
+						<th scope="row">
+							{parameter_.referenceValues}
+						</th>
+					{/if}
+				</tr>
+			{/each}
+		</tbody>
+	</table>
 </div>
