@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import icon from '$lib/assets/icon.png';
 	import { formatDateDMY, getAgeFromDate } from '$lib/client';
+	import { generatePDF } from '$lib/client/pdfGenerator';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -17,9 +19,22 @@
 	const orgEmail = 'roccajess@gmail.com';
 
 	const examHasReferences = results.some((r_) => r_.parameterSnapshot.hasReferences);
+
+	async function callGeneratePDF() {
+		await generatePDF(element);
+	}
+
+	let action = $state(page.url.searchParams.get('action'));
+	let element = $state<HTMLElement | null>(null);
+
+	$effect(() => {
+		if (action == 'download') {
+			callGeneratePDF();
+		}
+	});
 </script>
 
-<div class="mx-auto w-full space-y-4 !px-8 !pt-8 !pb-16">
+<div bind:this={element} class="mx-auto w-full space-y-4 bg-white !px-8 !pt-8 !pb-16">
 	<!-- Membrete -->
 	<div class="space-y-6">
 		<div class="ml-4 inline-flex items-end gap-x-3">
