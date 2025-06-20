@@ -25,10 +25,11 @@
 		ClockEdit,
 		Edit,
 		Progress,
-		FileDownload,
 		Download,
 		Eye,
-		Send2
+		Send2,
+		FileDescription,
+		TestPipe2
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
@@ -274,6 +275,23 @@
 						/>
 					</Link>
 				</p>
+
+				<div class="flex flex-col gap-y-1">
+					<LabelValue label="Muestra" value={examData.sample ?? 'N/A'} icon={TestPipe2} />
+
+					<p class="col-span-full flex flex-col gap-y-2" title="Observación del exámen">
+						<span class="flex items-center gap-x-1">
+							<Icon src={FileDescription} class="h-5 w-5" />
+							<strong>Observación: </strong><br />
+						</span>
+
+						<span
+							class="border-primary-blue/50 mx-2 max-h-60 overflow-y-auto rounded-xl border bg-gray-100 px-2 py-4 whitespace-pre-line"
+						>
+							{examData.observation ?? 'Sin observaciones'}
+						</span>
+					</p>
+				</div>
 
 				<!-- TODO: If the exam is not marked as COMPLETED, these button should be disabled because there is nothing to send/show/download yet -->
 				<div
