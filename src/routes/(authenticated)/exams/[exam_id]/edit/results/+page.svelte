@@ -118,8 +118,8 @@
 					<Input
 						bind:value={() => $form.sample ?? '', (v) => ($form.sample = v)}
 						name="sample"
-						label="Nombre del exámen"
-						placeholder="Nombre del exámen"
+						label="Muestra"
+						placeholder="Muestra"
 						wrapperClass="w-1/2"
 						error={$errors.sample}
 					/>
@@ -136,6 +136,21 @@
 					</div>
 
 					<hr class="border-primary-gray/50 my-1 mb-4" />
+
+					{#each $form.results as result, index (result.parameterId)}
+						<p>
+							{examData.examType.parameters.find((p) => p.id === result.parameterId)?.name}:
+						</p>
+					{/each}
+
+					<button
+						type="button"
+						onclick={() => {
+							console.log('$form.results: ', $form.results);
+							console.log('examData.examType.parameters: ', examData.examType.parameters);
+							console.log('examData.results: ', data.examData.results);
+						}}>Print</button
+					>
 				</div>
 			</div>
 
