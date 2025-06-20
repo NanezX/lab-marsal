@@ -16,7 +16,7 @@
 	const orgEmail = 'roccajess@gmail.com';
 </script>
 
-<div class="mx-auto w-full !px-8 !py-4">
+<div class="mx-auto w-full space-y-4 !px-8 !py-4">
 	<!-- Membrete -->
 	<div class="space-y-6">
 		<div class="ml-4 inline-flex items-end gap-x-3">
@@ -61,5 +61,18 @@
 		</div>
 	</div>
 
-	<hr class="border-primary-gray/50" />
+	{#if examType.classification.name !== 'Sin clasificación'}
+		<p class="text-center font-['Cambria'] text-xl uppercase">{examType.classification.name}</p>
+	{/if}
+
+	<hr class="border-primary-gray/50 mb-2" />
+
+	<p class="text-center font-['Cambria'] text-xl uppercase underline">{examType.name}</p>
+
+	{#if sample}
+		<p class="text-center font-['Cambria'] text-xl uppercase">
+			<span class="underline">Muestra: </span>
+			<span class="capitalize">{sample}</span>
+		</p>
+	{/if}
 </div>
