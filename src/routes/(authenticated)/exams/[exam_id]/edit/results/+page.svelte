@@ -109,6 +109,25 @@
 					/>
 				</div>
 			</div>
+
+			<!--  -->
+			RESULTADOS
+			<!--  -->
+
+			<div class="col-span-2">
+				<hr class="border-primary-gray/50 my-1 mb-4" />
+
+				<div class="mx-auto w-fit space-x-10">
+					<Button
+						disabled={!hasChanges}
+						onclick={() => (showConfirmModal = true)}
+						title="Guardar cambios"
+						class="w-fit !bg-green-500 hover:!bg-green-400 disabled:!bg-gray-200"
+					>
+						Guardar cambios
+					</Button>
+				</div>
+			</div>
 		</div>
 	</div>
 </form>
