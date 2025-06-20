@@ -1,10 +1,9 @@
 <script>
 	import { superForm } from 'sveltekit-superforms';
-	import { fade } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import { cleanEditExamResults } from '$lib/shared/utils.js';
-	import Select from '$lib/components/Select.svelte';
 	import { PatientGender } from '$lib/shared/enums.js';
 	import Button from '$lib/components/Button.svelte';
 	import CloseNavigationGuard from '$lib/components/modal/CloseNavigationGuard.svelte';
@@ -17,12 +16,9 @@
 		User,
 		Cash,
 		ListTree,
-		ClockPlus,
-		ClockEdit,
 		HelpCircle
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
-	import { examStatusItems, priorityItems } from '$lib/client/enumItems.js';
 	import Textarea from '$lib/components/Textarea.svelte';
 	import { Popover } from 'flowbite-svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
@@ -176,10 +172,26 @@
 									<div class="relative">
 										<div class="w-[24px]"></div>
 										<Icon
+											id="help-reference-values-{result.parameterId}"
 											src={HelpCircle}
 											size="24"
 											class="text-primary-blue hover:text-primary-blue/75 absolute top-1/2 cursor-pointer"
 										/>
+										<!-- class="w-72 bg-white text-sm font-light text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400" -->
+										<Popover
+											triggeredBy="#help-reference-values-{result.parameterId}"
+											trigger="click"
+											class=""
+											placement={'top-start'}
+											transition={slide}
+											transitionParams={{ duration: 300 }}
+										>
+											<p>DataDataDataDataDataData</p>
+											<p>Data</p>
+											<p>Data</p>
+											<p>Data</p>
+											<p>DDataata</p>
+										</Popover>
 									</div>
 								</div>
 							{/each}
