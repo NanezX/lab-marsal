@@ -110,9 +110,9 @@
 				</div>
 			</div>
 
-			<!--  -->
-			RESULTADOS
-			<!--  -->
+			<div class="col-span-2">
+				<p class="mb-4 text-center text-2xl">Actualizar</p>
+			</div>
 
 			<div class="col-span-2">
 				<hr class="border-primary-gray/50 my-1 mb-4" />
