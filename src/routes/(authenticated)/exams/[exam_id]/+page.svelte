@@ -301,6 +301,7 @@
 						href="/exams/{examData.id}/view"
 						class="inline-flex w-full justify-center gap-x-1"
 						linkClass="inline-flex"
+						target="_blank"
 					>
 						<span>Visualizar</span>
 						<span>
