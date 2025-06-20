@@ -1,6 +1,6 @@
 <script>
 	import { superForm } from 'sveltekit-superforms';
-	import { fade, slide } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import Input from '$lib/components/Input.svelte';
 	import { cleanEditExamResults } from '$lib/shared/utils.js';
@@ -171,27 +171,32 @@
 
 									<div class="relative">
 										<div class="w-[24px]"></div>
-										<Icon
-											id="help-reference-values-{result.parameterId}"
-											src={HelpCircle}
-											size="24"
-											class="text-primary-blue hover:text-primary-blue/75 absolute top-1/2 cursor-pointer"
-										/>
-										<!-- class="w-72 bg-white text-sm font-light text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400" -->
-										<Popover
-											triggeredBy="#help-reference-values-{result.parameterId}"
-											trigger="click"
-											class=""
-											placement={'top-start'}
-											transition={slide}
-											transitionParams={{ duration: 300 }}
-										>
-											<p>DataDataDataDataDataData</p>
-											<p>Data</p>
-											<p>Data</p>
-											<p>Data</p>
-											<p>DDataata</p>
-										</Popover>
+										{#if parameterData.hasReferences}
+											<Icon
+												id="help-reference-values-{result.parameterId}"
+												src={HelpCircle}
+												size="24"
+												class="text-primary-blue hover:text-primary-blue/75 absolute top-1/2 cursor-pointer"
+											/>
+											<!-- class="w-72 bg-white text-sm font-light text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400" -->
+											<Popover
+												title="Valores de referencia"
+												triggeredBy="#help-reference-values-{result.parameterId}"
+												trigger="click"
+												class="border-primary-blue border"
+												placement={'top-start'}
+												transition={fade}
+												transitionParams={{ duration: 150 }}
+											>
+												<div class="flex flex-col gap-2">
+													{#each parameterData.referenceValues as refValues}
+														<p class="not-last:border-b not-last:pb-2 border-b-primary-blue">
+															{refValues}
+														</p>
+													{/each}
+												</div>
+											</Popover>
+										{/if}
 									</div>
 								</div>
 							{/each}
