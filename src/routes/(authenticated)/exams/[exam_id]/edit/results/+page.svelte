@@ -137,7 +137,7 @@
 					<hr class="border-primary-gray/50 my-1 mb-4" />
 
 					{#each examTypeData.categories as category, i}
-						<div class="space-y-2">
+						<div class="space-y-4">
 							<p class="text-lg font-semibold underline">{category}</p>
 
 							<div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
