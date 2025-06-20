@@ -102,6 +102,10 @@ export const actions: Actions = {
 			return failFormResponse(form, errMsg, event.cookies, 500);
 		}
 
-		redirect(`/exams/${examId}`, { type: 'success', message: 'Resultados actualizado' }, event.cookies);
+		redirect(
+			`/exams/${examId}`,
+			{ type: 'success', message: 'Resultados actualizado' },
+			event.cookies
+		);
 	}
 };
