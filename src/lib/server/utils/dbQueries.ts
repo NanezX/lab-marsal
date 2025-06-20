@@ -224,6 +224,7 @@ export async function findExamById(id: string) {
 				// Exclude deleted results
 				where: (result, { and, eq }) => and(eq(result.examId, id), eq(result.deleted, false)),
 				columns: {
+					id: true,
 					parameterId: true,
 					value: true
 				}
