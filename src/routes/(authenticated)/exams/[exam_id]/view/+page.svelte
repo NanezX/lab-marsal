@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import icon from '$lib/assets/icon.png';
 	import { formatDateDMY, getAgeFromDate } from '$lib/client';
 	import { generatePDF } from '$lib/client/pdfGenerator';
 	import type { PageProps } from './$types';
@@ -21,7 +20,7 @@
 	const examHasReferences = results.some((r_) => r_.parameterSnapshot.hasReferences);
 
 	async function callGeneratePDF() {
-		await generatePDF(element);
+		return await generatePDF(element);
 	}
 
 	let action = $state(page.url.searchParams.get('action'));
@@ -29,7 +28,17 @@
 
 	$effect(() => {
 		if (action == 'download') {
-			callGeneratePDF();
+			callGeneratePDF().then((success) => {
+				if (success) {
+					action = null;
+					const url = page.url;
+					url.searchParams.delete('action');
+
+					setTimeout(() => {
+						window.close();
+					}, 100);
+				}
+			});
 		}
 	});
 </script>
