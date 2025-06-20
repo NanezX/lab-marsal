@@ -309,13 +309,26 @@
 						</span>
 					</Link>
 
-					<Button class="!bg-dark-blue hover:!bg-dark-blue/75 inline-flex items-center gap-x-1">
+					<!-- class="!bg-dark-blue hover:!bg-dark-blue/75 inline-flex items-center gap-x-1" -->
+					<Link
+						href="/exams/{examData.id}/view?action=download"
+						class="!bg-dark-blue hover:!bg-dark-blue/75 inline-flex w-full justify-center gap-x-1"
+						linkClass="inline-flex"
+						target="_blank"
+					>
 						<span>Descargar</span>
 
 						<span>
 							<Icon src={Download} size="24" />
 						</span>
-					</Button>
+					</Link>
+					<!-- <Button class="!bg-dark-blue hover:!bg-dark-blue/75 inline-flex items-center gap-x-1">
+						<span>Descargar</span>
+
+						<span>
+							<Icon src={Download} size="24" />
+						</span>
+					</Button> -->
 
 					<!-- TODO: Implementar logica para enviar los reusltados al correo del usuario si tiene uno asociado -->
 					<Button
