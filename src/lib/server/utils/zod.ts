@@ -320,6 +320,7 @@ export const editExamPaymentSchema = z
 
 // Helper: Zod schema for individual result entry
 const examResultInputSchema = z.object({
+	id: z.string().uuid().optional(),
 	/**
 	 * A snapshopt it will be needed after assign it each value result for first time for preserve the data
 	 */
