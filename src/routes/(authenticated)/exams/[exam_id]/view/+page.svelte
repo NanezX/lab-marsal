@@ -1,5 +1,8 @@
 <script lang="ts">
+	import icon from '$lib/assets/icon.png';
+	import { formatDateDMY, getAgeFromDate } from '$lib/client';
 	import type { PageProps } from './$types';
+
 	let { data }: PageProps = $props();
 
 	let {
@@ -13,18 +16,50 @@
 	const orgEmail = 'roccajess@gmail.com';
 </script>
 
-<div class="w-full !p-0">
+<div class="mx-auto w-full !px-8 !py-4">
 	<!-- Membrete -->
-	<div>
-		<p>{'<img>'}</p>
-		<p class="uppercase">{orgFullName}</p>
-		<p class="uppercase">RIF. {orgRif}</p>
+	<div class="space-y-6">
+		<div class="ml-4 inline-flex items-end gap-x-3">
+			<img alt="El logo de MarsalLab" src="/favicon.png" width="50" height="50" />
+			<p class="font-['Arial'] leading-none font-semibold uppercase">
+				<span>
+					{orgFullName}
+				</span>
+
+				<span class="ml-2 text-xs font-bold">
+					RIF. {orgRif}
+				</span>
+			</p>
+		</div>
+		<div class="flex justify-between">
+			<div class="w-1/2 space-y-3 font-['Arial'] text-xs font-semibold">
+				<p class="uppercase">{orgAddress}</p>
+
+				<p class="uppercase">
+					<span>
+						Telefonos: {orgPhones}
+					</span>
+					<span class="ml-2">E-MAIL: {orgEmail}</span>
+				</p>
+			</div>
+
+			<div class="max-w-1/2">
+				<div class="grid grid-cols-2 gap-x-4 font-['Arial']">
+					<span class="text-end">Nombre: </span>
+					<span class="uppercase">{patient.firstName} {patient.lastName}</span>
+
+					<span class="text-end">Cédula:</span>
+					<span>{patient.documentId ?? ''}</span>
+
+					<span class="text-end">Edad: </span>
+					<span class="uppercase">{getAgeFromDate(patient.birthdate)}</span>
+
+					<span class="text-end">Fecha: </span>
+					<span>{formatDateDMY(new Date())}</span>
+				</div>
+			</div>
+		</div>
 	</div>
 
-	======================================== ========================================
-	<div>
-		<p class="uppercase">{orgAddress}</p>
-		<p class="uppercase">Telefonos: {orgPhones}</p>
-		<p class="uppercase">E-MAIL: {orgEmail}</p>
-	</div>
+	<hr class="border-primary-gray/50" />
 </div>
