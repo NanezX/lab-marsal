@@ -3,7 +3,7 @@ import { toastError } from '$lib/toasts';
 export async function generatePDF(element_: HTMLElement | null) {
 	if (element_ === null) {
 		toastError('No hay nada seleccionado para generar el PDF');
-		return;
+		return false;
 	}
 
 	const response = await fetch('/api/generate-pdf', {
@@ -16,7 +16,7 @@ export async function generatePDF(element_: HTMLElement | null) {
 
 	if (!response.ok) {
 		toastError('Fallo la generación del PDF ');
-		return;
+		return false;
 	}
 
 	const blob = await response.blob();
@@ -28,6 +28,8 @@ export async function generatePDF(element_: HTMLElement | null) {
 	a.click();
 
 	URL.revokeObjectURL(url);
+
+	return true;
 }
 
 // WIP

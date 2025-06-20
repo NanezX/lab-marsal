@@ -39,7 +39,7 @@ export async function POST({ request }) {
 		format: 'A4',
 		printBackground: true,
 		margin: { top: '20px', right: '20px', bottom: '20px', left: '20px' },
-		preferCSSPageSize: false // Added for better page size handling
+		preferCSSPageSize: true // Added for better page size handling
 	});
 
 	await browser.close();
