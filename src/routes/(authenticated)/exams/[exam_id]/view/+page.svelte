@@ -32,7 +32,7 @@
 			</p>
 		</div>
 		<div class="flex justify-between">
-			<div class="w-1/2 space-y-3 font-['Arial'] text-xs font-semibold">
+			<div class="w-1/2 space-y-3 font-['Cambria'] text-xs font-semibold">
 				<p class="uppercase">{orgAddress}</p>
 
 				<p class="uppercase">
@@ -44,9 +44,9 @@
 			</div>
 
 			<div class="max-w-1/2">
-				<div class="grid grid-cols-2 gap-x-4 font-['Arial']">
-					<span class="text-end">Nombre: </span>
-					<span class="uppercase">{patient.firstName} {patient.lastName}</span>
+				<div class="direct-children:mt-[-2px] grid grid-cols-2 gap-x-4 font-['Cambria']">
+					<span class="!mt-0 text-end">Nombre: </span>
+					<span class="!mt-0 uppercase">{patient.firstName} {patient.lastName}</span>
 
 					<span class="text-end">Cédula:</span>
 					<span>{patient.documentId ?? ''}</span>
