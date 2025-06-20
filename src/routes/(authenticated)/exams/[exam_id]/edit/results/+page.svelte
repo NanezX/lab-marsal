@@ -134,6 +134,8 @@
 							placeholder="Observación del exámen"
 						/>
 					</div>
+
+					<hr class="border-primary-gray/50 my-1 mb-4" />
 				</div>
 			</div>
 
