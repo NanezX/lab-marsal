@@ -333,13 +333,6 @@ const existingResultSchema = newResultSchema.extend({
  */
 export const examResultInputSchema = z.union([existingResultSchema, newResultSchema]);
 
-// const examResultInputSchema = z.object({
-// 	id: z.string().uuid().optional(),
-// 	parameterId: z.string().uuid({ message: 'ID del parámetro no es válido' }),
-// 	// value: z.union([z.string().min(1, 'Debe ingresar un valor'), z.number().or(z.coerce.number())])
-// 	value: z.string().min(1, 'Debe ingresar un valor')
-// });
-
 // Main results edit schema
 export const editExamResultsSchema = z.object({
 	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
