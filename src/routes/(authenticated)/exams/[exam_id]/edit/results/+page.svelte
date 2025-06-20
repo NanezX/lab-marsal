@@ -138,9 +138,16 @@
 					<hr class="border-primary-gray/50 my-1 mb-4" />
 
 					{#each $form.results as result, index (result.parameterId)}
-						<p>
-							{examData.examType.parameters.find((p) => p.id === result.parameterId)?.name}:
-						</p>
+						<Input
+							bind:value={result.value}
+							name="sample"
+							label={examData.results.find((r) => r.parameterId === result.parameterId)
+								?.parameterSnapshot.name ||
+								examData.examType.parameters.find((p) => p.id === result.parameterId)?.name}
+							placeholder="Valor del resultado"
+							wrapperClass="w-1/2"
+							error={$errors.results?.[index]?.value}
+						/>
 					{/each}
 
 					<button
