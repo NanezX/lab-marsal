@@ -124,9 +124,22 @@ export function cleanEditExamDetails(data: FindExamData) {
 }
 
 export function cleanEditExamPayment(data: FindExamData) {
-	return {
+	const base = {
 		examId: data.id,
-		paid: data.paid,
+		paid: data.paid
+	};
+
+	if (!data.paid) {
+		return {
+			...base,
+			paymentMethod: undefined,
+			pricePaid: undefined,
+			paymentRef: undefined
+		};
+	}
+
+	return {
+		...base,
 		paymentMethod: data.paymentMethod ?? undefined,
 		pricePaid: toNumberOrUndefined(data.pricePaid),
 		paymentRef: data.paymentRef ?? undefined
