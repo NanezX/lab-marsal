@@ -18,11 +18,14 @@
 		Cash,
 		ListTree,
 		ClockPlus,
-		ClockEdit
+		ClockEdit,
+		HelpCircle
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { examStatusItems, priorityItems } from '$lib/client/enumItems.js';
 	import Textarea from '$lib/components/Textarea.svelte';
+	import { Popover } from 'flowbite-svelte';
+	import { Icon } from '@steeze-ui/svelte-icon';
 
 	let { data } = $props();
 
@@ -118,7 +121,7 @@
 					<Input
 						bind:value={() => $form.sample ?? '', (v) => ($form.sample = v)}
 						name="sample"
-						label="Muestra"
+						label="Muestra (opcional)"
 						placeholder="Muestra"
 						wrapperClass="w-1/2"
 						error={$errors.sample}
@@ -137,27 +140,51 @@
 
 					<hr class="border-primary-gray/50 my-1 mb-4" />
 
-					{#each $form.results as result, index (result.parameterId)}
-						<Input
-							bind:value={result.value}
-							name="sample"
-							label={examData.results.find((r) => r.parameterId === result.parameterId)
-								?.parameterSnapshot.name ||
-								examData.examType.parameters.find((p) => p.id === result.parameterId)?.name}
-							placeholder="Valor del resultado"
-							wrapperClass="w-1/2"
-							error={$errors.results?.[index]?.value}
-						/>
-					{/each}
+					{#each examTypeData.categories as category, i}
+						<!-- TODO: Built the same but with categories -->
+						<div></div>
+					{:else}
+						<div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+							{#each $form.results as result, index (result.parameterId)}
+								<!-- Values from the data to simplify access on html -->
+								{@const parameterSnapshotIndex = examData.results.findIndex(
+									(r) => r.parameterId === result.parameterId
+								)}
+								{@const parameterIndex = examData.examType.parameters.findIndex(
+									(p) => p.id === result.parameterId
+								)}
 
-					<button
-						type="button"
-						onclick={() => {
-							console.log('$form.results: ', $form.results);
-							console.log('examData.examType.parameters: ', examData.examType.parameters);
-							console.log('examData.results: ', data.examData.results);
-						}}>Print</button
-					>
+								{@const typeResult = parameterSnapshotIndex !== -1 ? 'SAVED' : 'NEW'}
+
+								{@const parameterData =
+									typeResult === 'NEW'
+										? examData.examType.parameters[parameterIndex]
+										: examData.results[parameterSnapshotIndex].parameterSnapshot}
+
+								<!-- Actual HTML -->
+								<div class="flex gap-x-1 order:[{parameterData.position}]">
+									<Input
+										bind:value={result.value}
+										name="sample"
+										placeholder="Valor del resultado"
+										label={parameterData.name +
+											(parameterData.unit ? ` (${parameterData.unit})` : '')}
+										wrapperClass="w-full"
+										error={$errors.results?.[index]?.value}
+									/>
+
+									<div class="relative">
+										<div class="w-[24px]"></div>
+										<Icon
+											src={HelpCircle}
+											size="24"
+											class="text-primary-blue hover:text-primary-blue/75 absolute top-1/2 cursor-pointer"
+										/>
+									</div>
+								</div>
+							{/each}
+						</div>
+					{/each}
 				</div>
 			</div>
 
