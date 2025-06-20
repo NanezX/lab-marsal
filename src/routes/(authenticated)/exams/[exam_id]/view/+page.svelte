@@ -49,13 +49,13 @@
 			<div class="max-w-1/2">
 				<div class="direct-children:mt-[-2px] grid grid-cols-2 gap-x-4 font-['Cambria']">
 					<span class="!mt-0 text-end">Nombre: </span>
-					<span class="!mt-0 uppercase">{patient.firstName} {patient.lastName}</span>
+					<span class="!mt-0">{patient.firstName} {patient.lastName}</span>
 
 					<span class="text-end">Cédula:</span>
 					<span>{patient.documentId ?? ''}</span>
 
 					<span class="text-end">Edad: </span>
-					<span class="uppercase">{getAgeFromDate(patient.birthdate)}</span>
+					<span>{getAgeFromDate(patient.birthdate)}</span>
 
 					<span class="text-end">Fecha: </span>
 					<span>{formatDateDMY(new Date())}</span>
