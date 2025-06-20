@@ -147,15 +147,33 @@ export function cleanEditExamPayment(data: FindExamData) {
 }
 
 export function cleanEditExamResults(data: FindExamData) {
+	const results = data.results.map((result_) => ({
+		id: result_.id,
+		parameterId: result_.parameterId,
+		value: result_.value
+	}));
+
+	data.examType.parameters.forEach((parameter) => {
+		// If the parameter is not in the results, we add it with an empty value
+		if (!results.some((result) => result.parameterId === parameter.id)) {
+			results.push({
+				id: '', // This will be considred as false on the if statement
+				parameterId: parameter.id,
+				value: ''
+			});
+		}
+	});
+
 	return {
 		examId: data.id,
 		sample: data.sample,
 		observation: data.observation,
-		results: data.results.map((result_) => ({
-			id: result_.id,
-			parameterId: result_.parameterId,
-			value: result_.value
-		}))
+		results
+		// results: data.results.map((result_) => ({
+		// 	id: result_.id,
+		// 	parameterId: result_.parameterId,
+		// 	value: result_.value
+		// }))
 	};
 }
 
