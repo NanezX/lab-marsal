@@ -50,6 +50,7 @@
 		applyAction: true
 	});
 
+	const areResultsReady = examData.results.length > 0;
 	let showConfirmDeleteModal = $state(false);
 </script>
 
@@ -304,6 +305,8 @@
 						class="inline-flex w-full justify-center gap-x-1"
 						linkClass="inline-flex"
 						target="_blank"
+						title={!areResultsReady ? 'Los resultados no están listos' : undefined}
+						disabled={!areResultsReady}
 					>
 						<span>Visualizar</span>
 						<span>
@@ -316,6 +319,8 @@
 						class="!bg-dark-blue hover:!bg-dark-blue/75 inline-flex w-full justify-center gap-x-1"
 						linkClass="inline-flex"
 						target="_blank"
+						title={!areResultsReady ? 'Los resultados no están listos' : undefined}
+						disabled={!areResultsReady}
 					>
 						<span>Descargar</span>
 
