@@ -76,7 +76,7 @@
 		"postgres": "^3.4.5",
 		"puppeteer": "^24.8.2",
 		"svelecte": "^5.2.0",
-		"svelte-email-tailwind": "^2.1.1",
+		"svelte-email-tailwind": "^3.0.0",
 		"uuid": "^11.1.0"
 	},
 	"overrides": {
