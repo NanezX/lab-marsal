@@ -41,7 +41,7 @@
 		"autoprefixer": "^10.4.20",
 		"drizzle-dbml-generator": "^0.10.0",
 		"drizzle-kit": "^0.31.1",
-		"drizzle-orm": "^0.43.1",
+		"drizzle-orm": "^0.44.2",
 		"eslint": "^9.20.1",
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-svelte": "^3.9.3",
