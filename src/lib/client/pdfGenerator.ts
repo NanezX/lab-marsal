@@ -1,7 +1,11 @@
-import { toastError } from '$lib/toasts';
+import { toastError, toastLoading, toastSuccess } from '$lib/toasts';
+import { toast } from '@zerodevx/svelte-toast';
 
 export async function generatePDF(element_: HTMLElement | null) {
+	const loadingToast = toastLoading('Generando documento...');
+
 	if (element_ === null) {
+		toast.pop(loadingToast);
 		toastError('No hay nada seleccionado para generar el PDF');
 		return false;
 	}
@@ -15,6 +19,7 @@ export async function generatePDF(element_: HTMLElement | null) {
 	});
 
 	if (!response.ok) {
+		toast.pop(loadingToast);
 		toastError('Fallo la generación del PDF ');
 		return false;
 	}
@@ -28,6 +33,9 @@ export async function generatePDF(element_: HTMLElement | null) {
 	a.click();
 
 	URL.revokeObjectURL(url);
+
+	toast.pop(loadingToast);
+	toastSuccess('Documento generado');
 
 	return true;
 }
