@@ -89,7 +89,8 @@
 				<div class="flex gap-x-8">
 					<Input
 						bind:value={
-							() => ($form.documentId === 0 ? '' : $form.documentId),
+							() =>
+								$form.documentId === 0 || $form.documentId === undefined ? '' : $form.documentId,
 							(v) => ($form.documentId = v === '' ? 0 : v)
 						}
 						name="documentId"

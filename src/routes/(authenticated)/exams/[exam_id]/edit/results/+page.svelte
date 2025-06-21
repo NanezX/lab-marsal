@@ -99,7 +99,12 @@
 						icon={User}
 						labelClass="mr-1"
 					/>
-					<LabelValue label="Cédula" value={patientData.documentId} icon={Id} labelClass="mr-1" />
+					<LabelValue
+						label="Cédula"
+						value={patientData.documentId ?? 'N/A'}
+						icon={Id}
+						labelClass="mr-1"
+					/>
 
 					<LabelValue
 						label="Género"

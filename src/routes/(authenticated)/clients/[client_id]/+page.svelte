@@ -84,7 +84,7 @@
 			<p class="text-2xl">Datos personales</p>
 
 			<div class="grid grid-cols-2 gap-x-4 gap-y-3">
-				<LabelValue label="Cédula" value={patientData.documentId} icon={Id} />
+				<LabelValue label="Cédula" value={patientData.documentId ?? 'N/A'} icon={Id} />
 
 				<LabelValue
 					label="Género"

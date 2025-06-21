@@ -191,7 +191,8 @@ export const createPatientSchema = z.object({
 	documentId: z
 		.number({ required_error: 'Debe ingresar la cédula del paciente' })
 		.min(1, 'Debe ingresar una cédula válida')
-		.max(maxDocumentId, 'Debe ingresar una cédula válida'),
+		.max(maxDocumentId, 'Debe ingresar una cédula válida')
+		.optional(),
 	birthdate: z.string().min(1, 'Debe ingresar una fecha').date('No es una fecha valida'),
 	email: z.string().email('Correo electrónico inválido').optional(),
 	phoneNumber: z

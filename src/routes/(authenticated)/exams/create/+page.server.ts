@@ -56,14 +56,16 @@ export const actions: Actions = {
 					const { firstName, lastName, documentId, birthdate, gender, email, phoneNumber } =
 						patient.data;
 
-					// Check if there is a patient with this document ID
-					const patientCreated = await findPatientByDocumentId(documentId);
+					if (documentId) {
+						// Check if there is a patient with this document ID
+						const patientCreated = await findPatientByDocumentId(documentId);
 
-					// Allow to "add" a previous deleted patient
-					if (patientCreated !== undefined && patientCreated.deleted === false) {
-						// Against some rules to avoid exposing vulnerabilities, we return the 409 error for already taken emails
-						// because this is intented to be an internal application on the organization
-						throw new AppDataNotSavedError('Cédula de identidad ya registrada', { status: 409 }); // Throw because we are on a tx
+						// Allow to "add" a previous deleted patient
+						if (patientCreated !== undefined && patientCreated.deleted === false) {
+							// Against some rules to avoid exposing vulnerabilities, we return the 409 error for already taken emails
+							// because this is intented to be an internal application on the organization
+							throw new AppDataNotSavedError('Cédula de identidad ya registrada', { status: 409 }); // Throw because we are on a tx
+						}
 					}
 
 					// Data to add

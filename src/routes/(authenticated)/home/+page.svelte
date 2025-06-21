@@ -42,7 +42,7 @@
 						</div>
 						<div class="space-y-0.5">
 							<LabelValue label="Paciente" value={exam.patientName} />
-							<LabelValue label="Cédula" value={exam.patientDocumentId} />
+							<LabelValue label="Cédula" value={exam.patientDocumentId ?? 'N/A'} />
 							<LabelValue label="Exámen" value={exam.examTypeName} />
 						</div>
 
@@ -82,7 +82,7 @@
 							/>
 						</div>
 
-						<LabelValue label="CI" value={patient.documentId} />
+						<LabelValue label="CI" value={patient.documentId ?? 'N/A'} />
 
 						<LabelValue label="Cantidad" value={patient.examCount} class="text-sm" />
 					</a>

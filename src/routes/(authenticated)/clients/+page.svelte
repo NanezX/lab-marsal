@@ -121,7 +121,7 @@
 						/>
 					</div>
 
-					<LabelValue label="CI" value={patient.documentId} />
+					<LabelValue label="CI" value={patient.documentId ?? 'N/A'} />
 
 					<LabelValue label="Cantidad" value={patient.examCount} class="text-sm" />
 				</a>
