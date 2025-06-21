@@ -78,10 +78,5 @@
 		"svelecte": "^5.2.0",
 		"svelte-email-tailwind": "^3.0.0",
 		"uuid": "^11.1.0"
-	},
-	"overrides": {
-		"cookie": "^0.7.2",
-		"esbuild": "^0.25.0",
-		"@sveltejs/kit": "^2.17.2"
 	}
 }
