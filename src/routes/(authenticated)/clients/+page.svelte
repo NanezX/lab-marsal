@@ -106,7 +106,7 @@
 		/>
 
 		<div class="grid grid-cols-2 gap-3 xl:grid-cols-3">
-			{#each data.patientsData as patient}
+			{#each data.patientsData as patient (patient.id)}
 				<a
 					title="{patient.firstName} {patient.lastName}"
 					href="/clients/{patient.id}"
@@ -121,7 +121,7 @@
 						/>
 					</div>
 
-					<LabelValue label="CI" value={patient.documentId} />
+					<LabelValue label="CI" value={patient.documentId ?? 'N/A'} />
 
 					<LabelValue label="Cantidad" value={patient.examCount} class="text-sm" />
 				</a>

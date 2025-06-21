@@ -51,7 +51,7 @@
 	</a>
 
 	<!-- Pagination Numbers (Example for pages 1, 2, 3, 4) -->
-	{#each Array(totalPages) as _, page}
+	{#each Array(totalPages) as _, page (`page-${page}`)}
 		<a
 			href={generateHref(page)}
 			class={{

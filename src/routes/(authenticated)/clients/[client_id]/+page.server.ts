@@ -32,10 +32,11 @@ export const load: PageServerLoad = async ({ params, url }) => {
 			limit,
 			offset: skip,
 			where: whereFilter,
-			orderBy: (examTable, { desc }) => [desc(examTable.createdAt)],
+			orderBy: (examTable, { desc }) => [desc(examTable.updatedAt)],
 			columns: {
 				id: true,
 				createdAt: true,
+				updatedAt: true,
 				priority: true,
 				status: true,
 				deliveredAt: true,

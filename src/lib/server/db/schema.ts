@@ -156,7 +156,7 @@ export const patient = pgTable('patient', {
 	lastName: text().notNull(),
 	firstNameNormalized: text().notNull(),
 	lastNameNormalized: text().notNull(),
-	documentId: integer('document_id').notNull().unique(),
+	documentId: integer('document_id').unique(),
 	birthdate: timestamp({ withTimezone: true, mode: 'date' }).notNull(),
 	email: text(),
 	phoneNumber: text(),
