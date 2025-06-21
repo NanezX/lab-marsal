@@ -58,7 +58,7 @@
 	class="flex h-fit flex-col rounded-xl border border-gray-200 bg-gray-100 p-1 text-xl shadow-2xl"
 >
 	<!-- Links / Modulos-->
-	{#each routes as route}
+	{#each routes as route, i (`route-${i}`)}
 		<a
 			href={route.href}
 			class={[

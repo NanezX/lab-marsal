@@ -112,7 +112,7 @@
 
 			<div class="flex flex-col gap-y-4">
 				{#if examTypeData.categories.length > 0}
-					{#each examTypeData.categories as category_}
+					{#each examTypeData.categories as category_, i (`exam-type-category-${i}`)}
 						<div class="rounded-xl border border-gray-200 bg-gray-100 px-2 py-4">
 							<p class="text-lg font-bold">{category_}</p>
 

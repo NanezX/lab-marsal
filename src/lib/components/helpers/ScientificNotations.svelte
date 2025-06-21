@@ -22,13 +22,13 @@
 	<p><strong>Unidades</strong> (Click para copiar)</p>
 
 	<ul class="list-disc px-6 text-lg">
-		{#each exponents as exponent}
+		{#each exponents as exponent, i (`notation-exp-${i}`)}
 			<li>
 				<Exponents {base} {exponent} />
 			</li>
 		{/each}
 
-		{#each commons as item}
+		{#each commons as item, i (`notation-common-${i}`)}
 			<li class="cursor-pointer hover:underline" use:clickToCopy={item}>
 				{item}
 			</li>

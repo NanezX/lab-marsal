@@ -59,7 +59,7 @@
 		/>
 
 		<div class="grid grid-cols-2 gap-3">
-			{#each data.examTypesData as examType}
+			{#each data.examTypesData as examType (examType.id)}
 				<a
 					title={examType.name}
 					href="/exam-type/{examType.id}"

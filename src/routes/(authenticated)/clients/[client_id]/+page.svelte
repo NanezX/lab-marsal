@@ -127,7 +127,7 @@
 		<div class="space-y-5">
 			<p class="text-2xl">Últimos exámenes</p>
 			<FilterControls baseUrl="/clients/{patientData.id}" totalItems={totalExamsCount} />
-			{#each patienExamsData as exam}
+			{#each patienExamsData as exam (exam.id)}
 				<!-- content here -->
 				<p class="text-center">{exam.examType.name}</p>
 			{:else}
