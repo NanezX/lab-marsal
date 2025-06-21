@@ -175,9 +175,7 @@
 						</p>
 
 						<LabelValue label="Estado" icon={Progress}>
-							{#snippet children()}
-								<ExamStatus status={examData.status} priority={examData.priority} minimal />
-							{/snippet}
+							<ExamStatus status={examData.status} priority={examData.priority} minimal />
 						</LabelValue>
 
 						<LabelValue label="Identificador" value={examData.customTag} icon={Label} />
@@ -244,7 +242,7 @@
 							<LabelValue
 								label="Ref. del pago"
 								value={examData.paymentRef}
-								title={'Referencia del pago por el exámen'}
+								title="Referencia del pago por el exámen"
 								icon={CodeDots}
 							/>
 						{/if}

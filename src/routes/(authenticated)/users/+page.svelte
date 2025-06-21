@@ -138,7 +138,7 @@
 				</thead>
 
 				<tbody>
-					{#each data.usersData as user}
+					{#each data.usersData as user (user.id)}
 						<tr class="border-b transition hover:bg-slate-100">
 							<td class="font-medim py-2 break-all">{user.firstName} {user.lastName}</td>
 							<td class="py-2">{user.documentId}</td>

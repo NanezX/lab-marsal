@@ -136,7 +136,7 @@
 
 					<hr class="border-primary-gray/50 my-1 mb-4" />
 
-					{#each examTypeData.categories as category, i}
+					{#each examTypeData.categories as category, i (`category-${i}`)}
 						<div class="space-y-4">
 							<p class="text-lg font-semibold underline">{category}</p>
 
@@ -185,12 +185,12 @@
 														triggeredBy="#help-reference-values-{result.parameterId}"
 														trigger="click"
 														class="border-primary-blue border"
-														placement={'top-start'}
+														placement="top-start"
 														transition={fade}
 														transitionParams={{ duration: 150 }}
 													>
 														<div class="flex flex-col gap-2">
-															{#each parameterData.referenceValues as refValues}
+															{#each parameterData.referenceValues as refValues, i (`parameter-${i}`)}
 																<p class="border-b-primary-blue not-last:border-b not-last:pb-2">
 																	{refValues}
 																</p>
@@ -253,12 +253,12 @@
 												triggeredBy="#help-reference-values-{result.parameterId}"
 												trigger="click"
 												class="border-primary-blue border"
-												placement={'top-start'}
+												placement="top-start"
 												transition={fade}
 												transitionParams={{ duration: 150 }}
 											>
 												<div class="flex flex-col gap-2">
-													{#each parameterData.referenceValues as refValues}
+													{#each parameterData.referenceValues as refValues, i (`ref-value-${i}`)}
 														<p class="not-last:border-b not-last:pb-2 border-b-primary-blue">
 															{refValues}
 														</p>
