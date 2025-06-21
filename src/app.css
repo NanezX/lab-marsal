@@ -11,6 +11,7 @@ body {
 	height: 100%;
 	/* background: radial-gradient(125% 125% at 50% 10%, #fff 30%, #81d4e7 60%); */
 	background: radial-gradient(125% 125% at 50% 10%, #fff 30%, #81d4e7 70%, #049ce4 100%);
+	overflow-y: auto;
 	width: 100%;
 }
 
