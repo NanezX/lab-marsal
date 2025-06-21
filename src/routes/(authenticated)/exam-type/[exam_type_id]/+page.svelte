@@ -96,9 +96,11 @@
 						<strong>Descripción: </strong><br />
 					</span>
 
-					<span class="ml-2 rounded-xl border border-gray-200 bg-gray-100 px-2 py-4"
-						>{examTypeData.description ?? 'Sin descripción'}</span
+					<span
+						class="ml-2 max-h-60 overflow-y-auto rounded-xl border border-gray-200 bg-gray-100 px-2 py-4 whitespace-pre-line"
 					>
+						{examTypeData.description ?? 'Sin descripción'}
+					</span>
 				</p>
 			</div>
 		</div>

@@ -24,7 +24,11 @@
 		ClockPlus,
 		ClockEdit,
 		Edit,
-		Progress
+		Progress,
+		Download,
+		Eye,
+		FileDescription,
+		TestPipe2
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
@@ -248,15 +252,11 @@
 				</div>
 			</div>
 
-			<!-- TODO: Design a bit how to show the results. If not saved yet, show some emtpy card -->
-			<!-- TODO: Design a bit how to show the specific observation. If not observation write, show N/A with some background
-			 The description will be inside the results table -->
-
 			<div
-				class="col-span-2 flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
+				class="col-span-2 flex flex-col gap-y-4 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
 			>
 				<p
-					class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
+					class="mx-auto mb-2 flex w-1/4 min-w-fit items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
 				>
 					<span> Resultados </span>
 
@@ -274,9 +274,54 @@
 						/>
 					</Link>
 				</p>
-			</div>
 
-			<p>MOSTRAR: RESULTADOS</p>
+				<div class="flex flex-col gap-y-1">
+					<LabelValue label="Muestra" value={examData.sample ?? 'N/A'} icon={TestPipe2} />
+
+					<p class="col-span-full flex flex-col gap-y-2" title="Observación del exámen">
+						<span class="flex items-center gap-x-1">
+							<Icon src={FileDescription} class="h-5 w-5" />
+							<strong>Observación: </strong><br />
+						</span>
+
+						<span
+							class="border-primary-blue/50 mx-2 max-h-60 overflow-y-auto rounded-xl border bg-gray-100 px-2 py-4 whitespace-pre-line"
+						>
+							{examData.observation ?? 'Sin observaciones'}
+						</span>
+					</p>
+				</div>
+
+				<!-- TODO: If the exam is not marked as COMPLETED, these button should be disabled because there is nothing to send/show/download yet -->
+				<div
+					class="direct-children:w-1/4 direct-children:justify-center inline-flex justify-center gap-x-8"
+				>
+					<Link
+						href="/exams/{examData.id}/view"
+						class="inline-flex w-full justify-center gap-x-1"
+						linkClass="inline-flex"
+						target="_blank"
+					>
+						<span>Visualizar</span>
+						<span>
+							<Icon src={Eye} size="24" />
+						</span>
+					</Link>
+
+					<Link
+						href="/exams/{examData.id}/view?action=download"
+						class="!bg-dark-blue hover:!bg-dark-blue/75 inline-flex w-full justify-center gap-x-1"
+						linkClass="inline-flex"
+						target="_blank"
+					>
+						<span>Descargar</span>
+
+						<span>
+							<Icon src={Download} size="24" />
+						</span>
+					</Link>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

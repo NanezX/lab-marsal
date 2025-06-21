@@ -124,12 +124,60 @@ export function cleanEditExamDetails(data: FindExamData) {
 }
 
 export function cleanEditExamPayment(data: FindExamData) {
-	return {
+	const base = {
 		examId: data.id,
-		paid: data.paid,
+		paid: data.paid
+	};
+
+	if (!data.paid) {
+		return {
+			...base,
+			paymentMethod: undefined,
+			pricePaid: undefined,
+			paymentRef: undefined
+		};
+	}
+
+	return {
+		...base,
 		paymentMethod: data.paymentMethod ?? undefined,
 		pricePaid: toNumberOrUndefined(data.pricePaid),
 		paymentRef: data.paymentRef ?? undefined
+	};
+}
+
+export function cleanEditExamResults(data: FindExamData) {
+	const results = data.results.map((result_) => ({
+		id: result_.id,
+		parameterId: result_.parameterId,
+		value: result_.value
+	}));
+
+	// If no results were saved befoe, we could consider any changes on the exam type parameters.
+	// If resulst are present previusly, we skip the exam type parameters since anyone could add them or edit them after the exam completed
+	if (results.length === 0) {
+		data.examType.parameters.forEach((parameter) => {
+			// If the parameter is not in the results, we add it with an empty value
+			if (!results.some((result) => result.parameterId === parameter.id)) {
+				results.push({
+					id: '', // This will be considred as false on the if statement
+					parameterId: parameter.id,
+					value: ''
+				});
+			}
+		});
+	}
+
+	return {
+		examId: data.id,
+		sample: data.sample,
+		observation: data.observation,
+		results
+		// results: data.results.map((result_) => ({
+		// 	id: result_.id,
+		// 	parameterId: result_.parameterId,
+		// 	value: result_.value
+		// }))
 	};
 }
 

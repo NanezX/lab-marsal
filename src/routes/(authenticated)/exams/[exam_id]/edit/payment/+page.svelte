@@ -57,7 +57,7 @@
 <ConfirmModal
 	bind:showModal={showConfirmModal}
 	title="Confirmar cambios"
-	secondaryText={'Revise los cambios realizados anes de confirmar' +
+	secondaryText={'Revise los cambios realizados antes de confirmar' +
 		(original.paid && !$form.paid ? '. Los datos de pagos serán reiniciados' : '')}
 	saveButtonText="Guardar cambios"
 	cancelButtonText="Cancelar"

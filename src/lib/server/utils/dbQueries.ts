@@ -191,7 +191,9 @@ export async function findExamById(id: string) {
 					firstName: true,
 					lastName: true,
 					documentId: true,
-					gender: true
+					gender: true,
+					email: true,
+					birthdate: true
 				}
 			},
 			examType: {
@@ -217,6 +219,16 @@ export async function findExamById(id: string) {
 							name: true
 						}
 					}
+				}
+			},
+			results: {
+				// Exclude deleted results
+				where: (result, { and, eq }) => and(eq(result.examId, id), eq(result.deleted, false)),
+				columns: {
+					id: true,
+					parameterId: true,
+					value: true,
+					parameterSnapshot: true
 				}
 			}
 		}

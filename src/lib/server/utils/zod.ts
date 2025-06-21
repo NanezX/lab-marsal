@@ -318,14 +318,20 @@ export const editExamPaymentSchema = z
 		return data;
 	});
 
-// Helper: Zod schema for individual result entry
-const examResultInputSchema = z.object({
-	/**
-	 * A snapshopt it will be needed after assign it each value result for first time for preserve the data
-	 */
+const newResultSchema = z.object({
 	parameterId: z.string().uuid({ message: 'ID del parámetro no es válido' }),
-	value: z.union([z.string().min(1, 'Debe ingresar un valor'), z.number().or(z.coerce.number())])
+	value: z.string().min(1, 'Debe ingresar un valor')
 });
+
+const existingResultSchema = newResultSchema.extend({
+	id: z.string().uuid()
+});
+
+// Helper: Zod schema for individual result entry
+/**
+ * A snapshopt it will be needed after assign it each value result for first time for preserve the data
+ */
+export const examResultInputSchema = z.union([existingResultSchema, newResultSchema]);
 
 // Main results edit schema
 export const editExamResultsSchema = z.object({
