@@ -47,7 +47,7 @@
 <select bind:value {name} {required} class={selectClass} {title} {disabled} {id} {onchange}>
 	<option value={null} disabled>{placeholder}</option>
 
-	{#each items as item}
+	{#each items as item, i (`option-${i}`)}
 		<!-- Support both raw value and { value, label } object -->
 		<option
 			value={item !== null && typeof item === 'object' && 'value' in item ? item.value : item}

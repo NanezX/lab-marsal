@@ -22,7 +22,7 @@
 		</thead>
 
 		<tbody class="">
-			{#each params as parameter_}
+			{#each params as parameter_ (parameter_.id)}
 				<tr
 					class="direct-children:font-normal direct-children:py-1 border-primary-gray/20 not-last:border-b"
 				>
@@ -34,7 +34,7 @@
 
 					<th scope="row" class="w-3/5">
 						{#if parameter_.hasReferences}
-							{#each parameter_.referenceValues as reference_}
+							{#each parameter_.referenceValues as reference_, i (`${parameter_.id}-${i}`)}
 								<p>{formatCapital(reference_)}</p>
 							{/each}
 						{:else}

@@ -26,7 +26,7 @@
 			<p class="text-center text-xl font-bold">Ultimos examenes actualizados</p>
 
 			<div class="mt-4 grid grid-cols-2 gap-3">
-				{#each data.lastExamsUpdated as exam}
+				{#each data.lastExamsUpdated as exam (exam.id)}
 					<a
 						href="/exams/{exam.id}"
 						title="{exam.examTypeName} - {exam.patientName}"
@@ -42,7 +42,7 @@
 						</div>
 						<div class="space-y-0.5">
 							<LabelValue label="Paciente" value={exam.patientName} />
-							<LabelValue label="Cédula" value={exam.patientDocumentId} />
+							<LabelValue label="Cédula" value={exam.patientDocumentId ?? 'N/A'} />
 							<LabelValue label="Exámen" value={exam.examTypeName} />
 						</div>
 
@@ -67,7 +67,7 @@
 			<p class="text-center text-xl font-bold">Ultimos clientes actualizados</p>
 
 			<div class="grid grid-cols-2 gap-3">
-				{#each data.lastPatientsUpdated as patient}
+				{#each data.lastPatientsUpdated as patient (patient.id)}
 					<a
 						title="{patient.firstName} {patient.lastName}"
 						href="/clients/{patient.id}"
@@ -82,7 +82,7 @@
 							/>
 						</div>
 
-						<LabelValue label="CI" value={patient.documentId} />
+						<LabelValue label="CI" value={patient.documentId ?? 'N/A'} />
 
 						<LabelValue label="Cantidad" value={patient.examCount} class="text-sm" />
 					</a>

@@ -184,7 +184,8 @@
 								bind:value={
 									() => {
 										return isNewPatient($form.patient)
-											? $form.patient.data.documentId === 0
+											? $form.patient.data.documentId === 0 ||
+												$form.patient.data.documentId === undefined
 												? ''
 												: $form.patient.data.documentId
 											: '';
@@ -200,7 +201,7 @@
 								wrapperClass="w-1/3"
 								type="number"
 								autoComplete={false}
-								error={$errors.patient?.data?.documentId}
+								error={$errors.patient?.data?.documentId as string[] | string | undefined}
 							/>
 
 							<div class="flex flex-col items-start gap-y-1">

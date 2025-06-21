@@ -120,7 +120,7 @@
 		/>
 
 		<div class="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-3">
-			{#each data.examsData as exam}
+			{#each data.examsData as exam (exam.id)}
 				<a
 					href="/exams/{exam.id}"
 					title="{exam.examTypeName} - {exam.patientName}"
@@ -136,7 +136,7 @@
 					</div>
 					<div class="space-y-0.5">
 						<LabelValue label="Paciente" value={exam.patientName} />
-						<LabelValue label="Cédula" value={exam.patientDocumentId} />
+						<LabelValue label="Cédula" value={exam.patientDocumentId ?? 'N/A'} />
 						<LabelValue label="Exámen" value={exam.examTypeName} />
 					</div>
 

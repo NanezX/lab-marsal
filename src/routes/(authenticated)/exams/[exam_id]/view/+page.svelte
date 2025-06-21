@@ -163,7 +163,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each results as result_}
+				{#each results as result_ (result_.id)}
 					{@const parameter_ = result_.parameterSnapshot}
 					<tr class="direct-children:font-[500]">
 						<th scope="row">

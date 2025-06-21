@@ -50,6 +50,7 @@
 		applyAction: true
 	});
 
+	const areResultsReady = examData.results.length > 0;
 	let showConfirmDeleteModal = $state(false);
 </script>
 
@@ -136,7 +137,12 @@
 						icon={User}
 						labelClass="mr-1"
 					/>
-					<LabelValue label="Cédula" value={patientData.documentId} icon={Id} labelClass="mr-1" />
+					<LabelValue
+						label="Cédula"
+						value={patientData.documentId ?? 'N/A'}
+						icon={Id}
+						labelClass="mr-1"
+					/>
 
 					<LabelValue
 						label="Género"
@@ -175,9 +181,7 @@
 						</p>
 
 						<LabelValue label="Estado" icon={Progress}>
-							{#snippet children()}
-								<ExamStatus status={examData.status} priority={examData.priority} minimal />
-							{/snippet}
+							<ExamStatus status={examData.status} priority={examData.priority} minimal />
 						</LabelValue>
 
 						<LabelValue label="Identificador" value={examData.customTag} icon={Label} />
@@ -244,7 +248,7 @@
 							<LabelValue
 								label="Ref. del pago"
 								value={examData.paymentRef}
-								title={'Referencia del pago por el exámen'}
+								title="Referencia del pago por el exámen"
 								icon={CodeDots}
 							/>
 						{/if}
@@ -301,6 +305,8 @@
 						class="inline-flex w-full justify-center gap-x-1"
 						linkClass="inline-flex"
 						target="_blank"
+						title={!areResultsReady ? 'Los resultados no están listos' : undefined}
+						disabled={!areResultsReady}
 					>
 						<span>Visualizar</span>
 						<span>
@@ -313,6 +319,8 @@
 						class="!bg-dark-blue hover:!bg-dark-blue/75 inline-flex w-full justify-center gap-x-1"
 						linkClass="inline-flex"
 						target="_blank"
+						title={!areResultsReady ? 'Los resultados no están listos' : undefined}
+						disabled={!areResultsReady}
 					>
 						<span>Descargar</span>
 
