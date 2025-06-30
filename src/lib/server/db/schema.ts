@@ -133,10 +133,10 @@ export const user = pgTable(
 		...baseTable,
 		email: text().notNull().unique(),
 		passwordHash: text('password_hash').notNull(),
-		firstName: text().notNull(),
-		lastName: text().notNull(),
-		firstNameNormalized: text().notNull(),
-		lastNameNormalized: text().notNull(),
+		firstName: text("first_name").notNull(),
+		lastName: text("last_name").notNull(),
+		firstNameNormalized: text("first_name_normalized").notNull(),
+		lastNameNormalized: text("last_name_normalized").notNull(),
 		role: userRoleEnum().notNull(),
 		documentId: integer('document_id').notNull().unique(),
 		birthdate: timestamp({ withTimezone: true, mode: 'date' }).notNull()
@@ -152,14 +152,14 @@ export const userRelations = relations(user, ({ many }) => ({
 // Patient table
 export const patient = pgTable('patient', {
 	...baseTable,
-	firstName: text().notNull(),
-	lastName: text().notNull(),
-	firstNameNormalized: text().notNull(),
-	lastNameNormalized: text().notNull(),
+	firstName: text("first_name").notNull(),
+	lastName: text("last_name").notNull(),
+	firstNameNormalized: text("first_name_normalized").notNull(),
+	lastNameNormalized: text("last_name_normalized").notNull(),
 	documentId: integer('document_id').unique(),
 	birthdate: timestamp({ withTimezone: true, mode: 'date' }).notNull(),
 	email: text(),
-	phoneNumber: text(),
+	phoneNumber: text("phone_umber"),
 	gender: patientGenderEnum().notNull()
 });
 
@@ -198,7 +198,7 @@ export const parameterRelations = relations(parameter, ({ one }) => ({
 export const examTypeClassification = pgTable('exam_type_classification', {
 	...baseTable,
 	name: text().notNull().unique(),
-	nameNormalized: text().notNull().unique()
+	nameNormalized: text("name_normalized").notNull().unique()
 });
 
 export const examTypeClassificationRelations = relations(examTypeClassification, ({ many }) => ({
@@ -211,7 +211,7 @@ export const examType = pgTable(
 	{
 		...baseTable,
 		name: text().notNull().unique(),
-		nameNormalized: text().notNull().unique(),
+		nameNormalized: text("name_normalized").notNull().unique(),
 		description: text(),
 		basePrice: decimal('base_price', { precision: 19, scale: 2 }).notNull(),
 		categories: text()
