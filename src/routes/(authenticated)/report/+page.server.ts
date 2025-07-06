@@ -4,6 +4,5 @@ import { getChartData } from '$lib/server/chartData';
 export async function load() {
 	const chartData = await getChartData();
 
-    console.log('chartData: ', chartData)
 	return { chartData };
 }
