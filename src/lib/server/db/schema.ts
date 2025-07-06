@@ -233,6 +233,7 @@ export const examTypeRelations = relations(examType, ({ one, many }) => ({
 		fields: [examType.classificationId],
 		references: [examTypeClassification.id]
 	}),
+	exams: many(exam),
 	orders: many(orderExamTypes)
 }));
 
@@ -278,6 +279,9 @@ export const exam = pgTable('exam', {
 	// Exam details
 	customTag: text('custom_tag'),
 	status: examStatusEnum().notNull().default(ExamStatus.Pending),
+	examTypeId: uuid('exam_type_id')
+		.notNull()
+		.references(() => examType.id),
 
 	// Results details
 	sample: text(),
@@ -290,7 +294,10 @@ export const examRelations = relations(exam, ({ one, many }) => ({
 		fields: [exam.orderId],
 		references: [order.id]
 	}),
-
+	examType: one(examType, {
+		fields: [exam.examTypeId],
+		references: [examType.id]
+	}),
 	results: many(examResult)
 }));
 

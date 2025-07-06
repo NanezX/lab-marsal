@@ -35,6 +35,7 @@
 	import { Icon } from '@steeze-ui/svelte-icon';
 	import ExamStatus from '$lib/components/ExamStatus.svelte';
 	import { paymentMethodLabels } from '$lib/client';
+	import { AccordionItem, Accordion } from 'flowbite-svelte';
 
 	// TODO: Verify AND check what roles can remove/delete an exam (maybe just block the page to those user in the backend)
 
@@ -203,6 +204,69 @@
 					/>
 				{/if}
 			</div>
+		</div>
+
+		<div
+			class="col-span-2 flex flex-col gap-y-4 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
+		>
+			<p
+				class="mx-auto mb-2 flex w-1/4 min-w-fit items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
+			>
+				<span> Exámenes </span>
+
+				<Link
+					href="/exams/{orderData.id}/edit/results"
+					linkClass="flex mt-1"
+					class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
+				>
+					<Icon
+						src={Edit}
+						size="24"
+						title="Editar detalles del exámen"
+						theme="filled"
+						class="text-green-500"
+					/>
+				</Link>
+			</p>
+
+			<Accordion>
+				{#each orderData.exams as exam}
+					{@const examType = orderExamTypes.find((element_) => element_.id == exam.examTypeId)!}
+
+					<AccordionItem class="cursor-pointer">
+						{#snippet header()}
+							<p class="font-bold">
+								{examType.name}
+							</p>
+						{/snippet}
+						<div class="flex flex-col gap-y-1">
+							<LabelValue label="Muestra" value={exam.sample ?? 'N/A'} icon={TestPipe2} />
+
+							<p class="col-span-full flex flex-col gap-y-2" title="Observación del exámen">
+								<span class="flex items-center gap-x-1">
+									<Icon src={FileDescription} class="h-5 w-5" />
+									<strong>Observación: </strong><br />
+								</span>
+
+								<span
+									class="border-primary-blue/50 mx-2 max-h-60 overflow-y-auto rounded-xl border bg-gray-100 px-2 py-4 whitespace-pre-line"
+								>
+									{exam.observation ?? 'Sin observaciones'}
+								</span>
+							</p>
+
+							<Link
+								href="/exams"
+								linkClass="flex mt-4 mx-auto"
+								class="!bg-green-500 hover:!bg-green-600"
+							>
+								<!-- class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800" -->
+								Editar examen
+							</Link>
+						</div>
+					</AccordionItem>
+				{/each}
+			</Accordion>
 		</div>
 	</div>
 </div>

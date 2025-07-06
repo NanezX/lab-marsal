@@ -155,10 +155,12 @@ export const actions: Actions = {
 				// Insert the reference
 				await tx.insert(orderExamTypesTable).values(orderWithExamTypes);
 
+				// Add the exams for each
 				const examsToAdd = orderWithExamTypes.map((element_) => {
 					return {
+						customTag: tag,
 						orderId: element_.orderId,
-						customTag: tag
+						examTypeId: element_.examTypeId
 					};
 				});
 
