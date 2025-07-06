@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { exam as examTable, patient as patientTable } from '$lib/server/db/schema';
+import { order as orderTable, patient as patientTable } from '$lib/server/db/schema';
 import { normalized } from '$lib/shared/utils.js';
 import { and, or, ilike, eq, count, asc, desc, sql, type SQL } from 'drizzle-orm';
 
@@ -67,10 +67,10 @@ export const load = async ({ url }) => {
 				lastName: patientTable.lastName,
 				documentId: patientTable.documentId,
 				createdAt: patientTable.createdAt,
-				examCount: count(examTable.id).as('exam_count')
+				examCount: count(orderTable.id).as('exam_count')
 			})
 			.from(patientTable)
-			.leftJoin(examTable, eq(examTable.patientId, patientTable.id))
+			.leftJoin(orderTable, eq(orderTable.patientId, patientTable.id))
 			.where(where)
 			.groupBy(patientTable.id)
 			.orderBy(...(Array.isArray(orderExpr) ? orderExpr : [orderExpr]))
