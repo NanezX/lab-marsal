@@ -91,7 +91,21 @@
 				<p
 					class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
 				>
-					<span> Datos generales </span>
+					<span> Detalles </span>
+
+					<Link
+						href="/exams/{orderData.id}/edit/details"
+						linkClass="flex mt-1"
+						class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
+					>
+						<Icon
+							src={Edit}
+							size="24"
+							title="Editar detalles del exámen"
+							theme="filled"
+							class="text-green-500"
+						/>
+					</Link>
 				</p>
 
 				<div class="space-y-0.5 px-1 py-2">
