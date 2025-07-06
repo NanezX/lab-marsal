@@ -165,7 +165,7 @@ export const patient = pgTable('patient', {
 
 // Patient relations declarations
 export const patientRelations = relations(patient, ({ many }) => ({
-	exams: many(exam)
+	orders: many(order)
 }));
 
 // Parameter table
@@ -228,12 +228,13 @@ export const examType = pgTable(
 
 // Exam type relations declarations
 export const examTypeRelations = relations(examType, ({ one, many }) => ({
-	exams: many(exam),
 	parameters: many(parameter),
 	classification: one(examTypeClassification, {
 		fields: [examType.classificationId],
 		references: [examTypeClassification.id]
-	})
+	}),
+	exams: many(exam),
+	orders: many(orderExamTypes)
 }));
 
 export const examResult = pgTable('exam_result', {
@@ -271,40 +272,27 @@ export const examResultRelations = relations(examResult, ({ one }) => ({
 // Exam table
 export const exam = pgTable('exam', {
 	...baseTable,
-	patientId: uuid('patient_id')
+	orderId: uuid('order_id')
 		.notNull()
-		.references(() => patient.id),
+		.references(() => order.id),
+
+	// Exam details
+	customTag: text('custom_tag'),
+	status: examStatusEnum().notNull().default(ExamStatus.Pending),
 	examTypeId: uuid('exam_type_id')
 		.notNull()
 		.references(() => examType.id),
 
-	// Exam details
-	customTag: text('custom_tag').notNull(),
-	priority: examPriorityEnum().notNull().default(ExamPriority.Normal),
-	status: examStatusEnum().notNull().default(ExamStatus.Pending),
-	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }), // Set when the exam is deliveted
-
-	// Payment details
-	paid: boolean().notNull(), // When the exam is paid
-	pricePaid: decimal('price_paid', { precision: 19, scale: 2 }), // Amount paid (probably after marked paid)
-	// paymentMethod: text('payment_method'), // payment method defined by administration
-	paymentMethod: examPaymentMethodEnum(), // payment method defined by administration
-	paymentRef: text('payment_ref'), // Reference if apply
-	paidAt: timestamp('paid_at', { withTimezone: true, mode: 'date' }), // Set when the exam is paid
-
-	//////////////////////
-	//////////////////////
 	// Results details
 	sample: text(),
 	observation: text() // Optional observation by the lab
-	// results: jsonb(), // (Other table) - Added when uploading the results
 });
 
 // Exam relations declarations
 export const examRelations = relations(exam, ({ one, many }) => ({
-	patient: one(patient, {
-		fields: [exam.patientId],
-		references: [patient.id]
+	order: one(order, {
+		fields: [exam.orderId],
+		references: [order.id]
 	}),
 	examType: one(examType, {
 		fields: [exam.examTypeId],
@@ -312,3 +300,44 @@ export const examRelations = relations(exam, ({ one, many }) => ({
 	}),
 	results: many(examResult)
 }));
+
+// Exam table
+export const order = pgTable('order', {
+	...baseTable,
+	patientId: uuid('patient_id')
+		.notNull()
+		.references(() => patient.id),
+	priority: examPriorityEnum().notNull().default(ExamPriority.Normal),
+	deliveredAt: timestamp('delivered_at', { withTimezone: true, mode: 'date' }), // Set when the exam is deliveted
+
+	// Payment details
+	totalPrice: decimal('total_price', { precision: 19, scale: 2 }).notNull(),
+	paid: boolean().notNull(), // When the order is paid
+	pricePaid: decimal('price_paid', { precision: 19, scale: 2 }), // Amount paid (probably after marked paid)
+	paymentMethod: examPaymentMethodEnum(), // payment method defined by administration
+	paymentRef: text('payment_ref'), // Reference if apply
+	paidAt: timestamp('paid_at', { withTimezone: true, mode: 'date' }) // Set when the order is paid
+});
+
+// Order relations declarations
+export const orderRelations = relations(order, ({ one, many }) => ({
+	patient: one(patient, {
+		fields: [order.patientId],
+		references: [patient.id]
+	}),
+	exams: many(exam),
+	orderExamTypes: many(orderExamTypes)
+}));
+
+export const orderExamTypes = pgTable('order_exam_types', {
+	// ID of the row
+	id: uuid()
+		.primaryKey()
+		.$defaultFn(() => generateRandomUUID()),
+	orderId: uuid('order_id')
+		.notNull()
+		.references(() => order.id),
+	examTypeId: uuid('exam_type_id')
+		.notNull()
+		.references(() => examType.id)
+});

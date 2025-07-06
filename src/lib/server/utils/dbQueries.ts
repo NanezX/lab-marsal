@@ -16,6 +16,7 @@ import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js';
 import { validate as validateUUID } from 'uuid';
 import { EditConfigSchema } from './zod';
 import { toSnakeCase } from 'drizzle-orm/casing';
+import type { ExamTypeWithParameters } from '$lib/shared/types';
 
 type TxType = PgTransaction<
 	PostgresJsQueryResultHKT,
@@ -179,26 +180,62 @@ export async function findPatientById<E extends (keyof InferSelectModel<typeof p
 	return results.at(0) as Omit<InferSelectModel<typeof patientTable>, E[number]> | undefined;
 }
 
+export async function findOrderById(id: string) {
+	//
+	const orderData = await db.query.order.findFirst({
+		where: (order, { and, eq }) => and(eq(order.id, id), eq(order.deleted, false)),
+		with: {
+			patient: true,
+			exams: {
+				with: {
+					results: {
+						// Exclude deleted results
+						where: (result, { eq }) => eq(result.deleted, false),
+						columns: {
+							id: true,
+							parameterId: true,
+							value: true,
+							parameterSnapshot: true
+						}
+					}
+				}
+			}
+		}
+	});
+
+	if (!orderData) return orderData;
+
+	const orderExamTypesResult = await db.query.orderExamTypes.findMany({
+		where: (orderExamType, { and, eq }) => and(eq(orderExamType.orderId, id)),
+		columns: {
+			examTypeId: true
+		}
+	});
+
+	const orderExamTypes: Array<ExamTypeWithParameters> = [];
+
+	for (let i = 0; i < orderExamTypesResult.length; i++) {
+		const examType = await findExamTypeById(orderExamTypesResult[i].examTypeId);
+
+		if (!examType) return undefined;
+
+		orderExamTypes.push(examType);
+	}
+
+	return {
+		...orderData,
+		orderExamTypes
+	};
+}
+
 export async function findExamById(id: string) {
 	return await db.query.exam.findFirst({
 		where: (examTable, { and, eq }) => and(eq(examTable.id, id), eq(examTable.deleted, false)),
 		columns: {
 			deleted: false,
-			patientId: false,
 			examTypeId: false
 		},
 		with: {
-			patient: {
-				columns: {
-					id: true,
-					firstName: true,
-					lastName: true,
-					documentId: true,
-					gender: true,
-					email: true,
-					birthdate: true
-				}
-			},
 			examType: {
 				columns: {
 					id: true,

@@ -1,6 +1,6 @@
 import type { Dictionary } from 'lodash';
 import { chain, sortBy } from 'lodash-es';
-import type { ExamTypeWithParameters, FindExamData, Patient } from './types';
+import type { ExamTypeWithParameters, FindExamData, FindOrderData, Patient } from './types';
 import { UserRoles } from './enums';
 import type { SessionValidationResult } from '$lib/server/auth';
 
@@ -123,9 +123,17 @@ export function cleanEditExamDetails(data: FindExamData) {
 	};
 }
 
-export function cleanEditExamPayment(data: FindExamData) {
+export function cleanEditOrderDetails(data: FindOrderData) {
+	return {
+		orderId: data.id,
+		priority: data.priority,
+		delivered: data.deliveredAt ? 'Entregado' : 'No entregado'
+	};
+}
+
+export function cleanEditOrderPayment(data: FindOrderData) {
 	const base = {
-		examId: data.id,
+		orderId: data.id,
 		paid: data.paid
 	};
 

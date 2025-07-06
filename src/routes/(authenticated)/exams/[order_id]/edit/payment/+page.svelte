@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import BackButton from '$lib/components/buttons/BackButton.svelte';
 	import Input from '$lib/components/Input.svelte';
-	import { cleanEditExamPayment } from '$lib/shared/utils.js';
+	import { cleanEditOrderPayment } from '$lib/shared/utils.js';
 	import Select from '$lib/components/Select.svelte';
 	import { PatientGender } from '$lib/shared/enums.js';
 	import Button from '$lib/components/Button.svelte';
@@ -25,15 +25,15 @@
 
 	let { data } = $props();
 
-	let { editExamPaymentForm, examData } = data;
-	let { patient: patientData, examType: examTypeData } = examData;
+	let { editOrderPaymentForm, orderData } = data;
+	let { patient: patientData } = orderData;
 
 	const {
 		form,
 		errors,
 		enhance,
 		submit: submitChanges
-	} = superForm(editExamPaymentForm, {
+	} = superForm(editOrderPaymentForm, {
 		dataType: 'json',
 		delayMs: 0,
 		applyAction: true,
@@ -45,7 +45,7 @@
 		}
 	});
 
-	const original = cleanEditExamPayment(examData);
+	const original = cleanEditOrderPayment(orderData);
 
 	let hasChanges = $derived(!isEqual($form, original));
 	let showConfirmModal = $state(false);
@@ -69,7 +69,7 @@
 
 <form in:fade class="mb-4 flex w-full flex-col gap-y-8" use:enhance method="POST">
 	<div class="relative flex justify-center">
-		<BackButton href="/exams/{examData.id}" size="40" />
+		<BackButton href="/exams/{orderData.id}" size="40" />
 
 		<p class="mx-auto text-center text-3xl">Editar detalles de pago</p>
 	</div>
@@ -80,24 +80,7 @@
 				<p class="inline-flex items-center gap-x-1 text-2xl">Datos generales</p>
 
 				<div class="space-y-0.5 px-1 py-2">
-					<LabelValue label="Exámen" value={examTypeData.name} icon={Cash} />
-					<LabelValue label="Precio base" value={`${examTypeData.basePrice} $`} icon={Cash} />
-
-					<LabelValue
-						label="Clasificación"
-						value={examTypeData.classification.name}
-						icon={ListTree}
-					/>
-
-					<LabelValue label="Creado" value={examData.createdAt.toLocaleString()} icon={ClockPlus} />
-
-					{#if examData.createdAt.getTime() !== examData.updatedAt.getTime()}
-						<LabelValue
-							label="Último cambio"
-							value={examData.updatedAt.toLocaleString()}
-							icon={ClockEdit}
-						/>
-					{/if}
+					<LabelValue label="Precio total" value={`${orderData.totalPrice} $`} icon={Cash} />
 				</div>
 			</div>
 

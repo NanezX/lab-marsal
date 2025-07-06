@@ -1,10 +1,10 @@
 import { toastError, toastLoading, toastSuccess } from '$lib/toasts';
 import { toast } from '@zerodevx/svelte-toast';
 
-export async function generatePDF(element_: HTMLElement | null) {
+export async function generatePDF(elements_: HTMLElement[] | null) {
 	const loadingToast = toastLoading('Generando documento...');
 
-	if (element_ === null) {
+	if (elements_ === null) {
 		toast.pop(loadingToast);
 		toastError('No hay nada seleccionado para generar el PDF');
 		return false;
@@ -14,7 +14,7 @@ export async function generatePDF(element_: HTMLElement | null) {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({
-			html: element_.outerHTML
+			pages: elements_.map((el) => el.outerHTML)
 		})
 	});
 

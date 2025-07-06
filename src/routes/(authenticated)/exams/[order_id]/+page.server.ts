@@ -1,10 +1,10 @@
 import { superValidate, fail as failForms } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { PageServerLoad, Actions } from './$types';
-import { deleteExamSchema } from '$lib/server/utils/zod';
-import { findExamById } from '$lib/server/utils/dbQueries';
+import { deleteOrderSchema } from '$lib/server/utils/zod';
+import { findOrderById } from '$lib/server/utils/dbQueries';
 import { db } from '$lib/server/db';
-import { exam as examTable } from '$lib/server/db/schema';
+import { order as orderTable } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { redirect } from 'sveltekit-flash-message/server';
 import { failFormResponse } from '$lib/server/utils/failFormResponse';
@@ -17,11 +17,11 @@ export const load: PageServerLoad = async ({ parent }) => {
 
 	// Get the examData
 	const {
-		examData: { id: examId }
+		orderData: { id: orderId }
 	} = data;
 
 	// Create the form
-	const deleteExamForm = await superValidate({ examId }, zod(deleteExamSchema));
+	const deleteExamForm = await superValidate({ orderId }, zod(deleteOrderSchema));
 
 	return { deleteExamForm };
 };
@@ -29,7 +29,7 @@ export const load: PageServerLoad = async ({ parent }) => {
 export const actions: Actions = {
 	default: async (event) => {
 		const request = event.request;
-		const form = await superValidate(request, zod(deleteExamSchema));
+		const form = await superValidate(request, zod(deleteOrderSchema));
 
 		if (!form.valid) {
 			console.error(JSON.stringify(form.errors, null, 2));
@@ -37,19 +37,19 @@ export const actions: Actions = {
 			return failForms(400, { form });
 		}
 
-		const { examId } = form.data;
+		const { orderId } = form.data;
 
 		// Check if there is an Exam with this ID
-		const examFound = await findExamById(examId);
-		if (examFound === undefined) {
-			return failFormResponse(form, 'ID del exámen no encontrado', event.cookies, 409);
+		const orderFound = await findOrderById(orderId);
+		if (orderFound === undefined) {
+			return failFormResponse(form, 'ID de la orden no encontrada', event.cookies, 409);
 		}
 
 		try {
-			// Soft deleting the exam
-			await db.update(examTable).set({ deleted: true }).where(eq(examTable.id, examId));
+			// Soft deleting the order
+			await db.update(orderTable).set({ deleted: true }).where(eq(orderTable.id, orderId));
 		} catch (e) {
-			const errMsg = 'No se eliminó el exámen';
+			const errMsg = 'No se eliminó la orden';
 
 			if (e instanceof Error) {
 				// Print the error type

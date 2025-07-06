@@ -1,5 +1,6 @@
 import { db } from '$lib/server/db';
-import { examType, exam as examTable, examTypeClassification } from '$lib/server/db/schema';
+// import { examType, exam as examTable, examTypeClassification } from '$lib/server/db/schema';
+import { examType, examTypeClassification } from '$lib/server/db/schema';
 import { and, asc, count, eq, ilike } from 'drizzle-orm';
 
 export const load = async ({ url }) => {
@@ -25,11 +26,11 @@ export const load = async ({ url }) => {
 				categories: examType.categories,
 				createdAt: examType.createdAt,
 				updatedAt: examType.updatedAt,
-				examCount: count(examTable.id).as('exam_count'),
+				// examCount: count(examTable.id).as('exam_count'),
 				clasification: examTypeClassification.name
 			})
 			.from(examType)
-			.leftJoin(examTable, eq(examTable.examTypeId, examType.id))
+			// .leftJoin(examTable, eq(examTable.examTypeId, examType.id))
 			.innerJoin(examTypeClassification, eq(examType.classificationId, examTypeClassification.id))
 			.groupBy(examType.id, examTypeClassification.name)
 			.orderBy(asc(examType.name))

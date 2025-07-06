@@ -10,7 +10,14 @@ import { failFormResponse } from '$lib/server/utils/failFormResponse';
 import { findExamTypeById, generateNextExamTag } from '$lib/server/utils/dbQueries';
 import { findPatientByDocumentId } from '$lib/server/utils/dbQueries';
 import { normalized } from '$lib/shared/utils';
-import { patient as patientTable, exam as examTable } from '$lib/server/db/schema';
+import {
+	patient as patientTable,
+	exam as examTable,
+	order as orderTable,
+	orderExamTypes as orderExamTypesTable,
+	examType as examTypeTable
+} from '$lib/server/db/schema';
+import { inArray } from 'drizzle-orm';
 
 export const load = async () => {
 	const createExamForm = await superValidate(zod(createExamSchema));
@@ -30,18 +37,25 @@ export const actions: Actions = {
 		}
 
 		// const { patient, examTypeId, customTag, priority } = form.data;
-		const { examTypeId, patient, customTag, priority } = form.data;
+		const { examTypesId, patient, customTag, priority } = form.data;
 
-		let examIdCreated: string = '';
+		let orderId: string = '';
+
+		const orderWithExamTypes: Array<{ orderId: string; examTypeId: string }> = [];
 
 		try {
 			await db.transaction(async (tx) => {
 				// 1. EXAM TYPE
 				// Check for existing exam type
-				const existExamType = await findExamTypeById(examTypeId);
-				if (!existExamType) {
-					// Exam type not found
-					throw new AppDataNotSavedError('No se encontró el tipo de exámen');
+				for (let i = 0; i < examTypesId.length; i++) {
+					const existExamType = await findExamTypeById(examTypesId[i]);
+					if (!existExamType) {
+						// Exam type not found
+						throw new AppDataNotSavedError('No se encontró el tipo de exámen seleccionado');
+					}
+
+					// Add exam types to future reference with the order
+					orderWithExamTypes.push({ orderId: '', examTypeId: examTypesId[i] });
 				}
 
 				// 2. PATIENT
@@ -107,28 +121,63 @@ export const actions: Actions = {
 				// Maybe for future: Allow custom configuration for auto tag generation based on app settings
 				const tag = customTag.kind == 'manual' ? customTag.tag : await generateNextExamTag(tx);
 
-				// INSERT EXAM DATA
-				const examInserted = await tx
-					.insert(examTable)
+				// 4. Get the total price of all the exam types
+				const examTypesData = await db
+					.select({
+						id: examTypeTable.id,
+						basePrice: examTypeTable.basePrice
+					})
+					.from(examTypeTable)
+					.where(inArray(examTypeTable.id, examTypesId));
+
+				const totalPrice = examTypesData.reduce((sum, exam) => {
+					return sum + Number(exam.basePrice);
+				}, 0);
+
+				// 5. Create the Order
+				const createdOrder = await tx
+					.insert(orderTable)
 					.values({
 						patientId,
-						examTypeId,
-						customTag: tag,
 						priority,
-						paid: false
+						paid: false,
+						totalPrice
 					})
+					.returning({ orderId: orderTable.id });
+
+				orderId = createdOrder[0].orderId;
+
+				// Generate the references of the order with the exam types
+				orderWithExamTypes.forEach((element_) => {
+					element_.orderId = orderId;
+				});
+
+				// Insert the reference
+				await tx.insert(orderExamTypesTable).values(orderWithExamTypes);
+
+				// Add the exams for each
+				const examsToAdd = orderWithExamTypes.map((element_) => {
+					return {
+						customTag: tag,
+						orderId: element_.orderId,
+						examTypeId: element_.examTypeId
+					};
+				});
+
+				// Insert exams
+				const examsInserted = await tx
+					.insert(examTable)
+					.values(examsToAdd)
 					.returning({ insertedId: examTable.id });
 
-				examIdCreated = examInserted[0]?.insertedId;
-
-				if (!examIdCreated) {
-					throw new AppDataNotSavedError('No se guardó el exámen');
+				if (!examsInserted || examsInserted.length === 0) {
+					throw new AppDataNotSavedError('No se guardó la orden');
 				}
 
 				return;
 			});
 		} catch (e) {
-			let errMsg = 'No se añadió el exámen';
+			let errMsg = 'No se añadió la orden';
 			let statusCode = 500;
 
 			// Print the error type
@@ -150,13 +199,13 @@ export const actions: Actions = {
 
 		// Just a guard, it should NEVER happen due to previous conditionals and try/catch
 		// If execution got here, then the exam was created
-		if (!examIdCreated) {
+		if (!orderId) {
 			return failFormResponse(form, 'Internal error', event.cookies, 500);
 		}
 
 		redirect(
-			`/exams/${examIdCreated}`,
-			{ type: 'success', message: 'Exámen añadido correctamente' },
+			`/exams/${orderId}`,
+			{ type: 'success', message: 'Orden añadida correctamente' },
 			event.cookies
 		);
 	}

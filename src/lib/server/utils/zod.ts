@@ -282,7 +282,7 @@ const customTagDiscriminatorSchema = z.discriminatedUnion('kind', [
 
 export const createExamSchema = z.object({
 	patient: patientDiscriminatorSchema.default({ kind: 'existing', id: '' }),
-	examTypeId: z.string({ message: 'Debe seleccionar un tipo de exámen' }).uuid(),
+	examTypesId: z.string({ message: 'Debe seleccionar un tipo de exámen' }).uuid().array(),
 	customTag: customTagDiscriminatorSchema.default({ kind: 'auto', tag: null }),
 	priority: z
 		.nativeEnum(ExamPriority, { errorMap: () => ({ message: 'Prioridad no definida' }) })
@@ -290,24 +290,21 @@ export const createExamSchema = z.object({
 	// NO Need for status when creating exam, always is ACTIVE by default on DB when missing
 });
 
-export const deleteExamSchema = z.object({
-	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido')
+export const deleteOrderSchema = z.object({
+	orderId: z.string().refine(uuidRefine, 'ID de la orden no válido')
 });
 
-export const editExamDetailsSchema = z.object({
-	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
-	customTag: z.string().min(1, 'Debe ingresar un identificador'),
+export const editOrderDetailsSchema = z.object({
+	orderId: z.string().refine(uuidRefine, 'ID de la orden no es válido'),
 	priority: z
 		.nativeEnum(ExamPriority, { errorMap: () => ({ message: 'Prioridad no definida' }) })
 		.default(ExamPriority.Normal),
-	status: z
-		.nativeEnum(ExamStatus, { errorMap: () => ({ message: 'Estado no definido' }) })
-		.default(ExamStatus.Pending)
+	delivered: z.string().min(1)
 });
 
-export const editExamPaymentSchema = z
+export const editOrderPaymentSchema = z
 	.object({
-		examId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
+		orderId: z.string().refine(uuidRefine, 'ID de la orden no es válido'),
 		paid: z.boolean().default(false),
 		paymentMethod: z
 			.nativeEnum(PaymentMethod, { errorMap: () => ({ message: 'Método de pago no válido' }) })

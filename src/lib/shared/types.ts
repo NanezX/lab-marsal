@@ -1,5 +1,10 @@
 import type { patient as patientTable } from '$lib/server/db/schema';
-import type { findExamTypeById, findPatientById, findExamById } from '$lib/server/utils/dbQueries';
+import type {
+	findExamTypeById,
+	findPatientById,
+	findExamById,
+	findOrderById
+} from '$lib/server/utils/dbQueries';
 import type { InferSelectModel } from 'drizzle-orm';
 
 // Get the return type of `findExamTypeById`
@@ -15,3 +20,5 @@ export type Patient<E extends PatientKey[] = []> = NonNullable<
 >;
 
 export type FindExamData = NonNullable<Awaited<ReturnType<typeof findExamById>>>;
+
+export type FindOrderData = NonNullable<Awaited<ReturnType<typeof findOrderById>>>;
