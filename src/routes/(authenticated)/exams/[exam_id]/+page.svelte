@@ -95,8 +95,6 @@
 				</p>
 
 				<div class="space-y-0.5 px-1 py-2">
-					<LabelValue label="Precio total" value={`${orderData.totalPrice} $`} icon={Cash} />
-
 					<LabelValue
 						class={undefined}
 						label="Creado"
@@ -147,12 +145,22 @@
 						/>
 					</Link>
 				</p>
+				<LabelValue label="Precio total" value={`${orderData.totalPrice} $`} icon={Cash} />
 
 				<LabelValue
 					label="Estado"
 					value={orderData.paid ? 'Pago confirmado' : 'No pagado'}
 					title={orderData.paid ? 'Pago del exámen confirmado' : 'El exámen no ha sido pagado'}
 					icon={Wallet}
+				/>
+
+				<LabelValue
+					label="Monto pagado"
+					value={orderData.paid && orderData.pricePaid ? orderData.pricePaid : 'N/A'}
+					title={orderData.paid && orderData.pricePaid
+						? 'Monto final cancelado por el exámen'
+						: 'El exámen no ha sido pagado'}
+					icon={Moneybag}
 				/>
 
 				<LabelValue
@@ -164,15 +172,6 @@
 						? 'Método de pago'
 						: 'El exámen no ha sido pagado'}
 					icon={DeviceMobileCog}
-				/>
-
-				<LabelValue
-					label="Monto pagado"
-					value={orderData.paid && orderData.pricePaid ? orderData.pricePaid : 'N/A'}
-					title={orderData.paid && orderData.pricePaid
-						? 'Monto final cancelado por el exámen'
-						: 'El exámen no ha sido pagado'}
-					icon={Moneybag}
 				/>
 
 				{#if orderData.paid && orderData.paymentRef}
