@@ -14,8 +14,10 @@ import {
 	patient as patientTable,
 	exam as examTable,
 	order as orderTable,
-	orderExamTypes as orderExamTypesTable
+	orderExamTypes as orderExamTypesTable,
+	examType as examTypeTable
 } from '$lib/server/db/schema';
+import { inArray } from 'drizzle-orm';
 
 export const load = async () => {
 	const createExamForm = await superValidate(zod(createExamSchema));
@@ -119,13 +121,27 @@ export const actions: Actions = {
 				// Maybe for future: Allow custom configuration for auto tag generation based on app settings
 				const tag = customTag.kind == 'manual' ? customTag.tag : await generateNextExamTag(tx);
 
-				// 4. Create the Order
+				// 4. Get the total price of all the exam types
+				const examTypesData = await db
+					.select({
+						id: examTypeTable.id,
+						basePrice: examTypeTable.basePrice
+					})
+					.from(examTypeTable)
+					.where(inArray(examTypeTable.id, examTypesId));
+
+				const totalPrice = examTypesData.reduce((sum, exam) => {
+					return sum + Number(exam.basePrice);
+				}, 0);
+
+				// 5. Create the Order
 				const createdOrder = await tx
 					.insert(orderTable)
 					.values({
 						patientId,
 						priority,
-						paid: false
+						paid: false,
+						totalPrice
 					})
 					.returning({ orderId: orderTable.id });
 
