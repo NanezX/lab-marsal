@@ -63,18 +63,18 @@
 </script>
 
 <div class="dashboard">
-	<h1>Reporte estadístico</h1>
+	<p class="text-center text-3xl">Reporte estadístico</p>
 
 	<div class="flex gap-x-4">
 		<div class="chart-container">
-			<h2>Tipos de exámen solicitados en el último mes</h2>
+			<h2 class="font-bold">Tipos de exámen solicitados en el último mes</h2>
 			<div class="chart-wrapper">
 				<Chart type="pie" data={examTypesChart} />
 			</div>
 		</div>
 
-		<div class="chart-container">
-			<h2>Grupos de edad de los pacientes en el último mes</h2>
+		<div class="chart-container flex flex-col">
+			<h2 class="font-bold">Grupos de edad de los pacientes en el último mes</h2>
 			<div class="chart-wrapper">
 				<Chart type="bar" data={ageGroupsChart} options={ageOptions} />
 			</div>
@@ -109,7 +109,9 @@
 	}
 
 	.chart-wrapper {
-		height: 400px;
+		height: fit-content;
 		position: relative;
+		margin-top: auto;
+		margin-bottom: auto;
 	}
 </style>

@@ -110,16 +110,6 @@
 			{@const examHasReferences = results.some((r_) => r_.parameterSnapshot.hasReferences)}
 			{@const examType = examTypes.find((elem_) => elem_.id === exam.examTypeId)!}
 
-			<!-- content here -->
-
-			<button
-				onclick={() => {
-					console.log('results: ', results);
-				}}
-			>
-				results
-			</button>
-
 			<div class="w-full space-y-4 !p-0">
 				<div class="w-full space-y-4 bg-white !px-8 !pt-8 !pb-16">
 					<!-- Membrete -->
