@@ -34,6 +34,24 @@ export const examStatusItems = Object.entries(statusLabels).map(([value, label])
 	value: value as ExamStatus,
 	label: formatCapital(label)
 }));
+/**
+ * Items for the exam status
+ */
+export const orderDeliverStatusItems = [
+	{
+		value: 'No entregado',
+		label: 'No entregado'
+	},
+	{
+		value: 'Entregado',
+		label: 'Entregado'
+	}
+];
+
+Object.entries(statusLabels).map(([value, label]) => ({
+	value: value as ExamStatus,
+	label: formatCapital(label)
+}));
 
 /**
  * Items for Gender

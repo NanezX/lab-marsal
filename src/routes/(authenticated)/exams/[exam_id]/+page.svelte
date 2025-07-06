@@ -6,7 +6,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
-	import { PatientGender } from '$lib/shared/enums';
+	import { ExamPriority, PatientGender } from '$lib/shared/enums';
 	import {
 		Id,
 		GenderMale,
@@ -54,6 +54,12 @@
 
 	// const areResultsReady = examData.results.length > 0;
 	let showConfirmDeleteModal = $state(false);
+
+	const priorityLabel = {
+		[ExamPriority.High]: 'Alta prioridad',
+		[ExamPriority.Normal]: 'Normal',
+		[ExamPriority.Low]: 'Baja prioridad'
+	};
 </script>
 
 <ConfirmModal
@@ -110,17 +116,23 @@
 
 				<div class="space-y-0.5 px-1 py-2">
 					<LabelValue
+						valueClass="capitalize"
+						label="Prioridad"
+						value={priorityLabel[orderData.priority]}
+						icon={Flag}
+					/>
+
+					<LabelValue
+						label="Entregado"
+						value={orderData.deliveredAt ? orderData.deliveredAt.toLocaleString() : 'No entregado'}
+						icon={TruckDelivery}
+					/>
+
+					<LabelValue
 						class={undefined}
 						label="Creado"
 						value={orderData.createdAt.toLocaleString()}
 						icon={ClockPlus}
-					/>
-
-					<LabelValue
-						valueClass="capitalize"
-						label="Prioridad"
-						value={orderData.priority}
-						icon={Flag}
 					/>
 
 					{#if orderData.createdAt.getTime() !== orderData.updatedAt.getTime()}
@@ -130,12 +142,6 @@
 							icon={ClockEdit}
 						/>
 					{/if}
-
-					<LabelValue
-						label="Entregado"
-						value={orderData.deliveredAt ? orderData.deliveredAt.toLocaleString() : 'No entregado'}
-						icon={TruckDelivery}
-					/>
 				</div>
 			</div>
 
