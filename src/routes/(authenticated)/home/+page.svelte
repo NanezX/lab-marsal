@@ -29,11 +29,15 @@
 				{#each data.lastExamsUpdated as exam (exam.id)}
 					<a
 						href="/exams/{exam.id}"
-						title="{exam.examTypeName} - {exam.patientName}"
+						title="Orden - {exam.patientName}"
 						class="group hover:border-primary-blue flex flex-col gap-y-2 rounded-sm border bg-white px-4 py-2 transition-all select-none hover:-translate-y-1 hover:border hover:shadow-2xl"
 					>
 						<div class="inline-flex w-full items-center justify-between">
-							<ExamStatus status={exam.status} priority={exam.priority} minimal />
+							<p class="font-bold">
+								Orden - {exam.patientName}
+							</p>
+
+							<!-- <ExamStatus status={exam.status} priority={exam.priority} minimal /> -->
 							<Icon
 								src={FileSearch}
 								size="24"
@@ -43,7 +47,7 @@
 						<div class="space-y-0.5">
 							<LabelValue label="Paciente" value={exam.patientName} />
 							<LabelValue label="Cédula" value={exam.patientDocumentId ?? 'N/A'} />
-							<LabelValue label="Exámen" value={exam.examTypeName} />
+							<!-- <LabelValue label="Exámen" value={exam.examTypeName} /> -->
 						</div>
 
 						<LabelValue
@@ -84,7 +88,7 @@
 
 						<LabelValue label="CI" value={patient.documentId ?? 'N/A'} />
 
-						<LabelValue label="Cantidad" value={patient.examCount} class="text-sm" />
+						<!-- <LabelValue label="Cantidad" value={patient.examCount} class="text-sm" /> -->
 					</a>
 				{:else}
 					<div class="col-span-2">
