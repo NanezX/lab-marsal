@@ -302,9 +302,9 @@ export const editOrderDetailsSchema = z.object({
 	delivered: z.string().min(1)
 });
 
-export const editExamPaymentSchema = z
+export const editOrderPaymentSchema = z
 	.object({
-		examId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
+		orderId: z.string().refine(uuidRefine, 'ID de la orden no es válido'),
 		paid: z.boolean().default(false),
 		paymentMethod: z
 			.nativeEnum(PaymentMethod, { errorMap: () => ({ message: 'Método de pago no válido' }) })

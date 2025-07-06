@@ -127,13 +127,13 @@ export function cleanEditOrderDetails(data: FindOrderData) {
 	return {
 		orderId: data.id,
 		priority: data.priority,
-		delivered: data.deliveredAt ? "Entregado" : "No entregado"
+		delivered: data.deliveredAt ? 'Entregado' : 'No entregado'
 	};
 }
 
-export function cleanEditExamPayment(data: FindExamData) {
+export function cleanEditOrderPayment(data: FindOrderData) {
 	const base = {
-		examId: data.id,
+		orderId: data.id,
 		paid: data.paid
 	};
 

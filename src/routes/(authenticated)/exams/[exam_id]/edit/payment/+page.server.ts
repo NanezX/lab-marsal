@@ -1,11 +1,11 @@
 import { superValidate, fail as failForms } from 'sveltekit-superforms';
-import { editExamPaymentSchema } from '$lib/server/utils/zod';
+import { editOrderPaymentSchema } from '$lib/server/utils/zod';
 import { zod } from 'sveltekit-superforms/adapters';
-import { cleanEditExamPayment, normalized as _normalized } from '$lib/shared/utils';
+import { cleanEditOrderPayment, normalized as _normalized } from '$lib/shared/utils';
 import type { Actions, PageServerLoad } from './$types';
-import { findExamById } from '$lib/server/utils/dbQueries';
+import { findOrderById } from '$lib/server/utils/dbQueries';
 import { db } from '$lib/server/db';
-import { exam as examTable } from '$lib/server/db/schema';
+import { order as orderTable } from '$lib/server/db/schema';
 import { failFormResponse } from '$lib/server/utils/failFormResponse';
 import { redirect } from 'sveltekit-flash-message/server';
 import { eq } from 'drizzle-orm';
@@ -17,21 +17,21 @@ export const load: PageServerLoad = async ({ parent }) => {
 	const data = await parent();
 
 	// Get the examData
-	const { examData } = data;
+	const { orderData } = data;
 
 	// Clean/format the data for the schema
-	const cleanedData = cleanEditExamPayment(examData);
+	const cleanedData = cleanEditOrderPayment(orderData);
 
 	// Create the form for editing
-	const editExamPaymentForm = await superValidate(cleanedData, zod(editExamPaymentSchema));
+	const editOrderPaymentForm = await superValidate(cleanedData, zod(editOrderPaymentSchema));
 
-	return { editExamPaymentForm };
+	return { editOrderPaymentForm };
 };
 
 export const actions: Actions = {
 	default: async (event) => {
 		const request = event.request;
-		const form = await superValidate(request, zod(editExamPaymentSchema));
+		const form = await superValidate(request, zod(editOrderPaymentSchema));
 
 		if (!form.valid) {
 			console.error(JSON.stringify(form.errors, null, 2));
@@ -39,12 +39,12 @@ export const actions: Actions = {
 			return failForms(400, { form });
 		}
 
-		const { examId, paid, pricePaid, paymentMethod, paymentRef } = form.data;
+		const { orderId, paid, pricePaid, paymentMethod, paymentRef } = form.data;
 
 		// Check if already exists
-		const patientSaved = await findExamById(examId);
-		if (patientSaved === undefined) {
-			return failFormResponse(form, 'ID del exámen no encontrado', event.cookies, 409);
+		const orderExist = await findOrderById(orderId);
+		if (orderExist === undefined) {
+			return failFormResponse(form, 'ID de la orden no encontrado', event.cookies, 409);
 		}
 
 		try {
@@ -56,9 +56,9 @@ export const actions: Actions = {
 				paidAt: paid ? new Date() : undefined
 			};
 
-			await db.update(examTable).set(updateData).where(eq(examTable.id, examId));
+			await db.update(orderTable).set(updateData).where(eq(orderTable.id, orderId));
 		} catch (e) {
-			const errMsg = 'No se editó el exámen';
+			const errMsg = 'No se editó la orden';
 
 			if (e instanceof Error) {
 				// Print the error type
@@ -71,6 +71,6 @@ export const actions: Actions = {
 			return failFormResponse(form, errMsg, event.cookies, 403);
 		}
 
-		redirect(`/exams/${examId}`, { type: 'success', message: 'Exámen actualizado' }, event.cookies);
+		redirect(`/exams/${orderId}`, { type: 'success', message: 'Orden actualizada' }, event.cookies);
 	}
 };
