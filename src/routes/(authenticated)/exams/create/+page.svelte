@@ -78,7 +78,7 @@
 	<div class="relative flex justify-center">
 		<BackButton href="/exams" size="40" />
 
-		<p class="mx-auto text-center text-3xl">Crear exámen</p>
+		<p class="mx-auto text-center text-3xl">Crear orden</p>
 	</div>
 
 	<div>
@@ -116,6 +116,7 @@
 						<label class="ml-2 font-semibold" for="examTypeId"> Tipo de exámen </label>
 
 						<SelectInput
+							multiple
 							bind:value={$form.examTypeId}
 							placeholder="Buscar tipo de examen"
 							fetch="/api/exam-types/search?q=[query]"
