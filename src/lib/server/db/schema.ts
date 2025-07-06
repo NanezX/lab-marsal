@@ -122,7 +122,7 @@ export const userRecoveryRelations = relations(userRecovery, ({ one }) => ({
 
 // Configuration table
 export const config = pgTable('configuration', {
-	id: varchar({ length: 50 }),
+	id: varchar({ length: 50 }).primaryKey(),
 	value: text()
 });
 

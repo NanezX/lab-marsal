@@ -5,14 +5,17 @@ import {
 	patient as patientTable,
 	lower,
 	parameter,
-	examTypeClassification
+	examTypeClassification,
+	config as configTable
 } from '$lib/server/db/schema';
-import { normalized } from '$lib/shared/utils';
-import { and, eq } from 'drizzle-orm';
+import { normalized, snakeToCamel } from '$lib/shared/utils';
+import { and, eq, inArray } from 'drizzle-orm';
 import type { ExtractTablesWithRelations, InferSelectModel } from 'drizzle-orm';
 import type { PgTable, PgTransaction } from 'drizzle-orm/pg-core';
 import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js';
 import { validate as validateUUID } from 'uuid';
+import { EditConfigSchema } from './zod';
+import { toSnakeCase } from 'drizzle-orm/casing';
 
 type TxType = PgTransaction<
 	PostgresJsQueryResultHKT,
@@ -233,6 +236,34 @@ export async function findExamById(id: string) {
 			}
 		}
 	});
+}
+
+export async function getConfigForEdit() {
+	// Get all configuration keys that match our schema
+	const keys = Object.keys(EditConfigSchema.shape);
+
+	// Convert camelCase keys to snake_case for database lookup
+	const snakeCaseKeys = keys.map((key) => toSnakeCase(key));
+
+	// Query the database
+	const configRecords = await db
+		.select()
+		.from(configTable)
+		.where(inArray(configTable.id, snakeCaseKeys));
+
+	// Transform the records into an object with camelCase keys
+
+	const configObject = configRecords.reduce(
+		(acc, record) => {
+			const camelKey = snakeToCamel(record.id ?? '');
+			acc[camelKey] = record.value ?? '';
+			return acc;
+		},
+		{} as Record<string, string>
+	);
+
+	// Parse with Zod schema to apply defaults if needed
+	return EditConfigSchema.parse(configObject);
 }
 
 export async function getAllExamTypeClassifications() {

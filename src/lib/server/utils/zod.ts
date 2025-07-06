@@ -24,6 +24,26 @@ function uuidRefine(value_: string): boolean {
 	return validate(value_);
 }
 
+export const EditConfigSchema = z.object({
+	orgFullName: z
+		.string()
+		.min(1, 'Debe especificar el nombre del laboratorio')
+		.default('Laboratorio Clínico Marsal C.A'),
+	orgRif: z.string().min(1, 'Debe especificar el RIF del laboratorio').default('J-30197029-2'),
+	orgAddress: z
+		.string()
+		.min(1, 'Debe especificar la direccion del laboratorio')
+		.default('Urbanizacion Los Guaritos III, Av.1, Calle N° 7 Maturín, Monagas'),
+	orgPhones: z
+		.string()
+		.min(1, 'Debe especificar los telefonos de contacto del laboratorio')
+		.default('0424-9188205'),
+	orgEmail: z
+		.string()
+		.min(1, 'Debe especificar el correo electronico del laboratorio')
+		.default('roccajess@gmail.com')
+});
+
 export const UserLoginSchema = z.object({
 	email: z.string().min(1, 'Correo electrónico obligatorio').email('Correo electrónico inválido'),
 	password: z

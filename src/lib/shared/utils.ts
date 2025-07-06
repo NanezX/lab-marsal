@@ -213,3 +213,21 @@ export const roleMinimums: Partial<Record<UserRoles, number>> = {
 	[UserRoles.Admin]: 1
 	// [UserRoles.Secretaria]: 2, // add more roles in the future
 };
+
+export function snakeToCamel(str: string): string {
+	return str.replace(/(_\w)/g, (match) => match[1].toUpperCase());
+}
+
+export function toSnakeCase(str: string): string {
+	return (
+		str
+			// Insert underscore between lowercase and uppercase
+			.replace(/([a-z\d])([A-Z])/g, '$1_$2')
+			// Insert underscore between uppercase and lowercase
+			.replace(/([A-Z]+)([A-Z][a-z\d]+)/g, '$1_$2')
+			// Replace all non-word characters with underscores
+			.replace(/[-\s]+/g, '_')
+			// Convert to lowercase
+			.toLowerCase()
+	);
+}

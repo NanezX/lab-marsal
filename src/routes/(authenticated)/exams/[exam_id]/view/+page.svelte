@@ -17,7 +17,7 @@
 	// TODO: Get this from the Configuration
 	const orgFullName = 'Laboratorio Clínico Marsal C.A';
 	const orgRif = 'J-30197029-2';
-	const orgAddress = 'Urbanizacion Los Guaritos III, Calle N° 7 Maturín, Monagas';
+	const orgAddress = 'Urbanizacion Los Guaritos III, Av.1, Calle N° 7 Maturín, Monagas';
 	const orgPhones = '0424-9188205';
 	const orgEmail = 'roccajess@gmail.com';
 
