@@ -307,7 +307,6 @@ export const order = pgTable('order', {
 	totalPrice: decimal('total_price', { precision: 19, scale: 2 }).notNull(),
 	paid: boolean().notNull(), // When the order is paid
 	pricePaid: decimal('price_paid', { precision: 19, scale: 2 }), // Amount paid (probably after marked paid)
-	// paymentMethod: text('payment_method'), // payment method defined by administration
 	paymentMethod: examPaymentMethodEnum(), // payment method defined by administration
 	paymentRef: text('payment_ref'), // Reference if apply
 	paidAt: timestamp('paid_at', { withTimezone: true, mode: 'date' }) // Set when the order is paid

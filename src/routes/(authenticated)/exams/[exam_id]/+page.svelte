@@ -28,7 +28,8 @@
 		Download,
 		Eye,
 		FileDescription,
-		TestPipe2
+		TestPipe2,
+		Flag
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
@@ -40,7 +41,8 @@
 	let { data }: PageProps = $props();
 
 	let {
-		examData: { patient: patientData, examType: examTypeData, ...examData },
+		orderData: { orderExamTypes, ...orderData },
+		// examData: { patient: patientData, examType: examTypeData, ...examData },
 		deleteExamForm
 	} = data;
 
@@ -50,7 +52,7 @@
 		applyAction: true
 	});
 
-	const areResultsReady = examData.results.length > 0;
+	// const areResultsReady = examData.results.length > 0;
 	let showConfirmDeleteModal = $state(false);
 </script>
 
@@ -72,7 +74,7 @@
 	<div class="relative flex justify-center">
 		<BackButton href="/exams" size="40" />
 
-		<p class="mx-auto my-0 text-center text-3xl">{examTypeData.name}</p>
+		<p class="mx-auto my-0 text-center text-3xl">Orden</p>
 
 		<div>
 			<Button
@@ -84,251 +86,103 @@
 	</div>
 
 	<div>
-		<div class="grid grid-cols-2 gap-x-1 gap-y-5">
-			<div class="">
-				<p class="inline-flex items-center gap-x-1 text-2xl">
-					<span>Datos generales</span>
-					<Link
-						href="/exam-type/{examTypeData.id}"
-						linkClass="flex mt-1"
-						class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
-					>
-						<Icon src={LinkIcon} class="h-5 w-5" />
-					</Link>
+		<div class="grid grid-cols-2 gap-2">
+			<div class="flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2">
+				<p
+					class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
+				>
+					<span> Datos generales </span>
 				</p>
 
 				<div class="space-y-0.5 px-1 py-2">
-					<LabelValue label="Precio base" value={`${examTypeData.basePrice} $`} icon={Cash} />
+					<LabelValue label="Precio total" value={`${orderData.totalPrice} $`} icon={Cash} />
 
 					<LabelValue
-						label="Clasificación"
-						value={examTypeData.classification.name}
-						icon={ListTree}
+						class={undefined}
+						label="Creado"
+						value={orderData.createdAt.toLocaleString()}
+						icon={ClockPlus}
 					/>
 
-					<LabelValue label="Creado" value={examData.createdAt.toLocaleString()} icon={ClockPlus} />
+					<LabelValue
+						valueClass="capitalize"
+						label="Prioridad"
+						value={orderData.priority}
+						icon={Flag}
+					/>
 
-					{#if examData.createdAt.getTime() !== examData.updatedAt.getTime()}
+					{#if orderData.createdAt.getTime() !== orderData.updatedAt.getTime()}
 						<LabelValue
 							label="Último cambio"
-							value={examData.updatedAt.toLocaleString()}
+							value={orderData.updatedAt.toLocaleString()}
 							icon={ClockEdit}
 						/>
 					{/if}
-				</div>
-			</div>
-
-			<div class="">
-				<p class="inline-flex items-center gap-x-1 text-2xl">
-					<span>Datos del paciente</span>
-					<Link
-						href="/clients/{patientData.id}"
-						linkClass="flex mt-1"
-						class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
-					>
-						<Icon src={LinkIcon} class="h-5 w-5" />
-					</Link>
-				</p>
-
-				<div class="space-y-0.5 px-1 py-2">
-					<LabelValue
-						label="Nombre"
-						value="{patientData.firstName} {patientData.lastName}"
-						icon={User}
-						labelClass="mr-1"
-					/>
-					<LabelValue
-						label="Cédula"
-						value={patientData.documentId ?? 'N/A'}
-						icon={Id}
-						labelClass="mr-1"
-					/>
 
 					<LabelValue
-						label="Género"
-						value={patientData.gender == PatientGender.Male ? 'Hombre' : 'Mujer'}
-						icon={patientData.gender == PatientGender.Male ? GenderMale : GenderFemale}
-						labelClass="mr-1"
+						label="Entregado"
+						value={orderData.deliveredAt ? orderData.deliveredAt.toLocaleString() : 'No entregado'}
+						icon={TruckDelivery}
 					/>
 				</div>
 			</div>
 
-			<div class="col-span-2 space-y-4">
-				<p class="text-center text-2xl">Estado del exámen</p>
-
-				<div class="grid grid-cols-2 gap-2">
-					<div
-						class="flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
-					>
-						<p
-							class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
-						>
-							<span> Detalles </span>
-
-							<Link
-								href="/exams/{examData.id}/edit/details"
-								linkClass="flex mt-1"
-								class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
-							>
-								<Icon
-									src={Edit}
-									size="24"
-									title="Editar detalles del exámen"
-									theme="filled"
-									class="text-green-500"
-								/>
-							</Link>
-						</p>
-
-						<LabelValue label="Estado" icon={Progress}>
-							<ExamStatus status={examData.status} priority={examData.priority} minimal />
-						</LabelValue>
-
-						<LabelValue label="Identificador" value={examData.customTag} icon={Label} />
-
-						<LabelValue
-							label="Entregado"
-							value={examData.deliveredAt ? examData.deliveredAt.toLocaleString() : 'No entregado'}
-							icon={TruckDelivery}
-						/>
-					</div>
-
-					<div
-						class="flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
-					>
-						<p
-							class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
-						>
-							<span> Pago </span>
-
-							<Link
-								href="/exams/{examData.id}/edit/payment"
-								linkClass="flex mt-1"
-								class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
-							>
-								<Icon
-									src={Edit}
-									size="24"
-									title="Editar detalles del pago"
-									theme="filled"
-									class="text-green-500"
-								/>
-							</Link>
-						</p>
-
-						<LabelValue
-							label="Estado"
-							value={examData.paid ? 'Pago confirmado' : 'No pagado'}
-							title={examData.paid ? 'Pago del exámen confirmado' : 'El exámen no ha sido pagado'}
-							icon={Wallet}
-						/>
-
-						<!-- value={examData.paid && examData.paymentMethod ? examData.paymentMethod : 'N/A'} -->
-						<LabelValue
-							label="Método de pago"
-							value={examData.paid && examData.paymentMethod
-								? paymentMethodLabels[examData.paymentMethod]
-								: 'N/A'}
-							title={examData.paid && examData.paymentMethod
-								? 'Método de pago'
-								: 'El exámen no ha sido pagado'}
-							icon={DeviceMobileCog}
-						/>
-
-						<LabelValue
-							label="Monto pagado"
-							value={examData.paid && examData.pricePaid ? examData.pricePaid : 'N/A'}
-							title={examData.paid && examData.pricePaid
-								? 'Monto final cancelado por el exámen'
-								: 'El exámen no ha sido pagado'}
-							icon={Moneybag}
-						/>
-
-						{#if examData.paid && examData.paymentRef}
-							<LabelValue
-								label="Ref. del pago"
-								value={examData.paymentRef}
-								title="Referencia del pago por el exámen"
-								icon={CodeDots}
-							/>
-						{/if}
-					</div>
-				</div>
-			</div>
-
-			<div
-				class="col-span-2 flex flex-col gap-y-4 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
-			>
+			<div class="flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2">
 				<p
-					class="mx-auto mb-2 flex w-1/4 min-w-fit items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
+					class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
 				>
-					<span> Resultados </span>
+					<span> Detalles de Pago </span>
 
 					<Link
-						href="/exams/{examData.id}/edit/results"
+						href="/exams/{orderData.id}/edit/payment"
 						linkClass="flex mt-1"
 						class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
 					>
 						<Icon
 							src={Edit}
 							size="24"
-							title="Editar detalles del exámen"
+							title="Editar detalles del pago"
 							theme="filled"
 							class="text-green-500"
 						/>
 					</Link>
 				</p>
 
-				<div class="flex flex-col gap-y-1">
-					<LabelValue label="Muestra" value={examData.sample ?? 'N/A'} icon={TestPipe2} />
+				<LabelValue
+					label="Estado"
+					value={orderData.paid ? 'Pago confirmado' : 'No pagado'}
+					title={orderData.paid ? 'Pago del exámen confirmado' : 'El exámen no ha sido pagado'}
+					icon={Wallet}
+				/>
 
-					<p class="col-span-full flex flex-col gap-y-2" title="Observación del exámen">
-						<span class="flex items-center gap-x-1">
-							<Icon src={FileDescription} class="h-5 w-5" />
-							<strong>Observación: </strong><br />
-						</span>
+				<LabelValue
+					label="Método de pago"
+					value={orderData.paid && orderData.paymentMethod
+						? paymentMethodLabels[orderData.paymentMethod]
+						: 'N/A'}
+					title={orderData.paid && orderData.paymentMethod
+						? 'Método de pago'
+						: 'El exámen no ha sido pagado'}
+					icon={DeviceMobileCog}
+				/>
 
-						<span
-							class="border-primary-blue/50 mx-2 max-h-60 overflow-y-auto rounded-xl border bg-gray-100 px-2 py-4 whitespace-pre-line"
-						>
-							{examData.observation ?? 'Sin observaciones'}
-						</span>
-					</p>
-				</div>
+				<LabelValue
+					label="Monto pagado"
+					value={orderData.paid && orderData.pricePaid ? orderData.pricePaid : 'N/A'}
+					title={orderData.paid && orderData.pricePaid
+						? 'Monto final cancelado por el exámen'
+						: 'El exámen no ha sido pagado'}
+					icon={Moneybag}
+				/>
 
-				<!-- TODO: If the exam is not marked as COMPLETED, these button should be disabled because there is nothing to send/show/download yet -->
-				<div
-					class="direct-children:w-1/4 direct-children:justify-center inline-flex justify-center gap-x-8"
-				>
-					<Link
-						href="/exams/{examData.id}/view"
-						class="inline-flex w-full justify-center gap-x-1"
-						linkClass="inline-flex"
-						target="_blank"
-						title={!areResultsReady ? 'Los resultados no están listos' : undefined}
-						disabled={!areResultsReady}
-					>
-						<span>Visualizar</span>
-						<span>
-							<Icon src={Eye} size="24" />
-						</span>
-					</Link>
-
-					<Link
-						href="/exams/{examData.id}/view?action=download"
-						class="!bg-dark-blue hover:!bg-dark-blue/75 inline-flex w-full justify-center gap-x-1"
-						linkClass="inline-flex"
-						target="_blank"
-						title={!areResultsReady ? 'Los resultados no están listos' : undefined}
-						disabled={!areResultsReady}
-					>
-						<span>Descargar</span>
-
-						<span>
-							<Icon src={Download} size="24" />
-						</span>
-					</Link>
-				</div>
+				{#if orderData.paid && orderData.paymentRef}
+					<LabelValue
+						label="Ref. del pago"
+						value={orderData.paymentRef}
+						title="Referencia del pago por el exámen"
+						icon={CodeDots}
+					/>
+				{/if}
 			</div>
 		</div>
 	</div>
