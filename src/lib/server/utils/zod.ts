@@ -282,7 +282,7 @@ const customTagDiscriminatorSchema = z.discriminatedUnion('kind', [
 
 export const createExamSchema = z.object({
 	patient: patientDiscriminatorSchema.default({ kind: 'existing', id: '' }),
-	examTypeId: z.string({ message: 'Debe seleccionar un tipo de exámen' }).uuid(),
+	examTypesId: z.string({ message: 'Debe seleccionar un tipo de exámen' }).uuid().array(),
 	customTag: customTagDiscriminatorSchema.default({ kind: 'auto', tag: null }),
 	priority: z
 		.nativeEnum(ExamPriority, { errorMap: () => ({ message: 'Prioridad no definida' }) })

@@ -117,14 +117,16 @@
 
 						<SelectInput
 							multiple
-							bind:value={$form.examTypeId}
+							bind:value={$form.examTypesId}
 							placeholder="Buscar tipo de examen"
 							fetch="/api/exam-types/search?q=[query]"
 							name="examTypeId"
 							inputId="examTypeId"
 							valueField="id"
 							labelField="name"
-							error={$errors.examTypeId}
+							error={$errors.examTypesId && $errors.examTypesId.length
+								? $errors.examTypesId[0]
+								: undefined}
 						/>
 					</div>
 
