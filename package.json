@@ -70,6 +70,8 @@
 		"@oslojs/crypto": "^1.0.1",
 		"@oslojs/encoding": "^1.1.0",
 		"@steeze-ui/svelte-icon": "^1.6.2",
+		"chart.js": "^4.5.0",
+		"date-fns": "^4.1.0",
 		"libphonenumber-js": "^1.12.8",
 		"lodash-es": "^4.17.21",
 		"nodemailer": "^7.0.3",
