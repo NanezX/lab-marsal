@@ -84,13 +84,6 @@
 
 					<div class="w-ful xl:inline-flex xl:justify-between">
 						<LabelValue
-							labelClass="font-semibold"
-							label="Cantidad"
-							value={examType.examCount}
-							class="text-sm"
-						/>
-
-						<LabelValue
 							label="Último cambio"
 							value={formatRelativeDate(examType.updatedAt)}
 							class="text-sm"
