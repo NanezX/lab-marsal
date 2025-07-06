@@ -319,7 +319,7 @@ export const orderRelations = relations(order, ({ one, many }) => ({
 		references: [patient.id]
 	}),
 	exams: many(exam),
-	examTypes: many(orderExamTypes)
+	orderExamTypes: many(orderExamTypes)
 }));
 
 export const orderExamTypes = pgTable('order_exam_types', {

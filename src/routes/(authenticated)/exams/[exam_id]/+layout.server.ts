@@ -1,18 +1,21 @@
 import type { LayoutServerLoad } from './$types';
-import { findExamById } from '$lib/server/utils/dbQueries';
+import { findOrderById } from '$lib/server/utils/dbQueries';
 import { error as svelteError } from '@sveltejs/kit';
 import { validate } from 'uuid';
 
 export const load: LayoutServerLoad = async ({ params }) => {
 	if (!validate(params.exam_id)) {
-		svelteError(404, 'ID de exámen no válido');
+		svelteError(404, 'ID de orden no válido');
 	}
 
-	const examData = await findExamById(params.exam_id);
+	// exam_id is in reality the ORDER_ID. Need to fix that naming for url routing
+	const orderData = await findOrderById(params.exam_id);
 
-	if (!examData) {
-		svelteError(404, 'Exámen no encontrado');
+	if (!orderData) {
+		svelteError(404, 'Orden no encontrada');
 	}
 
-	return { examData };
+	console.log('orderData: ', orderData);
+
+	return { orderData };
 };
