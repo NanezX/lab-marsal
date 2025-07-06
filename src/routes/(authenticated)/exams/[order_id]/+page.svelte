@@ -41,7 +41,7 @@
 	let { data }: PageProps = $props();
 
 	let {
-		orderData: { orderExamTypes, ...orderData },
+		orderData: { orderExamTypes, patient: patientData, ...orderData },
 		// examData: { patient: patientData, examType: examTypeData, ...examData },
 		deleteExamForm
 	} = data;
@@ -94,9 +94,11 @@
 		</div>
 	</div>
 
-	<div>
-		<div class="grid grid-cols-2 gap-2">
-			<div class="flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2">
+	<div class="space-y-4">
+		<div class="grid grid-cols-4 gap-4">
+			<div
+				class="col-span-2 flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
+			>
 				<p
 					class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
 				>
@@ -148,7 +150,9 @@
 				</div>
 			</div>
 
-			<div class="flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2">
+			<div
+				class="col-span-2 flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
+			>
 				<p
 					class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
 				>
@@ -205,6 +209,38 @@
 						icon={CodeDots}
 					/>
 				{/if}
+			</div>
+
+			<div
+				class="col-span-2 col-start-2 flex flex-col gap-y-1 rounded-xl border border-gray-200 bg-gray-100/75 px-1 py-2"
+			>
+				<p
+					class="mx-auto mb-2 flex w-1/2 items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
+				>
+					<span> Datos del paciente </span>
+				</p>
+
+				<div class="space-y-0.5 px-1 py-2">
+					<LabelValue
+						label="Nombre"
+						value="{patientData.firstName} {patientData.lastName}"
+						icon={User}
+						labelClass="mr-1"
+					/>
+					<LabelValue
+						label="Cédula"
+						value={patientData.documentId ?? 'N/A'}
+						icon={Id}
+						labelClass="mr-1"
+					/>
+
+					<LabelValue
+						label="Género"
+						value={patientData.gender == PatientGender.Male ? 'Hombre' : 'Mujer'}
+						icon={patientData.gender == PatientGender.Male ? GenderMale : GenderFemale}
+						labelClass="mr-1"
+					/>
+				</div>
 			</div>
 		</div>
 
