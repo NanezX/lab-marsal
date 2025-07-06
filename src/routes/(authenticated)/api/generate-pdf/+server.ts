@@ -1,12 +1,10 @@
 import puppeteer from 'puppeteer';
 
 export async function POST({ request }) {
-	const { html }: { html: string } = await request.json();
-
+	const { pages }: { pages: string[] } = await request.json();
 	const baseUrl = new URL(request.url).origin;
 	const cssUrl = `${baseUrl}/pdf.css`;
 
-	// Launch browser (use @sparticuz/chromium for serverless)
 	const browser = await puppeteer.launch({
 		headless: true,
 		args: ['--no-sandbox', '--disable-setuid-sandbox']
@@ -14,38 +12,52 @@ export async function POST({ request }) {
 
 	const page = await browser.newPage();
 
-	const newHtml = html.replace(`src="/favicon.png"`, `src="${baseUrl}/favicon.png"`);
+	// Generate a single HTML document with page breaks
+	const fullHtml = `
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <meta charset="UTF-8">
+                <link rel="stylesheet" href="${cssUrl}" />
+                <style>
+                    .page {
+                        page-break-after: always;
+                        height: 100%;
+                    }
+                    .page:last-child {
+                        page-break-after: auto;
+                    }
+                </style>
+            </head>
+            <body>
+                ${pages
+									.map(
+										(html) => `
+                    <div class="page">
+                        ${html.replace(`src="/favicon.png"`, `src="${baseUrl}/favicon.png"`)}
+                    </div>
+                `
+									)
+									.join('')}
+            </body>
+        </html>
+    `;
 
-	// Inject HTML and CSS
-	await page.setContent(
-		`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="${cssUrl}" />
-      </head>
-      <body>${newHtml}</body>
-    </html>
-  `,
-		{ waitUntil: 'networkidle0' }
-	);
+	await page.setContent(fullHtml, {
+		waitUntil: 'networkidle0'
+	});
 
-	// Add extra wait for CSS/JS processing
-	// await page.waitForTimeout(500); // Allow Tailwind to initialize
-
-	// Generate PDF
 	const pdf = await page.pdf({
 		format: 'A4',
 		printBackground: true,
 		margin: { top: '20px', right: '20px', bottom: '20px', left: '20px' },
-		preferCSSPageSize: true // Added for better page size handling
+		preferCSSPageSize: true,
+		displayHeaderFooter: false
 	});
 
 	await browser.close();
 
-	// Return PDF
-	return new Response(Buffer.from(pdf), {
+	return new Response(pdf, {
 		headers: {
 			'Content-Type': 'application/pdf',
 			'Content-Disposition': 'attachment; filename="document.pdf"'

@@ -186,7 +186,20 @@ export async function findOrderById(id: string) {
 		where: (order, { and, eq }) => and(eq(order.id, id), eq(order.deleted, false)),
 		with: {
 			patient: true,
-			exams: true
+			exams: {
+				with: {
+					results: {
+						// Exclude deleted results
+						where: (result, { eq }) => eq(result.deleted, false),
+						columns: {
+							id: true,
+							parameterId: true,
+							value: true,
+							parameterSnapshot: true
+						}
+					}
+				}
+			}
 		}
 	});
 

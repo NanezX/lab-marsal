@@ -118,11 +118,6 @@ export const load = async ({ url }) => {
 		};
 	});
 
-	console.log('AverL ', {
-		ordersData,
-		countTotal: countTotal[0].count
-	});
-
 	return {
 		ordersData,
 		countTotal: countTotal[0].count

@@ -14,7 +14,5 @@ export const load: LayoutServerLoad = async ({ params }) => {
 		svelteError(404, 'Orden no encontrada');
 	}
 
-	console.log('orderData: ', orderData);
-
 	return { orderData };
 };
