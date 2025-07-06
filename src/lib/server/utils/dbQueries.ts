@@ -220,21 +220,9 @@ export async function findExamById(id: string) {
 		where: (examTable, { and, eq }) => and(eq(examTable.id, id), eq(examTable.deleted, false)),
 		columns: {
 			deleted: false,
-			patientId: false,
 			examTypeId: false
 		},
 		with: {
-			patient: {
-				columns: {
-					id: true,
-					firstName: true,
-					lastName: true,
-					documentId: true,
-					gender: true,
-					email: true,
-					birthdate: true
-				}
-			},
 			examType: {
 				columns: {
 					id: true,

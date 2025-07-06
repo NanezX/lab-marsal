@@ -213,25 +213,14 @@
 				class="mx-auto mb-2 flex w-1/4 min-w-fit items-center justify-center gap-x-1 border-b border-b-gray-300 text-xl font-semibold"
 			>
 				<span> Exámenes </span>
-
-				<Link
-					href="/exams/{orderData.id}/edit/results"
-					linkClass="flex mt-1"
-					class="!text-primary-blue !rounded-full !bg-inherit !p-0 hover:!text-purple-800"
-				>
-					<Icon
-						src={Edit}
-						size="24"
-						title="Editar detalles del exámen"
-						theme="filled"
-						class="text-green-500"
-					/>
-				</Link>
 			</p>
 
 			<Accordion>
-				{#each orderData.exams as exam}
-					{@const examType = orderExamTypes.find((element_) => element_.id == exam.examTypeId)!}
+				<!-- Order the exams by the name of the exam type -->
+				{#each orderData.exams
+					.map( (exam) => ({ exam, examType: orderExamTypes.find((et) => et.id === exam.examTypeId)! }) )
+					.sort( (a, b) => a.examType.nameNormalized.localeCompare(b.examType.nameNormalized) ) as { exam, examType }}
+					<!-- {@const examType = orderExamTypes.find((element_) => element_.id == exam.examTypeId)!} -->
 
 					<AccordionItem class="cursor-pointer">
 						{#snippet header()}
@@ -249,14 +238,14 @@
 								</span>
 
 								<span
-									class="border-primary-blue/50 mx-2 max-h-60 overflow-y-auto rounded-xl border bg-gray-100 px-2 py-4 whitespace-pre-line"
+									class="border-primary-blue/50 mx-2 max-h-60 overflow-y-auto rounded-xl border bg-gray-100 px-2 py-4 whitespace-pre-line first-letter:uppercase"
 								>
 									{exam.observation ?? 'Sin observaciones'}
 								</span>
 							</p>
 
 							<Link
-								href="/exams"
+								href="/exams/{orderData.id}/edit/results/{exam.id}"
 								linkClass="flex mt-4 mx-auto"
 								class="!bg-green-500 hover:!bg-green-600"
 							>
