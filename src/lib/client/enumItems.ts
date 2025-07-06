@@ -23,6 +23,7 @@ export const priorityItems = Object.values(ExamPriority).map((priority_) => ({
 const statusLabels: Record<ExamStatus, string> = {
 	[ExamStatus.Cancelled]: 'Cancelado',
 	[ExamStatus.Pending]: 'En progreso',
+	[ExamStatus.Processing]: 'En proceso',
 	[ExamStatus.Ready]: 'Listo para entregar',
 	[ExamStatus.Completed]: 'Completado'
 };

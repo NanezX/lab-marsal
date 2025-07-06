@@ -23,6 +23,7 @@ export enum ExamPriority {
 export enum ExamStatus {
 	Cancelled = 'cancelled',
 	Pending = 'pending',
+	Processing = "procesing",
 	Ready = 'ready', // This if for ready to be deliver
 	Completed = 'completed'
 }

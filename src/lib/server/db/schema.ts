@@ -41,6 +41,7 @@ export const examPriorityEnum = pgEnum('exam_priority', [
 export const examStatusEnum = pgEnum('exam_status', [
 	ExamStatus.Cancelled,
 	ExamStatus.Pending,
+	ExamStatus.Processing,
 	ExamStatus.Ready,
 	ExamStatus.Completed
 ]);

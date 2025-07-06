@@ -1,10 +1,4 @@
-import {
-	ExamPriority,
-	ExamStatus,
-	PatientGender,
-	PaymentMethod,
-	UserRoles
-} from '$lib/shared/enums';
+import { ExamPriority, PatientGender, PaymentMethod, UserRoles } from '$lib/shared/enums';
 import { minDocumentId, maxDocumentId } from '$lib/shared/utils';
 import { v4 as uuidv4, validate } from 'uuid';
 import { parsePhoneNumberFromString } from 'libphonenumber-js/min';
