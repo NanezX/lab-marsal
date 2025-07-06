@@ -6,7 +6,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import { superForm } from 'sveltekit-superforms';
 	import ConfirmModal from '$lib/components/modal/ConfirmModal.svelte';
-	import { ExamPriority, PatientGender } from '$lib/shared/enums';
+	import { ExamPriority, ExamStatus, PatientGender } from '$lib/shared/enums';
 	import {
 		Id,
 		GenderMale,
@@ -33,7 +33,6 @@
 	} from '@steeze-ui/tabler-icons';
 	import LabelValue from '$lib/components/LabelValue.svelte';
 	import { Icon } from '@steeze-ui/svelte-icon';
-	import ExamStatus from '$lib/components/ExamStatus.svelte';
 	import { paymentMethodLabels } from '$lib/client';
 	import { AccordionItem, Accordion } from 'flowbite-svelte';
 
@@ -61,6 +60,9 @@
 		[ExamPriority.Normal]: 'Normal',
 		[ExamPriority.Low]: 'Baja prioridad'
 	};
+
+	const areResultsReady = true;
+	// const areResultsReady = orderData.exams.every((exam) => exam.status === ExamStatus.Completed);
 </script>
 
 <ConfirmModal
@@ -256,6 +258,42 @@
 					</AccordionItem>
 				{/each}
 			</Accordion>
+		</div>
+
+		<!-- TODO: If the exam is not marked as COMPLETED, these button should be disabled because there is nothing to send/show/download yet -->
+		<div class="mt-8 flex items-center justify-center">
+			<div
+				class="direct-children:w-full direct-children:justify-center inline-flex justify-center gap-x-8"
+			>
+				<Link
+					href="/exams/{orderData.id}/view"
+					class="inline-flex w-full justify-center gap-x-1"
+					linkClass="inline-flex"
+					target="_blank"
+					title={!areResultsReady ? 'Los resultados no están listos' : undefined}
+					disabled={!areResultsReady}
+				>
+					<span>Visualizar</span>
+					<span>
+						<Icon src={Eye} size="24" />
+					</span>
+				</Link>
+
+				<Link
+					href="/exams/{orderData.id}/view?action=download"
+					class="!bg-dark-blue hover:!bg-dark-blue/75 inline-flex w-full justify-center gap-x-1"
+					linkClass="inline-flex"
+					target="_blank"
+					title={!areResultsReady ? 'Los resultados no están listos' : undefined}
+					disabled={!areResultsReady}
+				>
+					<span>Descargar</span>
+
+					<span>
+						<Icon src={Download} size="24" />
+					</span>
+				</Link>
+			</div>
 		</div>
 	</div>
 </div>
