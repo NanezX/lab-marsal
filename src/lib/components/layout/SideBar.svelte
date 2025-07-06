@@ -5,7 +5,8 @@
 		Home,
 		Certificate,
 		UsersGroup,
-		UserEdit
+		UserEdit,
+		Report
 	} from '@steeze-ui/tabler-icons';
 	import { Icon, type IconSource } from '@steeze-ui/svelte-icon';
 	import type { UserRoles } from '$lib/shared/enums';
@@ -45,6 +46,11 @@
 			href: '/users',
 			icon: UserEdit,
 			text: 'Gestión de usuarios'
+		},
+		{
+			href: '/report',
+			icon: Report,
+			text: 'Reporte'
 		},
 		{
 			href: '/config',
