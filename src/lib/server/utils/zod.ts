@@ -294,15 +294,12 @@ export const deleteOrderSchema = z.object({
 	orderId: z.string().refine(uuidRefine, 'ID de la orden no válido')
 });
 
-export const editExamDetailsSchema = z.object({
-	examId: z.string().refine(uuidRefine, 'ID del exámen no es válido'),
-	customTag: z.string().min(1, 'Debe ingresar un identificador'),
+export const editOrderDetailsSchema = z.object({
+	orderId: z.string().refine(uuidRefine, 'ID de la orden no es válido'),
 	priority: z
 		.nativeEnum(ExamPriority, { errorMap: () => ({ message: 'Prioridad no definida' }) })
 		.default(ExamPriority.Normal),
-	status: z
-		.nativeEnum(ExamStatus, { errorMap: () => ({ message: 'Estado no definido' }) })
-		.default(ExamStatus.Pending)
+	delivered: z.string().min(1)
 });
 
 export const editExamPaymentSchema = z

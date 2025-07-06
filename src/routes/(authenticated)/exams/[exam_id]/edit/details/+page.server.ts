@@ -1,14 +1,15 @@
 import { superValidate, fail as failForms } from 'sveltekit-superforms';
-import { editExamDetailsSchema } from '$lib/server/utils/zod';
+import { editOrderDetailsSchema } from '$lib/server/utils/zod';
 import { zod } from 'sveltekit-superforms/adapters';
-import { cleanEditExamDetails, normalized as _normalized } from '$lib/shared/utils';
+import { cleanEditOrderDetails, normalized as _normalized } from '$lib/shared/utils';
 import type { Actions, PageServerLoad } from './$types';
-import { findExamById } from '$lib/server/utils/dbQueries';
+import { findOrderById } from '$lib/server/utils/dbQueries';
 import { db } from '$lib/server/db';
-import { exam as examTable } from '$lib/server/db/schema';
+import { order as orderTable } from '$lib/server/db/schema';
 import { failFormResponse } from '$lib/server/utils/failFormResponse';
 import { redirect } from 'sveltekit-flash-message/server';
 import { eq } from 'drizzle-orm';
+import type { ExamPriority } from '$lib/shared/enums';
 
 // TODO: Verify what roles can update an exam (on the action) - (maybe just block the page to those user in the backend)
 
@@ -17,21 +18,21 @@ export const load: PageServerLoad = async ({ parent }) => {
 	const data = await parent();
 
 	// Get the examData
-	const { examData } = data;
+	const { orderData } = data;
 
 	// Clean/format the data for the schema
-	const cleanedData = cleanEditExamDetails(examData);
+	const cleanedData = cleanEditOrderDetails(orderData);
 
 	// Create the form for editing
-	const editExamDetailsForm = await superValidate(cleanedData, zod(editExamDetailsSchema));
+	const editOrderDetailsForm = await superValidate(cleanedData, zod(editOrderDetailsSchema));
 
-	return { editExamDetailsForm };
+	return { editOrderDetailsForm };
 };
 
 export const actions: Actions = {
 	default: async (event) => {
 		const request = event.request;
-		const form = await superValidate(request, zod(editExamDetailsSchema));
+		const form = await superValidate(request, zod(editOrderDetailsSchema));
 
 		if (!form.valid) {
 			console.error(JSON.stringify(form.errors, null, 2));
@@ -39,25 +40,41 @@ export const actions: Actions = {
 			return failForms(400, { form });
 		}
 
-		const { examId, customTag, status, priority } = form.data;
+		const { orderId, priority, delivered } = form.data;
 
 		// Check if already exists
-		const examExist = await findExamById(examId);
-		if (examExist === undefined) {
-			return failFormResponse(form, 'ID del exámen no encontrado', event.cookies, 409);
+		const orderExist = await findOrderById(orderId);
+		if (orderExist === undefined) {
+			return failFormResponse(form, 'ID de la orden no encontrado', event.cookies, 409);
 		}
 
 		try {
-			await db
-				.update(examTable)
-				.set({
-					customTag,
-					status,
-					priority
-				})
-				.where(eq(examTable.id, examId));
+			const updateData: {
+				priority: ExamPriority;
+				deliveredAt?: Date | null;
+			} = {
+				priority
+			};
+
+			// Handle delivery status
+			if (delivered === 'Entregado') {
+				// Only set deliveredAt if it's currently null
+				const currentOrder = await db.query.order.findFirst({
+					where: eq(orderTable.id, orderId),
+					columns: { deliveredAt: true }
+				});
+
+				if (!currentOrder?.deliveredAt) {
+					updateData.deliveredAt = new Date();
+				}
+			} else if (delivered === 'No entregado') {
+				// Always set to null when not delivered
+				updateData.deliveredAt = null;
+			}
+
+			await db.update(orderTable).set(updateData).where(eq(orderTable.id, orderId));
 		} catch (e) {
-			const errMsg = 'No se editó el exámen';
+			const errMsg = 'No se editó la orden';
 
 			if (e instanceof Error) {
 				// Print the error type
@@ -70,6 +87,6 @@ export const actions: Actions = {
 			return failFormResponse(form, errMsg, event.cookies, 403);
 		}
 
-		redirect(`/exams/${examId}`, { type: 'success', message: 'Exámen actualizado' }, event.cookies);
+		redirect(`/exams/${orderId}`, { type: 'success', message: 'Orden actualizada' }, event.cookies);
 	}
 };
