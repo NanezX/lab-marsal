@@ -128,7 +128,7 @@
 		/>
 
 		<div class="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-3">
-			{#each data.ordersData as exam (exam.id)}
+			{#each data.ordersData as exam, index (exam.id)}
 				<a
 					href="/exams/{exam.id}"
 					title="{exam.examTypeNames} - {exam.patientName}"
@@ -161,7 +161,7 @@
 					</div>
 					<ButtonFlowbite
 						class="bg-secondary-blue mx-auto justify-self-center font-bold text-black"
-						id="hover"
+						id="hover-{index}"
 					>
 						Visualizar exámenes
 					</ButtonFlowbite>
@@ -169,7 +169,7 @@
 					<Popover
 						class="w-64 text-sm font-light "
 						title="Exámenes"
-						triggeredBy="#hover"
+						triggeredBy="#hover-{index}"
 						trigger="hover">{exam.examTypeNames}</Popover
 					>
 				</a>
