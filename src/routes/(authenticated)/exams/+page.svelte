@@ -11,6 +11,8 @@
 	import { formatRelativeDate } from '$lib/client/index.js';
 	import ExamStatus from '$lib/components/ExamStatus.svelte';
 	import FilterControls from '$lib/components/FilterControls.svelte';
+	import { ExamPriority } from '$lib/shared/enums.js';
+	import { Popover, Button as ButtonFlowbite } from 'flowbite-svelte';
 
 	let { data } = $props();
 
@@ -46,6 +48,12 @@
 			keepFocus: true
 		});
 	}
+
+	const priorityLabel = {
+		[ExamPriority.High]: 'Alta prioridad',
+		[ExamPriority.Normal]: 'Normal',
+		[ExamPriority.Low]: 'Baja prioridad'
+	};
 </script>
 
 <div in:fade class="flex w-full flex-col gap-y-8">
@@ -120,14 +128,15 @@
 		/>
 
 		<div class="mt-4 grid grid-cols-2 gap-3 xl:grid-cols-3">
-			{#each data.examsData as exam (exam.id)}
+			{#each data.ordersData as exam (exam.id)}
 				<a
 					href="/exams/{exam.id}"
-					title="{exam.examTypeName} - {exam.patientName}"
+					title="{exam.examTypeNames} - {exam.patientName}"
 					class="group hover:border-primary-blue flex flex-col gap-y-2 rounded-sm border bg-white px-4 py-2 transition-all select-none hover:-translate-y-1 hover:border hover:shadow-2xl"
 				>
 					<div class="inline-flex w-full items-center justify-between">
-						<ExamStatus status={exam.status} priority={exam.priority} minimal />
+						<LabelValue label="Paciente" value={exam.patientName} />
+
 						<Icon
 							src={FileSearch}
 							size="24"
@@ -137,15 +146,32 @@
 					<div class="space-y-0.5">
 						<LabelValue label="Paciente" value={exam.patientName} />
 						<LabelValue label="Cédula" value={exam.patientDocumentId ?? 'N/A'} />
-						<LabelValue label="Exámen" value={exam.examTypeName} />
-					</div>
+						<LabelValue
+							valueClass="capitalize"
+							label="Prioridad"
+							value={priorityLabel[exam.priority]}
+						/>
 
-					<LabelValue
-						label="Último cambio"
-						value={formatRelativeDate(exam.updatedAt)}
-						class="mt-auto text-sm"
-						labelClass="font-semibold"
-					/>
+						<LabelValue
+							label="Último cambio"
+							value={formatRelativeDate(exam.updatedAt)}
+							class="mt-auto text-sm"
+							labelClass="font-semibold"
+						/>
+					</div>
+					<ButtonFlowbite
+						class="bg-secondary-blue mx-auto justify-self-center font-bold text-black"
+						id="hover"
+					>
+						Visualizar exámenes
+					</ButtonFlowbite>
+
+					<Popover
+						class="w-64 text-sm font-light "
+						title="Exámenes"
+						triggeredBy="#hover"
+						trigger="hover">{exam.examTypeNames}</Popover
+					>
 				</a>
 			{:else}
 				<div class="col-span-2 xl:col-span-3">
